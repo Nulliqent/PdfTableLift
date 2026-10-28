@@ -1,0 +1,54 @@
+.content {
+  overflow: auto;
+  min-width: 0;
+  padding-block: 28px max(28px, env(safe-area-inset-bottom, 0px));
+  padding-left: 32px;
+  padding-right: max(32px, env(safe-area-inset-right, 0px));
+}
+
+.inner {
+  max-width: 1080px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.emptyState {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  gap: 10px;
+  padding: 64px 16px;
+  color: var(--label2);
+}
+
+.emptyState h3 {
+  margin: 0;
+  color: var(--label);
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.emptyState p {
+  margin: 0;
+  max-width: 42ch;
+}
+
+.emptyState > svg {
+  width: 44px;
+  height: 44px;
+  stroke-width: 1.2;
+  color: var(--label3);
+}
+
+@media (max-width: 760px) {
+  .content {
+    overflow: visible;
+    padding-left: max(16px, env(safe-area-inset-left, 0px));
+    padding-right: max(16px, env(safe-area-inset-right, 0px));
+    padding-block: 22px max(28px, env(safe-area-inset-bottom, 0px));
+  }
+}
