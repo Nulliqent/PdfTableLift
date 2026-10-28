@@ -18,6 +18,38 @@ npm run build
 npm run preview        # http://localhost:8080
 ```
 
+## Run with Docker
+
+You don't need Node, only Docker with Compose:
+
+```sh
+docker compose up --build    # http://localhost:8080
+docker compose down          # stop it
+```
+
+The `Dockerfile` builds the app in a `node:24-alpine` stage, and `nginx:alpine` serves the static
+build. It has no API and stores nothing (ADR 0001). Port 8080 is the one `npm run preview` and the
+Playwright tests use, so stop the container before you run `npm run check`.
+
+### Content Security Policy
+
+nginx and `npm run preview` both send a strict CSP, so the browser blocks any request that leaves
+the app's origin: your PDFs can't be uploaded anywhere. The policy is `default-src 'self'` and
+`connect-src 'self'`, `worker-src 'self'` for the pdf.js worker, `'wasm-unsafe-eval'` for pdf.js's
+WebAssembly decoders, and no third-party origins.
+
+The headers are defined once, in `security-headers.ts`. `vite.config.ts` reads it for the preview
+server, and the Docker build runs `scripts/nginx-security-headers.ts` to write it into nginx. Keep
+every `add_header` out of the `location` blocks in `nginx/default.conf`: a location with its own
+`add_header` drops the server-level CSP. `tests/e2e/csp.spec.ts` checks the policy, that every
+response of the preview build carries it, and that no request leaves the origin.
+
+To check a running container:
+
+```sh
+curl -sI http://localhost:8080/ | grep -i content-security-policy
+```
+
 ## Verify
 
 ```sh
