@@ -18,7 +18,8 @@
     "test:e2e": "playwright test",
     "check": "npm run typecheck && npm run lint && npm run test && npm run test:e2e",
     "prepare": "simple-git-hooks",
-    "fixtures": "node scripts/fixtures/make-fixtures.mjs"
+    "fixtures": "node scripts/fixtures/make-fixtures.mjs",
+    "golden": "npm ci --prefix tests/golden/harness --omit=optional --no-audit --no-fund && node tests/golden/harness/golden.mjs"
   },
   "simple-git-hooks": {
     "commit-msg": "python3 .claude/skills/commit-convention-comply/scripts/check_commit_msg.py \"$1\"",
