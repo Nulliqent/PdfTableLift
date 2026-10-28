@@ -17,7 +17,8 @@
     "test": "vitest run",
     "test:e2e": "playwright test",
     "check": "npm run typecheck && npm run lint && npm run test && npm run test:e2e",
-    "prepare": "simple-git-hooks"
+    "prepare": "simple-git-hooks",
+    "fixtures": "node scripts/fixtures/make-fixtures.mjs"
   },
   "simple-git-hooks": {
     "commit-msg": "python3 .claude/skills/commit-convention-comply/scripts/check_commit_msg.py \"$1\"",
@@ -39,6 +40,7 @@
     "eslint-plugin-react-hooks": "^7.1.1",
     "eslint-plugin-react-refresh": "^0.5.7",
     "globals": "^17.13.0",
+    "pdfkit": "^0.20.2",
     "prettier": "^3.9.10",
     "simple-git-hooks": "^2.14.0",
     "typescript": "^6.0.3",

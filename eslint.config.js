@@ -76,9 +76,9 @@ export default tseslint.config(
     },
   },
 
-  // Node-side files: configs, tests, scripts.
+  // Node-side files: configs, tests, scripts, the fixture generator and the golden harness.
   {
-    files: ["*.{js,ts}", "tests/**/*.ts", "scripts/**/*.{js,ts}"],
+    files: ["*.{js,ts}", "tests/**/*.{ts,mjs}", "scripts/**/*.{js,ts,mjs}"],
     languageOptions: { globals: globals.node },
   },
 
