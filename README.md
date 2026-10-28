@@ -68,6 +68,16 @@ npm run check
 
 `npm run format` rewrites files with Prettier.
 
+## Fixtures and golden snapshots
+
+```sh
+npm run fixtures   # regenerate the test PDFs (tests/fixtures) and public/example-document.pdf
+npm run golden     # re-record what the prototype produces for them on pdf.js 3.11
+```
+
+See [tests/golden/README.md](tests/golden/README.md) for the fixture list, the snapshot format and
+how the harness works.
+
 ## Git hooks
 
 `npm install` installs them with `simple-git-hooks`:
@@ -87,9 +97,12 @@ src/
   pdf-reader/       the only code that touches pdf.js
   engine/           pure TypeScript: detection, joining, Regions, export, workspace reducer
   ui/               React components (CSS Modules) and global design tokens
+scripts/fixtures/   fixture PDF generator (pdfkit) and its font
 tests/
   unit/             Vitest (seams A and B)
   e2e/              Playwright (seam C)
+  fixtures/         generated fixture PDFs (committed)
+  golden/           golden snapshots and the dev-only pdf.js 3.11 harness that records them
 ```
 
 Dependencies flow one way: UI → Engine and UI → PDF Reader. ESLint fails if the Engine imports

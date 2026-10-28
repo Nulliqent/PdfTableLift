@@ -1,0 +1,407 @@
+{
+  "fixture": "tests/fixtures/section-page-break.pdf",
+  "sha256": "a5359c15d8b402f0b65388ad1b06cbad4686700ace9aa80df5b1e939075f3999",
+  "pdfjs": "3.11.174",
+  "status": "ready",
+  "error": "",
+  "pages": [
+    {
+      "num": 1,
+      "w": 612,
+      "h": 792,
+      "items": [
+        {"str":"Inventory by warehouse","x":72,"y":740,"w":159.57199999999997,"h":14,"bold":true},
+        {"str":"Item","x":72,"y":710,"w":18.504,"h":9,"bold":true},
+        {"str":"Warehouse","x":220,"y":710,"w":48.14999999999999,"h":9,"bold":true},
+        {"str":"Units","x":377.5,"y":710,"w":22.500000000000004,"h":9,"bold":true},
+        {"str":"Value","x":456.528,"y":710,"w":23.471999999999984,"h":9,"bold":true},
+        {"str":"North","x":72,"y":696,"w":24.174000000000007,"h":9,"bold":true},
+        {"str":"Bolts","x":72,"y":682,"w":20.007000000000005,"h":9,"bold":false},
+        {"str":"Fargo","x":220,"y":682,"w":23.058000000000014,"h":9,"bold":false},
+        {"str":"1200","x":379.984,"y":682,"w":20.016000000000002,"h":9,"bold":false},
+        {"str":"360.0","x":457.482,"y":682,"w":22.518,"h":9,"bold":false},
+        {"str":"Nuts","x":72,"y":668,"w":18.504000000000005,"h":9,"bold":false},
+        {"str":"Fargo","x":220,"y":668,"w":23.058000000000014,"h":9,"bold":false},
+        {"str":"1850","x":379.984,"y":668,"w":20.016000000000002,"h":9,"bold":false},
+        {"str":"277.5","x":457.482,"y":668,"w":22.518,"h":9,"bold":false},
+        {"str":"South","x":72,"y":654,"w":25.497000000000007,"h":9,"bold":true},
+        {"str":"Washers","x":72,"y":640,"w":35.145,"h":9,"bold":false},
+        {"str":"Tulsa","x":220,"y":640,"w":20.92499999999999,"h":9,"bold":false},
+        {"str":"900","x":384.988,"y":640,"w":15.012,"h":9,"bold":false},
+        {"str":"90.0","x":462.486,"y":640,"w":17.514000000000003,"h":9,"bold":false},
+        {"str":"Rivets","x":72,"y":626,"w":24.777000000000008,"h":9,"bold":false},
+        {"str":"Tulsa","x":220,"y":626,"w":20.92499999999999,"h":9,"bold":false},
+        {"str":"4000","x":379.984,"y":626,"w":20.016000000000002,"h":9,"bold":false},
+        {"str":"520.0","x":457.482,"y":626,"w":22.518,"h":9,"bold":false}
+      ]
+    },
+    {
+      "num": 2,
+      "w": 612,
+      "h": 792,
+      "items": [
+        {"str":"Screws","x":72,"y":740,"w":29.321999999999996,"h":9,"bold":false},
+        {"str":"Tulsa","x":220,"y":740,"w":20.92499999999999,"h":9,"bold":false},
+        {"str":"2600","x":379.984,"y":740,"w":20.016000000000002,"h":9,"bold":false},
+        {"str":"468.0","x":457.482,"y":740,"w":22.518,"h":9,"bold":false},
+        {"str":"Anchors","x":72,"y":726,"w":33.01200000000001,"h":9,"bold":false},
+        {"str":"El Paso","x":220,"y":726,"w":30.654,"h":9,"bold":false},
+        {"str":"700","x":384.988,"y":726,"w":15.012,"h":9,"bold":false},
+        {"str":"175.0","x":457.482,"y":726,"w":22.518,"h":9,"bold":false},
+        {"str":"East","x":72,"y":712,"w":19.008000000000003,"h":9,"bold":true},
+        {"str":"Hinges","x":72,"y":698,"w":28.008000000000006,"h":9,"bold":false},
+        {"str":"Albany","x":220,"y":698,"w":27.378000000000014,"h":9,"bold":false},
+        {"str":"320","x":384.988,"y":698,"w":15.012,"h":9,"bold":false},
+        {"str":"960.0","x":457.482,"y":698,"w":22.518,"h":9,"bold":false},
+        {"str":"Brackets","x":72,"y":684,"w":34.55999999999999,"h":9,"bold":false},
+        {"str":"Albany","x":220,"y":684,"w":27.378000000000014,"h":9,"bold":false},
+        {"str":"540","x":384.988,"y":684,"w":15.012,"h":9,"bold":false},
+        {"str":"702.0","x":457.482,"y":684,"w":22.518,"h":9,"bold":false}
+      ]
+    }
+  ],
+  "runs": [
+    {
+      "columnSpacing": 1,
+      "joining": true,
+      "tables": [
+        {
+          "n": 1,
+          "pages": [1,2],
+          "parts": [{"page":1,"bbox":[68,622.85,484,719.45]},{"page":2,"bbox":[68,680.85,484,749.45]}],
+          "header": true,
+          "firstBold": true,
+          "grid": [
+            ["Item","Warehouse","Units","Value"],
+            ["North","","",""],
+            ["Bolts","Fargo","1200","360.0"],
+            ["Nuts","Fargo","1850","277.5"],
+            ["South","","",""],
+            ["Washers","Tulsa","900","90.0"],
+            ["Rivets","Tulsa","4000","520.0"],
+            ["Screws","Tulsa","2600","468.0"],
+            ["Anchors","El Paso","700","175.0"],
+            ["East","","",""],
+            ["Hinges","Albany","320","960.0"],
+            ["Brackets","Albany","540","702.0"]
+          ],
+          "sections": [1,4,9],
+          "cols": [[72,107.14500000000001],[220,268.15],[377.5,400],[456.528,480]],
+          "repeats": 0,
+          "exports": {
+            "column": {
+              "csv": "Section,Item,Warehouse,Units,Value\nNorth,Bolts,Fargo,1200,360.0\nNorth,Nuts,Fargo,1850,277.5\nSouth,Washers,Tulsa,900,90.0\nSouth,Rivets,Tulsa,4000,520.0\nSouth,Screws,Tulsa,2600,468.0\nSouth,Anchors,El Paso,700,175.0\nEast,Hinges,Albany,320,960.0\nEast,Brackets,Albany,540,702.0",
+              "tsv": "Section\tItem\tWarehouse\tUnits\tValue\nNorth\tBolts\tFargo\t1200\t360.0\nNorth\tNuts\tFargo\t1850\t277.5\nSouth\tWashers\tTulsa\t900\t90.0\nSouth\tRivets\tTulsa\t4000\t520.0\nSouth\tScrews\tTulsa\t2600\t468.0\nSouth\tAnchors\tEl Paso\t700\t175.0\nEast\tHinges\tAlbany\t320\t960.0\nEast\tBrackets\tAlbany\t540\t702.0",
+              "md": "| Section | Item | Warehouse | Units | Value |\n| --- | --- | --- | ---: | ---: |\n| North | Bolts | Fargo | 1200 | 360.0 |\n| North | Nuts | Fargo | 1850 | 277.5 |\n| South | Washers | Tulsa | 900 | 90.0 |\n| South | Rivets | Tulsa | 4000 | 520.0 |\n| South | Screws | Tulsa | 2600 | 468.0 |\n| South | Anchors | El Paso | 700 | 175.0 |\n| East | Hinges | Albany | 320 | 960.0 |\n| East | Brackets | Albany | 540 | 702.0 |",
+              "json": "[\n  {\n    \"Section\": \"North\",\n    \"Item\": \"Bolts\",\n    \"Warehouse\": \"Fargo\",\n    \"Units\": \"1200\",\n    \"Value\": \"360.0\"\n  },\n  {\n    \"Section\": \"North\",\n    \"Item\": \"Nuts\",\n    \"Warehouse\": \"Fargo\",\n    \"Units\": \"1850\",\n    \"Value\": \"277.5\"\n  },\n  {\n    \"Section\": \"South\",\n    \"Item\": \"Washers\",\n    \"Warehouse\": \"Tulsa\",\n    \"Units\": \"900\",\n    \"Value\": \"90.0\"\n  },\n  {\n    \"Section\": \"South\",\n    \"Item\": \"Rivets\",\n    \"Warehouse\": \"Tulsa\",\n    \"Units\": \"4000\",\n    \"Value\": \"520.0\"\n  },\n  {\n    \"Section\": \"South\",\n    \"Item\": \"Screws\",\n    \"Warehouse\": \"Tulsa\",\n    \"Units\": \"2600\",\n    \"Value\": \"468.0\"\n  },\n  {\n    \"Section\": \"South\",\n    \"Item\": \"Anchors\",\n    \"Warehouse\": \"El Paso\",\n    \"Units\": \"700\",\n    \"Value\": \"175.0\"\n  },\n  {\n    \"Section\": \"East\",\n    \"Item\": \"Hinges\",\n    \"Warehouse\": \"Albany\",\n    \"Units\": \"320\",\n    \"Value\": \"960.0\"\n  },\n  {\n    \"Section\": \"East\",\n    \"Item\": \"Brackets\",\n    \"Warehouse\": \"Albany\",\n    \"Units\": \"540\",\n    \"Value\": \"702.0\"\n  }\n]"
+            },
+            "rows": {
+              "csv": "Item,Warehouse,Units,Value\nNorth,,,\nBolts,Fargo,1200,360.0\nNuts,Fargo,1850,277.5\nSouth,,,\nWashers,Tulsa,900,90.0\nRivets,Tulsa,4000,520.0\nScrews,Tulsa,2600,468.0\nAnchors,El Paso,700,175.0\nEast,,,\nHinges,Albany,320,960.0\nBrackets,Albany,540,702.0",
+              "tsv": "Item\tWarehouse\tUnits\tValue\nNorth\t\t\t\nBolts\tFargo\t1200\t360.0\nNuts\tFargo\t1850\t277.5\nSouth\t\t\t\nWashers\tTulsa\t900\t90.0\nRivets\tTulsa\t4000\t520.0\nScrews\tTulsa\t2600\t468.0\nAnchors\tEl Paso\t700\t175.0\nEast\t\t\t\nHinges\tAlbany\t320\t960.0\nBrackets\tAlbany\t540\t702.0",
+              "md": "| Item | Warehouse | Units | Value |\n| --- | --- | ---: | ---: |\n| **North** | | | |\n| Bolts | Fargo | 1200 | 360.0 |\n| Nuts | Fargo | 1850 | 277.5 |\n| **South** | | | |\n| Washers | Tulsa | 900 | 90.0 |\n| Rivets | Tulsa | 4000 | 520.0 |\n| Screws | Tulsa | 2600 | 468.0 |\n| Anchors | El Paso | 700 | 175.0 |\n| **East** | | | |\n| Hinges | Albany | 320 | 960.0 |\n| Brackets | Albany | 540 | 702.0 |",
+              "json": "[\n  {\n    \"section\": \"North\",\n    \"rows\": [\n      {\n        \"Item\": \"Bolts\",\n        \"Warehouse\": \"Fargo\",\n        \"Units\": \"1200\",\n        \"Value\": \"360.0\"\n      },\n      {\n        \"Item\": \"Nuts\",\n        \"Warehouse\": \"Fargo\",\n        \"Units\": \"1850\",\n        \"Value\": \"277.5\"\n      }\n    ]\n  },\n  {\n    \"section\": \"South\",\n    \"rows\": [\n      {\n        \"Item\": \"Washers\",\n        \"Warehouse\": \"Tulsa\",\n        \"Units\": \"900\",\n        \"Value\": \"90.0\"\n      },\n      {\n        \"Item\": \"Rivets\",\n        \"Warehouse\": \"Tulsa\",\n        \"Units\": \"4000\",\n        \"Value\": \"520.0\"\n      },\n      {\n        \"Item\": \"Screws\",\n        \"Warehouse\": \"Tulsa\",\n        \"Units\": \"2600\",\n        \"Value\": \"468.0\"\n      },\n      {\n        \"Item\": \"Anchors\",\n        \"Warehouse\": \"El Paso\",\n        \"Units\": \"700\",\n        \"Value\": \"175.0\"\n      }\n    ]\n  },\n  {\n    \"section\": \"East\",\n    \"rows\": [\n      {\n        \"Item\": \"Hinges\",\n        \"Warehouse\": \"Albany\",\n        \"Units\": \"320\",\n        \"Value\": \"960.0\"\n      },\n      {\n        \"Item\": \"Brackets\",\n        \"Warehouse\": \"Albany\",\n        \"Units\": \"540\",\n        \"Value\": \"702.0\"\n      }\n    ]\n  }\n]"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "columnSpacing": 1,
+      "joining": false,
+      "tables": [
+        {
+          "n": 1,
+          "pages": [1],
+          "parts": [{"page":1,"bbox":[68,622.85,484,719.45]}],
+          "header": true,
+          "firstBold": true,
+          "grid": [
+            ["Item","Warehouse","Units","Value"],
+            ["North","","",""],
+            ["Bolts","Fargo","1200","360.0"],
+            ["Nuts","Fargo","1850","277.5"],
+            ["South","","",""],
+            ["Washers","Tulsa","900","90.0"],
+            ["Rivets","Tulsa","4000","520.0"]
+          ],
+          "sections": [1,4],
+          "cols": [[72,107.14500000000001],[220,268.15],[377.5,400],[456.528,480]],
+          "repeats": 0,
+          "exports": {
+            "column": {
+              "csv": "Section,Item,Warehouse,Units,Value\nNorth,Bolts,Fargo,1200,360.0\nNorth,Nuts,Fargo,1850,277.5\nSouth,Washers,Tulsa,900,90.0\nSouth,Rivets,Tulsa,4000,520.0",
+              "tsv": "Section\tItem\tWarehouse\tUnits\tValue\nNorth\tBolts\tFargo\t1200\t360.0\nNorth\tNuts\tFargo\t1850\t277.5\nSouth\tWashers\tTulsa\t900\t90.0\nSouth\tRivets\tTulsa\t4000\t520.0",
+              "md": "| Section | Item | Warehouse | Units | Value |\n| --- | --- | --- | ---: | ---: |\n| North | Bolts | Fargo | 1200 | 360.0 |\n| North | Nuts | Fargo | 1850 | 277.5 |\n| South | Washers | Tulsa | 900 | 90.0 |\n| South | Rivets | Tulsa | 4000 | 520.0 |",
+              "json": "[\n  {\n    \"Section\": \"North\",\n    \"Item\": \"Bolts\",\n    \"Warehouse\": \"Fargo\",\n    \"Units\": \"1200\",\n    \"Value\": \"360.0\"\n  },\n  {\n    \"Section\": \"North\",\n    \"Item\": \"Nuts\",\n    \"Warehouse\": \"Fargo\",\n    \"Units\": \"1850\",\n    \"Value\": \"277.5\"\n  },\n  {\n    \"Section\": \"South\",\n    \"Item\": \"Washers\",\n    \"Warehouse\": \"Tulsa\",\n    \"Units\": \"900\",\n    \"Value\": \"90.0\"\n  },\n  {\n    \"Section\": \"South\",\n    \"Item\": \"Rivets\",\n    \"Warehouse\": \"Tulsa\",\n    \"Units\": \"4000\",\n    \"Value\": \"520.0\"\n  }\n]"
+            },
+            "rows": {
+              "csv": "Item,Warehouse,Units,Value\nNorth,,,\nBolts,Fargo,1200,360.0\nNuts,Fargo,1850,277.5\nSouth,,,\nWashers,Tulsa,900,90.0\nRivets,Tulsa,4000,520.0",
+              "tsv": "Item\tWarehouse\tUnits\tValue\nNorth\t\t\t\nBolts\tFargo\t1200\t360.0\nNuts\tFargo\t1850\t277.5\nSouth\t\t\t\nWashers\tTulsa\t900\t90.0\nRivets\tTulsa\t4000\t520.0",
+              "md": "| Item | Warehouse | Units | Value |\n| --- | --- | ---: | ---: |\n| **North** | | | |\n| Bolts | Fargo | 1200 | 360.0 |\n| Nuts | Fargo | 1850 | 277.5 |\n| **South** | | | |\n| Washers | Tulsa | 900 | 90.0 |\n| Rivets | Tulsa | 4000 | 520.0 |",
+              "json": "[\n  {\n    \"section\": \"North\",\n    \"rows\": [\n      {\n        \"Item\": \"Bolts\",\n        \"Warehouse\": \"Fargo\",\n        \"Units\": \"1200\",\n        \"Value\": \"360.0\"\n      },\n      {\n        \"Item\": \"Nuts\",\n        \"Warehouse\": \"Fargo\",\n        \"Units\": \"1850\",\n        \"Value\": \"277.5\"\n      }\n    ]\n  },\n  {\n    \"section\": \"South\",\n    \"rows\": [\n      {\n        \"Item\": \"Washers\",\n        \"Warehouse\": \"Tulsa\",\n        \"Units\": \"900\",\n        \"Value\": \"90.0\"\n      },\n      {\n        \"Item\": \"Rivets\",\n        \"Warehouse\": \"Tulsa\",\n        \"Units\": \"4000\",\n        \"Value\": \"520.0\"\n      }\n    ]\n  }\n]"
+            }
+          }
+        },
+        {
+          "n": 2,
+          "pages": [2],
+          "parts": [{"page":2,"bbox":[68,680.85,484,749.45]}],
+          "header": true,
+          "firstBold": false,
+          "grid": [
+            ["Screws","Tulsa","2600","468.0"],
+            ["Anchors","El Paso","700","175.0"],
+            ["East","","",""],
+            ["Hinges","Albany","320","960.0"],
+            ["Brackets","Albany","540","702.0"]
+          ],
+          "sections": [2],
+          "cols": [[72,106.55999999999999],[220,250.654],[379.984,400],[457.482,480]],
+          "repeats": 0,
+          "exports": {
+            "column": {
+              "csv": "Section,Screws,Tulsa,2600,468.0\n,Anchors,El Paso,700,175.0\nEast,Hinges,Albany,320,960.0\nEast,Brackets,Albany,540,702.0",
+              "tsv": "Section\tScrews\tTulsa\t2600\t468.0\n\tAnchors\tEl Paso\t700\t175.0\nEast\tHinges\tAlbany\t320\t960.0\nEast\tBrackets\tAlbany\t540\t702.0",
+              "md": "| Section | Screws | Tulsa | 2600 | 468.0 |\n| --- | --- | --- | ---: | ---: |\n|  | Anchors | El Paso | 700 | 175.0 |\n| East | Hinges | Albany | 320 | 960.0 |\n| East | Brackets | Albany | 540 | 702.0 |",
+              "json": "[\n  {\n    \"2600\": \"700\",\n    \"Section\": \"\",\n    \"Screws\": \"Anchors\",\n    \"Tulsa\": \"El Paso\",\n    \"468.0\": \"175.0\"\n  },\n  {\n    \"2600\": \"320\",\n    \"Section\": \"East\",\n    \"Screws\": \"Hinges\",\n    \"Tulsa\": \"Albany\",\n    \"468.0\": \"960.0\"\n  },\n  {\n    \"2600\": \"540\",\n    \"Section\": \"East\",\n    \"Screws\": \"Brackets\",\n    \"Tulsa\": \"Albany\",\n    \"468.0\": \"702.0\"\n  }\n]"
+            },
+            "rows": {
+              "csv": "Screws,Tulsa,2600,468.0\nAnchors,El Paso,700,175.0\nEast,,,\nHinges,Albany,320,960.0\nBrackets,Albany,540,702.0",
+              "tsv": "Screws\tTulsa\t2600\t468.0\nAnchors\tEl Paso\t700\t175.0\nEast\t\t\t\nHinges\tAlbany\t320\t960.0\nBrackets\tAlbany\t540\t702.0",
+              "md": "| Screws | Tulsa | 2600 | 468.0 |\n| --- | --- | ---: | ---: |\n| Anchors | El Paso | 700 | 175.0 |\n| **East** | | | |\n| Hinges | Albany | 320 | 960.0 |\n| Brackets | Albany | 540 | 702.0 |",
+              "json": "[\n  {\n    \"section\": null,\n    \"rows\": [\n      {\n        \"2600\": \"700\",\n        \"Screws\": \"Anchors\",\n        \"Tulsa\": \"El Paso\",\n        \"468.0\": \"175.0\"\n      }\n    ]\n  },\n  {\n    \"section\": \"East\",\n    \"rows\": [\n      {\n        \"2600\": \"320\",\n        \"Screws\": \"Hinges\",\n        \"Tulsa\": \"Albany\",\n        \"468.0\": \"960.0\"\n      },\n      {\n        \"2600\": \"540\",\n        \"Screws\": \"Brackets\",\n        \"Tulsa\": \"Albany\",\n        \"468.0\": \"702.0\"\n      }\n    ]\n  }\n]"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "columnSpacing": 0.5,
+      "joining": true,
+      "tables": [
+        {
+          "n": 1,
+          "pages": [1,2],
+          "parts": [{"page":1,"bbox":[68,622.85,484,719.45]},{"page":2,"bbox":[68,680.85,484,749.45]}],
+          "header": true,
+          "firstBold": true,
+          "grid": [
+            ["Item","Warehouse","Units","Value"],
+            ["North","","",""],
+            ["Bolts","Fargo","1200","360.0"],
+            ["Nuts","Fargo","1850","277.5"],
+            ["South","","",""],
+            ["Washers","Tulsa","900","90.0"],
+            ["Rivets","Tulsa","4000","520.0"],
+            ["Screws","Tulsa","2600","468.0"],
+            ["Anchors","El Paso","700","175.0"],
+            ["East","","",""],
+            ["Hinges","Albany","320","960.0"],
+            ["Brackets","Albany","540","702.0"]
+          ],
+          "sections": [1,4,9],
+          "cols": [[72,107.14500000000001],[220,268.15],[377.5,400],[456.528,480]],
+          "repeats": 0,
+          "exports": {
+            "column": {
+              "csv": "Section,Item,Warehouse,Units,Value\nNorth,Bolts,Fargo,1200,360.0\nNorth,Nuts,Fargo,1850,277.5\nSouth,Washers,Tulsa,900,90.0\nSouth,Rivets,Tulsa,4000,520.0\nSouth,Screws,Tulsa,2600,468.0\nSouth,Anchors,El Paso,700,175.0\nEast,Hinges,Albany,320,960.0\nEast,Brackets,Albany,540,702.0",
+              "tsv": "Section\tItem\tWarehouse\tUnits\tValue\nNorth\tBolts\tFargo\t1200\t360.0\nNorth\tNuts\tFargo\t1850\t277.5\nSouth\tWashers\tTulsa\t900\t90.0\nSouth\tRivets\tTulsa\t4000\t520.0\nSouth\tScrews\tTulsa\t2600\t468.0\nSouth\tAnchors\tEl Paso\t700\t175.0\nEast\tHinges\tAlbany\t320\t960.0\nEast\tBrackets\tAlbany\t540\t702.0",
+              "md": "| Section | Item | Warehouse | Units | Value |\n| --- | --- | --- | ---: | ---: |\n| North | Bolts | Fargo | 1200 | 360.0 |\n| North | Nuts | Fargo | 1850 | 277.5 |\n| South | Washers | Tulsa | 900 | 90.0 |\n| South | Rivets | Tulsa | 4000 | 520.0 |\n| South | Screws | Tulsa | 2600 | 468.0 |\n| South | Anchors | El Paso | 700 | 175.0 |\n| East | Hinges | Albany | 320 | 960.0 |\n| East | Brackets | Albany | 540 | 702.0 |",
+              "json": "[\n  {\n    \"Section\": \"North\",\n    \"Item\": \"Bolts\",\n    \"Warehouse\": \"Fargo\",\n    \"Units\": \"1200\",\n    \"Value\": \"360.0\"\n  },\n  {\n    \"Section\": \"North\",\n    \"Item\": \"Nuts\",\n    \"Warehouse\": \"Fargo\",\n    \"Units\": \"1850\",\n    \"Value\": \"277.5\"\n  },\n  {\n    \"Section\": \"South\",\n    \"Item\": \"Washers\",\n    \"Warehouse\": \"Tulsa\",\n    \"Units\": \"900\",\n    \"Value\": \"90.0\"\n  },\n  {\n    \"Section\": \"South\",\n    \"Item\": \"Rivets\",\n    \"Warehouse\": \"Tulsa\",\n    \"Units\": \"4000\",\n    \"Value\": \"520.0\"\n  },\n  {\n    \"Section\": \"South\",\n    \"Item\": \"Screws\",\n    \"Warehouse\": \"Tulsa\",\n    \"Units\": \"2600\",\n    \"Value\": \"468.0\"\n  },\n  {\n    \"Section\": \"South\",\n    \"Item\": \"Anchors\",\n    \"Warehouse\": \"El Paso\",\n    \"Units\": \"700\",\n    \"Value\": \"175.0\"\n  },\n  {\n    \"Section\": \"East\",\n    \"Item\": \"Hinges\",\n    \"Warehouse\": \"Albany\",\n    \"Units\": \"320\",\n    \"Value\": \"960.0\"\n  },\n  {\n    \"Section\": \"East\",\n    \"Item\": \"Brackets\",\n    \"Warehouse\": \"Albany\",\n    \"Units\": \"540\",\n    \"Value\": \"702.0\"\n  }\n]"
+            },
+            "rows": {
+              "csv": "Item,Warehouse,Units,Value\nNorth,,,\nBolts,Fargo,1200,360.0\nNuts,Fargo,1850,277.5\nSouth,,,\nWashers,Tulsa,900,90.0\nRivets,Tulsa,4000,520.0\nScrews,Tulsa,2600,468.0\nAnchors,El Paso,700,175.0\nEast,,,\nHinges,Albany,320,960.0\nBrackets,Albany,540,702.0",
+              "tsv": "Item\tWarehouse\tUnits\tValue\nNorth\t\t\t\nBolts\tFargo\t1200\t360.0\nNuts\tFargo\t1850\t277.5\nSouth\t\t\t\nWashers\tTulsa\t900\t90.0\nRivets\tTulsa\t4000\t520.0\nScrews\tTulsa\t2600\t468.0\nAnchors\tEl Paso\t700\t175.0\nEast\t\t\t\nHinges\tAlbany\t320\t960.0\nBrackets\tAlbany\t540\t702.0",
+              "md": "| Item | Warehouse | Units | Value |\n| --- | --- | ---: | ---: |\n| **North** | | | |\n| Bolts | Fargo | 1200 | 360.0 |\n| Nuts | Fargo | 1850 | 277.5 |\n| **South** | | | |\n| Washers | Tulsa | 900 | 90.0 |\n| Rivets | Tulsa | 4000 | 520.0 |\n| Screws | Tulsa | 2600 | 468.0 |\n| Anchors | El Paso | 700 | 175.0 |\n| **East** | | | |\n| Hinges | Albany | 320 | 960.0 |\n| Brackets | Albany | 540 | 702.0 |",
+              "json": "[\n  {\n    \"section\": \"North\",\n    \"rows\": [\n      {\n        \"Item\": \"Bolts\",\n        \"Warehouse\": \"Fargo\",\n        \"Units\": \"1200\",\n        \"Value\": \"360.0\"\n      },\n      {\n        \"Item\": \"Nuts\",\n        \"Warehouse\": \"Fargo\",\n        \"Units\": \"1850\",\n        \"Value\": \"277.5\"\n      }\n    ]\n  },\n  {\n    \"section\": \"South\",\n    \"rows\": [\n      {\n        \"Item\": \"Washers\",\n        \"Warehouse\": \"Tulsa\",\n        \"Units\": \"900\",\n        \"Value\": \"90.0\"\n      },\n      {\n        \"Item\": \"Rivets\",\n        \"Warehouse\": \"Tulsa\",\n        \"Units\": \"4000\",\n        \"Value\": \"520.0\"\n      },\n      {\n        \"Item\": \"Screws\",\n        \"Warehouse\": \"Tulsa\",\n        \"Units\": \"2600\",\n        \"Value\": \"468.0\"\n      },\n      {\n        \"Item\": \"Anchors\",\n        \"Warehouse\": \"El Paso\",\n        \"Units\": \"700\",\n        \"Value\": \"175.0\"\n      }\n    ]\n  },\n  {\n    \"section\": \"East\",\n    \"rows\": [\n      {\n        \"Item\": \"Hinges\",\n        \"Warehouse\": \"Albany\",\n        \"Units\": \"320\",\n        \"Value\": \"960.0\"\n      },\n      {\n        \"Item\": \"Brackets\",\n        \"Warehouse\": \"Albany\",\n        \"Units\": \"540\",\n        \"Value\": \"702.0\"\n      }\n    ]\n  }\n]"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "columnSpacing": 0.5,
+      "joining": false,
+      "tables": [
+        {
+          "n": 1,
+          "pages": [1],
+          "parts": [{"page":1,"bbox":[68,622.85,484,719.45]}],
+          "header": true,
+          "firstBold": true,
+          "grid": [
+            ["Item","Warehouse","Units","Value"],
+            ["North","","",""],
+            ["Bolts","Fargo","1200","360.0"],
+            ["Nuts","Fargo","1850","277.5"],
+            ["South","","",""],
+            ["Washers","Tulsa","900","90.0"],
+            ["Rivets","Tulsa","4000","520.0"]
+          ],
+          "sections": [1,4],
+          "cols": [[72,107.14500000000001],[220,268.15],[377.5,400],[456.528,480]],
+          "repeats": 0,
+          "exports": {
+            "column": {
+              "csv": "Section,Item,Warehouse,Units,Value\nNorth,Bolts,Fargo,1200,360.0\nNorth,Nuts,Fargo,1850,277.5\nSouth,Washers,Tulsa,900,90.0\nSouth,Rivets,Tulsa,4000,520.0",
+              "tsv": "Section\tItem\tWarehouse\tUnits\tValue\nNorth\tBolts\tFargo\t1200\t360.0\nNorth\tNuts\tFargo\t1850\t277.5\nSouth\tWashers\tTulsa\t900\t90.0\nSouth\tRivets\tTulsa\t4000\t520.0",
+              "md": "| Section | Item | Warehouse | Units | Value |\n| --- | --- | --- | ---: | ---: |\n| North | Bolts | Fargo | 1200 | 360.0 |\n| North | Nuts | Fargo | 1850 | 277.5 |\n| South | Washers | Tulsa | 900 | 90.0 |\n| South | Rivets | Tulsa | 4000 | 520.0 |",
+              "json": "[\n  {\n    \"Section\": \"North\",\n    \"Item\": \"Bolts\",\n    \"Warehouse\": \"Fargo\",\n    \"Units\": \"1200\",\n    \"Value\": \"360.0\"\n  },\n  {\n    \"Section\": \"North\",\n    \"Item\": \"Nuts\",\n    \"Warehouse\": \"Fargo\",\n    \"Units\": \"1850\",\n    \"Value\": \"277.5\"\n  },\n  {\n    \"Section\": \"South\",\n    \"Item\": \"Washers\",\n    \"Warehouse\": \"Tulsa\",\n    \"Units\": \"900\",\n    \"Value\": \"90.0\"\n  },\n  {\n    \"Section\": \"South\",\n    \"Item\": \"Rivets\",\n    \"Warehouse\": \"Tulsa\",\n    \"Units\": \"4000\",\n    \"Value\": \"520.0\"\n  }\n]"
+            },
+            "rows": {
+              "csv": "Item,Warehouse,Units,Value\nNorth,,,\nBolts,Fargo,1200,360.0\nNuts,Fargo,1850,277.5\nSouth,,,\nWashers,Tulsa,900,90.0\nRivets,Tulsa,4000,520.0",
+              "tsv": "Item\tWarehouse\tUnits\tValue\nNorth\t\t\t\nBolts\tFargo\t1200\t360.0\nNuts\tFargo\t1850\t277.5\nSouth\t\t\t\nWashers\tTulsa\t900\t90.0\nRivets\tTulsa\t4000\t520.0",
+              "md": "| Item | Warehouse | Units | Value |\n| --- | --- | ---: | ---: |\n| **North** | | | |\n| Bolts | Fargo | 1200 | 360.0 |\n| Nuts | Fargo | 1850 | 277.5 |\n| **South** | | | |\n| Washers | Tulsa | 900 | 90.0 |\n| Rivets | Tulsa | 4000 | 520.0 |",
+              "json": "[\n  {\n    \"section\": \"North\",\n    \"rows\": [\n      {\n        \"Item\": \"Bolts\",\n        \"Warehouse\": \"Fargo\",\n        \"Units\": \"1200\",\n        \"Value\": \"360.0\"\n      },\n      {\n        \"Item\": \"Nuts\",\n        \"Warehouse\": \"Fargo\",\n        \"Units\": \"1850\",\n        \"Value\": \"277.5\"\n      }\n    ]\n  },\n  {\n    \"section\": \"South\",\n    \"rows\": [\n      {\n        \"Item\": \"Washers\",\n        \"Warehouse\": \"Tulsa\",\n        \"Units\": \"900\",\n        \"Value\": \"90.0\"\n      },\n      {\n        \"Item\": \"Rivets\",\n        \"Warehouse\": \"Tulsa\",\n        \"Units\": \"4000\",\n        \"Value\": \"520.0\"\n      }\n    ]\n  }\n]"
+            }
+          }
+        },
+        {
+          "n": 2,
+          "pages": [2],
+          "parts": [{"page":2,"bbox":[68,680.85,484,749.45]}],
+          "header": true,
+          "firstBold": false,
+          "grid": [
+            ["Screws","Tulsa","2600","468.0"],
+            ["Anchors","El Paso","700","175.0"],
+            ["East","","",""],
+            ["Hinges","Albany","320","960.0"],
+            ["Brackets","Albany","540","702.0"]
+          ],
+          "sections": [2],
+          "cols": [[72,106.55999999999999],[220,250.654],[379.984,400],[457.482,480]],
+          "repeats": 0,
+          "exports": {
+            "column": {
+              "csv": "Section,Screws,Tulsa,2600,468.0\n,Anchors,El Paso,700,175.0\nEast,Hinges,Albany,320,960.0\nEast,Brackets,Albany,540,702.0",
+              "tsv": "Section\tScrews\tTulsa\t2600\t468.0\n\tAnchors\tEl Paso\t700\t175.0\nEast\tHinges\tAlbany\t320\t960.0\nEast\tBrackets\tAlbany\t540\t702.0",
+              "md": "| Section | Screws | Tulsa | 2600 | 468.0 |\n| --- | --- | --- | ---: | ---: |\n|  | Anchors | El Paso | 700 | 175.0 |\n| East | Hinges | Albany | 320 | 960.0 |\n| East | Brackets | Albany | 540 | 702.0 |",
+              "json": "[\n  {\n    \"2600\": \"700\",\n    \"Section\": \"\",\n    \"Screws\": \"Anchors\",\n    \"Tulsa\": \"El Paso\",\n    \"468.0\": \"175.0\"\n  },\n  {\n    \"2600\": \"320\",\n    \"Section\": \"East\",\n    \"Screws\": \"Hinges\",\n    \"Tulsa\": \"Albany\",\n    \"468.0\": \"960.0\"\n  },\n  {\n    \"2600\": \"540\",\n    \"Section\": \"East\",\n    \"Screws\": \"Brackets\",\n    \"Tulsa\": \"Albany\",\n    \"468.0\": \"702.0\"\n  }\n]"
+            },
+            "rows": {
+              "csv": "Screws,Tulsa,2600,468.0\nAnchors,El Paso,700,175.0\nEast,,,\nHinges,Albany,320,960.0\nBrackets,Albany,540,702.0",
+              "tsv": "Screws\tTulsa\t2600\t468.0\nAnchors\tEl Paso\t700\t175.0\nEast\t\t\t\nHinges\tAlbany\t320\t960.0\nBrackets\tAlbany\t540\t702.0",
+              "md": "| Screws | Tulsa | 2600 | 468.0 |\n| --- | --- | ---: | ---: |\n| Anchors | El Paso | 700 | 175.0 |\n| **East** | | | |\n| Hinges | Albany | 320 | 960.0 |\n| Brackets | Albany | 540 | 702.0 |",
+              "json": "[\n  {\n    \"section\": null,\n    \"rows\": [\n      {\n        \"2600\": \"700\",\n        \"Screws\": \"Anchors\",\n        \"Tulsa\": \"El Paso\",\n        \"468.0\": \"175.0\"\n      }\n    ]\n  },\n  {\n    \"section\": \"East\",\n    \"rows\": [\n      {\n        \"2600\": \"320\",\n        \"Screws\": \"Hinges\",\n        \"Tulsa\": \"Albany\",\n        \"468.0\": \"960.0\"\n      },\n      {\n        \"2600\": \"540\",\n        \"Screws\": \"Brackets\",\n        \"Tulsa\": \"Albany\",\n        \"468.0\": \"702.0\"\n      }\n    ]\n  }\n]"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "columnSpacing": 2,
+      "joining": true,
+      "tables": [
+        {
+          "n": 1,
+          "pages": [1,2],
+          "parts": [{"page":1,"bbox":[68,622.85,484,719.45]},{"page":2,"bbox":[68,680.85,484,749.45]}],
+          "header": true,
+          "firstBold": true,
+          "grid": [
+            ["Item","Warehouse","Units","Value"],
+            ["North","","",""],
+            ["Bolts","Fargo","1200","360.0"],
+            ["Nuts","Fargo","1850","277.5"],
+            ["South","","",""],
+            ["Washers","Tulsa","900","90.0"],
+            ["Rivets","Tulsa","4000","520.0"],
+            ["Screws","Tulsa","2600","468.0"],
+            ["Anchors","El Paso","700","175.0"],
+            ["East","","",""],
+            ["Hinges","Albany","320","960.0"],
+            ["Brackets","Albany","540","702.0"]
+          ],
+          "sections": [1,4,9],
+          "cols": [[72,107.14500000000001],[220,268.15],[377.5,400],[456.528,480]],
+          "repeats": 0,
+          "exports": {
+            "column": {
+              "csv": "Section,Item,Warehouse,Units,Value\nNorth,Bolts,Fargo,1200,360.0\nNorth,Nuts,Fargo,1850,277.5\nSouth,Washers,Tulsa,900,90.0\nSouth,Rivets,Tulsa,4000,520.0\nSouth,Screws,Tulsa,2600,468.0\nSouth,Anchors,El Paso,700,175.0\nEast,Hinges,Albany,320,960.0\nEast,Brackets,Albany,540,702.0",
+              "tsv": "Section\tItem\tWarehouse\tUnits\tValue\nNorth\tBolts\tFargo\t1200\t360.0\nNorth\tNuts\tFargo\t1850\t277.5\nSouth\tWashers\tTulsa\t900\t90.0\nSouth\tRivets\tTulsa\t4000\t520.0\nSouth\tScrews\tTulsa\t2600\t468.0\nSouth\tAnchors\tEl Paso\t700\t175.0\nEast\tHinges\tAlbany\t320\t960.0\nEast\tBrackets\tAlbany\t540\t702.0",
+              "md": "| Section | Item | Warehouse | Units | Value |\n| --- | --- | --- | ---: | ---: |\n| North | Bolts | Fargo | 1200 | 360.0 |\n| North | Nuts | Fargo | 1850 | 277.5 |\n| South | Washers | Tulsa | 900 | 90.0 |\n| South | Rivets | Tulsa | 4000 | 520.0 |\n| South | Screws | Tulsa | 2600 | 468.0 |\n| South | Anchors | El Paso | 700 | 175.0 |\n| East | Hinges | Albany | 320 | 960.0 |\n| East | Brackets | Albany | 540 | 702.0 |",
+              "json": "[\n  {\n    \"Section\": \"North\",\n    \"Item\": \"Bolts\",\n    \"Warehouse\": \"Fargo\",\n    \"Units\": \"1200\",\n    \"Value\": \"360.0\"\n  },\n  {\n    \"Section\": \"North\",\n    \"Item\": \"Nuts\",\n    \"Warehouse\": \"Fargo\",\n    \"Units\": \"1850\",\n    \"Value\": \"277.5\"\n  },\n  {\n    \"Section\": \"South\",\n    \"Item\": \"Washers\",\n    \"Warehouse\": \"Tulsa\",\n    \"Units\": \"900\",\n    \"Value\": \"90.0\"\n  },\n  {\n    \"Section\": \"South\",\n    \"Item\": \"Rivets\",\n    \"Warehouse\": \"Tulsa\",\n    \"Units\": \"4000\",\n    \"Value\": \"520.0\"\n  },\n  {\n    \"Section\": \"South\",\n    \"Item\": \"Screws\",\n    \"Warehouse\": \"Tulsa\",\n    \"Units\": \"2600\",\n    \"Value\": \"468.0\"\n  },\n  {\n    \"Section\": \"South\",\n    \"Item\": \"Anchors\",\n    \"Warehouse\": \"El Paso\",\n    \"Units\": \"700\",\n    \"Value\": \"175.0\"\n  },\n  {\n    \"Section\": \"East\",\n    \"Item\": \"Hinges\",\n    \"Warehouse\": \"Albany\",\n    \"Units\": \"320\",\n    \"Value\": \"960.0\"\n  },\n  {\n    \"Section\": \"East\",\n    \"Item\": \"Brackets\",\n    \"Warehouse\": \"Albany\",\n    \"Units\": \"540\",\n    \"Value\": \"702.0\"\n  }\n]"
+            },
+            "rows": {
+              "csv": "Item,Warehouse,Units,Value\nNorth,,,\nBolts,Fargo,1200,360.0\nNuts,Fargo,1850,277.5\nSouth,,,\nWashers,Tulsa,900,90.0\nRivets,Tulsa,4000,520.0\nScrews,Tulsa,2600,468.0\nAnchors,El Paso,700,175.0\nEast,,,\nHinges,Albany,320,960.0\nBrackets,Albany,540,702.0",
+              "tsv": "Item\tWarehouse\tUnits\tValue\nNorth\t\t\t\nBolts\tFargo\t1200\t360.0\nNuts\tFargo\t1850\t277.5\nSouth\t\t\t\nWashers\tTulsa\t900\t90.0\nRivets\tTulsa\t4000\t520.0\nScrews\tTulsa\t2600\t468.0\nAnchors\tEl Paso\t700\t175.0\nEast\t\t\t\nHinges\tAlbany\t320\t960.0\nBrackets\tAlbany\t540\t702.0",
+              "md": "| Item | Warehouse | Units | Value |\n| --- | --- | ---: | ---: |\n| **North** | | | |\n| Bolts | Fargo | 1200 | 360.0 |\n| Nuts | Fargo | 1850 | 277.5 |\n| **South** | | | |\n| Washers | Tulsa | 900 | 90.0 |\n| Rivets | Tulsa | 4000 | 520.0 |\n| Screws | Tulsa | 2600 | 468.0 |\n| Anchors | El Paso | 700 | 175.0 |\n| **East** | | | |\n| Hinges | Albany | 320 | 960.0 |\n| Brackets | Albany | 540 | 702.0 |",
+              "json": "[\n  {\n    \"section\": \"North\",\n    \"rows\": [\n      {\n        \"Item\": \"Bolts\",\n        \"Warehouse\": \"Fargo\",\n        \"Units\": \"1200\",\n        \"Value\": \"360.0\"\n      },\n      {\n        \"Item\": \"Nuts\",\n        \"Warehouse\": \"Fargo\",\n        \"Units\": \"1850\",\n        \"Value\": \"277.5\"\n      }\n    ]\n  },\n  {\n    \"section\": \"South\",\n    \"rows\": [\n      {\n        \"Item\": \"Washers\",\n        \"Warehouse\": \"Tulsa\",\n        \"Units\": \"900\",\n        \"Value\": \"90.0\"\n      },\n      {\n        \"Item\": \"Rivets\",\n        \"Warehouse\": \"Tulsa\",\n        \"Units\": \"4000\",\n        \"Value\": \"520.0\"\n      },\n      {\n        \"Item\": \"Screws\",\n        \"Warehouse\": \"Tulsa\",\n        \"Units\": \"2600\",\n        \"Value\": \"468.0\"\n      },\n      {\n        \"Item\": \"Anchors\",\n        \"Warehouse\": \"El Paso\",\n        \"Units\": \"700\",\n        \"Value\": \"175.0\"\n      }\n    ]\n  },\n  {\n    \"section\": \"East\",\n    \"rows\": [\n      {\n        \"Item\": \"Hinges\",\n        \"Warehouse\": \"Albany\",\n        \"Units\": \"320\",\n        \"Value\": \"960.0\"\n      },\n      {\n        \"Item\": \"Brackets\",\n        \"Warehouse\": \"Albany\",\n        \"Units\": \"540\",\n        \"Value\": \"702.0\"\n      }\n    ]\n  }\n]"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "columnSpacing": 2,
+      "joining": false,
+      "tables": [
+        {
+          "n": 1,
+          "pages": [1],
+          "parts": [{"page":1,"bbox":[68,622.85,484,719.45]}],
+          "header": true,
+          "firstBold": true,
+          "grid": [
+            ["Item","Warehouse","Units","Value"],
+            ["North","","",""],
+            ["Bolts","Fargo","1200","360.0"],
+            ["Nuts","Fargo","1850","277.5"],
+            ["South","","",""],
+            ["Washers","Tulsa","900","90.0"],
+            ["Rivets","Tulsa","4000","520.0"]
+          ],
+          "sections": [1,4],
+          "cols": [[72,107.14500000000001],[220,268.15],[377.5,400],[456.528,480]],
+          "repeats": 0,
+          "exports": {
+            "column": {
+              "csv": "Section,Item,Warehouse,Units,Value\nNorth,Bolts,Fargo,1200,360.0\nNorth,Nuts,Fargo,1850,277.5\nSouth,Washers,Tulsa,900,90.0\nSouth,Rivets,Tulsa,4000,520.0",
+              "tsv": "Section\tItem\tWarehouse\tUnits\tValue\nNorth\tBolts\tFargo\t1200\t360.0\nNorth\tNuts\tFargo\t1850\t277.5\nSouth\tWashers\tTulsa\t900\t90.0\nSouth\tRivets\tTulsa\t4000\t520.0",
+              "md": "| Section | Item | Warehouse | Units | Value |\n| --- | --- | --- | ---: | ---: |\n| North | Bolts | Fargo | 1200 | 360.0 |\n| North | Nuts | Fargo | 1850 | 277.5 |\n| South | Washers | Tulsa | 900 | 90.0 |\n| South | Rivets | Tulsa | 4000 | 520.0 |",
+              "json": "[\n  {\n    \"Section\": \"North\",\n    \"Item\": \"Bolts\",\n    \"Warehouse\": \"Fargo\",\n    \"Units\": \"1200\",\n    \"Value\": \"360.0\"\n  },\n  {\n    \"Section\": \"North\",\n    \"Item\": \"Nuts\",\n    \"Warehouse\": \"Fargo\",\n    \"Units\": \"1850\",\n    \"Value\": \"277.5\"\n  },\n  {\n    \"Section\": \"South\",\n    \"Item\": \"Washers\",\n    \"Warehouse\": \"Tulsa\",\n    \"Units\": \"900\",\n    \"Value\": \"90.0\"\n  },\n  {\n    \"Section\": \"South\",\n    \"Item\": \"Rivets\",\n    \"Warehouse\": \"Tulsa\",\n    \"Units\": \"4000\",\n    \"Value\": \"520.0\"\n  }\n]"
+            },
+            "rows": {
+              "csv": "Item,Warehouse,Units,Value\nNorth,,,\nBolts,Fargo,1200,360.0\nNuts,Fargo,1850,277.5\nSouth,,,\nWashers,Tulsa,900,90.0\nRivets,Tulsa,4000,520.0",
+              "tsv": "Item\tWarehouse\tUnits\tValue\nNorth\t\t\t\nBolts\tFargo\t1200\t360.0\nNuts\tFargo\t1850\t277.5\nSouth\t\t\t\nWashers\tTulsa\t900\t90.0\nRivets\tTulsa\t4000\t520.0",
+              "md": "| Item | Warehouse | Units | Value |\n| --- | --- | ---: | ---: |\n| **North** | | | |\n| Bolts | Fargo | 1200 | 360.0 |\n| Nuts | Fargo | 1850 | 277.5 |\n| **South** | | | |\n| Washers | Tulsa | 900 | 90.0 |\n| Rivets | Tulsa | 4000 | 520.0 |",
+              "json": "[\n  {\n    \"section\": \"North\",\n    \"rows\": [\n      {\n        \"Item\": \"Bolts\",\n        \"Warehouse\": \"Fargo\",\n        \"Units\": \"1200\",\n        \"Value\": \"360.0\"\n      },\n      {\n        \"Item\": \"Nuts\",\n        \"Warehouse\": \"Fargo\",\n        \"Units\": \"1850\",\n        \"Value\": \"277.5\"\n      }\n    ]\n  },\n  {\n    \"section\": \"South\",\n    \"rows\": [\n      {\n        \"Item\": \"Washers\",\n        \"Warehouse\": \"Tulsa\",\n        \"Units\": \"900\",\n        \"Value\": \"90.0\"\n      },\n      {\n        \"Item\": \"Rivets\",\n        \"Warehouse\": \"Tulsa\",\n        \"Units\": \"4000\",\n        \"Value\": \"520.0\"\n      }\n    ]\n  }\n]"
+            }
+          }
+        },
+        {
+          "n": 2,
+          "pages": [2],
+          "parts": [{"page":2,"bbox":[68,680.85,484,749.45]}],
+          "header": true,
+          "firstBold": false,
+          "grid": [
+            ["Screws","Tulsa","2600","468.0"],
+            ["Anchors","El Paso","700","175.0"],
+            ["East","","",""],
+            ["Hinges","Albany","320","960.0"],
+            ["Brackets","Albany","540","702.0"]
+          ],
+          "sections": [2],
+          "cols": [[72,106.55999999999999],[220,250.654],[379.984,400],[457.482,480]],
+          "repeats": 0,
+          "exports": {
+            "column": {
+              "csv": "Section,Screws,Tulsa,2600,468.0\n,Anchors,El Paso,700,175.0\nEast,Hinges,Albany,320,960.0\nEast,Brackets,Albany,540,702.0",
+              "tsv": "Section\tScrews\tTulsa\t2600\t468.0\n\tAnchors\tEl Paso\t700\t175.0\nEast\tHinges\tAlbany\t320\t960.0\nEast\tBrackets\tAlbany\t540\t702.0",
+              "md": "| Section | Screws | Tulsa | 2600 | 468.0 |\n| --- | --- | --- | ---: | ---: |\n|  | Anchors | El Paso | 700 | 175.0 |\n| East | Hinges | Albany | 320 | 960.0 |\n| East | Brackets | Albany | 540 | 702.0 |",
+              "json": "[\n  {\n    \"2600\": \"700\",\n    \"Section\": \"\",\n    \"Screws\": \"Anchors\",\n    \"Tulsa\": \"El Paso\",\n    \"468.0\": \"175.0\"\n  },\n  {\n    \"2600\": \"320\",\n    \"Section\": \"East\",\n    \"Screws\": \"Hinges\",\n    \"Tulsa\": \"Albany\",\n    \"468.0\": \"960.0\"\n  },\n  {\n    \"2600\": \"540\",\n    \"Section\": \"East\",\n    \"Screws\": \"Brackets\",\n    \"Tulsa\": \"Albany\",\n    \"468.0\": \"702.0\"\n  }\n]"
+            },
+            "rows": {
+              "csv": "Screws,Tulsa,2600,468.0\nAnchors,El Paso,700,175.0\nEast,,,\nHinges,Albany,320,960.0\nBrackets,Albany,540,702.0",
+              "tsv": "Screws\tTulsa\t2600\t468.0\nAnchors\tEl Paso\t700\t175.0\nEast\t\t\t\nHinges\tAlbany\t320\t960.0\nBrackets\tAlbany\t540\t702.0",
+              "md": "| Screws | Tulsa | 2600 | 468.0 |\n| --- | --- | ---: | ---: |\n| Anchors | El Paso | 700 | 175.0 |\n| **East** | | | |\n| Hinges | Albany | 320 | 960.0 |\n| Brackets | Albany | 540 | 702.0 |",
+              "json": "[\n  {\n    \"section\": null,\n    \"rows\": [\n      {\n        \"2600\": \"700\",\n        \"Screws\": \"Anchors\",\n        \"Tulsa\": \"El Paso\",\n        \"468.0\": \"175.0\"\n      }\n    ]\n  },\n  {\n    \"section\": \"East\",\n    \"rows\": [\n      {\n        \"2600\": \"320\",\n        \"Screws\": \"Hinges\",\n        \"Tulsa\": \"Albany\",\n        \"468.0\": \"960.0\"\n      },\n      {\n        \"2600\": \"540\",\n        \"Screws\": \"Brackets\",\n        \"Tulsa\": \"Albany\",\n        \"468.0\": \"702.0\"\n      }\n    ]\n  }\n]"
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

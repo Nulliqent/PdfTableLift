@@ -1,0 +1,213 @@
+{
+  "fixture": "tests/fixtures/spaced-strings-pdfkit.pdf",
+  "sha256": "1832c36f7b78009e0767ed57e4e31d0324cf2645e313d5592ff968c0e3696b32",
+  "pdfjs": "3.11.174",
+  "status": "ready",
+  "error": "",
+  "pages": [
+    {
+      "num": 1,
+      "w": 612,
+      "h": 792,
+      "items": [
+        {"str":"Store","x":72,"y":700,"w":23.004000000000005,"h":9,"bold":true},
+        {"str":"Region","x":142.542,"y":700,"w":30.501000000000005,"h":9,"bold":true},
+        {"str":"Q1","x":198.06300000000007,"y":700,"w":12.006,"h":9,"bold":true},
+        {"str":"Portland Pearl","x":72,"y":686,"w":56.61899999999999,"h":9,"bold":false},
+        {"str":"West","x":153.2790000000001,"y":686,"w":20.23199999999999,"h":9,"bold":false},
+        {"str":"412.8","x":203.53500000000022,"y":686,"w":22.518,"h":9,"bold":false},
+        {"str":"Denver","x":72,"y":672,"w":28.602000000000004,"h":9,"bold":false},
+        {"str":"Mountain","x":145.63800000000003,"y":672,"w":37.017,"h":9,"bold":false},
+        {"str":"388.1","x":202.67100000000008,"y":672,"w":22.518,"h":9,"bold":false}
+      ]
+    }
+  ],
+  "runs": [
+    {
+      "columnSpacing": 1,
+      "joining": true,
+      "tables": [
+        {
+          "n": 1,
+          "pages": [1],
+          "parts": [{"page":1,"bbox":[68,668.85,230.05300000000022,709.45]}],
+          "header": true,
+          "firstBold": true,
+          "grid": [["Store","Region","Q1"],["Portland Pearl","West","412.8"],["Denver","Mountain","388.1"]],
+          "sections": [],
+          "cols": [[72,128.619],[142.542,182.65500000000003],[198.06300000000007,226.05300000000022]],
+          "repeats": 0,
+          "exports": {
+            "column": {
+              "csv": "Store,Region,Q1\nPortland Pearl,West,412.8\nDenver,Mountain,388.1",
+              "tsv": "Store\tRegion\tQ1\nPortland Pearl\tWest\t412.8\nDenver\tMountain\t388.1",
+              "md": "| Store | Region | Q1 |\n| --- | --- | ---: |\n| Portland Pearl | West | 412.8 |\n| Denver | Mountain | 388.1 |",
+              "json": "[\n  {\n    \"Store\": \"Portland Pearl\",\n    \"Region\": \"West\",\n    \"Q1\": \"412.8\"\n  },\n  {\n    \"Store\": \"Denver\",\n    \"Region\": \"Mountain\",\n    \"Q1\": \"388.1\"\n  }\n]"
+            },
+            "rows": {
+              "csv": "Store,Region,Q1\nPortland Pearl,West,412.8\nDenver,Mountain,388.1",
+              "tsv": "Store\tRegion\tQ1\nPortland Pearl\tWest\t412.8\nDenver\tMountain\t388.1",
+              "md": "| Store | Region | Q1 |\n| --- | --- | ---: |\n| Portland Pearl | West | 412.8 |\n| Denver | Mountain | 388.1 |",
+              "json": "[\n  {\n    \"Store\": \"Portland Pearl\",\n    \"Region\": \"West\",\n    \"Q1\": \"412.8\"\n  },\n  {\n    \"Store\": \"Denver\",\n    \"Region\": \"Mountain\",\n    \"Q1\": \"388.1\"\n  }\n]"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "columnSpacing": 1,
+      "joining": false,
+      "tables": [
+        {
+          "n": 1,
+          "pages": [1],
+          "parts": [{"page":1,"bbox":[68,668.85,230.05300000000022,709.45]}],
+          "header": true,
+          "firstBold": true,
+          "grid": [["Store","Region","Q1"],["Portland Pearl","West","412.8"],["Denver","Mountain","388.1"]],
+          "sections": [],
+          "cols": [[72,128.619],[142.542,182.65500000000003],[198.06300000000007,226.05300000000022]],
+          "repeats": 0,
+          "exports": {
+            "column": {
+              "csv": "Store,Region,Q1\nPortland Pearl,West,412.8\nDenver,Mountain,388.1",
+              "tsv": "Store\tRegion\tQ1\nPortland Pearl\tWest\t412.8\nDenver\tMountain\t388.1",
+              "md": "| Store | Region | Q1 |\n| --- | --- | ---: |\n| Portland Pearl | West | 412.8 |\n| Denver | Mountain | 388.1 |",
+              "json": "[\n  {\n    \"Store\": \"Portland Pearl\",\n    \"Region\": \"West\",\n    \"Q1\": \"412.8\"\n  },\n  {\n    \"Store\": \"Denver\",\n    \"Region\": \"Mountain\",\n    \"Q1\": \"388.1\"\n  }\n]"
+            },
+            "rows": {
+              "csv": "Store,Region,Q1\nPortland Pearl,West,412.8\nDenver,Mountain,388.1",
+              "tsv": "Store\tRegion\tQ1\nPortland Pearl\tWest\t412.8\nDenver\tMountain\t388.1",
+              "md": "| Store | Region | Q1 |\n| --- | --- | ---: |\n| Portland Pearl | West | 412.8 |\n| Denver | Mountain | 388.1 |",
+              "json": "[\n  {\n    \"Store\": \"Portland Pearl\",\n    \"Region\": \"West\",\n    \"Q1\": \"412.8\"\n  },\n  {\n    \"Store\": \"Denver\",\n    \"Region\": \"Mountain\",\n    \"Q1\": \"388.1\"\n  }\n]"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "columnSpacing": 0.5,
+      "joining": true,
+      "tables": [
+        {
+          "n": 1,
+          "pages": [1],
+          "parts": [{"page":1,"bbox":[68,668.85,230.05300000000022,709.45]}],
+          "header": true,
+          "firstBold": true,
+          "grid": [["Store","Region","Q1"],["Portland Pearl","West","412.8"],["Denver","Mountain","388.1"]],
+          "sections": [],
+          "cols": [[72,128.619],[142.542,182.65500000000003],[198.06300000000007,226.05300000000022]],
+          "repeats": 0,
+          "exports": {
+            "column": {
+              "csv": "Store,Region,Q1\nPortland Pearl,West,412.8\nDenver,Mountain,388.1",
+              "tsv": "Store\tRegion\tQ1\nPortland Pearl\tWest\t412.8\nDenver\tMountain\t388.1",
+              "md": "| Store | Region | Q1 |\n| --- | --- | ---: |\n| Portland Pearl | West | 412.8 |\n| Denver | Mountain | 388.1 |",
+              "json": "[\n  {\n    \"Store\": \"Portland Pearl\",\n    \"Region\": \"West\",\n    \"Q1\": \"412.8\"\n  },\n  {\n    \"Store\": \"Denver\",\n    \"Region\": \"Mountain\",\n    \"Q1\": \"388.1\"\n  }\n]"
+            },
+            "rows": {
+              "csv": "Store,Region,Q1\nPortland Pearl,West,412.8\nDenver,Mountain,388.1",
+              "tsv": "Store\tRegion\tQ1\nPortland Pearl\tWest\t412.8\nDenver\tMountain\t388.1",
+              "md": "| Store | Region | Q1 |\n| --- | --- | ---: |\n| Portland Pearl | West | 412.8 |\n| Denver | Mountain | 388.1 |",
+              "json": "[\n  {\n    \"Store\": \"Portland Pearl\",\n    \"Region\": \"West\",\n    \"Q1\": \"412.8\"\n  },\n  {\n    \"Store\": \"Denver\",\n    \"Region\": \"Mountain\",\n    \"Q1\": \"388.1\"\n  }\n]"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "columnSpacing": 0.5,
+      "joining": false,
+      "tables": [
+        {
+          "n": 1,
+          "pages": [1],
+          "parts": [{"page":1,"bbox":[68,668.85,230.05300000000022,709.45]}],
+          "header": true,
+          "firstBold": true,
+          "grid": [["Store","Region","Q1"],["Portland Pearl","West","412.8"],["Denver","Mountain","388.1"]],
+          "sections": [],
+          "cols": [[72,128.619],[142.542,182.65500000000003],[198.06300000000007,226.05300000000022]],
+          "repeats": 0,
+          "exports": {
+            "column": {
+              "csv": "Store,Region,Q1\nPortland Pearl,West,412.8\nDenver,Mountain,388.1",
+              "tsv": "Store\tRegion\tQ1\nPortland Pearl\tWest\t412.8\nDenver\tMountain\t388.1",
+              "md": "| Store | Region | Q1 |\n| --- | --- | ---: |\n| Portland Pearl | West | 412.8 |\n| Denver | Mountain | 388.1 |",
+              "json": "[\n  {\n    \"Store\": \"Portland Pearl\",\n    \"Region\": \"West\",\n    \"Q1\": \"412.8\"\n  },\n  {\n    \"Store\": \"Denver\",\n    \"Region\": \"Mountain\",\n    \"Q1\": \"388.1\"\n  }\n]"
+            },
+            "rows": {
+              "csv": "Store,Region,Q1\nPortland Pearl,West,412.8\nDenver,Mountain,388.1",
+              "tsv": "Store\tRegion\tQ1\nPortland Pearl\tWest\t412.8\nDenver\tMountain\t388.1",
+              "md": "| Store | Region | Q1 |\n| --- | --- | ---: |\n| Portland Pearl | West | 412.8 |\n| Denver | Mountain | 388.1 |",
+              "json": "[\n  {\n    \"Store\": \"Portland Pearl\",\n    \"Region\": \"West\",\n    \"Q1\": \"412.8\"\n  },\n  {\n    \"Store\": \"Denver\",\n    \"Region\": \"Mountain\",\n    \"Q1\": \"388.1\"\n  }\n]"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "columnSpacing": 2,
+      "joining": true,
+      "tables": [
+        {
+          "n": 1,
+          "pages": [1],
+          "parts": [{"page":1,"bbox":[68,668.85,230.05300000000022,709.45]}],
+          "header": true,
+          "firstBold": true,
+          "grid": [["Store","Region","Q1"],["Portland Pearl","West","412.8"],["Denver","Mountain","388.1"]],
+          "sections": [],
+          "cols": [[72,128.619],[142.542,182.65500000000003],[198.06300000000007,226.05300000000022]],
+          "repeats": 0,
+          "exports": {
+            "column": {
+              "csv": "Store,Region,Q1\nPortland Pearl,West,412.8\nDenver,Mountain,388.1",
+              "tsv": "Store\tRegion\tQ1\nPortland Pearl\tWest\t412.8\nDenver\tMountain\t388.1",
+              "md": "| Store | Region | Q1 |\n| --- | --- | ---: |\n| Portland Pearl | West | 412.8 |\n| Denver | Mountain | 388.1 |",
+              "json": "[\n  {\n    \"Store\": \"Portland Pearl\",\n    \"Region\": \"West\",\n    \"Q1\": \"412.8\"\n  },\n  {\n    \"Store\": \"Denver\",\n    \"Region\": \"Mountain\",\n    \"Q1\": \"388.1\"\n  }\n]"
+            },
+            "rows": {
+              "csv": "Store,Region,Q1\nPortland Pearl,West,412.8\nDenver,Mountain,388.1",
+              "tsv": "Store\tRegion\tQ1\nPortland Pearl\tWest\t412.8\nDenver\tMountain\t388.1",
+              "md": "| Store | Region | Q1 |\n| --- | --- | ---: |\n| Portland Pearl | West | 412.8 |\n| Denver | Mountain | 388.1 |",
+              "json": "[\n  {\n    \"Store\": \"Portland Pearl\",\n    \"Region\": \"West\",\n    \"Q1\": \"412.8\"\n  },\n  {\n    \"Store\": \"Denver\",\n    \"Region\": \"Mountain\",\n    \"Q1\": \"388.1\"\n  }\n]"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "columnSpacing": 2,
+      "joining": false,
+      "tables": [
+        {
+          "n": 1,
+          "pages": [1],
+          "parts": [{"page":1,"bbox":[68,668.85,230.05300000000022,709.45]}],
+          "header": true,
+          "firstBold": true,
+          "grid": [["Store","Region","Q1"],["Portland Pearl","West","412.8"],["Denver","Mountain","388.1"]],
+          "sections": [],
+          "cols": [[72,128.619],[142.542,182.65500000000003],[198.06300000000007,226.05300000000022]],
+          "repeats": 0,
+          "exports": {
+            "column": {
+              "csv": "Store,Region,Q1\nPortland Pearl,West,412.8\nDenver,Mountain,388.1",
+              "tsv": "Store\tRegion\tQ1\nPortland Pearl\tWest\t412.8\nDenver\tMountain\t388.1",
+              "md": "| Store | Region | Q1 |\n| --- | --- | ---: |\n| Portland Pearl | West | 412.8 |\n| Denver | Mountain | 388.1 |",
+              "json": "[\n  {\n    \"Store\": \"Portland Pearl\",\n    \"Region\": \"West\",\n    \"Q1\": \"412.8\"\n  },\n  {\n    \"Store\": \"Denver\",\n    \"Region\": \"Mountain\",\n    \"Q1\": \"388.1\"\n  }\n]"
+            },
+            "rows": {
+              "csv": "Store,Region,Q1\nPortland Pearl,West,412.8\nDenver,Mountain,388.1",
+              "tsv": "Store\tRegion\tQ1\nPortland Pearl\tWest\t412.8\nDenver\tMountain\t388.1",
+              "md": "| Store | Region | Q1 |\n| --- | --- | ---: |\n| Portland Pearl | West | 412.8 |\n| Denver | Mountain | 388.1 |",
+              "json": "[\n  {\n    \"Store\": \"Portland Pearl\",\n    \"Region\": \"West\",\n    \"Q1\": \"412.8\"\n  },\n  {\n    \"Store\": \"Denver\",\n    \"Region\": \"Mountain\",\n    \"Q1\": \"388.1\"\n  }\n]"
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

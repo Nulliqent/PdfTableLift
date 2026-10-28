@@ -1,0 +1,281 @@
+{
+  "fixture": "tests/fixtures/single-string-rows.pdf",
+  "sha256": "a015c0877cb3867df96689b0187465419122f3354adc992ede838f3144966d51",
+  "pdfjs": "3.11.174",
+  "status": "ready",
+  "error": "",
+  "pages": [
+    {
+      "num": 1,
+      "w": 612,
+      "h": 792,
+      "items": [
+        {"str":"Store results","x":72,"y":740,"w":109.20000000000003,"h":14,"bold":true},
+        {"str":"Store","x":72,"y":710,"w":27.000000000000007,"h":9,"bold":true},
+        {"str":"Region","x":180.00000000000003,"y":710,"w":32.400000000000006,"h":9,"bold":true},
+        {"str":"Q1","x":244.80000000000004,"y":710,"w":10.800000000000002,"h":9,"bold":true},
+        {"str":"Q2","x":293.4000000000001,"y":710,"w":10.800000000000002,"h":9,"bold":true},
+        {"str":"Portland Pearl","x":72,"y":696,"w":75.60000000000002,"h":9,"bold":false},
+        {"str":"West","x":180.00000000000003,"y":696,"w":21.600000000000005,"h":9,"bold":false},
+        {"str":"412.8","x":244.80000000000004,"y":696,"w":27.000000000000007,"h":9,"bold":false},
+        {"str":"430.1","x":293.4000000000001,"y":696,"w":27.000000000000007,"h":9,"bold":false},
+        {"str":"Boise  Downtown","x":72,"y":682,"w":81.00000000000003,"h":9,"bold":false},
+        {"str":"Mountain","x":180.00000000000006,"y":682,"w":43.20000000000002,"h":9,"bold":false},
+        {"str":"388.1","x":244.80000000000007,"y":682,"w":27.00000000000001,"h":9,"bold":false},
+        {"str":"391.7","x":293.4000000000001,"y":682,"w":27.00000000000001,"h":9,"bold":false},
+        {"str":"Austin","x":72,"y":668,"w":32.400000000000006,"h":9,"bold":false},
+        {"str":"South","x":180.00000000000003,"y":668,"w":27.000000000000007,"h":9,"bold":false},
+        {"str":"501.2","x":244.80000000000004,"y":668,"w":27.000000000000007,"h":9,"bold":false},
+        {"str":"522.9","x":293.4000000000001,"y":668,"w":27.000000000000007,"h":9,"bold":false}
+      ]
+    }
+  ],
+  "runs": [
+    {
+      "columnSpacing": 1,
+      "joining": true,
+      "tables": [
+        {
+          "n": 1,
+          "pages": [1],
+          "parts": [{"page":1,"bbox":[68,664.85,324.4000000000001,719.45]}],
+          "header": true,
+          "firstBold": true,
+          "grid": [
+            ["Store","Region","Q1","Q2"],
+            ["Portland Pearl","West","412.8","430.1"],
+            ["Boise Downtown","Mountain","388.1","391.7"],
+            ["Austin","South","501.2","522.9"]
+          ],
+          "sections": [],
+          "cols": [
+            [72,153.00000000000003],
+            [180.00000000000003,223.20000000000007],
+            [244.80000000000004,271.80000000000007],
+            [293.4000000000001,320.4000000000001]
+          ],
+          "repeats": 0,
+          "exports": {
+            "column": {
+              "csv": "Store,Region,Q1,Q2\nPortland Pearl,West,412.8,430.1\nBoise Downtown,Mountain,388.1,391.7\nAustin,South,501.2,522.9",
+              "tsv": "Store\tRegion\tQ1\tQ2\nPortland Pearl\tWest\t412.8\t430.1\nBoise Downtown\tMountain\t388.1\t391.7\nAustin\tSouth\t501.2\t522.9",
+              "md": "| Store | Region | Q1 | Q2 |\n| --- | --- | ---: | ---: |\n| Portland Pearl | West | 412.8 | 430.1 |\n| Boise Downtown | Mountain | 388.1 | 391.7 |\n| Austin | South | 501.2 | 522.9 |",
+              "json": "[\n  {\n    \"Store\": \"Portland Pearl\",\n    \"Region\": \"West\",\n    \"Q1\": \"412.8\",\n    \"Q2\": \"430.1\"\n  },\n  {\n    \"Store\": \"Boise Downtown\",\n    \"Region\": \"Mountain\",\n    \"Q1\": \"388.1\",\n    \"Q2\": \"391.7\"\n  },\n  {\n    \"Store\": \"Austin\",\n    \"Region\": \"South\",\n    \"Q1\": \"501.2\",\n    \"Q2\": \"522.9\"\n  }\n]"
+            },
+            "rows": {
+              "csv": "Store,Region,Q1,Q2\nPortland Pearl,West,412.8,430.1\nBoise Downtown,Mountain,388.1,391.7\nAustin,South,501.2,522.9",
+              "tsv": "Store\tRegion\tQ1\tQ2\nPortland Pearl\tWest\t412.8\t430.1\nBoise Downtown\tMountain\t388.1\t391.7\nAustin\tSouth\t501.2\t522.9",
+              "md": "| Store | Region | Q1 | Q2 |\n| --- | --- | ---: | ---: |\n| Portland Pearl | West | 412.8 | 430.1 |\n| Boise Downtown | Mountain | 388.1 | 391.7 |\n| Austin | South | 501.2 | 522.9 |",
+              "json": "[\n  {\n    \"Store\": \"Portland Pearl\",\n    \"Region\": \"West\",\n    \"Q1\": \"412.8\",\n    \"Q2\": \"430.1\"\n  },\n  {\n    \"Store\": \"Boise Downtown\",\n    \"Region\": \"Mountain\",\n    \"Q1\": \"388.1\",\n    \"Q2\": \"391.7\"\n  },\n  {\n    \"Store\": \"Austin\",\n    \"Region\": \"South\",\n    \"Q1\": \"501.2\",\n    \"Q2\": \"522.9\"\n  }\n]"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "columnSpacing": 1,
+      "joining": false,
+      "tables": [
+        {
+          "n": 1,
+          "pages": [1],
+          "parts": [{"page":1,"bbox":[68,664.85,324.4000000000001,719.45]}],
+          "header": true,
+          "firstBold": true,
+          "grid": [
+            ["Store","Region","Q1","Q2"],
+            ["Portland Pearl","West","412.8","430.1"],
+            ["Boise Downtown","Mountain","388.1","391.7"],
+            ["Austin","South","501.2","522.9"]
+          ],
+          "sections": [],
+          "cols": [
+            [72,153.00000000000003],
+            [180.00000000000003,223.20000000000007],
+            [244.80000000000004,271.80000000000007],
+            [293.4000000000001,320.4000000000001]
+          ],
+          "repeats": 0,
+          "exports": {
+            "column": {
+              "csv": "Store,Region,Q1,Q2\nPortland Pearl,West,412.8,430.1\nBoise Downtown,Mountain,388.1,391.7\nAustin,South,501.2,522.9",
+              "tsv": "Store\tRegion\tQ1\tQ2\nPortland Pearl\tWest\t412.8\t430.1\nBoise Downtown\tMountain\t388.1\t391.7\nAustin\tSouth\t501.2\t522.9",
+              "md": "| Store | Region | Q1 | Q2 |\n| --- | --- | ---: | ---: |\n| Portland Pearl | West | 412.8 | 430.1 |\n| Boise Downtown | Mountain | 388.1 | 391.7 |\n| Austin | South | 501.2 | 522.9 |",
+              "json": "[\n  {\n    \"Store\": \"Portland Pearl\",\n    \"Region\": \"West\",\n    \"Q1\": \"412.8\",\n    \"Q2\": \"430.1\"\n  },\n  {\n    \"Store\": \"Boise Downtown\",\n    \"Region\": \"Mountain\",\n    \"Q1\": \"388.1\",\n    \"Q2\": \"391.7\"\n  },\n  {\n    \"Store\": \"Austin\",\n    \"Region\": \"South\",\n    \"Q1\": \"501.2\",\n    \"Q2\": \"522.9\"\n  }\n]"
+            },
+            "rows": {
+              "csv": "Store,Region,Q1,Q2\nPortland Pearl,West,412.8,430.1\nBoise Downtown,Mountain,388.1,391.7\nAustin,South,501.2,522.9",
+              "tsv": "Store\tRegion\tQ1\tQ2\nPortland Pearl\tWest\t412.8\t430.1\nBoise Downtown\tMountain\t388.1\t391.7\nAustin\tSouth\t501.2\t522.9",
+              "md": "| Store | Region | Q1 | Q2 |\n| --- | --- | ---: | ---: |\n| Portland Pearl | West | 412.8 | 430.1 |\n| Boise Downtown | Mountain | 388.1 | 391.7 |\n| Austin | South | 501.2 | 522.9 |",
+              "json": "[\n  {\n    \"Store\": \"Portland Pearl\",\n    \"Region\": \"West\",\n    \"Q1\": \"412.8\",\n    \"Q2\": \"430.1\"\n  },\n  {\n    \"Store\": \"Boise Downtown\",\n    \"Region\": \"Mountain\",\n    \"Q1\": \"388.1\",\n    \"Q2\": \"391.7\"\n  },\n  {\n    \"Store\": \"Austin\",\n    \"Region\": \"South\",\n    \"Q1\": \"501.2\",\n    \"Q2\": \"522.9\"\n  }\n]"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "columnSpacing": 0.5,
+      "joining": true,
+      "tables": [
+        {
+          "n": 1,
+          "pages": [1],
+          "parts": [{"page":1,"bbox":[68,664.85,324.4000000000001,719.45]}],
+          "header": true,
+          "firstBold": true,
+          "grid": [
+            ["Store","Region","Q1","Q2"],
+            ["Portland Pearl","West","412.8","430.1"],
+            ["Boise Downtown","Mountain","388.1","391.7"],
+            ["Austin","South","501.2","522.9"]
+          ],
+          "sections": [],
+          "cols": [
+            [72,153.00000000000003],
+            [180.00000000000003,223.20000000000007],
+            [244.80000000000004,271.80000000000007],
+            [293.4000000000001,320.4000000000001]
+          ],
+          "repeats": 0,
+          "exports": {
+            "column": {
+              "csv": "Store,Region,Q1,Q2\nPortland Pearl,West,412.8,430.1\nBoise Downtown,Mountain,388.1,391.7\nAustin,South,501.2,522.9",
+              "tsv": "Store\tRegion\tQ1\tQ2\nPortland Pearl\tWest\t412.8\t430.1\nBoise Downtown\tMountain\t388.1\t391.7\nAustin\tSouth\t501.2\t522.9",
+              "md": "| Store | Region | Q1 | Q2 |\n| --- | --- | ---: | ---: |\n| Portland Pearl | West | 412.8 | 430.1 |\n| Boise Downtown | Mountain | 388.1 | 391.7 |\n| Austin | South | 501.2 | 522.9 |",
+              "json": "[\n  {\n    \"Store\": \"Portland Pearl\",\n    \"Region\": \"West\",\n    \"Q1\": \"412.8\",\n    \"Q2\": \"430.1\"\n  },\n  {\n    \"Store\": \"Boise Downtown\",\n    \"Region\": \"Mountain\",\n    \"Q1\": \"388.1\",\n    \"Q2\": \"391.7\"\n  },\n  {\n    \"Store\": \"Austin\",\n    \"Region\": \"South\",\n    \"Q1\": \"501.2\",\n    \"Q2\": \"522.9\"\n  }\n]"
+            },
+            "rows": {
+              "csv": "Store,Region,Q1,Q2\nPortland Pearl,West,412.8,430.1\nBoise Downtown,Mountain,388.1,391.7\nAustin,South,501.2,522.9",
+              "tsv": "Store\tRegion\tQ1\tQ2\nPortland Pearl\tWest\t412.8\t430.1\nBoise Downtown\tMountain\t388.1\t391.7\nAustin\tSouth\t501.2\t522.9",
+              "md": "| Store | Region | Q1 | Q2 |\n| --- | --- | ---: | ---: |\n| Portland Pearl | West | 412.8 | 430.1 |\n| Boise Downtown | Mountain | 388.1 | 391.7 |\n| Austin | South | 501.2 | 522.9 |",
+              "json": "[\n  {\n    \"Store\": \"Portland Pearl\",\n    \"Region\": \"West\",\n    \"Q1\": \"412.8\",\n    \"Q2\": \"430.1\"\n  },\n  {\n    \"Store\": \"Boise Downtown\",\n    \"Region\": \"Mountain\",\n    \"Q1\": \"388.1\",\n    \"Q2\": \"391.7\"\n  },\n  {\n    \"Store\": \"Austin\",\n    \"Region\": \"South\",\n    \"Q1\": \"501.2\",\n    \"Q2\": \"522.9\"\n  }\n]"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "columnSpacing": 0.5,
+      "joining": false,
+      "tables": [
+        {
+          "n": 1,
+          "pages": [1],
+          "parts": [{"page":1,"bbox":[68,664.85,324.4000000000001,719.45]}],
+          "header": true,
+          "firstBold": true,
+          "grid": [
+            ["Store","Region","Q1","Q2"],
+            ["Portland Pearl","West","412.8","430.1"],
+            ["Boise Downtown","Mountain","388.1","391.7"],
+            ["Austin","South","501.2","522.9"]
+          ],
+          "sections": [],
+          "cols": [
+            [72,153.00000000000003],
+            [180.00000000000003,223.20000000000007],
+            [244.80000000000004,271.80000000000007],
+            [293.4000000000001,320.4000000000001]
+          ],
+          "repeats": 0,
+          "exports": {
+            "column": {
+              "csv": "Store,Region,Q1,Q2\nPortland Pearl,West,412.8,430.1\nBoise Downtown,Mountain,388.1,391.7\nAustin,South,501.2,522.9",
+              "tsv": "Store\tRegion\tQ1\tQ2\nPortland Pearl\tWest\t412.8\t430.1\nBoise Downtown\tMountain\t388.1\t391.7\nAustin\tSouth\t501.2\t522.9",
+              "md": "| Store | Region | Q1 | Q2 |\n| --- | --- | ---: | ---: |\n| Portland Pearl | West | 412.8 | 430.1 |\n| Boise Downtown | Mountain | 388.1 | 391.7 |\n| Austin | South | 501.2 | 522.9 |",
+              "json": "[\n  {\n    \"Store\": \"Portland Pearl\",\n    \"Region\": \"West\",\n    \"Q1\": \"412.8\",\n    \"Q2\": \"430.1\"\n  },\n  {\n    \"Store\": \"Boise Downtown\",\n    \"Region\": \"Mountain\",\n    \"Q1\": \"388.1\",\n    \"Q2\": \"391.7\"\n  },\n  {\n    \"Store\": \"Austin\",\n    \"Region\": \"South\",\n    \"Q1\": \"501.2\",\n    \"Q2\": \"522.9\"\n  }\n]"
+            },
+            "rows": {
+              "csv": "Store,Region,Q1,Q2\nPortland Pearl,West,412.8,430.1\nBoise Downtown,Mountain,388.1,391.7\nAustin,South,501.2,522.9",
+              "tsv": "Store\tRegion\tQ1\tQ2\nPortland Pearl\tWest\t412.8\t430.1\nBoise Downtown\tMountain\t388.1\t391.7\nAustin\tSouth\t501.2\t522.9",
+              "md": "| Store | Region | Q1 | Q2 |\n| --- | --- | ---: | ---: |\n| Portland Pearl | West | 412.8 | 430.1 |\n| Boise Downtown | Mountain | 388.1 | 391.7 |\n| Austin | South | 501.2 | 522.9 |",
+              "json": "[\n  {\n    \"Store\": \"Portland Pearl\",\n    \"Region\": \"West\",\n    \"Q1\": \"412.8\",\n    \"Q2\": \"430.1\"\n  },\n  {\n    \"Store\": \"Boise Downtown\",\n    \"Region\": \"Mountain\",\n    \"Q1\": \"388.1\",\n    \"Q2\": \"391.7\"\n  },\n  {\n    \"Store\": \"Austin\",\n    \"Region\": \"South\",\n    \"Q1\": \"501.2\",\n    \"Q2\": \"522.9\"\n  }\n]"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "columnSpacing": 2,
+      "joining": true,
+      "tables": [
+        {
+          "n": 1,
+          "pages": [1],
+          "parts": [{"page":1,"bbox":[68,664.85,324.4000000000001,719.45]}],
+          "header": true,
+          "firstBold": true,
+          "grid": [
+            ["Store","Region","Q1","Q2"],
+            ["Portland Pearl","West","412.8","430.1"],
+            ["Boise Downtown","Mountain","388.1","391.7"],
+            ["Austin","South","501.2","522.9"]
+          ],
+          "sections": [],
+          "cols": [
+            [72,153.00000000000003],
+            [180.00000000000003,223.20000000000007],
+            [244.80000000000004,271.80000000000007],
+            [293.4000000000001,320.4000000000001]
+          ],
+          "repeats": 0,
+          "exports": {
+            "column": {
+              "csv": "Store,Region,Q1,Q2\nPortland Pearl,West,412.8,430.1\nBoise Downtown,Mountain,388.1,391.7\nAustin,South,501.2,522.9",
+              "tsv": "Store\tRegion\tQ1\tQ2\nPortland Pearl\tWest\t412.8\t430.1\nBoise Downtown\tMountain\t388.1\t391.7\nAustin\tSouth\t501.2\t522.9",
+              "md": "| Store | Region | Q1 | Q2 |\n| --- | --- | ---: | ---: |\n| Portland Pearl | West | 412.8 | 430.1 |\n| Boise Downtown | Mountain | 388.1 | 391.7 |\n| Austin | South | 501.2 | 522.9 |",
+              "json": "[\n  {\n    \"Store\": \"Portland Pearl\",\n    \"Region\": \"West\",\n    \"Q1\": \"412.8\",\n    \"Q2\": \"430.1\"\n  },\n  {\n    \"Store\": \"Boise Downtown\",\n    \"Region\": \"Mountain\",\n    \"Q1\": \"388.1\",\n    \"Q2\": \"391.7\"\n  },\n  {\n    \"Store\": \"Austin\",\n    \"Region\": \"South\",\n    \"Q1\": \"501.2\",\n    \"Q2\": \"522.9\"\n  }\n]"
+            },
+            "rows": {
+              "csv": "Store,Region,Q1,Q2\nPortland Pearl,West,412.8,430.1\nBoise Downtown,Mountain,388.1,391.7\nAustin,South,501.2,522.9",
+              "tsv": "Store\tRegion\tQ1\tQ2\nPortland Pearl\tWest\t412.8\t430.1\nBoise Downtown\tMountain\t388.1\t391.7\nAustin\tSouth\t501.2\t522.9",
+              "md": "| Store | Region | Q1 | Q2 |\n| --- | --- | ---: | ---: |\n| Portland Pearl | West | 412.8 | 430.1 |\n| Boise Downtown | Mountain | 388.1 | 391.7 |\n| Austin | South | 501.2 | 522.9 |",
+              "json": "[\n  {\n    \"Store\": \"Portland Pearl\",\n    \"Region\": \"West\",\n    \"Q1\": \"412.8\",\n    \"Q2\": \"430.1\"\n  },\n  {\n    \"Store\": \"Boise Downtown\",\n    \"Region\": \"Mountain\",\n    \"Q1\": \"388.1\",\n    \"Q2\": \"391.7\"\n  },\n  {\n    \"Store\": \"Austin\",\n    \"Region\": \"South\",\n    \"Q1\": \"501.2\",\n    \"Q2\": \"522.9\"\n  }\n]"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "columnSpacing": 2,
+      "joining": false,
+      "tables": [
+        {
+          "n": 1,
+          "pages": [1],
+          "parts": [{"page":1,"bbox":[68,664.85,324.4000000000001,719.45]}],
+          "header": true,
+          "firstBold": true,
+          "grid": [
+            ["Store","Region","Q1","Q2"],
+            ["Portland Pearl","West","412.8","430.1"],
+            ["Boise Downtown","Mountain","388.1","391.7"],
+            ["Austin","South","501.2","522.9"]
+          ],
+          "sections": [],
+          "cols": [
+            [72,153.00000000000003],
+            [180.00000000000003,223.20000000000007],
+            [244.80000000000004,271.80000000000007],
+            [293.4000000000001,320.4000000000001]
+          ],
+          "repeats": 0,
+          "exports": {
+            "column": {
+              "csv": "Store,Region,Q1,Q2\nPortland Pearl,West,412.8,430.1\nBoise Downtown,Mountain,388.1,391.7\nAustin,South,501.2,522.9",
+              "tsv": "Store\tRegion\tQ1\tQ2\nPortland Pearl\tWest\t412.8\t430.1\nBoise Downtown\tMountain\t388.1\t391.7\nAustin\tSouth\t501.2\t522.9",
+              "md": "| Store | Region | Q1 | Q2 |\n| --- | --- | ---: | ---: |\n| Portland Pearl | West | 412.8 | 430.1 |\n| Boise Downtown | Mountain | 388.1 | 391.7 |\n| Austin | South | 501.2 | 522.9 |",
+              "json": "[\n  {\n    \"Store\": \"Portland Pearl\",\n    \"Region\": \"West\",\n    \"Q1\": \"412.8\",\n    \"Q2\": \"430.1\"\n  },\n  {\n    \"Store\": \"Boise Downtown\",\n    \"Region\": \"Mountain\",\n    \"Q1\": \"388.1\",\n    \"Q2\": \"391.7\"\n  },\n  {\n    \"Store\": \"Austin\",\n    \"Region\": \"South\",\n    \"Q1\": \"501.2\",\n    \"Q2\": \"522.9\"\n  }\n]"
+            },
+            "rows": {
+              "csv": "Store,Region,Q1,Q2\nPortland Pearl,West,412.8,430.1\nBoise Downtown,Mountain,388.1,391.7\nAustin,South,501.2,522.9",
+              "tsv": "Store\tRegion\tQ1\tQ2\nPortland Pearl\tWest\t412.8\t430.1\nBoise Downtown\tMountain\t388.1\t391.7\nAustin\tSouth\t501.2\t522.9",
+              "md": "| Store | Region | Q1 | Q2 |\n| --- | --- | ---: | ---: |\n| Portland Pearl | West | 412.8 | 430.1 |\n| Boise Downtown | Mountain | 388.1 | 391.7 |\n| Austin | South | 501.2 | 522.9 |",
+              "json": "[\n  {\n    \"Store\": \"Portland Pearl\",\n    \"Region\": \"West\",\n    \"Q1\": \"412.8\",\n    \"Q2\": \"430.1\"\n  },\n  {\n    \"Store\": \"Boise Downtown\",\n    \"Region\": \"Mountain\",\n    \"Q1\": \"388.1\",\n    \"Q2\": \"391.7\"\n  },\n  {\n    \"Store\": \"Austin\",\n    \"Region\": \"South\",\n    \"Q1\": \"501.2\",\n    \"Q2\": \"522.9\"\n  }\n]"
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

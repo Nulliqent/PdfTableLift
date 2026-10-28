@@ -1,0 +1,16 @@
+{
+  "fixture": "tests/fixtures/encrypted.pdf",
+  "sha256": "b2f3671c0a0aa29a0317c29d1c8f92108577a026d5357dd186002581e3e1afe4",
+  "pdfjs": "3.11.174",
+  "status": "error",
+  "error": "This PDF is password-protected. Remove the password and try again.",
+  "pages": [],
+  "runs": [
+    {"columnSpacing":1,"joining":true,"tables":[]},
+    {"columnSpacing":1,"joining":false,"tables":[]},
+    {"columnSpacing":0.5,"joining":true,"tables":[]},
+    {"columnSpacing":0.5,"joining":false,"tables":[]},
+    {"columnSpacing":2,"joining":true,"tables":[]},
+    {"columnSpacing":2,"joining":false,"tables":[]}
+  ]
+}

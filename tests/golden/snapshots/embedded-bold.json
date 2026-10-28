@@ -1,0 +1,251 @@
+{
+  "fixture": "tests/fixtures/embedded-bold.pdf",
+  "sha256": "94a0eaab297fab750f305c4700bdf040d803f2e931e71726ebccda2d2406f825",
+  "pdfjs": "3.11.174",
+  "status": "ready",
+  "error": "",
+  "pages": [
+    {
+      "num": 1,
+      "w": 612,
+      "h": 792,
+      "items": [
+        {"str":"Branch staffing","x":72,"y":740,"w":102.53600000000002,"h":14,"bold":true},
+        {"str":"Branch","x":72,"y":710,"w":28.647000000000006,"h":9,"bold":true},
+        {"str":"Lead","x":220,"y":710,"w":19.134000000000007,"h":9,"bold":true},
+        {"str":"Staff","x":380.668,"y":710,"w":19.332,"h":9,"bold":true},
+        {"str":"Budget","x":450.939,"y":710,"w":29.061,"h":9,"bold":true},
+        {"str":"Leeds","x":72,"y":696,"w":24.516000000000002,"h":9,"bold":false},
+        {"str":"P. Grant","x":220,"y":696,"w":31.266000000000012,"h":9,"bold":false},
+        {"str":"14","x":389.992,"y":696,"w":10.008000000000001,"h":9,"bold":false},
+        {"str":"410.0","x":457.482,"y":696,"w":22.518,"h":9,"bold":false},
+        {"str":"York","x":72,"y":682,"w":17.379,"h":9,"bold":false},
+        {"str":"H. Ito","x":220,"y":682,"w":20.97000000000002,"h":9,"bold":false},
+        {"str":"9","x":394.996,"y":682,"w":5.0040000000000004,"h":9,"bold":false},
+        {"str":"265.5","x":457.482,"y":682,"w":22.518,"h":9,"bold":false},
+        {"str":"Hull","x":72,"y":668,"w":15.498000000000005,"h":9,"bold":false},
+        {"str":"E. Shaw","x":220,"y":668,"w":32.79600000000002,"h":9,"bold":false},
+        {"str":"11","x":389.992,"y":668,"w":10.008000000000001,"h":9,"bold":false},
+        {"str":"320.25","x":452.478,"y":668,"w":27.522000000000002,"h":9,"bold":false}
+      ]
+    }
+  ],
+  "runs": [
+    {
+      "columnSpacing": 1,
+      "joining": true,
+      "tables": [
+        {
+          "n": 1,
+          "pages": [1],
+          "parts": [{"page":1,"bbox":[68,664.85,484,719.45]}],
+          "header": true,
+          "firstBold": true,
+          "grid": [
+            ["Branch","Lead","Staff","Budget"],
+            ["Leeds","P. Grant","14","410.0"],
+            ["York","H. Ito","9","265.5"],
+            ["Hull","E. Shaw","11","320.25"]
+          ],
+          "sections": [],
+          "cols": [[72,100.647],[220,252.79600000000002],[380.668,400],[450.939,480]],
+          "repeats": 0,
+          "exports": {
+            "column": {
+              "csv": "Branch,Lead,Staff,Budget\nLeeds,P. Grant,14,410.0\nYork,H. Ito,9,265.5\nHull,E. Shaw,11,320.25",
+              "tsv": "Branch\tLead\tStaff\tBudget\nLeeds\tP. Grant\t14\t410.0\nYork\tH. Ito\t9\t265.5\nHull\tE. Shaw\t11\t320.25",
+              "md": "| Branch | Lead | Staff | Budget |\n| --- | --- | ---: | ---: |\n| Leeds | P. Grant | 14 | 410.0 |\n| York | H. Ito | 9 | 265.5 |\n| Hull | E. Shaw | 11 | 320.25 |",
+              "json": "[\n  {\n    \"Branch\": \"Leeds\",\n    \"Lead\": \"P. Grant\",\n    \"Staff\": \"14\",\n    \"Budget\": \"410.0\"\n  },\n  {\n    \"Branch\": \"York\",\n    \"Lead\": \"H. Ito\",\n    \"Staff\": \"9\",\n    \"Budget\": \"265.5\"\n  },\n  {\n    \"Branch\": \"Hull\",\n    \"Lead\": \"E. Shaw\",\n    \"Staff\": \"11\",\n    \"Budget\": \"320.25\"\n  }\n]"
+            },
+            "rows": {
+              "csv": "Branch,Lead,Staff,Budget\nLeeds,P. Grant,14,410.0\nYork,H. Ito,9,265.5\nHull,E. Shaw,11,320.25",
+              "tsv": "Branch\tLead\tStaff\tBudget\nLeeds\tP. Grant\t14\t410.0\nYork\tH. Ito\t9\t265.5\nHull\tE. Shaw\t11\t320.25",
+              "md": "| Branch | Lead | Staff | Budget |\n| --- | --- | ---: | ---: |\n| Leeds | P. Grant | 14 | 410.0 |\n| York | H. Ito | 9 | 265.5 |\n| Hull | E. Shaw | 11 | 320.25 |",
+              "json": "[\n  {\n    \"Branch\": \"Leeds\",\n    \"Lead\": \"P. Grant\",\n    \"Staff\": \"14\",\n    \"Budget\": \"410.0\"\n  },\n  {\n    \"Branch\": \"York\",\n    \"Lead\": \"H. Ito\",\n    \"Staff\": \"9\",\n    \"Budget\": \"265.5\"\n  },\n  {\n    \"Branch\": \"Hull\",\n    \"Lead\": \"E. Shaw\",\n    \"Staff\": \"11\",\n    \"Budget\": \"320.25\"\n  }\n]"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "columnSpacing": 1,
+      "joining": false,
+      "tables": [
+        {
+          "n": 1,
+          "pages": [1],
+          "parts": [{"page":1,"bbox":[68,664.85,484,719.45]}],
+          "header": true,
+          "firstBold": true,
+          "grid": [
+            ["Branch","Lead","Staff","Budget"],
+            ["Leeds","P. Grant","14","410.0"],
+            ["York","H. Ito","9","265.5"],
+            ["Hull","E. Shaw","11","320.25"]
+          ],
+          "sections": [],
+          "cols": [[72,100.647],[220,252.79600000000002],[380.668,400],[450.939,480]],
+          "repeats": 0,
+          "exports": {
+            "column": {
+              "csv": "Branch,Lead,Staff,Budget\nLeeds,P. Grant,14,410.0\nYork,H. Ito,9,265.5\nHull,E. Shaw,11,320.25",
+              "tsv": "Branch\tLead\tStaff\tBudget\nLeeds\tP. Grant\t14\t410.0\nYork\tH. Ito\t9\t265.5\nHull\tE. Shaw\t11\t320.25",
+              "md": "| Branch | Lead | Staff | Budget |\n| --- | --- | ---: | ---: |\n| Leeds | P. Grant | 14 | 410.0 |\n| York | H. Ito | 9 | 265.5 |\n| Hull | E. Shaw | 11 | 320.25 |",
+              "json": "[\n  {\n    \"Branch\": \"Leeds\",\n    \"Lead\": \"P. Grant\",\n    \"Staff\": \"14\",\n    \"Budget\": \"410.0\"\n  },\n  {\n    \"Branch\": \"York\",\n    \"Lead\": \"H. Ito\",\n    \"Staff\": \"9\",\n    \"Budget\": \"265.5\"\n  },\n  {\n    \"Branch\": \"Hull\",\n    \"Lead\": \"E. Shaw\",\n    \"Staff\": \"11\",\n    \"Budget\": \"320.25\"\n  }\n]"
+            },
+            "rows": {
+              "csv": "Branch,Lead,Staff,Budget\nLeeds,P. Grant,14,410.0\nYork,H. Ito,9,265.5\nHull,E. Shaw,11,320.25",
+              "tsv": "Branch\tLead\tStaff\tBudget\nLeeds\tP. Grant\t14\t410.0\nYork\tH. Ito\t9\t265.5\nHull\tE. Shaw\t11\t320.25",
+              "md": "| Branch | Lead | Staff | Budget |\n| --- | --- | ---: | ---: |\n| Leeds | P. Grant | 14 | 410.0 |\n| York | H. Ito | 9 | 265.5 |\n| Hull | E. Shaw | 11 | 320.25 |",
+              "json": "[\n  {\n    \"Branch\": \"Leeds\",\n    \"Lead\": \"P. Grant\",\n    \"Staff\": \"14\",\n    \"Budget\": \"410.0\"\n  },\n  {\n    \"Branch\": \"York\",\n    \"Lead\": \"H. Ito\",\n    \"Staff\": \"9\",\n    \"Budget\": \"265.5\"\n  },\n  {\n    \"Branch\": \"Hull\",\n    \"Lead\": \"E. Shaw\",\n    \"Staff\": \"11\",\n    \"Budget\": \"320.25\"\n  }\n]"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "columnSpacing": 0.5,
+      "joining": true,
+      "tables": [
+        {
+          "n": 1,
+          "pages": [1],
+          "parts": [{"page":1,"bbox":[68,664.85,484,719.45]}],
+          "header": true,
+          "firstBold": true,
+          "grid": [
+            ["Branch","Lead","Staff","Budget"],
+            ["Leeds","P. Grant","14","410.0"],
+            ["York","H. Ito","9","265.5"],
+            ["Hull","E. Shaw","11","320.25"]
+          ],
+          "sections": [],
+          "cols": [[72,100.647],[220,252.79600000000002],[380.668,400],[450.939,480]],
+          "repeats": 0,
+          "exports": {
+            "column": {
+              "csv": "Branch,Lead,Staff,Budget\nLeeds,P. Grant,14,410.0\nYork,H. Ito,9,265.5\nHull,E. Shaw,11,320.25",
+              "tsv": "Branch\tLead\tStaff\tBudget\nLeeds\tP. Grant\t14\t410.0\nYork\tH. Ito\t9\t265.5\nHull\tE. Shaw\t11\t320.25",
+              "md": "| Branch | Lead | Staff | Budget |\n| --- | --- | ---: | ---: |\n| Leeds | P. Grant | 14 | 410.0 |\n| York | H. Ito | 9 | 265.5 |\n| Hull | E. Shaw | 11 | 320.25 |",
+              "json": "[\n  {\n    \"Branch\": \"Leeds\",\n    \"Lead\": \"P. Grant\",\n    \"Staff\": \"14\",\n    \"Budget\": \"410.0\"\n  },\n  {\n    \"Branch\": \"York\",\n    \"Lead\": \"H. Ito\",\n    \"Staff\": \"9\",\n    \"Budget\": \"265.5\"\n  },\n  {\n    \"Branch\": \"Hull\",\n    \"Lead\": \"E. Shaw\",\n    \"Staff\": \"11\",\n    \"Budget\": \"320.25\"\n  }\n]"
+            },
+            "rows": {
+              "csv": "Branch,Lead,Staff,Budget\nLeeds,P. Grant,14,410.0\nYork,H. Ito,9,265.5\nHull,E. Shaw,11,320.25",
+              "tsv": "Branch\tLead\tStaff\tBudget\nLeeds\tP. Grant\t14\t410.0\nYork\tH. Ito\t9\t265.5\nHull\tE. Shaw\t11\t320.25",
+              "md": "| Branch | Lead | Staff | Budget |\n| --- | --- | ---: | ---: |\n| Leeds | P. Grant | 14 | 410.0 |\n| York | H. Ito | 9 | 265.5 |\n| Hull | E. Shaw | 11 | 320.25 |",
+              "json": "[\n  {\n    \"Branch\": \"Leeds\",\n    \"Lead\": \"P. Grant\",\n    \"Staff\": \"14\",\n    \"Budget\": \"410.0\"\n  },\n  {\n    \"Branch\": \"York\",\n    \"Lead\": \"H. Ito\",\n    \"Staff\": \"9\",\n    \"Budget\": \"265.5\"\n  },\n  {\n    \"Branch\": \"Hull\",\n    \"Lead\": \"E. Shaw\",\n    \"Staff\": \"11\",\n    \"Budget\": \"320.25\"\n  }\n]"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "columnSpacing": 0.5,
+      "joining": false,
+      "tables": [
+        {
+          "n": 1,
+          "pages": [1],
+          "parts": [{"page":1,"bbox":[68,664.85,484,719.45]}],
+          "header": true,
+          "firstBold": true,
+          "grid": [
+            ["Branch","Lead","Staff","Budget"],
+            ["Leeds","P. Grant","14","410.0"],
+            ["York","H. Ito","9","265.5"],
+            ["Hull","E. Shaw","11","320.25"]
+          ],
+          "sections": [],
+          "cols": [[72,100.647],[220,252.79600000000002],[380.668,400],[450.939,480]],
+          "repeats": 0,
+          "exports": {
+            "column": {
+              "csv": "Branch,Lead,Staff,Budget\nLeeds,P. Grant,14,410.0\nYork,H. Ito,9,265.5\nHull,E. Shaw,11,320.25",
+              "tsv": "Branch\tLead\tStaff\tBudget\nLeeds\tP. Grant\t14\t410.0\nYork\tH. Ito\t9\t265.5\nHull\tE. Shaw\t11\t320.25",
+              "md": "| Branch | Lead | Staff | Budget |\n| --- | --- | ---: | ---: |\n| Leeds | P. Grant | 14 | 410.0 |\n| York | H. Ito | 9 | 265.5 |\n| Hull | E. Shaw | 11 | 320.25 |",
+              "json": "[\n  {\n    \"Branch\": \"Leeds\",\n    \"Lead\": \"P. Grant\",\n    \"Staff\": \"14\",\n    \"Budget\": \"410.0\"\n  },\n  {\n    \"Branch\": \"York\",\n    \"Lead\": \"H. Ito\",\n    \"Staff\": \"9\",\n    \"Budget\": \"265.5\"\n  },\n  {\n    \"Branch\": \"Hull\",\n    \"Lead\": \"E. Shaw\",\n    \"Staff\": \"11\",\n    \"Budget\": \"320.25\"\n  }\n]"
+            },
+            "rows": {
+              "csv": "Branch,Lead,Staff,Budget\nLeeds,P. Grant,14,410.0\nYork,H. Ito,9,265.5\nHull,E. Shaw,11,320.25",
+              "tsv": "Branch\tLead\tStaff\tBudget\nLeeds\tP. Grant\t14\t410.0\nYork\tH. Ito\t9\t265.5\nHull\tE. Shaw\t11\t320.25",
+              "md": "| Branch | Lead | Staff | Budget |\n| --- | --- | ---: | ---: |\n| Leeds | P. Grant | 14 | 410.0 |\n| York | H. Ito | 9 | 265.5 |\n| Hull | E. Shaw | 11 | 320.25 |",
+              "json": "[\n  {\n    \"Branch\": \"Leeds\",\n    \"Lead\": \"P. Grant\",\n    \"Staff\": \"14\",\n    \"Budget\": \"410.0\"\n  },\n  {\n    \"Branch\": \"York\",\n    \"Lead\": \"H. Ito\",\n    \"Staff\": \"9\",\n    \"Budget\": \"265.5\"\n  },\n  {\n    \"Branch\": \"Hull\",\n    \"Lead\": \"E. Shaw\",\n    \"Staff\": \"11\",\n    \"Budget\": \"320.25\"\n  }\n]"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "columnSpacing": 2,
+      "joining": true,
+      "tables": [
+        {
+          "n": 1,
+          "pages": [1],
+          "parts": [{"page":1,"bbox":[68,664.85,484,719.45]}],
+          "header": true,
+          "firstBold": true,
+          "grid": [
+            ["Branch","Lead","Staff","Budget"],
+            ["Leeds","P. Grant","14","410.0"],
+            ["York","H. Ito","9","265.5"],
+            ["Hull","E. Shaw","11","320.25"]
+          ],
+          "sections": [],
+          "cols": [[72,100.647],[220,252.79600000000002],[380.668,400],[450.939,480]],
+          "repeats": 0,
+          "exports": {
+            "column": {
+              "csv": "Branch,Lead,Staff,Budget\nLeeds,P. Grant,14,410.0\nYork,H. Ito,9,265.5\nHull,E. Shaw,11,320.25",
+              "tsv": "Branch\tLead\tStaff\tBudget\nLeeds\tP. Grant\t14\t410.0\nYork\tH. Ito\t9\t265.5\nHull\tE. Shaw\t11\t320.25",
+              "md": "| Branch | Lead | Staff | Budget |\n| --- | --- | ---: | ---: |\n| Leeds | P. Grant | 14 | 410.0 |\n| York | H. Ito | 9 | 265.5 |\n| Hull | E. Shaw | 11 | 320.25 |",
+              "json": "[\n  {\n    \"Branch\": \"Leeds\",\n    \"Lead\": \"P. Grant\",\n    \"Staff\": \"14\",\n    \"Budget\": \"410.0\"\n  },\n  {\n    \"Branch\": \"York\",\n    \"Lead\": \"H. Ito\",\n    \"Staff\": \"9\",\n    \"Budget\": \"265.5\"\n  },\n  {\n    \"Branch\": \"Hull\",\n    \"Lead\": \"E. Shaw\",\n    \"Staff\": \"11\",\n    \"Budget\": \"320.25\"\n  }\n]"
+            },
+            "rows": {
+              "csv": "Branch,Lead,Staff,Budget\nLeeds,P. Grant,14,410.0\nYork,H. Ito,9,265.5\nHull,E. Shaw,11,320.25",
+              "tsv": "Branch\tLead\tStaff\tBudget\nLeeds\tP. Grant\t14\t410.0\nYork\tH. Ito\t9\t265.5\nHull\tE. Shaw\t11\t320.25",
+              "md": "| Branch | Lead | Staff | Budget |\n| --- | --- | ---: | ---: |\n| Leeds | P. Grant | 14 | 410.0 |\n| York | H. Ito | 9 | 265.5 |\n| Hull | E. Shaw | 11 | 320.25 |",
+              "json": "[\n  {\n    \"Branch\": \"Leeds\",\n    \"Lead\": \"P. Grant\",\n    \"Staff\": \"14\",\n    \"Budget\": \"410.0\"\n  },\n  {\n    \"Branch\": \"York\",\n    \"Lead\": \"H. Ito\",\n    \"Staff\": \"9\",\n    \"Budget\": \"265.5\"\n  },\n  {\n    \"Branch\": \"Hull\",\n    \"Lead\": \"E. Shaw\",\n    \"Staff\": \"11\",\n    \"Budget\": \"320.25\"\n  }\n]"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "columnSpacing": 2,
+      "joining": false,
+      "tables": [
+        {
+          "n": 1,
+          "pages": [1],
+          "parts": [{"page":1,"bbox":[68,664.85,484,719.45]}],
+          "header": true,
+          "firstBold": true,
+          "grid": [
+            ["Branch","Lead","Staff","Budget"],
+            ["Leeds","P. Grant","14","410.0"],
+            ["York","H. Ito","9","265.5"],
+            ["Hull","E. Shaw","11","320.25"]
+          ],
+          "sections": [],
+          "cols": [[72,100.647],[220,252.79600000000002],[380.668,400],[450.939,480]],
+          "repeats": 0,
+          "exports": {
+            "column": {
+              "csv": "Branch,Lead,Staff,Budget\nLeeds,P. Grant,14,410.0\nYork,H. Ito,9,265.5\nHull,E. Shaw,11,320.25",
+              "tsv": "Branch\tLead\tStaff\tBudget\nLeeds\tP. Grant\t14\t410.0\nYork\tH. Ito\t9\t265.5\nHull\tE. Shaw\t11\t320.25",
+              "md": "| Branch | Lead | Staff | Budget |\n| --- | --- | ---: | ---: |\n| Leeds | P. Grant | 14 | 410.0 |\n| York | H. Ito | 9 | 265.5 |\n| Hull | E. Shaw | 11 | 320.25 |",
+              "json": "[\n  {\n    \"Branch\": \"Leeds\",\n    \"Lead\": \"P. Grant\",\n    \"Staff\": \"14\",\n    \"Budget\": \"410.0\"\n  },\n  {\n    \"Branch\": \"York\",\n    \"Lead\": \"H. Ito\",\n    \"Staff\": \"9\",\n    \"Budget\": \"265.5\"\n  },\n  {\n    \"Branch\": \"Hull\",\n    \"Lead\": \"E. Shaw\",\n    \"Staff\": \"11\",\n    \"Budget\": \"320.25\"\n  }\n]"
+            },
+            "rows": {
+              "csv": "Branch,Lead,Staff,Budget\nLeeds,P. Grant,14,410.0\nYork,H. Ito,9,265.5\nHull,E. Shaw,11,320.25",
+              "tsv": "Branch\tLead\tStaff\tBudget\nLeeds\tP. Grant\t14\t410.0\nYork\tH. Ito\t9\t265.5\nHull\tE. Shaw\t11\t320.25",
+              "md": "| Branch | Lead | Staff | Budget |\n| --- | --- | ---: | ---: |\n| Leeds | P. Grant | 14 | 410.0 |\n| York | H. Ito | 9 | 265.5 |\n| Hull | E. Shaw | 11 | 320.25 |",
+              "json": "[\n  {\n    \"Branch\": \"Leeds\",\n    \"Lead\": \"P. Grant\",\n    \"Staff\": \"14\",\n    \"Budget\": \"410.0\"\n  },\n  {\n    \"Branch\": \"York\",\n    \"Lead\": \"H. Ito\",\n    \"Staff\": \"9\",\n    \"Budget\": \"265.5\"\n  },\n  {\n    \"Branch\": \"Hull\",\n    \"Lead\": \"E. Shaw\",\n    \"Staff\": \"11\",\n    \"Budget\": \"320.25\"\n  }\n]"
+            }
+          }
+        }
+      ]
+    }
+  ]
+}
