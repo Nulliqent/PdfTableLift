@@ -44,10 +44,34 @@ export type Table = {
 };
 
 /** A Region the user drew on a page; it yields a Hand-drawn Table. */
-export type Region = { id: string; page: number; bbox: Bbox };
+export type Region = {
+  id: string;
+  page: number;
+  bbox: Bbox;
+  /** The Part of the Detected Table this Region was redrawn from; it stays hidden, wherever the Region moves. */
+  replaces: Part | null;
+  /** The other Parts of the Joined Table that Part belonged to; they stand on their own, never joined. */
+  apart: Part[];
+};
 
-/** The Region being selected: the page shown and the box dragged so far (null before any drag). */
-export type RegionInProgress = { documentId: string; page: number; bbox: Bbox | null };
+/** What a redraw carries over from the Table whose Region is being redrawn. */
+export type Redraw = {
+  /** The Region being redrawn if the Table was Hand-drawn, else null (a new Region is made). */
+  regionId: string | null;
+  replaces: Part | null;
+  apart: Part[];
+};
+
+/**
+ * The Region being selected: the page shown and the box dragged so far (null before any drag).
+ * `redraw` is set when it was opened from a Table, else null.
+ */
+export type RegionInProgress = {
+  documentId: string;
+  page: number;
+  bbox: Bbox | null;
+  redraw: Redraw | null;
+};
 
 /** A Detected Table the user dismissed, recorded by page and bounding box so it survives re-detection. */
 export type RemovedTable = {
@@ -138,8 +162,11 @@ export type WorkspaceAction =
   | { type: "changeConfirmed" }
   /** The user cancelled the pending change: nothing changes. */
   | { type: "changeCancelled" }
-  /** Select Region was entered for a Document, on the given page. */
-  | { type: "regionStarted"; documentId: string; page: number }
+  /**
+   * Select Region was entered for a Document, on the given page. With `tableId` it redraws that
+   * Table's Region (the Part on `page` for a Joined Table), opening on its current bounds.
+   */
+  | { type: "regionStarted"; documentId: string; page: number; tableId?: string }
   /** The page was stepped, or the Region dragged (bbox in PDF points; null clears it). */
   | { type: "regionChanged"; page: number; bbox: Bbox | null }
   /** Select Whole Page: the Region covers the current page. */
@@ -340,17 +367,47 @@ export function reduce(state: WorkspaceState, action: WorkspaceAction): Workspac
       if (!doc || !region?.bbox || !regionPreview(state)) return state;
       if (needsConfirmation(state, action)) return { ...state, pendingChange: action };
       const id = `r${Math.max(0, ...doc.regions.map((r) => Number(r.id.slice(1)))) + 1}`;
-      const regions = [...doc.regions, { id, page: region.page, bbox: region.bbox }];
+      const { redraw } = region;
+      // Redrawing a Hand-drawn Table moves its own Region; anything else adds one.
+      const own = redraw?.regionId ?? null;
+      const regions = own
+        ? doc.regions.map((r) =>
+            r.id === own ? { ...r, page: region.page, bbox: region.bbox! } : r,
+          )
+        : [
+            ...doc.regions,
+            {
+              id,
+              page: region.page,
+              bbox: region.bbox,
+              replaces: redraw?.replaces ?? null,
+              apart: redraw?.apart ?? [],
+            },
+          ];
       const next = redetect({ ...state, region: null, pendingChange: null }, { ...doc, regions });
       const created = next.documents
         .find((d) => d.id === doc.id)!
-        .tables.find((t) => t.manual === id);
+        .tables.find((t) => t.manual === (own ?? id));
       return created ? { ...next, selection: { documentId: doc.id, tableId: created.id } } : next;
     }
     case "regionStarted": {
       const doc = state.documents.find((d) => d.id === action.documentId);
       if (doc?.status !== "ready" || !pageOf(doc, action.page)) return state;
-      return { ...state, region: { documentId: doc.id, page: action.page, bbox: null } };
+      if (action.tableId === undefined) {
+        return {
+          ...state,
+          region: { documentId: doc.id, page: action.page, bbox: null, redraw: null },
+        };
+      }
+      const table = doc.tables.find((t) => t.id === action.tableId);
+      if (!table) return state;
+      const part = table.parts.find((p) => p.page === action.page) ?? table.parts[0]!;
+      const own = table.manual ? doc.regions.find((r) => r.id === table.manual) : undefined;
+      const redraw: Redraw = own
+        ? { regionId: own.id, replaces: own.replaces, apart: own.apart }
+        : { regionId: null, replaces: part, apart: table.parts.filter((p) => p !== part) };
+      const bbox = own?.bbox ?? part.bbox;
+      return { ...state, region: { documentId: doc.id, page: part.page, bbox, redraw } };
     }
     case "regionChanged": {
       const doc = regionDocument(state);
@@ -514,6 +571,7 @@ function keepSelection(before: WorkspaceState, documents: Document[]): Selection
 function detectDocument(doc: Document, pages: PageText[], settings: Settings): Table[] {
   const documentId = doc.id;
   const detected: Table[] = [];
+  const apart = new Set<string>();
   const handDrawn: Table[] = [];
   const table = (id: string, page: number, t: FoundTable, manual: string | null): Table => ({
     id,
@@ -539,10 +597,25 @@ function detectDocument(doc: Document, pages: PageText[], settings: Settings): T
       );
     // A Hand-drawn Table takes over the Detected Tables its Region covers.
     const covering = doc.regions.filter((r) => r.page === p.num);
+    // A redrawn Region keeps hiding the Table it replaced, wherever it now lies.
+    const replaced = (bbox: Bbox) =>
+      doc.regions.some(
+        (r) =>
+          r.replaces?.page === p.num && overlapRatio(r.replaces.bbox, bbox) > REMOVED_TABLE_OVERLAP,
+      );
+    // The Parts left behind by a redraw are not joined to anything.
+    const standalone = (bbox: Bbox) =>
+      doc.regions.some((r) =>
+        r.apart.some(
+          (ap) => ap.page === p.num && overlapRatio(ap.bbox, bbox) > REMOVED_TABLE_OVERLAP,
+        ),
+      );
     detectTables(p.items, settings.columnSpacing).forEach((t, i) => {
-      if (hidden(t.bbox)) return;
+      if (hidden(t.bbox) || replaced(t.bbox)) return;
       if (covering.some((r) => overlapRatio(r.bbox, t.bbox) > HAND_DRAWN_OVERLAP)) return;
-      detected.push(table(`${documentId}:${p.num}:${i}`, p.num, t, null));
+      const id = `${documentId}:${p.num}:${i}`;
+      if (standalone(t.bbox)) apart.add(id);
+      detected.push(table(id, p.num, t, null));
     });
     for (const r of covering) {
       const t = regionTable(p.items, r.bbox, settings.columnSpacing);
@@ -551,7 +624,7 @@ function detectDocument(doc: Document, pages: PageText[], settings: Settings): T
   }
   // Removed Tables and Hand-drawn Regions took their Tables out per page above, so a Joined Table
   // never spans them. A Hand-drawn Table is added after joining and is never joined.
-  const joined = settings.join ? joinTables(pages, detected, doc.noJoin) : detected;
+  const joined = settings.join ? joinTables(pages, detected, apart, doc.noJoin) : detected;
   return [...joined, ...handDrawn]
     .sort((a, b) => a.page - b.page || b.parts[0]!.bbox[3] - a.parts[0]!.bbox[3])
     .map((t, i) => ({ ...t, n: i + 1 }));

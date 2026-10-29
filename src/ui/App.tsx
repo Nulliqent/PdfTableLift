@@ -49,13 +49,17 @@ export function App() {
     const onSelected = state.selection?.documentId === documentId && table;
     dispatch({ type: "regionStarted", documentId, page: onSelected ? table.page : 1 });
   };
+  const redrawRegion = (documentId: string, tableId: string, page: number) =>
+    dispatch({ type: "regionStarted", documentId, page, tableId });
+  const savedMessage = (n: number, redrawn: boolean) =>
+    redrawn ? `Table ${n} redrawn from your selection` : `Table ${n} added from your selection`;
   const saveRegion = () => {
     // The reducer is pure, so the new Table's number is known before dispatching.
     const action: WorkspaceAction = { type: "regionCommitted" };
     const created = selectedTable(reduce(state, action));
     dispatch(action);
     if (created && created.manual !== null && !hasEdits(region!.documentId))
-      showHud(`Table ${created.n} added from your selection`);
+      showHud(savedMessage(created.n, region!.redraw !== null));
   };
 
   const read = async (id: string, bytes: Uint8Array) => {
@@ -205,6 +209,7 @@ export function App() {
                 />
               )
             }
+            onRedrawRegion={redrawRegion}
             onRemoveTable={(documentId, tableId) => {
               const n = state.documents
                 .find((d) => d.id === documentId)
@@ -250,7 +255,11 @@ export function App() {
               showHud(splitMessage(pending.documentId, pending.tableId));
             else if (pending?.type === "joinAgain") showHud("Joined with the previous page");
             else if (pending?.type === "regionCommitted")
-              showHud("Table added from your selection");
+              showHud(
+                state.region?.redraw
+                  ? "Table redrawn from your selection"
+                  : "Table added from your selection",
+              );
           }}
           onCancel={() => dispatch({ type: "changeCancelled" })}
         />

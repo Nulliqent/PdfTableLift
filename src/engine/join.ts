@@ -76,11 +76,19 @@ function continuation(
  * page break covers the rows after it. A Table whose page is in `noJoin` (the pages the user
  * split) is never joined to the one before it.
  */
-export function joinTables(pages: PageText[], tables: Table[], noJoin: number[] = []): Table[] {
+export function joinTables(
+  pages: PageText[],
+  tables: Table[],
+  /** Ids of Tables that stand on their own: never joined to the Table before or after. */
+  apart: ReadonlySet<string> = new Set(),
+  /** Pages the user split: a Table on one is never joined to the one before it. */
+  noJoin: number[] = [],
+): Table[] {
   const out: Table[] = [];
   for (const next of tables) {
     const table = out[out.length - 1];
-    const join = table && continuation(pages, table, next);
+    const stands = apart.has(next.id) || (table !== undefined && apart.has(table.id));
+    const join = table && !stands && continuation(pages, table, next);
     if (!table || !join) {
       out.push(next);
       continue;
