@@ -8,6 +8,7 @@ type SidebarProps = {
   documents: Document[];
   selection: Selection | null;
   onSelect: (documentId: string, tableId: string) => void;
+  onRestore: (documentId: string, removedId: string) => void;
   onOpen: () => void;
   onRemove: (documentId: string) => void;
   columnSpacing: number;
@@ -19,6 +20,7 @@ export function Sidebar({
   documents,
   selection,
   onSelect,
+  onRestore,
   onOpen,
   onRemove,
   columnSpacing,
@@ -31,6 +33,7 @@ export function Sidebar({
         documents={documents}
         selection={selection}
         onSelect={onSelect}
+        onRestore={onRestore}
         onRemove={onRemove}
       />
       <ColumnSpacingPanel value={columnSpacing} onChange={onColumnSpacing} />
