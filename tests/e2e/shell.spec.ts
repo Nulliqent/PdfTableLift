@@ -1,6 +1,8 @@
 import { expect, test } from "@playwright/test";
 
 test("the empty app shell renders its toolbar, sidebar and content pane", async ({ page }) => {
+  // The Example Document would otherwise fill the shell (see getting-documents-in.spec.ts).
+  await page.route("**/example-document.pdf", (route) => route.abort());
   await page.goto("/");
 
   await expect(page).toHaveTitle("Table Lift");
