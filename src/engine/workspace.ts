@@ -311,16 +311,28 @@ export function reduce(state: WorkspaceState, action: WorkspaceAction): Workspac
       if (!doc || !table) return state;
       if (needsConfirmation(state, action)) return { ...state, pendingChange: action };
       const n = Math.max(0, ...doc.removed.map((r) => r.seq)) + 1;
-      // A Hand-drawn Table is deleted with its Region; a Detected Table is recorded as removed.
-      const gone: Document = table.manual
-        ? { ...doc, regions: doc.regions.filter((r) => r.id !== table.manual) }
-        : {
-            ...doc,
-            removed: [
-              ...doc.removed,
-              { id: `${doc.id}:removed:${n}`, seq: n, n: table.n, parts: table.parts },
-            ],
-          };
+      // A Hand-drawn Table is deleted with its Region. A Detected Table is recorded as removed.
+      const region = table.manual ? doc.regions.find((r) => r.id === table.manual) : undefined;
+      const record = (parts: Part[]) => ({
+        id: `${doc.id}:removed:${n}`,
+        seq: n,
+        n: table.n,
+        parts,
+      });
+      let gone: Document;
+      if (!table.manual) gone = { ...doc, removed: [...doc.removed, record(table.parts)] };
+      else if (region?.replaces) {
+        // A redrawn Region carried the suppression of the Detected Table it replaced. Deleting the
+        // Region must not undo the user's Remove, so the replaced Part becomes a Removed Table
+        // (restorable), and the Parts the redraw left standing alone stay unjoined.
+        const alone = [region.replaces, ...region.apart].map((p) => p.page);
+        gone = {
+          ...doc,
+          regions: doc.regions.filter((r) => r.id !== region.id),
+          removed: [...doc.removed, record([region.replaces])],
+          noJoin: [...new Set([...doc.noJoin, ...alone])],
+        };
+      } else gone = { ...doc, regions: doc.regions.filter((r) => r.id !== table.manual) };
       const next = { ...redetect(state, gone), pendingChange: null };
       // Move to the neighbour that took the removed Table's place, else the previous one.
       const was = state.selection?.documentId === doc.id && state.selection.tableId === table.id;
