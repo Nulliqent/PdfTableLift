@@ -13,12 +13,12 @@ test("moving Column Spacing re-detects the Tables and is remembered", async ({ p
   await (await chooser).setFiles(example);
   const main = page.getByRole("main");
   await expect(main.getByRole("heading", { name: "Table 1" })).toBeVisible();
-  await expect(main.getByRole("columnheader")).toHaveCount(7);
+  await expect(main.getByRole("columnheader")).toHaveCount(6);
 
   await slider.fill("2");
   await expect(page.getByText("2.0×")).toBeVisible();
   await expect(main.getByRole("heading", { name: "Table 1" })).toBeVisible();
-  await expect(main.getByRole("columnheader")).toHaveCount(5);
+  await expect(main.getByRole("columnheader")).toHaveCount(4);
 
   await page.reload();
   await expect(page.getByRole("slider", { name: "Column spacing" })).toHaveValue("2");

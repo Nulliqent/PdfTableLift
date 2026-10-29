@@ -18,6 +18,7 @@ export {
 export type {
   Band,
   Bbox,
+  DiscardingAction,
   Document,
   Part,
   Selection,
@@ -26,5 +27,11 @@ export type {
   WorkspaceAction,
   WorkspaceState,
 } from "./workspace";
-export { DEFAULT_EXPORT_FORMAT, EXPORT_FORMATS, exportTable, isExportFormat } from "./export";
+export {
+  DEFAULT_EXPORT_FORMAT,
+  EXPORT_FORMATS,
+  exportTable,
+  isExportFormat,
+  numericColumns,
+} from "./export";
 export type { ExportFormat } from "./export";
