@@ -19,6 +19,7 @@ type ContentPaneProps = {
   onOpen: () => void;
   onCopied: (message: string) => void;
   onSelectTable: (documentId: string, tableId: string) => void;
+  onRemoveTable: (documentId: string, tableId: string) => void;
   onEditCell: (
     documentId: string,
     tableId: string,
@@ -37,6 +38,7 @@ export function ContentPane({
   onOpen,
   onCopied,
   onSelectTable,
+  onRemoveTable,
   onEditCell,
   onToggleHeader,
 }: ContentPaneProps) {
@@ -49,6 +51,7 @@ export function ContentPane({
             table={table}
             onCopied={onCopied}
             onSelectTable={onSelectTable}
+            onRemoveTable={onRemoveTable}
             onEditCell={onEditCell}
             onToggleHeader={onToggleHeader}
           />
@@ -65,6 +68,7 @@ function TableDetail({
   table,
   onCopied,
   onSelectTable,
+  onRemoveTable,
   onEditCell,
   onToggleHeader,
 }: {
@@ -72,6 +76,7 @@ function TableDetail({
   table: Table;
   onCopied: (message: string) => void;
   onSelectTable: (documentId: string, tableId: string) => void;
+  onRemoveTable: (documentId: string, tableId: string) => void;
   onEditCell: ContentPaneProps["onEditCell"];
   onToggleHeader: ContentPaneProps["onToggleHeader"];
 }) {
@@ -97,6 +102,16 @@ function TableDetail({
           </span>
         </div>
         <h2>Table {table.n}</h2>
+        <div className={styles.actions}>
+          <button
+            type="button"
+            className={`${styles.linkBtn} ${styles.danger}`}
+            onClick={() => onRemoveTable(document.id, table.id)}
+          >
+            <Icon name="trash" />
+            Remove Table
+          </button>
+        </div>
       </div>
       <div className={styles.bar}>
         <div className={styles.seg} role="group" aria-label="View">

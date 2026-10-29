@@ -99,6 +99,12 @@ export function App() {
 
   const dragging = useFileDrop((files) => void openFiles(files));
 
+  /** Whether re-detecting this Document would ask to discard corrections first. */
+  const hasEdits = (documentId: string) =>
+    state.documents.some((d) => d.id === documentId && d.tables.some((t) => t.edited));
+  const removedMessage = (n: number | undefined) =>
+    `Removed Table ${n}: restore it from the sidebar`;
+
   const removeDocument = (id: string) => {
     const doc = state.documents.find((d) => d.id === id);
     dispatch({ type: "documentRemoved", id });
@@ -129,6 +135,10 @@ export function App() {
             onSelect={(documentId, tableId) =>
               dispatch({ type: "tableSelected", documentId, tableId })
             }
+            onRestore={(documentId, removedId) => {
+              dispatch({ type: "tableRestored", documentId, removedId });
+              if (!hasEdits(documentId)) showHud("Restored table");
+            }}
             onOpen={chooseFiles}
             onRemove={removeDocument}
             columnSpacing={columnSpacing}
@@ -143,6 +153,13 @@ export function App() {
             onSelectTable={(documentId, tableId) =>
               dispatch({ type: "tableSelected", documentId, tableId })
             }
+            onRemoveTable={(documentId, tableId) => {
+              const n = state.documents
+                .find((d) => d.id === documentId)
+                ?.tables.find((t) => t.id === tableId)?.n;
+              dispatch({ type: "tableRemoved", documentId, tableId });
+              if (!hasEdits(documentId)) showHud(removedMessage(n));
+            }}
             onEditCell={(documentId, tableId, row, col, value) =>
               dispatch({ type: "cellEdited", documentId, tableId, row, col, value })
             }
@@ -155,9 +172,18 @@ export function App() {
       {state.pendingChange && (
         <ConfirmSheet
           title="Discard your corrections?"
-          message="Changing the column spacing detects the tables again, which discards the cells you corrected and any header change."
+          message="Detecting the tables again discards the cells you corrected and any header change."
           confirmLabel="Discard and Re-detect"
-          onConfirm={() => dispatch({ type: "changeConfirmed" })}
+          onConfirm={() => {
+            const pending = state.pendingChange;
+            dispatch({ type: "changeConfirmed" });
+            if (pending?.type === "tableRemoved") {
+              const table = state.documents
+                .find((d) => d.id === pending.documentId)
+                ?.tables.find((t) => t.id === pending.tableId);
+              showHud(removedMessage(table?.n));
+            } else if (pending?.type === "tableRestored") showHud("Restored table");
+          }}
           onCancel={() => dispatch({ type: "changeCancelled" })}
         />
       )}

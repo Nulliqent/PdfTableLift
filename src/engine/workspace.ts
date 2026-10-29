@@ -7,6 +7,7 @@
  */
 import type { PageText } from "../shared/page-text";
 import { detectTables, type Band, type Bbox } from "./detection";
+import { REMOVED_TABLE_OVERLAP, overlapRatio } from "./overlap";
 
 export type { Band, Bbox } from "./detection";
 
@@ -36,6 +37,16 @@ export type Table = {
   edited: boolean;
 };
 
+/** A Detected Table the user dismissed, recorded by page and bounding box so it survives re-detection. */
+export type RemovedTable = {
+  id: string;
+  /** Removal order within the Document; makes `id` unique. */
+  seq: number;
+  /** Its number when removed ("Table 2"). */
+  n: number;
+  parts: Part[];
+};
+
 export type Document = {
   id: string;
   name: string;
@@ -46,6 +57,8 @@ export type Document = {
   example: boolean;
   pages: PageText[];
   tables: Table[];
+  /** Removed Tables, hidden from `tables` until restored. */
+  removed: RemovedTable[];
 };
 
 export type Settings = {
@@ -59,11 +72,13 @@ export type Selection = { documentId: string; tableId: string };
  * An action that re-detects Tables and so would discard corrections. Without `discardEdits`, the
  * reducer refuses to run it while any Table is edited and parks it in `pendingChange` instead.
  */
-export type DiscardingAction = {
-  type: "columnSpacingChanged";
-  value: number;
-  discardEdits?: boolean;
-};
+export type DiscardingAction = { discardEdits?: boolean } & (
+  | { type: "columnSpacingChanged"; value: number }
+  /** The user removed a Detected Table; it is hidden through re-detection until restored. */
+  | { type: "tableRemoved"; documentId: string; tableId: string }
+  /** The user restored a Removed Table from the sidebar. */
+  | { type: "tableRestored"; documentId: string; removedId: string }
+);
 
 export type WorkspaceState = {
   documents: Document[];
@@ -133,6 +148,7 @@ export function reduce(state: WorkspaceState, action: WorkspaceAction): Workspac
         example: action.example === true,
         pages: [],
         tables: [],
+        removed: [],
       };
       // The Example Document steps aside when the user's first own Document opens.
       const kept = action.example ? state.documents : state.documents.filter((d) => !d.example);
@@ -154,7 +170,7 @@ export function reduce(state: WorkspaceState, action: WorkspaceAction): Workspac
     case "documentRead": {
       const doc = state.documents.find((d) => d.id === action.id);
       if (!doc) return state;
-      const tables = detectDocument(doc.id, action.pages, state.settings);
+      const tables = detectDocument(doc, action.pages, state.settings);
       const read: Document = { ...doc, status: "ready", pages: action.pages, tables };
       const next = { ...state, documents: state.documents.map((d) => (d === doc ? read : d)) };
       // Keep what the user is looking at; otherwise show this Document's first Table.
@@ -175,7 +191,7 @@ export function reduce(state: WorkspaceState, action: WorkspaceAction): Workspac
       if (needsConfirmation(state, action)) return { ...state, pendingChange: action };
       const settings = { ...state.settings, columnSpacing };
       const documents = state.documents.map((d) =>
-        d.status === "ready" ? { ...d, tables: detectDocument(d.id, d.pages, settings) } : d,
+        d.status === "ready" ? { ...d, tables: detectDocument(d, d.pages, settings) } : d,
       );
       return {
         ...state,
@@ -184,6 +200,40 @@ export function reduce(state: WorkspaceState, action: WorkspaceAction): Workspac
         selection: keepSelection(state, documents),
         pendingChange: null,
       };
+    }
+    case "tableRemoved": {
+      const doc = state.documents.find((d) => d.id === action.documentId);
+      const table = doc?.tables.find((t) => t.id === action.tableId);
+      if (!doc || !table) return state;
+      if (needsConfirmation(state, action)) return { ...state, pendingChange: action };
+      const n = Math.max(0, ...doc.removed.map((r) => r.seq)) + 1;
+      const removed = [
+        ...doc.removed,
+        { id: `${doc.id}:removed:${n}`, seq: n, n: table.n, parts: table.parts },
+      ];
+      const next = { ...redetect(state, { ...doc, removed }), pendingChange: null };
+      // Move to the neighbour that took the removed Table's place, else the previous one.
+      const was = state.selection?.documentId === doc.id && state.selection.tableId === table.id;
+      if (!was) return { ...next, selection: sameTable(state, next.documents) };
+      const tables = next.documents.find((d) => d.id === doc.id)!.tables;
+      const neighbour = tables[Math.min(doc.tables.indexOf(table), tables.length - 1)];
+      if (neighbour) return { ...next, selection: { documentId: doc.id, tableId: neighbour.id } };
+      const other = next.documents.find((d) => d.tables.length);
+      return {
+        ...next,
+        selection: other ? { documentId: other.id, tableId: other.tables[0]!.id } : null,
+      };
+    }
+    case "tableRestored": {
+      const doc = state.documents.find((d) => d.id === action.documentId);
+      if (!doc?.removed.some((r) => r.id === action.removedId)) return state;
+      if (needsConfirmation(state, action)) return { ...state, pendingChange: action };
+      const removed = doc.removed.filter((r) => r.id !== action.removedId);
+      const next = { ...redetect(state, { ...doc, removed }), pendingChange: null };
+      const kept = sameTable(state, next.documents);
+      if (kept) return { ...next, selection: kept };
+      const first = next.documents.find((d) => d.id === doc.id)!.tables[0];
+      return { ...next, selection: first ? { documentId: doc.id, tableId: first.id } : null };
     }
     case "changeConfirmed": {
       if (!state.pendingChange) return state;
@@ -218,9 +268,38 @@ export function reduce(state: WorkspaceState, action: WorkspaceAction): Workspac
   }
 }
 
+/** Replaces a Document and re-detects its Tables (its Removed Tables already updated). */
+function redetect(state: WorkspaceState, doc: Document): WorkspaceState {
+  const tables = detectDocument(doc, doc.pages, state.settings);
+  return {
+    ...state,
+    documents: state.documents.map((d) => (d.id === doc.id ? { ...doc, tables } : d)),
+  };
+}
+
+/** The selection, re-pointed at the same Table (same page and box) after ids were renumbered. */
+function sameTable(before: WorkspaceState, documents: Document[]): Selection | null {
+  const sel = before.selection;
+  const old = before.documents
+    .find((d) => d.id === sel?.documentId)
+    ?.tables.find((t) => t.id === sel?.tableId);
+  const now = documents.find((d) => d.id === sel?.documentId);
+  const table =
+    old &&
+    now?.tables.find(
+      (t) => t.page === old.page && t.parts[0]!.bbox.every((v, i) => v === old.parts[0]!.bbox[i]),
+    );
+  return table && now ? { documentId: now.id, tableId: table.id } : null;
+}
+
 /** True when `action` would discard corrections the user has not agreed to lose. */
 function needsConfirmation(state: WorkspaceState, action: DiscardingAction): boolean {
-  return !action.discardEdits && state.documents.some((d) => d.tables.some((t) => t.edited));
+  // Removing or restoring re-detects one Document only; Column Spacing re-detects them all.
+  const scope = "documentId" in action ? [action.documentId] : state.documents.map((d) => d.id);
+  return (
+    !action.discardEdits &&
+    state.documents.some((d) => scope.includes(d.id) && d.tables.some((t) => t.edited))
+  );
 }
 
 function updateTable(
@@ -258,11 +337,19 @@ function keepSelection(before: WorkspaceState, documents: Document[]): Selection
   return table ? { documentId: now.id, tableId: table.id } : null;
 }
 
-/** Detects every Table in a Document, ordered by page and then top to bottom. */
-function detectDocument(documentId: string, pages: PageText[], settings: Settings): Table[] {
+/** Detects every Table in a Document (minus its Removed Tables), ordered by page and then top to bottom. */
+function detectDocument(doc: Document, pages: PageText[], settings: Settings): Table[] {
+  const documentId = doc.id;
   const found: Table[] = [];
   for (const p of pages) {
+    const hidden = (bbox: Bbox) =>
+      doc.removed.some((r) =>
+        r.parts.some(
+          (rp) => rp.page === p.num && overlapRatio(rp.bbox, bbox) > REMOVED_TABLE_OVERLAP,
+        ),
+      );
     detectTables(p.items, settings.columnSpacing).forEach((t, i) => {
+      if (hidden(t.bbox)) return;
       found.push({
         id: `${documentId}:${p.num}:${i}`,
         n: 0,
