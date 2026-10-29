@@ -5,6 +5,7 @@ import { Hud } from "./components/Hud";
 import { IconSprite } from "./components/Icon";
 import { Sidebar } from "./components/Sidebar";
 import { Toolbar } from "./components/Toolbar";
+import { registerSource } from "./documentSources";
 import { useHud } from "./useHud";
 import styles from "./App.module.css";
 
@@ -19,6 +20,7 @@ export function App() {
     for (const file of files) {
       const id = crypto.randomUUID();
       dispatch({ type: "documentAdded", id, name: file.name, size: file.size });
+      registerSource(id, async () => new Uint8Array(await file.arrayBuffer()));
       // pdf.js is large, so it loads with the first Document instead of with the page.
       const { readDocument } = await import("../pdf-reader");
       const result = await readDocument(new Uint8Array(await file.arrayBuffer()));
@@ -57,6 +59,9 @@ export function App() {
             loading={state.documents.some((d) => d.status === "loading")}
             onOpen={chooseFiles}
             onCopied={showHud}
+            onSelectTable={(documentId, tableId) =>
+              dispatch({ type: "tableSelected", documentId, tableId })
+            }
           />
         </div>
       </div>
