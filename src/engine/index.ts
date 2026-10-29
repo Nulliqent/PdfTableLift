@@ -23,5 +23,5 @@ export type {
   WorkspaceAction,
   WorkspaceState,
 } from "./workspace";
-export { exportTable } from "./export";
+export { DEFAULT_EXPORT_FORMAT, EXPORT_FORMATS, exportTable, isExportFormat } from "./export";
 export type { ExportFormat } from "./export";
