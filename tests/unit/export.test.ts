@@ -59,11 +59,7 @@ describe("exportTable", () => {
 
   it("JSON keeps a real Section column apart from the injected one in As Column mode", () => {
     const t = {
-      grid: [
-        ["Section", "Qty"],
-        ["East"],
-        ["Tea", "2"],
-      ],
+      grid: [["Section", "Qty"], ["East"], ["Tea", "2"]],
       header: true,
       sections: [1],
       parts: [],
