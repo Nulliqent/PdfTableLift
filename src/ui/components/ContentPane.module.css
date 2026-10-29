@@ -73,6 +73,45 @@
   text-wrap: balance;
 }
 
+.linkBtn {
+  border: 0;
+  background: none;
+  color: var(--accent);
+  font: inherit;
+  font-size: 13px;
+  font-weight: 500;
+  padding: 2px 4px;
+  border-radius: 5px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.linkBtn:hover {
+  background: var(--accent-tint);
+}
+
+.linkBtn svg {
+  width: 15px;
+  height: 15px;
+}
+
+.danger {
+  color: var(--red);
+}
+
+.danger:hover {
+  background: color-mix(in srgb, var(--red) 12%, transparent);
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin: 6px 0 0 -4px;
+}
+
 .bar {
   display: flex;
   align-items: center;

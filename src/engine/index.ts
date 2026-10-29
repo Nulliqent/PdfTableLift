@@ -20,11 +20,13 @@ export type {
   Bbox,
   Document,
   Part,
+  RemovedTable,
   Selection,
   Settings,
   Table,
   WorkspaceAction,
   WorkspaceState,
 } from "./workspace";
+export { HAND_DRAWN_OVERLAP, REMOVED_TABLE_OVERLAP, overlapRatio } from "./overlap";
 export { DEFAULT_EXPORT_FORMAT, EXPORT_FORMATS, exportTable, isExportFormat } from "./export";
 export type { ExportFormat } from "./export";

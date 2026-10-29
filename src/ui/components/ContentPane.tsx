@@ -19,6 +19,7 @@ type ContentPaneProps = {
   onOpen: () => void;
   onCopied: (message: string) => void;
   onSelectTable: (documentId: string, tableId: string) => void;
+  onRemoveTable: (documentId: string, tableId: string) => void;
 };
 
 /** The content pane: the selected Table with Copy, or an empty state. */
@@ -29,6 +30,7 @@ export function ContentPane({
   onOpen,
   onCopied,
   onSelectTable,
+  onRemoveTable,
 }: ContentPaneProps) {
   return (
     <main className={styles.content}>
@@ -39,6 +41,7 @@ export function ContentPane({
             table={table}
             onCopied={onCopied}
             onSelectTable={onSelectTable}
+            onRemoveTable={onRemoveTable}
           />
         ) : (
           <EmptyState loading={loading} onOpen={onOpen} />
@@ -53,11 +56,13 @@ function TableDetail({
   table,
   onCopied,
   onSelectTable,
+  onRemoveTable,
 }: {
   document: Document;
   table: Table;
   onCopied: (message: string) => void;
   onSelectTable: (documentId: string, tableId: string) => void;
+  onRemoveTable: (documentId: string, tableId: string) => void;
 }) {
   const [view, setView] = useState<"table" | "source">("table");
   const { rows, cols } = tableSize(table);
@@ -81,6 +86,16 @@ function TableDetail({
           </span>
         </div>
         <h2>Table {table.n}</h2>
+        <div className={styles.actions}>
+          <button
+            type="button"
+            className={`${styles.linkBtn} ${styles.danger}`}
+            onClick={() => onRemoveTable(document.id, table.id)}
+          >
+            <Icon name="trash" />
+            Remove Table
+          </button>
+        </div>
       </div>
       <div className={styles.bar}>
         <div className={styles.seg} role="group" aria-label="View">

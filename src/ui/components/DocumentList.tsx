@@ -7,10 +7,11 @@ type DocumentListProps = {
   documents: Document[];
   selection: Selection | null;
   onSelect: (documentId: string, tableId: string) => void;
+  onRestore: (documentId: string, removedId: string) => void;
 };
 
 /** The sidebar's Documents section: each Document and its Tables with page and size. */
-export function DocumentList({ documents, selection, onSelect }: DocumentListProps) {
+export function DocumentList({ documents, selection, onSelect, onRestore }: DocumentListProps) {
   return (
     <div>
       <div className={styles.heading}>Documents</div>
@@ -25,6 +26,7 @@ export function DocumentList({ documents, selection, onSelect }: DocumentListPro
                 </span>
               </div>
               <DocumentBody doc={doc} selection={selection} onSelect={onSelect} />
+              <RemovedTables doc={doc} onRestore={onRestore} />
             </div>
           ))
         ) : (
@@ -35,11 +37,34 @@ export function DocumentList({ documents, selection, onSelect }: DocumentListPro
   );
 }
 
+/** Removed Tables of a Document, each with a Restore action. */
+function RemovedTables({
+  doc,
+  onRestore,
+}: { doc: Document } & Pick<DocumentListProps, "onRestore">) {
+  if (doc.status !== "ready") return null;
+  return doc.removed.map((r) => (
+    <div key={r.id} className={styles.removed}>
+      <span>
+        Removed: Table {r.n}, {pageLabel(r)}
+      </span>
+      <button
+        type="button"
+        className={styles.linkBtn}
+        aria-label={`Restore Table ${r.n} of ${doc.name}`}
+        onClick={() => onRestore(doc.id, r.id)}
+      >
+        Restore
+      </button>
+    </div>
+  ));
+}
+
 function DocumentBody({
   doc,
   selection,
   onSelect,
-}: { doc: Document } & Omit<DocumentListProps, "documents">) {
+}: { doc: Document } & Pick<DocumentListProps, "selection" | "onSelect">) {
   if (doc.status === "loading")
     return (
       <div className={styles.status}>

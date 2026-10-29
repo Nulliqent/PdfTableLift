@@ -58,6 +58,10 @@ export function App() {
             onSelect={(documentId, tableId) =>
               dispatch({ type: "tableSelected", documentId, tableId })
             }
+            onRestore={(documentId, removedId) => {
+              dispatch({ type: "tableRestored", documentId, removedId });
+              showHud("Restored table");
+            }}
             columnSpacing={columnSpacing}
             onColumnSpacing={(value) => dispatch({ type: "columnSpacingChanged", value })}
           />
@@ -70,6 +74,11 @@ export function App() {
             onSelectTable={(documentId, tableId) =>
               dispatch({ type: "tableSelected", documentId, tableId })
             }
+            onRemoveTable={(documentId, tableId) => {
+              const n = selectedTable(state)?.n;
+              dispatch({ type: "tableRemoved", documentId, tableId });
+              showHud(`Removed Table ${n}: restore it from the sidebar`);
+            }}
           />
         </div>
       </div>
