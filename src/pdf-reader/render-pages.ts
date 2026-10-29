@@ -4,7 +4,7 @@
  * `destroy()`.
  */
 import type { DocumentInitParameters, PDFPageProxy } from "pdfjs-dist/types/src/display/api";
-import { outlineBox, type OutlineBox, type PdfBox } from "./page-outline";
+import { outlineBox, pdfBox, type OutlineBox, type PdfBox } from "./page-outline";
 import type { PdfJs, ReaderOptions } from "./read-document";
 
 export type { OutlineBox, PdfBox } from "./page-outline";
@@ -18,6 +18,8 @@ export type RenderedPage = {
   height: number;
   /** Where a bbox in PDF space lies on this page, as fractions of its width and height. */
   locate(bbox: PdfBox): OutlineBox;
+  /** The inverse of `locate`: a box on this page, as fractions, as a bbox in PDF space. */
+  unlocate(box: OutlineBox): PdfBox;
 };
 
 export type PageRenderer = {
@@ -71,6 +73,7 @@ export function createOpenPages(pdfjs: PdfJs, options: ReaderOptions = {}): Open
           width: viewport.width,
           height: viewport.height,
           locate: (bbox) => outlineBox(viewport, bbox),
+          unlocate: (box) => pdfBox(viewport, box),
         };
       },
       destroy: () => doc.loadingTask.destroy(),

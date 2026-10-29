@@ -6,8 +6,8 @@
  * exhaustiveness check in the default branch flags any action left unhandled.
  */
 import type { PageText } from "../shared/page-text";
-import { detectTables, type Band, type Bbox } from "./detection";
-import { REMOVED_TABLE_OVERLAP, overlapRatio } from "./overlap";
+import { detectTables, regionTable, type Band, type Bbox, type FoundTable } from "./detection";
+import { HAND_DRAWN_OVERLAP, REMOVED_TABLE_OVERLAP, overlapRatio } from "./overlap";
 
 export type { Band, Bbox } from "./detection";
 
@@ -35,7 +35,15 @@ export type Table = {
   repeats: number;
   /** The user corrected a cell or the Header Row; re-detection would discard it. */
   edited: boolean;
+  /** The id of the Region a Hand-drawn Table is built from ("Selected by hand"); null if Detected. */
+  manual: string | null;
 };
+
+/** A Region the user drew on a page; it yields a Hand-drawn Table. */
+export type Region = { id: string; page: number; bbox: Bbox };
+
+/** The Region being selected: the page shown and the box dragged so far (null before any drag). */
+export type RegionInProgress = { documentId: string; page: number; bbox: Bbox | null };
 
 /** A Detected Table the user dismissed, recorded by page and bounding box so it survives re-detection. */
 export type RemovedTable = {
@@ -59,6 +67,8 @@ export type Document = {
   tables: Table[];
   /** Removed Tables, hidden from `tables` until restored. */
   removed: RemovedTable[];
+  /** Regions drawn by hand; each stands as a Hand-drawn Table. */
+  regions: Region[];
 };
 
 export type Settings = {
@@ -78,11 +88,15 @@ export type DiscardingAction = { discardEdits?: boolean } & (
   | { type: "tableRemoved"; documentId: string; tableId: string }
   /** The user restored a Removed Table from the sidebar. */
   | { type: "tableRestored"; documentId: string; removedId: string }
+  /** Save the Region in progress as a Hand-drawn Table. Ignored while the Region holds no text. */
+  | { type: "regionCommitted" }
 );
 
 export type WorkspaceState = {
   documents: Document[];
   selection: Selection | null;
+  /** The Region in progress while the user is in Select Region, else null. */
+  region: RegionInProgress | null;
   settings: Settings;
   /**
    * The change waiting for the user to confirm that edits may be discarded, or null. The UI shows
@@ -106,6 +120,14 @@ export type WorkspaceAction =
   | { type: "changeConfirmed" }
   /** The user cancelled the pending change: nothing changes. */
   | { type: "changeCancelled" }
+  /** Select Region was entered for a Document, on the given page. */
+  | { type: "regionStarted"; documentId: string; page: number }
+  /** The page was stepped, or the Region dragged (bbox in PDF points; null clears it). */
+  | { type: "regionChanged"; page: number; bbox: Bbox | null }
+  /** Select Whole Page: the Region covers the current page. */
+  | { type: "wholePageSelected" }
+  /** Escape or Cancel: leave Region selection with no changes. */
+  | { type: "regionCancelled" }
   /** A cell was corrected (grid coordinates, Header Row included). */
   | {
       type: "cellEdited";
@@ -119,6 +141,9 @@ export type WorkspaceAction =
   | { type: "headerToggled"; documentId: string; tableId: string; header: boolean }
   /** A row number was clicked: the grid row becomes a Section Header, or a data row again. */
   | { type: "sectionHeaderToggled"; documentId: string; tableId: string; row: number };
+
+/** Margin left around the page by Select Whole Page, in points. */
+const WHOLE_PAGE_MARGIN = 18;
 
 export const MIN_COLUMN_SPACING = 0.4;
 export const MAX_COLUMN_SPACING = 2.6;
@@ -135,6 +160,7 @@ export const DEFAULT_SETTINGS: Settings = { columnSpacing: 1 };
 export const initialWorkspace: WorkspaceState = {
   documents: [],
   selection: null,
+  region: null,
   settings: DEFAULT_SETTINGS,
   pendingChange: null,
 };
@@ -151,6 +177,7 @@ export function reduce(state: WorkspaceState, action: WorkspaceAction): Workspac
         pages: [],
         tables: [],
         removed: [],
+        regions: [],
       };
       // The Example Document steps aside when the user's first own Document opens.
       const kept = action.example ? state.documents : state.documents.filter((d) => !d.example);
@@ -187,7 +214,11 @@ export function reduce(state: WorkspaceState, action: WorkspaceAction): Workspac
     case "tableSelected": {
       const doc = state.documents.find((d) => d.id === action.documentId);
       if (!doc?.tables.some((t) => t.id === action.tableId)) return state;
-      return { ...state, selection: { documentId: action.documentId, tableId: action.tableId } };
+      return {
+        ...state,
+        region: null,
+        selection: { documentId: action.documentId, tableId: action.tableId },
+      };
     }
     case "columnSpacingChanged": {
       const columnSpacing = parseColumnSpacing(action.value);
@@ -211,11 +242,17 @@ export function reduce(state: WorkspaceState, action: WorkspaceAction): Workspac
       if (!doc || !table) return state;
       if (needsConfirmation(state, action)) return { ...state, pendingChange: action };
       const n = Math.max(0, ...doc.removed.map((r) => r.seq)) + 1;
-      const removed = [
-        ...doc.removed,
-        { id: `${doc.id}:removed:${n}`, seq: n, n: table.n, parts: table.parts },
-      ];
-      const next = { ...redetect(state, { ...doc, removed }), pendingChange: null };
+      // A Hand-drawn Table is deleted with its Region; a Detected Table is recorded as removed.
+      const gone: Document = table.manual
+        ? { ...doc, regions: doc.regions.filter((r) => r.id !== table.manual) }
+        : {
+            ...doc,
+            removed: [
+              ...doc.removed,
+              { id: `${doc.id}:removed:${n}`, seq: n, n: table.n, parts: table.parts },
+            ],
+          };
+      const next = { ...redetect(state, gone), pendingChange: null };
       // Move to the neighbour that took the removed Table's place, else the previous one.
       const was = state.selection?.documentId === doc.id && state.selection.tableId === table.id;
       if (!was) return { ...next, selection: sameTable(state, next.documents) };
@@ -239,6 +276,38 @@ export function reduce(state: WorkspaceState, action: WorkspaceAction): Workspac
       const first = next.documents.find((d) => d.id === doc.id)!.tables[0];
       return { ...next, selection: first ? { documentId: doc.id, tableId: first.id } : null };
     }
+    case "regionCommitted": {
+      const doc = state.documents.find((d) => d.id === state.region?.documentId);
+      const region = state.region;
+      if (!doc || !region?.bbox || !regionPreview(state)) return state;
+      if (needsConfirmation(state, action)) return { ...state, pendingChange: action };
+      const id = `r${Math.max(0, ...doc.regions.map((r) => Number(r.id.slice(1)))) + 1}`;
+      const regions = [...doc.regions, { id, page: region.page, bbox: region.bbox }];
+      const next = redetect({ ...state, region: null, pendingChange: null }, { ...doc, regions });
+      const created = next.documents
+        .find((d) => d.id === doc.id)!
+        .tables.find((t) => t.manual === id);
+      return created ? { ...next, selection: { documentId: doc.id, tableId: created.id } } : next;
+    }
+    case "regionStarted": {
+      const doc = state.documents.find((d) => d.id === action.documentId);
+      if (doc?.status !== "ready" || !pageOf(doc, action.page)) return state;
+      return { ...state, region: { documentId: doc.id, page: action.page, bbox: null } };
+    }
+    case "regionChanged": {
+      const doc = regionDocument(state);
+      if (!state.region || !doc || !pageOf(doc, action.page)) return state;
+      return { ...state, region: { ...state.region, page: action.page, bbox: action.bbox } };
+    }
+    case "wholePageSelected": {
+      const doc = regionDocument(state);
+      const p = doc && pageOf(doc, state.region!.page);
+      if (!p) return state;
+      const m = WHOLE_PAGE_MARGIN;
+      return { ...state, region: { ...state.region!, bbox: [m, m, p.w - m, p.h - m] } };
+    }
+    case "regionCancelled":
+      return state.region ? { ...state, region: null } : state;
     case "changeConfirmed": {
       if (!state.pendingChange) return state;
       return reduce(
@@ -318,8 +387,13 @@ function sameTable(before: WorkspaceState, documents: Document[]): Selection | n
 
 /** True when `action` would discard corrections the user has not agreed to lose. */
 function needsConfirmation(state: WorkspaceState, action: DiscardingAction): boolean {
-  // Removing or restoring re-detects one Document only; Column Spacing re-detects them all.
-  const scope = "documentId" in action ? [action.documentId] : state.documents.map((d) => d.id);
+  // Removing, restoring or saving a Region re-detects one Document only; Column Spacing re-detects them all.
+  const scope =
+    action.type === "regionCommitted"
+      ? [state.region?.documentId]
+      : "documentId" in action
+        ? [action.documentId]
+        : state.documents.map((d) => d.id);
   return (
     !action.discardEdits &&
     state.documents.some((d) => scope.includes(d.id) && d.tables.some((t) => t.edited))
@@ -355,6 +429,10 @@ function keepSelection(before: WorkspaceState, documents: Document[]): Selection
   const now = documents.find((d) => d.id === sel.documentId);
   const oldTable = old?.tables.find((t) => t.id === sel.tableId);
   if (!old || !now || !oldTable) return null;
+  if (oldTable.manual) {
+    const same = now.tables.find((t) => t.manual === oldTable.manual);
+    if (same) return { documentId: now.id, tableId: same.id };
+  }
   const position = old.tables.filter((t) => t.page === oldTable.page).indexOf(oldTable);
   const same = now.tables.filter((t) => t.page === oldTable.page)[position];
   const table = same ?? now.tables[0];
@@ -365,6 +443,20 @@ function keepSelection(before: WorkspaceState, documents: Document[]): Selection
 function detectDocument(doc: Document, pages: PageText[], settings: Settings): Table[] {
   const documentId = doc.id;
   const found: Table[] = [];
+  const table = (id: string, page: number, t: FoundTable, manual: string | null): Table => ({
+    id,
+    n: 0,
+    page,
+    parts: [{ page, bbox: t.bbox }],
+    header: true,
+    firstBold: t.firstBold,
+    grid: t.grid,
+    sections: t.sections,
+    cols: t.cols,
+    repeats: 0,
+    edited: false,
+    manual,
+  });
   for (const p of pages) {
     const hidden = (bbox: Bbox) =>
       doc.removed.some((r) =>
@@ -372,22 +464,17 @@ function detectDocument(doc: Document, pages: PageText[], settings: Settings): T
           (rp) => rp.page === p.num && overlapRatio(rp.bbox, bbox) > REMOVED_TABLE_OVERLAP,
         ),
       );
+    // A Hand-drawn Table takes over the Detected Tables its Region covers.
+    const covering = doc.regions.filter((r) => r.page === p.num);
     detectTables(p.items, settings.columnSpacing).forEach((t, i) => {
       if (hidden(t.bbox)) return;
-      found.push({
-        id: `${documentId}:${p.num}:${i}`,
-        n: 0,
-        page: p.num,
-        parts: [{ page: p.num, bbox: t.bbox }],
-        header: true,
-        firstBold: t.firstBold,
-        grid: t.grid,
-        sections: t.sections,
-        cols: t.cols,
-        repeats: 0,
-        edited: false,
-      });
+      if (covering.some((r) => overlapRatio(r.bbox, t.bbox) > HAND_DRAWN_OVERLAP)) return;
+      found.push(table(`${documentId}:${p.num}:${i}`, p.num, t, null));
     });
+    for (const r of covering) {
+      const t = regionTable(p.items, r.bbox, settings.columnSpacing);
+      if (t) found.push(table(`${documentId}:region:${r.id}`, p.num, t, r.id));
+    }
   }
   return found
     .sort((a, b) => a.page - b.page || b.parts[0]!.bbox[3] - a.parts[0]!.bbox[3])
@@ -415,4 +502,22 @@ export function tableSize(table: Table): { rows: number; cols: number } {
     rows: table.grid.length - (table.header ? 1 : 0) - secs,
     cols: table.grid[0]?.length ?? 0,
   };
+}
+
+const pageOf = (doc: Document, num: number): PageText | undefined =>
+  doc.pages.find((p) => p.num === num);
+
+const regionDocument = (state: WorkspaceState): Document | undefined =>
+  state.documents.find((d) => d.id === state.region?.documentId);
+
+/**
+ * The Table the Region in progress would make with the current Column Spacing, or null while
+ * nothing is drawn or the Region holds no text (so it cannot be saved).
+ */
+export function regionPreview(state: WorkspaceState): FoundTable | null {
+  const { region } = state;
+  const doc = regionDocument(state);
+  const page = doc && region && pageOf(doc, region.page);
+  if (!region?.bbox || !page) return null;
+  return regionTable(page.items, region.bbox, state.settings.columnSpacing);
 }

@@ -234,3 +234,25 @@ export function buildTable(rows: Line[], manual = false): FoundTable | null {
     ],
   };
 }
+
+/**
+ * Builds a Hand-drawn Table from the text items whose centre lies inside a Region (PDF
+ * coordinates), allowing a single column. Returns null when the Region holds no text.
+ * The Table's bbox is the Region itself.
+ */
+export function regionTable(
+  items: TextItem[],
+  region: Bbox,
+  columnSpacing: number,
+): FoundTable | null {
+  const [x0, y0, x1, y1] = region;
+  const inside = items.filter((it) => {
+    const cx = it.x + it.w / 2;
+    const cy = it.y + it.h * 0.35;
+    return cx >= x0 && cx <= x1 && cy >= y0 && cy <= y1;
+  });
+  if (!inside.length) return null;
+  const rows = linesFromItems(inside, columnSpacing);
+  const table = rows.length ? buildTable(rows, true) : null;
+  return table && { ...table, bbox: region };
+}

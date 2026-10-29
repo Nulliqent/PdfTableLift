@@ -9,6 +9,7 @@ export {
   MAX_COLUMN_SPACING,
   MIN_COLUMN_SPACING,
   parseColumnSpacing,
+  regionPreview,
   initialWorkspace,
   reduce,
   selectedDocument,
@@ -21,6 +22,8 @@ export type {
   DiscardingAction,
   Document,
   Part,
+  Region,
+  RegionInProgress,
   RemovedTable,
   Selection,
   Settings,
@@ -42,3 +45,4 @@ export {
   numericColumns,
 } from "./export";
 export type { ExportFormat, SectionMode } from "./export";
+export type { FoundTable } from "./detection";

@@ -7,6 +7,9 @@ type DocumentListProps = {
   documents: Document[];
   selection: Selection | null;
   onSelect: (documentId: string, tableId: string) => void;
+  /** The Document whose Region is being selected, if any. */
+  regionDocumentId: string | null;
+  onSelectRegion: (documentId: string) => void;
   onRestore: (documentId: string, removedId: string) => void;
   onRemove: (documentId: string) => void;
 };
@@ -16,6 +19,8 @@ export function DocumentList({
   documents,
   selection,
   onSelect,
+  regionDocumentId,
+  onSelectRegion,
   onRestore,
   onRemove,
 }: DocumentListProps) {
@@ -42,7 +47,13 @@ export function DocumentList({
                   <Icon name="x" />
                 </button>
               </div>
-              <DocumentBody doc={doc} selection={selection} onSelect={onSelect} />
+              <DocumentBody
+                doc={doc}
+                selection={selection}
+                onSelect={onSelect}
+                regionDocumentId={regionDocumentId}
+                onSelectRegion={onSelectRegion}
+              />
               <RemovedTables doc={doc} onRestore={onRestore} />
             </div>
           ))
@@ -81,7 +92,12 @@ function DocumentBody({
   doc,
   selection,
   onSelect,
-}: { doc: Document } & Pick<DocumentListProps, "selection" | "onSelect">) {
+  regionDocumentId,
+  onSelectRegion,
+}: { doc: Document } & Pick<
+  DocumentListProps,
+  "selection" | "onSelect" | "regionDocumentId" | "onSelectRegion"
+>) {
   if (doc.status === "loading")
     return (
       <div className={styles.status}>
@@ -89,14 +105,11 @@ function DocumentBody({
         Reading pages…
       </div>
     );
-  if (!doc.tables.length)
-    return (
-      <div className={styles.status}>No tables found on {plural(doc.pages.length, "page")}</div>
-    );
-  return doc.tables.map((t) => {
+  const selecting = regionDocumentId !== null;
+  const tables = doc.tables.map((t) => {
     const { rows, cols } = tableSize(t);
     const sections = t.sections.filter((r) => isSectionHeader(t, r)).length;
-    const current = selection?.documentId === doc.id && selection.tableId === t.id;
+    const current = !selecting && selection?.documentId === doc.id && selection.tableId === t.id;
     return (
       <button
         key={t.id}
@@ -105,15 +118,37 @@ function DocumentBody({
         aria-current={current}
         onClick={() => onSelect(doc.id, t.id)}
       >
-        <Icon name="table" />
+        <Icon name={t.manual === null ? "table" : "select"} />
         <span className={styles.t}>
           <b>Table {t.n}</b>
           <span className={styles.sub}>
             {pageLabel(t)} · {rows} × {cols}
             {sections > 0 && ` · ${plural(sections, "section")}`}
+            {t.manual !== null && " · Selected by hand"}
           </span>
         </span>
       </button>
     );
   });
+  return (
+    <>
+      {doc.tables.length ? (
+        tables
+      ) : (
+        <div className={styles.status}>No tables found on {plural(doc.pages.length, "page")}</div>
+      )}
+      <button
+        type="button"
+        className={`${styles.row} ${styles.add}`}
+        aria-current={regionDocumentId === doc.id}
+        onClick={() => onSelectRegion(doc.id)}
+      >
+        <Icon name="select" />
+        <span className={styles.t}>
+          <b>Select Table Region…</b>
+          <span className={styles.sub}>When a table is missed or cut off</span>
+        </span>
+      </button>
+    </>
+  );
 }

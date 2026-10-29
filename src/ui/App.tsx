@@ -1,10 +1,18 @@
 import { useCallback, useEffect, useReducer, useRef } from "react";
-import { initialWorkspace, reduce, selectedDocument, selectedTable } from "../engine";
+import {
+  initialWorkspace,
+  reduce,
+  regionPreview,
+  selectedDocument,
+  selectedTable,
+  type WorkspaceAction,
+} from "../engine";
 import { ContentPane } from "./components/ContentPane";
 import { ConfirmSheet } from "./components/ConfirmSheet";
 import { DropOverlay } from "./components/DropOverlay";
 import { Hud } from "./components/Hud";
 import { IconSprite } from "./components/Icon";
+import { RegionSelection } from "./components/RegionSelection";
 import { Sidebar } from "./components/Sidebar";
 import { Toolbar } from "./components/Toolbar";
 import { loadColumnSpacing, saveColumnSpacing } from "./column-spacing-storage";
@@ -30,6 +38,22 @@ export function App() {
   const userOpened = useRef(false);
   const exampleRequested = useRef(false);
   const chooseFiles = useCallback(() => fileInput.current?.click(), []);
+
+  const region = state.region;
+  const regionDoc = region && state.documents.find((d) => d.id === region.documentId);
+  const startRegion = (documentId: string) => {
+    const table = selectedTable(state);
+    const onSelected = state.selection?.documentId === documentId && table;
+    dispatch({ type: "regionStarted", documentId, page: onSelected ? table.page : 1 });
+  };
+  const saveRegion = () => {
+    // The reducer is pure, so the new Table's number is known before dispatching.
+    const action: WorkspaceAction = { type: "regionCommitted" };
+    const created = selectedTable(reduce(state, action));
+    dispatch(action);
+    if (created && created.manual !== null && !hasEdits(region!.documentId))
+      showHud(`Table ${created.n} added from your selection`);
+  };
 
   const read = async (id: string, bytes: Uint8Array) => {
     // pdf.js is large, so it loads with the first Document instead of with the page.
@@ -135,6 +159,8 @@ export function App() {
             onSelect={(documentId, tableId) =>
               dispatch({ type: "tableSelected", documentId, tableId })
             }
+            regionDocumentId={region?.documentId ?? null}
+            onSelectRegion={startRegion}
             onRestore={(documentId, removedId) => {
               dispatch({ type: "tableRestored", documentId, removedId });
               if (!hasEdits(documentId)) showHud("Restored table");
@@ -152,6 +178,21 @@ export function App() {
             onCopied={showHud}
             onSelectTable={(documentId, tableId) =>
               dispatch({ type: "tableSelected", documentId, tableId })
+            }
+            regionSelection={
+              region &&
+              regionDoc && (
+                <RegionSelection
+                  document={regionDoc}
+                  region={region}
+                  preview={regionPreview(state)}
+                  onPage={(page) => dispatch({ type: "regionChanged", page, bbox: null })}
+                  onDrag={(bbox) => dispatch({ type: "regionChanged", page: region.page, bbox })}
+                  onWholePage={() => dispatch({ type: "wholePageSelected" })}
+                  onCancel={() => dispatch({ type: "regionCancelled" })}
+                  onSave={saveRegion}
+                />
+              )
             }
             onRemoveTable={(documentId, tableId) => {
               const n = state.documents
@@ -186,6 +227,8 @@ export function App() {
                 ?.tables.find((t) => t.id === pending.tableId);
               showHud(removedMessage(table?.n));
             } else if (pending?.type === "tableRestored") showHud("Restored table");
+            else if (pending?.type === "regionCommitted")
+              showHud("Table added from your selection");
           }}
           onCancel={() => dispatch({ type: "changeCancelled" })}
         />

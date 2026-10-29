@@ -79,6 +79,14 @@
   color: var(--on-accent);
 }
 
+.add {
+  color: var(--accent);
+}
+
+.add b {
+  font-weight: 500;
+}
+
 .t {
   display: flex;
   flex-direction: column;

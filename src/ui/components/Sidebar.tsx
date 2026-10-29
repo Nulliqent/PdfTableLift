@@ -8,6 +8,8 @@ type SidebarProps = {
   documents: Document[];
   selection: Selection | null;
   onSelect: (documentId: string, tableId: string) => void;
+  regionDocumentId: string | null;
+  onSelectRegion: (documentId: string) => void;
   onRestore: (documentId: string, removedId: string) => void;
   onOpen: () => void;
   onRemove: (documentId: string) => void;
@@ -20,6 +22,8 @@ export function Sidebar({
   documents,
   selection,
   onSelect,
+  regionDocumentId,
+  onSelectRegion,
   onRestore,
   onOpen,
   onRemove,
@@ -33,6 +37,8 @@ export function Sidebar({
         documents={documents}
         selection={selection}
         onSelect={onSelect}
+        regionDocumentId={regionDocumentId}
+        onSelectRegion={onSelectRegion}
         onRestore={onRestore}
         onRemove={onRemove}
       />

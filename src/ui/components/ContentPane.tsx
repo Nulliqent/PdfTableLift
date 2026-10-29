@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, type ReactNode } from "react";
 import {
   EXPORT_FORMATS,
   exportTable,
@@ -29,6 +29,8 @@ type ContentPaneProps = {
   onOpen: () => void;
   onCopied: (message: string) => void;
   onSelectTable: (documentId: string, tableId: string) => void;
+  /** Select Region, shown in place of the selected Table while the user is drawing a Region. */
+  regionSelection?: ReactNode;
   onRemoveTable: (documentId: string, tableId: string) => void;
   onEditCell: (
     documentId: string,
@@ -49,6 +51,7 @@ export function ContentPane({
   onOpen,
   onCopied,
   onSelectTable,
+  regionSelection,
   onRemoveTable,
   onEditCell,
   onToggleHeader,
@@ -57,7 +60,9 @@ export function ContentPane({
   return (
     <main className={styles.content}>
       <div className={styles.inner}>
-        {document && table ? (
+        {regionSelection ? (
+          regionSelection
+        ) : document && table ? (
           <TableDetail
             document={document}
             table={table}
@@ -119,6 +124,12 @@ function TableDetail({
           </span>
         </div>
         <h2>Table {table.n}</h2>
+        {table.manual !== null && (
+          <span className={styles.tag}>
+            <Icon name="select" />
+            Selected by hand
+          </span>
+        )}
         <div className={styles.actions}>
           <button
             type="button"

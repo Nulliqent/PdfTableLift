@@ -73,6 +73,24 @@
   text-wrap: balance;
 }
 
+.tag {
+  align-self: flex-start;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--accent);
+  background: var(--accent-tint);
+  padding: 3px 8px;
+  border-radius: 999px;
+}
+
+.tag svg {
+  width: 13px;
+  height: 13px;
+}
+
 .linkBtn {
   border: 0;
   background: none;
