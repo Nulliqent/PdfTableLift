@@ -43,6 +43,8 @@ type ContentPaneProps = {
   ) => void;
   onToggleHeader: (documentId: string, tableId: string, header: boolean) => void;
   onToggleSection: (documentId: string, tableId: string, row: number) => void;
+  onSplitByPage: (documentId: string, tableId: string) => void;
+  onJoinAgain: (documentId: string, tableId: string) => void;
 };
 
 /** The content pane: the selected Table with Copy, or an empty state. */
@@ -59,6 +61,8 @@ export function ContentPane({
   onEditCell,
   onToggleHeader,
   onToggleSection,
+  onSplitByPage,
+  onJoinAgain,
 }: ContentPaneProps) {
   return (
     <main className={styles.content}>
@@ -75,6 +79,8 @@ export function ContentPane({
             onEditCell={onEditCell}
             onToggleHeader={onToggleHeader}
             onToggleSection={onToggleSection}
+            onSplitByPage={onSplitByPage}
+            onJoinAgain={onJoinAgain}
           />
         ) : (
           <EmptyState documents={documents} onOpen={onOpen} onSelectRegion={onSelectRegion} />
@@ -93,6 +99,8 @@ function TableDetail({
   onEditCell,
   onToggleHeader,
   onToggleSection,
+  onSplitByPage,
+  onJoinAgain,
 }: {
   document: Document;
   table: Table;
@@ -102,6 +110,8 @@ function TableDetail({
   onEditCell: ContentPaneProps["onEditCell"];
   onToggleHeader: ContentPaneProps["onToggleHeader"];
   onToggleSection: ContentPaneProps["onToggleSection"];
+  onSplitByPage: ContentPaneProps["onSplitByPage"];
+  onJoinAgain: ContentPaneProps["onJoinAgain"];
 }) {
   const [view, setView] = useState<"table" | "source">("table");
   const { rows, cols } = tableSize(table);
@@ -132,6 +142,35 @@ function TableDetail({
             <Icon name="select" />
             Selected by hand
           </span>
+        )}
+        {table.parts.length > 1 && (
+          <div className={styles.joined}>
+            <Icon name="link" />
+            <span>
+              Joined from {table.parts.length} pages
+              {table.repeats > 0 && ", repeated header removed"}
+            </span>
+            <button
+              type="button"
+              className={styles.linkBtn}
+              onClick={() => onSplitByPage(document.id, table.id)}
+            >
+              Split by Page
+            </button>
+          </div>
+        )}
+        {table.splitFrom && (
+          <div className={styles.joined}>
+            <Icon name="link" />
+            <span>Split from the table on page {table.page - 1}</span>
+            <button
+              type="button"
+              className={styles.linkBtn}
+              onClick={() => onJoinAgain(document.id, table.id)}
+            >
+              Join Again
+            </button>
+          </div>
         )}
         <div className={styles.actions}>
           <button
