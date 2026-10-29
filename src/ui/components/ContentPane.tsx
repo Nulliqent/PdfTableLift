@@ -1,6 +1,11 @@
-import { exportTable, tableSize, type Document, type Table } from "../../engine";
+import { useState } from "react";
+import { EXPORT_FORMATS, exportTable, tableSize, type Document, type Table } from "../../engine";
+import { copyText } from "../copy-text";
 import { pageLabel, plural } from "../format";
+import { useExportFormat } from "../useExportFormat";
 import { Button } from "./Button";
+import { CopySheet } from "./CopySheet";
+import { FormatControl } from "./FormatControl";
 import { Icon } from "./Icon";
 import { TableView } from "./TableView";
 import styles from "./ContentPane.module.css";
@@ -39,12 +44,14 @@ function TableDetail({
   onCopied: (message: string) => void;
 }) {
   const { rows, cols } = tableSize(table);
-  const copy = () => {
-    // The fallback sheet for a blocked clipboard (US-49) arrives with the export formats (#10).
-    navigator.clipboard.writeText(exportTable(table, "csv")).then(
-      () => onCopied("Copied as CSV"),
-      () => undefined,
-    );
+  const [format, setFormat] = useExportFormat();
+  const [sheet, setSheet] = useState<string | null>(null);
+  const name = EXPORT_FORMATS.find((f) => f.format === format)!.name;
+  const copy = async () => {
+    const text = exportTable(table, format);
+    if (await copyText(text)) {
+      onCopied(format === "tsv" ? "Copied: paste into Numbers or Excel" : `Copied as ${name}`);
+    } else setSheet(text);
   };
   return (
     <>
@@ -59,8 +66,9 @@ function TableDetail({
         <h2>Table {table.n}</h2>
       </div>
       <div className={styles.bar}>
+        <FormatControl value={format} onChange={setFormat} />
         <span className={styles.spacer} />
-        <Button variant="primary" onClick={copy}>
+        <Button variant="primary" onClick={() => void copy()}>
           <Icon name="copy" />
           Copy
         </Button>
@@ -68,6 +76,9 @@ function TableDetail({
       <div className={styles.card}>
         <TableView table={table} />
       </div>
+      {sheet !== null && (
+        <CopySheet title={`Copy ${name}`} text={sheet} onDone={() => setSheet(null)} />
+      )}
       <div className={styles.foot}>
         <span>
           {plural(rows, "row")} × {plural(cols, "column")}
