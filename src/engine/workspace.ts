@@ -33,6 +33,8 @@ export type Table = {
   cols: Band[];
   /** Repeated Header Rows dropped by joining. */
   repeats: number;
+  /** The user corrected a cell or the Header Row; re-detection would discard it. */
+  edited: boolean;
 };
 
 /** A Detected Table the user dismissed, recorded by page and bounding box so it survives re-detection. */
@@ -66,10 +68,28 @@ export type Settings = {
 
 export type Selection = { documentId: string; tableId: string };
 
+/**
+ * An action that re-detects Tables and so would discard corrections. Without `discardEdits`, the
+ * reducer refuses to run it while any Table is edited and parks it in `pendingChange` instead.
+ */
+export type DiscardingAction = { discardEdits?: boolean } & (
+  | { type: "columnSpacingChanged"; value: number }
+  /** The user removed a Detected Table; it is hidden through re-detection until restored. */
+  | { type: "tableRemoved"; documentId: string; tableId: string }
+  /** The user restored a Removed Table from the sidebar. */
+  | { type: "tableRestored"; documentId: string; removedId: string }
+);
+
 export type WorkspaceState = {
   documents: Document[];
   selection: Selection | null;
   settings: Settings;
+  /**
+   * The change waiting for the user to confirm that edits may be discarded, or null. The UI shows
+   * a confirmation while it is set and answers with `changeConfirmed` or `changeCancelled`.
+   * To guard another action: add it to DiscardingAction and start its case with `guardEdits`.
+   */
+  pendingChange: DiscardingAction | null;
 };
 
 export type WorkspaceAction =
@@ -81,11 +101,22 @@ export type WorkspaceAction =
   /** The user removed a Document. Selection moves to the next Document with Tables. */
   | { type: "documentRemoved"; id: string }
   /** The Column Spacing slider moved; every Document is re-detected. */
-  | { type: "columnSpacingChanged"; value: number }
-  /** The user removed a Detected Table; it is hidden through re-detection until restored. */
-  | { type: "tableRemoved"; documentId: string; tableId: string }
-  /** The user restored a Removed Table from the sidebar. */
-  | { type: "tableRestored"; documentId: string; removedId: string };
+  | DiscardingAction
+  /** The user confirmed the pending change: it runs with the edits discarded. */
+  | { type: "changeConfirmed" }
+  /** The user cancelled the pending change: nothing changes. */
+  | { type: "changeCancelled" }
+  /** A cell was corrected (grid coordinates, Header Row included). */
+  | {
+      type: "cellEdited";
+      documentId: string;
+      tableId: string;
+      row: number;
+      col: number;
+      value: string;
+    }
+  /** "First row is header" was switched. */
+  | { type: "headerToggled"; documentId: string; tableId: string; header: boolean };
 
 export const MIN_COLUMN_SPACING = 0.4;
 export const MAX_COLUMN_SPACING = 2.6;
@@ -103,6 +134,7 @@ export const initialWorkspace: WorkspaceState = {
   documents: [],
   selection: null,
   settings: DEFAULT_SETTINGS,
+  pendingChange: null,
 };
 
 export function reduce(state: WorkspaceState, action: WorkspaceAction): WorkspaceState {
@@ -156,22 +188,30 @@ export function reduce(state: WorkspaceState, action: WorkspaceAction): Workspac
     case "columnSpacingChanged": {
       const columnSpacing = parseColumnSpacing(action.value);
       if (columnSpacing === null || columnSpacing === state.settings.columnSpacing) return state;
+      if (needsConfirmation(state, action)) return { ...state, pendingChange: action };
       const settings = { ...state.settings, columnSpacing };
       const documents = state.documents.map((d) =>
         d.status === "ready" ? { ...d, tables: detectDocument(d, d.pages, settings) } : d,
       );
-      return { ...state, settings, documents, selection: keepSelection(state, documents) };
+      return {
+        ...state,
+        settings,
+        documents,
+        selection: keepSelection(state, documents),
+        pendingChange: null,
+      };
     }
     case "tableRemoved": {
       const doc = state.documents.find((d) => d.id === action.documentId);
       const table = doc?.tables.find((t) => t.id === action.tableId);
       if (!doc || !table) return state;
+      if (needsConfirmation(state, action)) return { ...state, pendingChange: action };
       const n = Math.max(0, ...doc.removed.map((r) => r.seq)) + 1;
       const removed = [
         ...doc.removed,
         { id: `${doc.id}:removed:${n}`, seq: n, n: table.n, parts: table.parts },
       ];
-      const next = redetect(state, { ...doc, removed });
+      const next = { ...redetect(state, { ...doc, removed }), pendingChange: null };
       // Move to the neighbour that took the removed Table's place, else the previous one.
       const was = state.selection?.documentId === doc.id && state.selection.tableId === table.id;
       if (!was) return { ...next, selection: sameTable(state, next.documents) };
@@ -187,13 +227,40 @@ export function reduce(state: WorkspaceState, action: WorkspaceAction): Workspac
     case "tableRestored": {
       const doc = state.documents.find((d) => d.id === action.documentId);
       if (!doc?.removed.some((r) => r.id === action.removedId)) return state;
+      if (needsConfirmation(state, action)) return { ...state, pendingChange: action };
       const removed = doc.removed.filter((r) => r.id !== action.removedId);
-      const next = redetect(state, { ...doc, removed });
+      const next = { ...redetect(state, { ...doc, removed }), pendingChange: null };
       const kept = sameTable(state, next.documents);
       if (kept) return { ...next, selection: kept };
       const first = next.documents.find((d) => d.id === doc.id)!.tables[0];
       return { ...next, selection: first ? { documentId: doc.id, tableId: first.id } : null };
     }
+    case "changeConfirmed": {
+      if (!state.pendingChange) return state;
+      return reduce(
+        { ...state, pendingChange: null },
+        { ...state.pendingChange, discardEdits: true },
+      );
+    }
+    case "changeCancelled":
+      return state.pendingChange ? { ...state, pendingChange: null } : state;
+    case "cellEdited": {
+      const value = action.value.replace(/\s+/g, " ").trim();
+      return updateTable(state, action.documentId, action.tableId, (t) => {
+        if (
+          t.grid[action.row]?.[action.col] === undefined ||
+          t.grid[action.row]![action.col] === value
+        ) {
+          return t;
+        }
+        const grid = t.grid.map((r, i) => (i === action.row ? r.with(action.col, value) : r));
+        return { ...t, grid, edited: true };
+      });
+    }
+    case "headerToggled":
+      return updateTable(state, action.documentId, action.tableId, (t) =>
+        t.header === action.header ? t : { ...t, header: action.header, edited: true },
+      );
     default: {
       const unhandled: never = action;
       return unhandled;
@@ -223,6 +290,34 @@ function sameTable(before: WorkspaceState, documents: Document[]): Selection | n
       (t) => t.page === old.page && t.parts[0]!.bbox.every((v, i) => v === old.parts[0]!.bbox[i]),
     );
   return table && now ? { documentId: now.id, tableId: table.id } : null;
+}
+
+/** True when `action` would discard corrections the user has not agreed to lose. */
+function needsConfirmation(state: WorkspaceState, action: DiscardingAction): boolean {
+  // Removing or restoring re-detects one Document only; Column Spacing re-detects them all.
+  const scope = "documentId" in action ? [action.documentId] : state.documents.map((d) => d.id);
+  return (
+    !action.discardEdits &&
+    state.documents.some((d) => scope.includes(d.id) && d.tables.some((t) => t.edited))
+  );
+}
+
+function updateTable(
+  state: WorkspaceState,
+  documentId: string,
+  tableId: string,
+  change: (table: Table) => Table,
+): WorkspaceState {
+  const doc = state.documents.find((d) => d.id === documentId);
+  const table = doc?.tables.find((t) => t.id === tableId);
+  if (!doc || !table) return state;
+  const next = change(table);
+  if (next === table) return state;
+  const tables = doc.tables.map((t) => (t === table ? next : t));
+  return {
+    ...state,
+    documents: state.documents.map((d) => (d === doc ? { ...doc, tables } : d)),
+  };
 }
 
 /**
@@ -266,6 +361,7 @@ function detectDocument(doc: Document, pages: PageText[], settings: Settings): T
         sections: t.sections,
         cols: t.cols,
         repeats: 0,
+        edited: false,
       });
     });
   }

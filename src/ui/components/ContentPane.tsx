@@ -20,6 +20,14 @@ type ContentPaneProps = {
   onCopied: (message: string) => void;
   onSelectTable: (documentId: string, tableId: string) => void;
   onRemoveTable: (documentId: string, tableId: string) => void;
+  onEditCell: (
+    documentId: string,
+    tableId: string,
+    row: number,
+    col: number,
+    value: string,
+  ) => void;
+  onToggleHeader: (documentId: string, tableId: string, header: boolean) => void;
 };
 
 /** The content pane: the selected Table with Copy, or an empty state. */
@@ -31,6 +39,8 @@ export function ContentPane({
   onCopied,
   onSelectTable,
   onRemoveTable,
+  onEditCell,
+  onToggleHeader,
 }: ContentPaneProps) {
   return (
     <main className={styles.content}>
@@ -42,6 +52,8 @@ export function ContentPane({
             onCopied={onCopied}
             onSelectTable={onSelectTable}
             onRemoveTable={onRemoveTable}
+            onEditCell={onEditCell}
+            onToggleHeader={onToggleHeader}
           />
         ) : (
           <EmptyState loading={loading} onOpen={onOpen} />
@@ -57,12 +69,16 @@ function TableDetail({
   onCopied,
   onSelectTable,
   onRemoveTable,
+  onEditCell,
+  onToggleHeader,
 }: {
   document: Document;
   table: Table;
   onCopied: (message: string) => void;
   onSelectTable: (documentId: string, tableId: string) => void;
   onRemoveTable: (documentId: string, tableId: string) => void;
+  onEditCell: ContentPaneProps["onEditCell"];
+  onToggleHeader: ContentPaneProps["onToggleHeader"];
 }) {
   const [view, setView] = useState<"table" | "source">("table");
   const { rows, cols } = tableSize(table);
@@ -107,6 +123,17 @@ function TableDetail({
         </div>
         <FormatControl value={format} onChange={setFormat} />
         <span className={styles.spacer} />
+        {view === "table" && (
+          <label className={styles.switch}>
+            <input
+              type="checkbox"
+              role="switch"
+              checked={table.header}
+              onChange={(e) => onToggleHeader(document.id, table.id, e.target.checked)}
+            />
+            First row is header
+          </label>
+        )}
         <Button variant="primary" onClick={() => void copy()}>
           <Icon name="copy" />
           Copy
@@ -114,7 +141,10 @@ function TableDetail({
       </div>
       <div className={styles.card}>
         {view === "table" ? (
-          <TableView table={table} />
+          <TableView
+            table={table}
+            onEdit={(row, col, value) => onEditCell(document.id, table.id, row, col, value)}
+          />
         ) : (
           <SourcePage
             document={document}
@@ -129,7 +159,9 @@ function TableDetail({
       <div className={styles.foot}>
         <span>
           {plural(rows, "row")} × {plural(cols, "column")}
-          {view === "source" && " · Click an outline to switch tables"}
+          {view === "table"
+            ? " · Click a cell to correct it"
+            : " · Click an outline to switch tables"}
         </span>
       </div>
     </>

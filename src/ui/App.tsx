@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useReducer, useRef } from "react";
 import { initialWorkspace, reduce, selectedDocument, selectedTable } from "../engine";
 import { ContentPane } from "./components/ContentPane";
+import { ConfirmSheet } from "./components/ConfirmSheet";
 import { DropOverlay } from "./components/DropOverlay";
 import { Hud } from "./components/Hud";
 import { IconSprite } from "./components/Icon";
@@ -98,6 +99,12 @@ export function App() {
 
   const dragging = useFileDrop((files) => void openFiles(files));
 
+  /** Whether re-detecting this Document would ask to discard corrections first. */
+  const hasEdits = (documentId: string) =>
+    state.documents.some((d) => d.id === documentId && d.tables.some((t) => t.edited));
+  const removedMessage = (n: number | undefined) =>
+    `Removed Table ${n}: restore it from the sidebar`;
+
   const removeDocument = (id: string) => {
     const doc = state.documents.find((d) => d.id === id);
     dispatch({ type: "documentRemoved", id });
@@ -130,7 +137,7 @@ export function App() {
             }
             onRestore={(documentId, removedId) => {
               dispatch({ type: "tableRestored", documentId, removedId });
-              showHud("Restored table");
+              if (!hasEdits(documentId)) showHud("Restored table");
             }}
             onOpen={chooseFiles}
             onRemove={removeDocument}
@@ -147,13 +154,39 @@ export function App() {
               dispatch({ type: "tableSelected", documentId, tableId })
             }
             onRemoveTable={(documentId, tableId) => {
-              const n = selectedTable(state)?.n;
+              const n = state.documents
+                .find((d) => d.id === documentId)
+                ?.tables.find((t) => t.id === tableId)?.n;
               dispatch({ type: "tableRemoved", documentId, tableId });
-              showHud(`Removed Table ${n}: restore it from the sidebar`);
+              if (!hasEdits(documentId)) showHud(removedMessage(n));
             }}
+            onEditCell={(documentId, tableId, row, col, value) =>
+              dispatch({ type: "cellEdited", documentId, tableId, row, col, value })
+            }
+            onToggleHeader={(documentId, tableId, header) =>
+              dispatch({ type: "headerToggled", documentId, tableId, header })
+            }
           />
         </div>
       </div>
+      {state.pendingChange && (
+        <ConfirmSheet
+          title="Discard your corrections?"
+          message="Detecting the tables again discards the cells you corrected and any header change."
+          confirmLabel="Discard and Re-detect"
+          onConfirm={() => {
+            const pending = state.pendingChange;
+            dispatch({ type: "changeConfirmed" });
+            if (pending?.type === "tableRemoved") {
+              const table = state.documents
+                .find((d) => d.id === pending.documentId)
+                ?.tables.find((t) => t.id === pending.tableId);
+              showHud(removedMessage(table?.n));
+            } else if (pending?.type === "tableRestored") showHud("Restored table");
+          }}
+          onCancel={() => dispatch({ type: "changeCancelled" })}
+        />
+      )}
       {dragging && <DropOverlay />}
       <Hud message={hud} />
     </>

@@ -229,3 +229,38 @@ describe("tableRestored", () => {
     expect(run(opened, { type: "tableRestored", documentId: "d", removedId: "nope" })).toBe(opened);
   });
 });
+
+describe("Removed Tables and corrections", () => {
+  const edit = (state: WorkspaceState, documentId: string, tableId: string): WorkspaceState =>
+    run(state, { type: "cellEdited", documentId, tableId, row: 1, col: 0, value: "Washer" });
+
+  it("ask before discarding corrections in the same Document, then run", () => {
+    const opened = open("d", stacked());
+    const [a, b] = tablesOf(opened);
+    const asked = run(edit(opened, "d", a!.id), {
+      type: "tableRemoved",
+      documentId: "d",
+      tableId: b!.id,
+    });
+    expect(names(asked)).toEqual(["A", "B", "C"]);
+    expect(asked.pendingChange?.type).toBe("tableRemoved");
+    expect(names(run(asked, { type: "changeCancelled" }))).toEqual(["A", "B", "C"]);
+    const confirmed = run(asked, { type: "changeConfirmed" });
+    expect(names(confirmed)).toEqual(["A", "C"]);
+    expect(confirmed.pendingChange).toBeNull();
+  });
+
+  it("do not ask about corrections in another Document", () => {
+    const first = open("d", stacked());
+    const both = open("e", [page(1, table("Z", 700))], first);
+    const edited = edit(both, "e", tablesOf(both, "e")[0]!.id);
+    const state = run(edited, {
+      type: "tableRemoved",
+      documentId: "d",
+      tableId: tablesOf(edited)[1]!.id,
+    });
+    expect(state.pendingChange).toBeNull();
+    expect(names(state)).toEqual(["A", "C"]);
+    expect(tablesOf(state, "e")[0]!.edited).toBe(true);
+  });
+});

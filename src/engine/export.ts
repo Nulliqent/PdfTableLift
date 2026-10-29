@@ -38,7 +38,7 @@ function outputRows(table: Table): OutputRow[] {
 const isNum = (v: string) => /^[\s$€£¥(+\-−]*\d[\d,.\s]*%?\)?\s*$/.test(v);
 
 /** Columns where at least 70% of the non-empty body cells are numbers. */
-function numericColumns({ table, rows }: Output): boolean[] {
+function outputNumericColumns({ table, rows }: Output): boolean[] {
   const body = rows.filter((r) => !r.head);
   const n = table.grid[0]?.length ?? 0;
   return Array.from({ length: n }, (_, c) => {
@@ -59,7 +59,7 @@ const WRITERS: Record<ExportFormat, (out: Output) => string> = {
     const first = rows[0]?.cells ?? [];
     const head = table.header ? first : first.map((_, i) => `Column ${i + 1}`);
     const body = rows.slice(table.header ? 1 : 0);
-    const align = numericColumns(out);
+    const align = outputNumericColumns(out);
     return [
       `| ${head.map(mdCell).join(" | ")} |`,
       `| ${align.map((n) => (n ? "---:" : "---")).join(" | ")} |`,
@@ -81,4 +81,18 @@ const WRITERS: Record<ExportFormat, (out: Output) => string> = {
 /** The Table as text in the given format, ready for the clipboard. */
 export function exportTable(table: Table, format: ExportFormat): string {
   return WRITERS[format]({ table, rows: outputRows(table) });
+}
+
+/**
+ * Columns where at least 70% of the non-empty body cells are numbers, for right-aligning them.
+ * Body cells exclude the Header Row and Section Headers.
+ */
+export function numericColumns(table: Table): boolean[] {
+  const body = table.grid.filter(
+    (_, r) => !(table.header && r === 0) && !table.sections.includes(r),
+  );
+  return Array.from({ length: table.grid[0]?.length ?? 0 }, (_, c) => {
+    const v = body.map((r) => r[c]).filter(Boolean);
+    return v.length > 0 && v.filter((x) => isNum(x!)).length / v.length >= 0.7;
+  });
 }

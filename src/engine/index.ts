@@ -18,6 +18,7 @@ export {
 export type {
   Band,
   Bbox,
+  DiscardingAction,
   Document,
   Part,
   RemovedTable,
@@ -28,5 +29,11 @@ export type {
   WorkspaceState,
 } from "./workspace";
 export { HAND_DRAWN_OVERLAP, REMOVED_TABLE_OVERLAP, overlapRatio } from "./overlap";
-export { DEFAULT_EXPORT_FORMAT, EXPORT_FORMATS, exportTable, isExportFormat } from "./export";
+export {
+  DEFAULT_EXPORT_FORMAT,
+  EXPORT_FORMATS,
+  exportTable,
+  isExportFormat,
+  numericColumns,
+} from "./export";
 export type { ExportFormat } from "./export";
