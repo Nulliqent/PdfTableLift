@@ -8,6 +8,7 @@
 import { createHash } from "node:crypto";
 import { beforeAll, describe, expect, it } from "vitest";
 import {
+  READ_ERROR_MESSAGES,
   exportTable,
   initialWorkspace,
   reduce,
@@ -77,10 +78,29 @@ function expectExports(
 for (const golden of loadGoldens()) {
   describe(golden.name, () => {
     if (golden.status === "error") {
-      it.todo(`#18 errors: reports "${golden.error}"`);
+      defineErrorComparisons(golden);
       return;
     }
     defineComparisons(golden);
+  });
+}
+
+/** An error fixture: the PDF Reader returns a ReadError, which the Document shows as the prototype's message. */
+function defineErrorComparisons(golden: Golden) {
+  it(`reports "${golden.error}" and detects no Tables`, async () => {
+    const result = await readDocument(fixtureBytes(golden));
+    if (typeof result !== "string") throw new Error("expected a ReadError, got pages");
+
+    const state = [
+      { type: "documentAdded", id: "golden", name: "golden.pdf", size: 0 } as const,
+      { type: "documentFailed", id: "golden", error: result } as const,
+    ].reduce(reduce, initialWorkspace);
+
+    const doc = state.documents[0]!;
+    expect(doc.status).toBe("error");
+    expect(READ_ERROR_MESSAGES[doc.error!]).toBe(golden.error);
+    expect(doc.tables).toEqual([]);
+    for (const run of golden.runs) expect(run.tables).toEqual([]);
   });
 }
 

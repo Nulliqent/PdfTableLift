@@ -62,8 +62,8 @@ export function App() {
     // pdf.js is large, so it loads with the first Document instead of with the page.
     const { readDocument } = await import("../pdf-reader");
     const result = await readDocument(bytes);
-    // A ReadError leaves the Document loading until the error screens arrive (#18).
-    if (typeof result !== "string") dispatch({ type: "documentRead", id, pages: result });
+    if (typeof result === "string") dispatch({ type: "documentFailed", id, error: result });
+    else dispatch({ type: "documentRead", id, pages: result });
   };
 
   const openFiles = async (files: File[]) => {
@@ -178,7 +178,8 @@ export function App() {
           <ContentPane
             document={selectedDocument(state)}
             table={selectedTable(state)}
-            loading={state.documents.some((d) => d.status === "loading")}
+            documents={state.documents}
+            onSelectRegion={startRegion}
             onOpen={chooseFiles}
             onCopied={showHud}
             onSelectTable={(documentId, tableId) =>

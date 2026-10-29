@@ -116,6 +116,18 @@
   align-items: center;
 }
 
+.error {
+  color: var(--red);
+  align-items: flex-start;
+}
+
+.error svg {
+  width: 14px;
+  height: 14px;
+  flex: none;
+  margin-top: 1px;
+}
+
 .linkBtn {
   border: 0;
   background: none;

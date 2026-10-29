@@ -8,9 +8,9 @@ import type {
   TextItem as PdfTextItem,
 } from "pdfjs-dist/types/src/display/api";
 import type { PageText, TextItem } from "../shared/page-text";
+import type { ReadError } from "../shared/read-error";
 
-/** Why a Document could not be read. */
-export type ReadError = "not-pdf" | "password-protected" | "no-text-layer";
+export type { ReadError };
 
 /** The part of the pdf.js module the reader uses. */
 export type PdfJs = {

@@ -39,4 +39,16 @@ describe("readDocument", () => {
     await readDocument(bytes);
     expect(bytes.byteLength).toBeGreaterThan(0);
   });
+
+  it("reports a scanned PDF (no text on any page) as no-text-layer", async () => {
+    expect(await readDocument(fixture("image-only.pdf"))).toBe("no-text-layer");
+  });
+
+  it("reports a password-protected PDF as password-protected", async () => {
+    expect(await readDocument(fixture("encrypted.pdf"))).toBe("password-protected");
+  });
+
+  it("reports a file that is not a PDF as not-pdf", async () => {
+    expect(await readDocument(fixture("not-a-pdf.pdf"))).toBe("not-pdf");
+  });
 });

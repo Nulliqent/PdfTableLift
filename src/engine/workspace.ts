@@ -6,6 +6,7 @@
  * exhaustiveness check in the default branch flags any action left unhandled.
  */
 import type { PageText } from "../shared/page-text";
+import type { ReadError } from "../shared/read-error";
 import { detectTables, regionTable, type Band, type Bbox, type FoundTable } from "./detection";
 import { joinTables } from "./join";
 import { HAND_DRAWN_OVERLAP, REMOVED_TABLE_OVERLAP, overlapRatio } from "./overlap";
@@ -61,7 +62,9 @@ export type Document = {
   name: string;
   /** File size in bytes. */
   size: number;
-  status: "loading" | "ready";
+  status: "loading" | "ready" | "error";
+  /** Why the PDF Reader could not read it; set exactly when `status` is "error". */
+  error: ReadError | null;
   /** The Example Document that greets first-time visitors. */
   example: boolean;
   pages: PageText[];
@@ -116,6 +119,8 @@ export type WorkspaceAction =
   | { type: "documentAdded"; id: string; name: string; size: number; example?: boolean }
   /** The PDF Reader returned the Document's pages; its Tables are detected. */
   | { type: "documentRead"; id: string; pages: PageText[] }
+  /** The PDF Reader could not read the Document; the error stays on it and nothing else changes. */
+  | { type: "documentFailed"; id: string; error: ReadError }
   | { type: "tableSelected"; documentId: string; tableId: string }
   /** The user removed a Document. Selection moves to the next Document with Tables. */
   | { type: "documentRemoved"; id: string }
@@ -178,6 +183,7 @@ export function reduce(state: WorkspaceState, action: WorkspaceAction): Workspac
         name: action.name,
         size: action.size,
         status: "loading",
+        error: null,
         example: action.example === true,
         pages: [],
         tables: [],
@@ -203,6 +209,7 @@ export function reduce(state: WorkspaceState, action: WorkspaceAction): Workspac
     }
     case "documentRead": {
       const doc = state.documents.find((d) => d.id === action.id);
+      // Ignored for a Document removed while it was loading.
       if (!doc) return state;
       const tables = detectDocument(doc, action.pages, state.settings);
       const read: Document = { ...doc, status: "ready", pages: action.pages, tables };
@@ -215,6 +222,12 @@ export function reduce(state: WorkspaceState, action: WorkspaceAction): Workspac
         ...next,
         selection: shown ? { documentId: doc.id, tableId: shown.id } : null,
       };
+    }
+    case "documentFailed": {
+      const doc = state.documents.find((d) => d.id === action.id);
+      if (doc?.status !== "loading") return state;
+      const failed: Document = { ...doc, status: "error", error: action.error };
+      return { ...state, documents: state.documents.map((d) => (d === doc ? failed : d)) };
     }
     case "tableSelected": {
       const doc = state.documents.find((d) => d.id === action.documentId);
