@@ -40,6 +40,8 @@ export type Document = {
   /** File size in bytes. */
   size: number;
   status: "loading" | "ready";
+  /** The Example Document that greets first-time visitors. */
+  example: boolean;
   pages: PageText[];
   tables: Table[];
 };
@@ -59,10 +61,12 @@ export type WorkspaceState = {
 
 export type WorkspaceAction =
   /** A Document was chosen; it shows as loading while the PDF Reader reads it. */
-  | { type: "documentAdded"; id: string; name: string; size: number }
+  | { type: "documentAdded"; id: string; name: string; size: number; example?: boolean }
   /** The PDF Reader returned the Document's pages; its Tables are detected. */
   | { type: "documentRead"; id: string; pages: PageText[] }
   | { type: "tableSelected"; documentId: string; tableId: string }
+  /** The user removed a Document. Selection moves to the next Document with Tables. */
+  | { type: "documentRemoved"; id: string }
   /** The Column Spacing slider moved; every Document is re-detected. */
   | { type: "columnSpacingChanged"; value: number };
 
@@ -92,10 +96,26 @@ export function reduce(state: WorkspaceState, action: WorkspaceAction): Workspac
         name: action.name,
         size: action.size,
         status: "loading",
+        example: action.example === true,
         pages: [],
         tables: [],
       };
-      return { ...state, documents: [...state.documents, doc] };
+      // The Example Document steps aside when the user's first own Document opens.
+      const kept = action.example ? state.documents : state.documents.filter((d) => !d.example);
+      const next = { ...state, documents: [...kept, doc] };
+      return selectedDocument(next) ? next : { ...next, selection: null };
+    }
+    case "documentRemoved": {
+      if (!state.documents.some((d) => d.id === action.id)) return state;
+      const next = { ...state, documents: state.documents.filter((d) => d.id !== action.id) };
+      if (selectedTable(next)) return next;
+      const following = next.documents.find((d) => d.tables.length);
+      return {
+        ...next,
+        selection: following
+          ? { documentId: following.id, tableId: following.tables[0]!.id }
+          : null,
+      };
     }
     case "documentRead": {
       const doc = state.documents.find((d) => d.id === action.id);
