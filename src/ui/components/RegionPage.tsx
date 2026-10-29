@@ -39,6 +39,8 @@ export function RegionPage({
   const layer = useRef<HTMLDivElement>(null);
   const start = useRef<Fractions | null>(null);
   const [width, setWidth] = useState(0);
+  // A finger scrolls the pane unless Draw is on; it turns itself off when the drag ends.
+  const [fingerDraws, setFingerDraws] = useState(false);
   // The last result, tagged with what it shows. While the pane is resized the old page stays up
   // (the boxes are fractions, so they still line up) until the redraw lands.
   const [result, setResult] = useState<Result | null>(null);
@@ -101,10 +103,19 @@ export function RegionPage({
     if (!start.current) return;
     drag(at(e));
     start.current = null;
+    if (e.pointerType === "touch") setFingerDraws(false);
   };
 
   return (
     <div ref={host} className={source.source}>
+      <button
+        type="button"
+        className={styles.drawToggle}
+        aria-pressed={fingerDraws}
+        onClick={() => setFingerDraws((on) => !on)}
+      >
+        Draw
+      </button>
       {failed ? (
         <div className={source.message} role="alert">
           <Icon name="warn" />
@@ -148,11 +159,12 @@ export function RegionPage({
           )}
           <div
             ref={layer}
-            className={styles.layer}
+            className={`${styles.layer} ${fingerDraws ? styles.fingerDraws : ""}`}
             role="group"
             aria-label="Drag to select a table region"
             onPointerDown={(e) => {
               if (e.button > 0) return;
+              if (e.pointerType === "touch" && !fingerDraws) return; // the swipe scrolls
               e.preventDefault();
               e.currentTarget.setPointerCapture(e.pointerId);
               start.current = at(e);
