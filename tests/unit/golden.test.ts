@@ -18,9 +18,6 @@ import {
 import { fixtureBytes, loadGoldens, type Golden, type GoldenTable } from "./support/golden";
 import { readDocument } from "./support/node-reader";
 
-/** Fixtures whose rows are stored as single strings: the US-14 split arrives in #17. */
-const US14 = new Set(["single-string-rows"]);
-
 const sha256 = (text: string) => createHash("sha256").update(text, "utf8").digest("hex");
 
 /** Opens the pages as a Document and returns its Tables. */
@@ -66,10 +63,6 @@ for (const golden of loadGoldens()) {
   describe(golden.name, () => {
     if (golden.status === "error") {
       it.todo(`#18 errors: reports "${golden.error}"`);
-      return;
-    }
-    if (US14.has(golden.name)) {
-      it.todo("#17 US-14: splits rows stored as one string, then matches every run");
       return;
     }
     defineComparisons(golden);
