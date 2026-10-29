@@ -167,7 +167,7 @@ describe("saving a Region", () => {
 
     const table = selectedTable(state)!;
     expect(state.region).toBeNull();
-    expect(table.region).toBeDefined();
+    expect(table.manual).not.toBeNull();
     expect(table.page).toBe(2);
     expect(table.parts).toEqual([{ page: 2, bbox: [60, 660, 200, 720] }]);
     expect(table.grid).toEqual([["Apples 3"], ["Pears 5"], ["Plums 8"]]);
@@ -190,7 +190,7 @@ describe("saving a Region", () => {
 
     const tables = state.documents[0]!.tables;
     expect(tables).toHaveLength(1);
-    expect(tables[0]!.region).toBeDefined();
+    expect(tables[0]!.manual).not.toBeNull();
     expect(tables[0]!.grid).toHaveLength(2);
   });
 
@@ -201,7 +201,7 @@ describe("saving a Region", () => {
 
     const tables = state.documents[0]!.tables;
     expect(tables).toHaveLength(2);
-    expect(tables.map((t) => t.region === undefined)).toEqual([true, false]);
+    expect(tables.map((t) => t.manual === null)).toEqual([true, false]);
   });
 
   it("survives Column Spacing changes, rebuilt from its Region, and stays selected", () => {
@@ -213,7 +213,7 @@ describe("saving a Region", () => {
     const next = run(state, { type: "columnSpacingChanged", value: 0.4 });
 
     const after = selectedTable(next)!;
-    expect(after.region).toBe(before.region);
+    expect(after.manual).toBe(before.manual);
     expect(after.parts).toEqual(before.parts);
   });
 
@@ -230,5 +230,42 @@ describe("saving a Region", () => {
 
     expect(state.documents[0]!.tables).toHaveLength(1);
     expect(selectedTable(state)!.n).toBe(1);
+  });
+});
+
+describe("Hand-drawn Tables and the other actions", () => {
+  it("removing a Hand-drawn Table deletes its Region instead of recording a Removed Table", () => {
+    const saved = run(draw(opened([stores, prose]), 2, [60, 660, 200, 720]), {
+      type: "regionCommitted",
+    });
+    const table = selectedTable(saved)!;
+
+    const state = run(saved, { type: "tableRemoved", documentId: "d1", tableId: table.id });
+
+    const doc = state.documents[0]!;
+    expect(doc.regions).toEqual([]);
+    expect(doc.removed).toEqual([]);
+    expect(doc.tables.map((t) => t.manual)).toEqual([null]);
+  });
+
+  it("asks before saving a Region would discard corrections, and saves once confirmed", () => {
+    const base = opened([stores, prose]);
+    const edited = run(base, {
+      type: "cellEdited",
+      documentId: "d1",
+      tableId: base.documents[0]!.tables[0]!.id,
+      row: 1,
+      col: 0,
+      value: "Fixed",
+    });
+    const drawn = draw(edited, 2, [60, 660, 200, 720]);
+
+    const asked = run(drawn, { type: "regionCommitted" });
+    expect(asked.pendingChange).toEqual({ type: "regionCommitted" });
+    expect(asked.documents[0]!.regions).toEqual([]);
+
+    const done = run(asked, { type: "changeConfirmed" });
+    expect(done.documents[0]!.regions).toHaveLength(1);
+    expect(selectedTable(done)!.manual).not.toBeNull();
   });
 });

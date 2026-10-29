@@ -19,16 +19,25 @@ export {
 export type {
   Band,
   Bbox,
+  DiscardingAction,
   Document,
   Part,
   Region,
   RegionInProgress,
+  RemovedTable,
   Selection,
   Settings,
   Table,
   WorkspaceAction,
   WorkspaceState,
 } from "./workspace";
-export { DEFAULT_EXPORT_FORMAT, EXPORT_FORMATS, exportTable, isExportFormat } from "./export";
+export { HAND_DRAWN_OVERLAP, REMOVED_TABLE_OVERLAP, overlapRatio } from "./overlap";
+export {
+  DEFAULT_EXPORT_FORMAT,
+  EXPORT_FORMATS,
+  exportTable,
+  isExportFormat,
+  numericColumns,
+} from "./export";
 export type { ExportFormat } from "./export";
 export type { FoundTable } from "./detection";

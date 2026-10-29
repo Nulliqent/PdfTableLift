@@ -116,6 +116,40 @@
   align-items: center;
 }
 
+.linkBtn {
+  border: 0;
+  background: none;
+  color: var(--accent);
+  font: inherit;
+  font-size: 13px;
+  font-weight: 500;
+  padding: 2px 4px;
+  border-radius: 5px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.linkBtn:hover {
+  background: var(--accent-tint);
+}
+
+.linkBtn svg {
+  width: 15px;
+  height: 15px;
+}
+
+.removed {
+  padding: 4px 8px 4px 30px;
+  font-size: 12px;
+  color: var(--label2);
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  justify-content: space-between;
+}
+
 .spinner {
   width: 13px;
   height: 13px;
@@ -130,4 +164,33 @@
   to {
     transform: rotate(360deg);
   }
+}
+
+.tag {
+  font-weight: 400;
+  color: var(--label2);
+}
+
+.remove {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 22px;
+  height: 22px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: none;
+  color: var(--label2);
+  cursor: pointer;
+}
+
+.remove:hover {
+  background: var(--fill);
+  color: var(--label);
+}
+
+.remove svg {
+  width: 14px;
+  height: 14px;
 }
