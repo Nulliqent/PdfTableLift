@@ -228,12 +228,18 @@ export function reduce(state: WorkspaceState, action: WorkspaceAction): Workspac
       };
       // The Example Document steps aside when the user's first own Document opens.
       const kept = action.example ? state.documents : state.documents.filter((d) => !d.example);
-      const next = { ...state, documents: [...kept, doc] };
+      const region = kept.some((d) => d.id === state.region?.documentId) ? state.region : null;
+      const next = { ...state, documents: [...kept, doc], ...withoutRegion(state, region) };
       return selectedDocument(next) ? next : { ...next, selection: null };
     }
     case "documentRemoved": {
       if (!state.documents.some((d) => d.id === action.id)) return state;
-      const next = { ...state, documents: state.documents.filter((d) => d.id !== action.id) };
+      const region = state.region?.documentId === action.id ? null : state.region;
+      const next = {
+        ...state,
+        documents: state.documents.filter((d) => d.id !== action.id),
+        ...withoutRegion(state, region),
+      };
       if (selectedTable(next)) return next;
       const following = next.documents.find((d) => d.tables.length);
       return {
@@ -311,16 +317,28 @@ export function reduce(state: WorkspaceState, action: WorkspaceAction): Workspac
       if (!doc || !table) return state;
       if (needsConfirmation(state, action)) return { ...state, pendingChange: action };
       const n = Math.max(0, ...doc.removed.map((r) => r.seq)) + 1;
-      // A Hand-drawn Table is deleted with its Region; a Detected Table is recorded as removed.
-      const gone: Document = table.manual
-        ? { ...doc, regions: doc.regions.filter((r) => r.id !== table.manual) }
-        : {
-            ...doc,
-            removed: [
-              ...doc.removed,
-              { id: `${doc.id}:removed:${n}`, seq: n, n: table.n, parts: table.parts },
-            ],
-          };
+      // A Hand-drawn Table is deleted with its Region. A Detected Table is recorded as removed.
+      const region = table.manual ? doc.regions.find((r) => r.id === table.manual) : undefined;
+      const record = (parts: Part[]) => ({
+        id: `${doc.id}:removed:${n}`,
+        seq: n,
+        n: table.n,
+        parts,
+      });
+      let gone: Document;
+      if (!table.manual) gone = { ...doc, removed: [...doc.removed, record(table.parts)] };
+      else if (region?.replaces) {
+        // A redrawn Region carried the suppression of the Detected Table it replaced. Deleting the
+        // Region must not undo the user's Remove, so the replaced Part becomes a Removed Table
+        // (restorable), and the Parts the redraw left standing alone stay unjoined.
+        const alone = [region.replaces, ...region.apart].map((p) => p.page);
+        gone = {
+          ...doc,
+          regions: doc.regions.filter((r) => r.id !== region.id),
+          removed: [...doc.removed, record([region.replaces])],
+          noJoin: [...new Set([...doc.noJoin, ...alone])],
+        };
+      } else gone = { ...doc, regions: doc.regions.filter((r) => r.id !== table.manual) };
       const next = { ...redetect(state, gone), pendingChange: null };
       // Move to the neighbour that took the removed Table's place, else the previous one.
       const was = state.selection?.documentId === doc.id && state.selection.tableId === table.id;
@@ -474,6 +492,12 @@ function toggleSectionHeader(t: Table, row: number): Table {
     r === row ? cells.map((_, c) => (c ? "" : label)) : cells,
   );
   return { ...t, grid, sections: [...t.sections, row].sort((a, b) => a - b), edited: true };
+}
+
+/** The region field to keep, and no pending Region save once its Region is gone. */
+function withoutRegion(state: WorkspaceState, region: RegionInProgress | null) {
+  const orphaned = !region && state.pendingChange?.type === "regionCommitted";
+  return { region, pendingChange: orphaned ? null : state.pendingChange };
 }
 
 /** Replaces a Document and re-detects its Tables (its Removed Tables already updated). */

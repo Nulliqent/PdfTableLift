@@ -6,6 +6,8 @@ import {
   regionPreview,
   selectedDocument,
   selectedTable,
+  type PageText,
+  type ReadError,
   type WorkspaceAction,
 } from "../engine";
 import { ContentPane } from "./components/ContentPane";
@@ -70,8 +72,13 @@ export function App() {
 
   const read = async (id: string, bytes: Uint8Array) => {
     // pdf.js is large, so it loads with the first Document instead of with the page.
-    const { readDocument } = await import("../pdf-reader");
-    const result = await readDocument(bytes);
+    let result: PageText[] | ReadError;
+    try {
+      const { readDocument } = await import("../pdf-reader");
+      result = await readDocument(bytes);
+    } catch {
+      result = "not-pdf"; // e.g. the pdf.js chunk failed to load; never leave the Document reading
+    }
     if (typeof result === "string") {
       dispatch({ type: "documentFailed", id, error: result });
       // With a good Table selected the content pane doesn't show the error, only the sidebar does.

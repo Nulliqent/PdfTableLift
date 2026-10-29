@@ -14,7 +14,10 @@ export type { ReadError };
 
 /** The part of the pdf.js module the reader uses. */
 export type PdfJs = {
-  getDocument: (params: DocumentInitParameters) => { promise: Promise<unknown> };
+  getDocument: (params: DocumentInitParameters) => {
+    promise: Promise<unknown>;
+    destroy(): Promise<void>;
+  };
 };
 
 /** Extra getDocument options from the wiring: worker data URLs, verbosity. */
@@ -25,7 +28,6 @@ export type ReadDocument = (bytes: Uint8Array) => Promise<PageText[] | ReadError
 type PdfDocument = {
   numPages: number;
   getPage(n: number): Promise<PDFPageProxy>;
-  loadingTask: { destroy(): Promise<void> };
 };
 
 const BOLD_NAME = /bold|black|heavy|semibold|demi/i;
@@ -41,20 +43,19 @@ export function createReadDocument(pdfjs: PdfJs, options: ReaderOptions = {}): R
       // Without it, pdf.js 6 drops the font name, and embedded bold fonts read as regular.
       fontExtraProperties: true,
     });
-    let doc: PdfDocument;
     try {
-      doc = (await task.promise) as PdfDocument;
-    } catch (err) {
-      return (err as { name?: string })?.name === "PasswordException"
-        ? "password-protected"
-        : "not-pdf";
-    }
-    try {
+      const doc = (await task.promise) as PdfDocument;
       const pages: PageText[] = [];
       for (let n = 1; n <= doc.numPages; n++) pages.push(await readPage(await doc.getPage(n), n));
       return pages.some((p) => p.items.length) ? pages : "no-text-layer";
+    } catch (err) {
+      // A page pdf.js cannot parse means the file is damaged: the same answer as a file that
+      // is not a PDF at all, since the user cannot act on the difference.
+      return (err as { name?: string })?.name === "PasswordException"
+        ? "password-protected"
+        : "not-pdf";
     } finally {
-      await doc.loadingTask.destroy();
+      await task.destroy().catch(() => undefined);
     }
   };
 }

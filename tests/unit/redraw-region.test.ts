@@ -143,11 +143,36 @@ describe("redrawing a Region", () => {
     expect(kind(redraw(open([solo]), 0, 1, [60, 690, 560, 760]))).toEqual([true]);
   });
 
-  it("brings the Detected Table back when the Hand-drawn Table that replaced it is removed", () => {
+  it("keeps the replaced Detected Table hidden, and restorable, when the Hand-drawn Table is removed", () => {
     const hand = redraw(open([solo]), 0, 1, [60, 690, 560, 760]);
     const tableId = tablesOf(hand)[0]!.id;
     const gone = reduce(hand, { type: "tableRemoved", documentId: "d", tableId });
+    expect(tablesOf(gone)).toEqual([]);
+    const [removed] = gone.documents[0]!.removed;
+    expect(removed).toBeDefined();
+
+    const back = reduce(gone, {
+      type: "tableRestored",
+      documentId: "d",
+      removedId: removed!.id,
+    });
+    expect(kind(back)).toEqual([false]);
+  });
+
+  it("brings back a Detected Table that only sat under a freshly drawn Region", () => {
+    const drawn = run(
+      open([solo]),
+      { type: "regionStarted", documentId: "d", page: 1 },
+      { type: "regionChanged", page: 1, bbox: [60, 690, 560, 760] },
+      { type: "regionCommitted" },
+    );
+    const gone = reduce(drawn, {
+      type: "tableRemoved",
+      documentId: "d",
+      tableId: tablesOf(drawn)[0]!.id,
+    });
     expect(kind(gone)).toEqual([false]);
+    expect(gone.documents[0]!.removed).toEqual([]);
   });
 
   it("ignores an unknown Table", () => {
@@ -211,11 +236,23 @@ describe("redrawing one Part of a Joined Table", () => {
     expect(pagesOf(reduce(on, { type: "columnSpacingChanged", value: 1.2 }))).toEqual([[1], [2]]);
   });
 
-  it("joins again once the Hand-drawn Table is removed", () => {
+  it("keeps the other Part alone and the replaced Part removed when the Hand-drawn Table is removed", () => {
     const state = redraw(open(two), 0, 2, [60, 700, 560, 760]);
     const tableId = tablesOf(state)[1]!.id;
     const gone = reduce(state, { type: "tableRemoved", documentId: "d", tableId });
-    expect(pagesOf(gone)).toEqual([[1, 2]]);
+    expect(pagesOf(gone)).toEqual([[1]]);
+    expect(gone.documents[0]!.removed).toHaveLength(1);
+  });
+
+  it("does not rejoin the Parts of a three-Part Table around a removed Hand-drawn Table", () => {
+    const first = redraw(open(three), 0, 1, [60, 120, 560, 180]);
+    const tableId = tablesOf(first)[0]!.id;
+    const gone = reduce(first, { type: "tableRemoved", documentId: "d", tableId });
+    expect(pagesOf(gone)).toEqual([[2], [3]]);
+
+    const [removed] = gone.documents[0]!.removed;
+    const back = reduce(gone, { type: "tableRestored", documentId: "d", removedId: removed!.id });
+    expect(pagesOf(back)).toEqual([[1], [2], [3]]);
   });
 });
 

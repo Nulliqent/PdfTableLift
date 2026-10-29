@@ -10,9 +10,40 @@
   position: absolute;
   inset: 0;
   z-index: 2;
-  /* A finger drags the Region instead of scrolling the pane. */
-  touch-action: none;
+  /* A finger scrolls the pane; the Draw toggle makes it drag a Region instead. */
+  touch-action: pan-y pinch-zoom;
   cursor: crosshair;
+}
+
+.fingerDraws {
+  touch-action: none;
+}
+
+/* Only where there is a finger: a mouse always draws, so it needs no toggle. */
+.drawToggle {
+  display: none;
+}
+
+@media (any-pointer: coarse) {
+  .drawToggle {
+    display: flex;
+    width: fit-content;
+    align-items: center;
+    min-height: 44px;
+    margin: 0 auto 8px;
+    padding: 0 18px;
+    border: 1px solid var(--separator);
+    border-radius: var(--r-m);
+    background: var(--surface);
+    color: var(--label);
+    font: 600 15px/1 var(--font);
+  }
+
+  .drawToggle[aria-pressed="true"] {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: var(--on-accent);
+  }
 }
 
 .existing {

@@ -26,6 +26,14 @@ export function ConfirmSheet({
       className={styles.sheet}
       aria-labelledby="confirm-sheet-title"
       onCancel={onCancel}
+      onKeyDown={(e) => {
+        // Escape belongs to this question alone: stop it reaching a window-level Escape handler
+        // (Region selection) and the browser's own close, then cancel once.
+        if (e.key !== "Escape") return;
+        e.preventDefault();
+        e.stopPropagation();
+        onCancel();
+      }}
       onClick={(e) => {
         if (e.target === dialog.current) onCancel();
       }}

@@ -55,3 +55,15 @@ test("a Document with text but no Tables offers Select Region and points to Colu
   await main.getByRole("button", { name: "Select Table Region" }).click();
   await expect(main.getByRole("button", { name: "Select Whole Page" })).toBeVisible();
 });
+
+test("a PDF Reader that fails to load turns the Document into an error instead of hanging", async ({
+  page,
+}) => {
+  await page.route(/assets\/pdf-reader-.*\.js/, (route) => route.abort());
+  await page.goto("/");
+  await openFixture(page, "separate-tables.pdf");
+
+  const main = page.getByRole("main");
+  await expect(main.getByText(NOT_PDF)).toBeVisible();
+  await expect(page.getByText("Reading pages…")).toHaveCount(0);
+});

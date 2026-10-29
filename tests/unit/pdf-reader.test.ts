@@ -2,7 +2,8 @@
 // The golden comparison of every fixture's text items is in golden.test.ts.
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
+import { createReadDocument } from "../../src/pdf-reader/read-document";
 import { readDocument } from "./support/node-reader";
 
 const fixture = (name: string) =>
@@ -50,5 +51,32 @@ describe("readDocument", () => {
 
   it("reports a file that is not a PDF as not-pdf", async () => {
     expect(await readDocument(fixture("not-a-pdf.pdf"))).toBe("not-pdf");
+  });
+
+  describe("when pdf.js fails partway", () => {
+    const readWith = async (open: () => Promise<unknown>) => {
+      const destroy = vi.fn(() => Promise.resolve());
+      const read = createReadDocument({
+        getDocument: () => ({ promise: open(), destroy }) as never,
+      });
+      return { result: await read(new Uint8Array([1])), destroy };
+    };
+
+    it("reports a page that cannot be read as not-pdf and still closes the PDF", async () => {
+      const { result, destroy } = await readWith(() =>
+        Promise.resolve({
+          numPages: 1,
+          getPage: () => Promise.reject(new Error("Invalid page")),
+        }),
+      );
+      expect(result).toBe("not-pdf");
+      expect(destroy).toHaveBeenCalled();
+    });
+
+    it("destroys the loading task when opening the PDF is rejected", async () => {
+      const { result, destroy } = await readWith(() => Promise.reject(new Error("bad")));
+      expect(result).toBe("not-pdf");
+      expect(destroy).toHaveBeenCalled();
+    });
   });
 });
