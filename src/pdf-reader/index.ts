@@ -1,7 +1,26 @@
 /**
  * PDF Reader: the only module that touches pdf.js.
- * Public interface (built in a later ticket): `readDocument(bytes) → Promise<PageText[] | ReadError>`.
+ * Public interface: `readDocument(bytes) → Promise<PageText[] | ReadError>`.
+ *
+ * This file wires the reader to pdf.js's standard browser build, with its worker and data files
+ * served by the app itself (no CDN). Node tests wire the legacy build instead, through
+ * `createReadDocument` in read-document.ts.
  */
-export type { PageText, TextItem } from "../shared/page-text";
+import { getDocument, GlobalWorkerOptions } from "pdfjs-dist";
+import workerUrl from "pdfjs-dist/build/pdf.worker.min.mjs?url";
+import { createReadDocument } from "./read-document";
 
-export type ReadError = "not-pdf" | "password-protected" | "no-text-layer";
+export type { PageText, TextItem } from "../shared/page-text";
+export type { ReadDocument, ReadError } from "./read-document";
+
+GlobalWorkerOptions.workerSrc = workerUrl;
+
+// Copied into the build by the pdfjsAssets plugin in vite.config.ts. Each URL needs its
+// trailing slash.
+const asset = (dir: string) =>
+  new URL(`${import.meta.env.BASE_URL}pdfjs/${dir}/`, location.href).href;
+
+export const readDocument = createReadDocument(
+  { getDocument },
+  { wasmUrl: asset("wasm"), standardFontDataUrl: asset("standard_fonts") },
+);
