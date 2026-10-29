@@ -60,6 +60,18 @@ function outputRows(table: Table, asColumn: boolean): OutputRow[] {
   return out;
 }
 
+/** Header names as object keys: empty ones become column_N, repeats get _2, _3, ... suffixes. */
+function uniqueKeys(headers: string[]): string[] {
+  const seen = new Set<string>();
+  return headers.map((h, i) => {
+    const base = h || `column_${i + 1}`;
+    let key = base;
+    for (let n = 2; seen.has(key); n++) key = `${base}_${n}`;
+    seen.add(key);
+    return key;
+  });
+}
+
 const isNum = (v: string) => /^[\s$€£¥(+\-−]*\d[\d,.\s]*%?\)?\s*$/.test(v);
 
 const csvCell = (v: string) => (/[",\n]/.test(v) ? `"${v.replace(/"/g, '""')}"` : v);
@@ -86,7 +98,7 @@ const WRITERS: Record<ExportFormat, (out: Output) => string> = {
     ].join("\n");
   },
   json: ({ table, rows, asColumn }) => {
-    const keys = table.header ? rows[0]!.cells.map((k, i) => k || `column_${i + 1}`) : null;
+    const keys = table.header ? uniqueKeys(rows[0]!.cells) : null;
     const obj = (cells: string[]) =>
       keys ? Object.fromEntries(keys.map((k, i) => [k, cells[i]])) : cells;
     const body = rows.slice(table.header ? 1 : 0);

@@ -40,6 +40,35 @@ describe("exportTable", () => {
     expect(rows).toEqual([{ Name: "x", column_2: "y" }]);
   });
 
+  it("JSON keeps every column when header names repeat, suffixing the later ones", () => {
+    const rows = JSON.parse(
+      exportTable(
+        table([
+          ["Name", "Name", "Name_2", "Name"],
+          ["a", "b", "c", "d"],
+        ]),
+        "json",
+      ),
+    );
+    expect(rows).toEqual([{ Name: "a", Name_2: "b", Name_2_2: "c", Name_3: "d" }]);
+  });
+
+  it("JSON keeps a real Section column apart from the injected one in As Column mode", () => {
+    const t = {
+      grid: [
+        ["Section", "Qty"],
+        ["East"],
+        ["Tea", "2"],
+      ],
+      header: true,
+      sections: [1],
+      parts: [],
+    } as unknown as Table;
+    expect(JSON.parse(exportTable(t, "json", "column"))).toEqual([
+      { Section: "East", Section_2: "Tea", Qty: "2" },
+    ]);
+  });
+
   it("JSON is an array of arrays when the first row is not a header", () => {
     expect(JSON.parse(exportTable(table([["x", "y"]], false), "json"))).toEqual([["x", "y"]]);
   });
