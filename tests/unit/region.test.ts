@@ -269,3 +269,37 @@ describe("Hand-drawn Tables and the other actions", () => {
     expect(selectedTable(done)!.manual).not.toBeNull();
   });
 });
+
+describe("a Region in progress when its Document goes away", () => {
+  const started = (extra: Partial<{ example: boolean }> = {}) =>
+    run(
+      initialWorkspace,
+      { type: "documentAdded", id: "d1", name: "r.pdf", size: 1, ...extra },
+      { type: "documentRead", id: "d1", pages: [stores] },
+      { type: "regionStarted", documentId: "d1", page: 1 },
+    );
+
+  it("is cleared when the Document is removed", () => {
+    const state = run(started(), { type: "documentRemoved", id: "d1" });
+    expect(state.region).toBeNull();
+  });
+
+  it("is cleared when the user's own Document replaces the Example Document", () => {
+    const state = run(started({ example: true }), {
+      type: "documentAdded",
+      id: "d2",
+      name: "mine.pdf",
+      size: 1,
+    });
+    expect(state.region).toBeNull();
+  });
+
+  it("is kept when another Document is removed", () => {
+    const state = run(
+      started(),
+      { type: "documentAdded", id: "d2", name: "o.pdf", size: 1 },
+      { type: "documentRemoved", id: "d2" },
+    );
+    expect(state.region).not.toBeNull();
+  });
+});

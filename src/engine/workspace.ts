@@ -228,12 +228,18 @@ export function reduce(state: WorkspaceState, action: WorkspaceAction): Workspac
       };
       // The Example Document steps aside when the user's first own Document opens.
       const kept = action.example ? state.documents : state.documents.filter((d) => !d.example);
-      const next = { ...state, documents: [...kept, doc] };
+      const region = kept.some((d) => d.id === state.region?.documentId) ? state.region : null;
+      const next = { ...state, documents: [...kept, doc], ...withoutRegion(state, region) };
       return selectedDocument(next) ? next : { ...next, selection: null };
     }
     case "documentRemoved": {
       if (!state.documents.some((d) => d.id === action.id)) return state;
-      const next = { ...state, documents: state.documents.filter((d) => d.id !== action.id) };
+      const region = state.region?.documentId === action.id ? null : state.region;
+      const next = {
+        ...state,
+        documents: state.documents.filter((d) => d.id !== action.id),
+        ...withoutRegion(state, region),
+      };
       if (selectedTable(next)) return next;
       const following = next.documents.find((d) => d.tables.length);
       return {
@@ -486,6 +492,12 @@ function toggleSectionHeader(t: Table, row: number): Table {
     r === row ? cells.map((_, c) => (c ? "" : label)) : cells,
   );
   return { ...t, grid, sections: [...t.sections, row].sort((a, b) => a - b), edited: true };
+}
+
+/** The region field to keep, and no pending Region save once its Region is gone. */
+function withoutRegion(state: WorkspaceState, region: RegionInProgress | null) {
+  const orphaned = !region && state.pendingChange?.type === "regionCommitted";
+  return { region, pendingChange: orphaned ? null : state.pendingChange };
 }
 
 /** Replaces a Document and re-detects its Tables (its Removed Tables already updated). */
