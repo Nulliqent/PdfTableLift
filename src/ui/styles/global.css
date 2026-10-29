@@ -146,6 +146,7 @@ input {
   *::before,
   *::after {
     transition: none !important;
-    animation-duration: 0s !important;
+    animation: none !important;
+    scroll-behavior: auto !important;
   }
 }

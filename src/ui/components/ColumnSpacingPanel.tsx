@@ -19,7 +19,10 @@ export function ColumnSpacingPanel({
     <div className={styles.panel}>
       <div className={styles.header}>
         <label htmlFor="column-spacing">Column spacing</label>
-        <output htmlFor="column-spacing">{value.toFixed(1)}×</output>
+        {/* The slider announces its own value; a second live region here would say it twice. */}
+        <output htmlFor="column-spacing" aria-hidden="true">
+          {value.toFixed(1)}×
+        </output>
       </div>
       <input
         type="range"
@@ -27,6 +30,7 @@ export function ColumnSpacingPanel({
         min={MIN_COLUMN_SPACING}
         max={MAX_COLUMN_SPACING}
         step="0.1"
+        aria-valuetext={`${value.toFixed(1)}×`}
         value={value}
         onChange={(e) => onChange(e.target.valueAsNumber)}
         className={styles.range}

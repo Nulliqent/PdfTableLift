@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useReducer, useRef } from "react";
 import {
+  READ_ERROR_MESSAGES,
   initialWorkspace,
   reduce,
   regionPreview,
@@ -62,12 +63,20 @@ export function App() {
       showHud(savedMessage(created.n, region!.redraw !== null));
   };
 
+  const selectionRef = useRef(state.selection);
+  useEffect(() => {
+    selectionRef.current = state.selection;
+  }, [state.selection]);
+
   const read = async (id: string, bytes: Uint8Array) => {
     // pdf.js is large, so it loads with the first Document instead of with the page.
     const { readDocument } = await import("../pdf-reader");
     const result = await readDocument(bytes);
-    if (typeof result === "string") dispatch({ type: "documentFailed", id, error: result });
-    else dispatch({ type: "documentRead", id, pages: result });
+    if (typeof result === "string") {
+      dispatch({ type: "documentFailed", id, error: result });
+      // With a good Table selected the content pane doesn't show the error, only the sidebar does.
+      if (selectionRef.current) showHud(READ_ERROR_MESSAGES[result], "warn");
+    } else dispatch({ type: "documentRead", id, pages: result });
   };
 
   const openFiles = async (files: File[]) => {

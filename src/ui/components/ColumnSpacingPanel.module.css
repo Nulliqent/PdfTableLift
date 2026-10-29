@@ -38,7 +38,8 @@
   display: flex;
   justify-content: space-between;
   font-size: 11px;
-  color: var(--label3);
+  /* label3 is too faint for text (about 2:1 on white); label2 keeps these readable. */
+  color: var(--label2);
   margin-top: -4px;
 }
 
