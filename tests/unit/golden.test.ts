@@ -13,6 +13,7 @@ import {
   reduce,
   tableSize,
   type PageText,
+  type SectionMode,
   type Table,
 } from "../../src/engine";
 import { fixtureBytes, loadGoldens, type Golden, type GoldenTable } from "./support/golden";
@@ -47,6 +48,7 @@ const detectionOf = (t: Table | GoldenTable) => ({
   header: t.header,
   firstBold: t.firstBold,
   grid: t.grid,
+  sections: t.sections,
   cols: t.cols,
   repeats: t.repeats ?? 0,
 });
@@ -56,8 +58,25 @@ const goldenSize = (t: GoldenTable) => ({
   cols: t.grid[0]!.length,
 });
 
-const goldenExport = (format: "csv" | "tsv" | "md" | "json") => (t: GoldenTable) =>
-  t.exports ? t.exports.column[format] : t.exportDigests!.column[format];
+type Format = "csv" | "tsv" | "md" | "json";
+const goldenExport =
+  (format: Format, mode: SectionMode = "column") =>
+  (t: GoldenTable) =>
+    t.exports ? t.exports[mode][format] : t.exportDigests![mode][format];
+
+/** Every Table's export in `format` and `mode` against the snapshot (digests for large ones). */
+function expectExports(
+  actual: Table[],
+  expected: GoldenTable[],
+  format: Format,
+  mode: SectionMode,
+) {
+  const write = (t: Table) => exportTable(t, format, mode);
+  if (expected[0]?.exports)
+    expect(actual.map(write)).toEqual(expected.map(goldenExport(format, mode)));
+  else
+    expect(actual.map((t) => sha256(write(t)))).toEqual(expected.map(goldenExport(format, mode)));
+}
 
 for (const golden of loadGoldens()) {
   describe(golden.name, () => {
@@ -71,7 +90,6 @@ for (const golden of loadGoldens()) {
 
 function defineComparisons(golden: Golden) {
   const run = golden.runs.find((r) => r.columnSpacing === 1 && !r.joining)!;
-  const withSections = run.tables.filter((t) => t.sections.length);
   let pages: PageText[];
   let tables: Table[];
 
@@ -91,33 +109,22 @@ function defineComparisons(golden: Golden) {
     expect(tables.map(tableSize)).toEqual(run.tables.map(goldenSize));
   });
 
-  for (const format of ["csv", "tsv", "md", "json"] as const) {
-    it(`exports the same ${format.toUpperCase()} for each Table without Section Headers`, () => {
-      const expected = run.tables.filter((t) => !t.sections.length);
-      const actual = tables.filter((_, i) => !run.tables[i]?.sections.length);
-      const write = (t: Table) => exportTable(t, format);
-      if (expected[0]?.exports)
-        expect(actual.map(write)).toEqual(expected.map(goldenExport(format)));
-      else expect(actual.map((t) => sha256(write(t)))).toEqual(expected.map(goldenExport(format)));
-    });
+  for (const mode of ["column", "rows"] as const) {
+    for (const format of ["csv", "tsv", "md", "json"] as const) {
+      it(`exports the same ${format.toUpperCase()} for every Table, Section Mode ${mode}`, () => {
+        expectExports(tables, run.tables, format, mode);
+      });
+    }
   }
 
-  if (withSections.length)
-    it.todo(
-      `#11 Section Headers: sections and As Column / As Rows exports of Tables ${withSections.map((t) => t.n).join(", ")}`,
-    );
   it.todo("#12 joining: the runs with joining on");
   for (const other of golden.runs.filter((r) => r.columnSpacing !== 1 && !r.joining)) {
     it(`re-detects the same Tables at Column Spacing ${other.columnSpacing}, joining off`, () => {
       const found = redetect(pages, other.columnSpacing);
       expect(found.map(detectionOf)).toEqual(other.tables.map(detectionOf));
       expect(found.map(tableSize)).toEqual(other.tables.map(goldenSize));
-      const plain = other.tables.filter((t) => !t.sections.length);
-      const csv = (t: Table) => exportTable(t, "csv");
-      const actual = found.filter((_, i) => !other.tables[i]?.sections.length).map(csv);
-      expect(plain[0]?.exports ? actual : actual.map(sha256)).toEqual(
-        plain.map(goldenExport("csv")),
-      );
+      expectExports(found, other.tables, "csv", "column");
+      expectExports(found, other.tables, "csv", "rows");
     });
   }
 }

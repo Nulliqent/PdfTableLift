@@ -2,10 +2,7 @@
  * Export, ported from the prototype ("Export"). To add a format: extend ExportFormat, add it to
  * EXPORT_FORMATS and add its writer to WRITERS.
  *
- * Section Mode isn't wired yet (#11): `outputRows` is the seam. It returns the rows to write, with
- * the Header Row flagged, and #11 fills in As Column (a leading Section column) and As Rows
- * (Section Headers kept as their own rows). Until then the grid is written as it is, which for a
- * Table without Section Headers is identical in both modes.
+ * Section Mode (#11) is the third argument of `exportTable`.
  */
 import type { Table } from "./workspace";
 
@@ -24,28 +21,46 @@ export const DEFAULT_EXPORT_FORMAT: ExportFormat = "csv";
 export const isExportFormat = (v: unknown): v is ExportFormat =>
   EXPORT_FORMATS.some((f) => f.format === v);
 
-type OutputRow = { cells: string[]; head?: boolean };
-type Output = { table: Table; rows: OutputRow[] };
+/** Where Section Headers go: a leading Section column on every row, or rows of their own. */
+export type SectionMode = "column" | "rows";
 
-/** Seam for #11: the rows to write for the Table in the chosen Section Mode. */
-function outputRows(table: Table): OutputRow[] {
-  return table.grid.map((cells, r) => ({
-    cells: cells.slice(),
-    head: table.header && r === 0 ? true : undefined,
-  }));
+export const DEFAULT_SECTION_MODE: SectionMode = "column";
+
+export const isSectionMode = (v: unknown): v is SectionMode => v === "column" || v === "rows";
+
+type OutputRow = { cells: string[]; head?: boolean; section?: boolean };
+type Output = { table: Table; rows: OutputRow[]; asColumn: boolean };
+
+/** Whether a grid row is a Section Header (the Header Row never is). */
+export const isSectionHeader = (table: Table, row: number) =>
+  table.sections.includes(row) && !(table.header && row === 0);
+
+export const hasSectionHeaders = (table: Table) =>
+  table.sections.some((r) => isSectionHeader(table, r));
+
+/** Whether the Table is written with a leading Section column in this Section Mode. */
+export const usesSectionColumn = (table: Table, mode: SectionMode) =>
+  mode === "column" && hasSectionHeaders(table);
+
+/**
+ * The rows to write, with the Header Row flagged. As Column moves each Section Header into a
+ * leading Section column of the rows below it; As Rows keeps the Section Headers as rows.
+ */
+function outputRows(table: Table, asColumn: boolean): OutputRow[] {
+  const out: OutputRow[] = [];
+  let current = "";
+  table.grid.forEach((row, r) => {
+    if (table.header && r === 0) {
+      out.push({ cells: asColumn ? ["Section", ...row] : row.slice(), head: true });
+    } else if (isSectionHeader(table, r)) {
+      current = row[0] ?? "";
+      if (!asColumn) out.push({ cells: row.slice(), section: true });
+    } else out.push({ cells: asColumn ? [current, ...row] : row.slice() });
+  });
+  return out;
 }
 
 const isNum = (v: string) => /^[\s$€£¥(+\-−]*\d[\d,.\s]*%?\)?\s*$/.test(v);
-
-/** Columns where at least 70% of the non-empty body cells are numbers. */
-function outputNumericColumns({ table, rows }: Output): boolean[] {
-  const body = rows.filter((r) => !r.head);
-  const n = table.grid[0]?.length ?? 0;
-  return Array.from({ length: n }, (_, c) => {
-    const v = body.map((r) => r.cells[c]).filter(Boolean);
-    return v.length > 0 && v.filter((x) => isNum(x!)).length / v.length >= 0.7;
-  });
-}
 
 const csvCell = (v: string) => (/[",\n]/.test(v) ? `"${v.replace(/"/g, '""')}"` : v);
 const mdCell = (v: string) => v.replace(/\|/g, "\\|");
@@ -54,33 +69,60 @@ const WRITERS: Record<ExportFormat, (out: Output) => string> = {
   csv: ({ rows }) => rows.map((r) => r.cells.map(csvCell).join(",")).join("\n"),
   tsv: ({ rows }) =>
     rows.map((r) => r.cells.map((v) => v.replace(/\t|\n/g, " ")).join("\t")).join("\n"),
-  md: (out) => {
-    const { table, rows } = out;
+  md: ({ table, rows, asColumn }) => {
     const first = rows[0]?.cells ?? [];
     const head = table.header ? first : first.map((_, i) => `Column ${i + 1}`);
     const body = rows.slice(table.header ? 1 : 0);
-    const align = outputNumericColumns(out);
+    const numeric = numericColumns(table);
+    const align = asColumn ? [false, ...numeric] : numeric;
     return [
       `| ${head.map(mdCell).join(" | ")} |`,
       `| ${align.map((n) => (n ? "---:" : "---")).join(" | ")} |`,
-      ...body.map((r) => `| ${r.cells.map(mdCell).join(" | ")} |`),
+      ...body.map((r) =>
+        r.section
+          ? `| **${mdCell(r.cells[0]!)}** |${" |".repeat(r.cells.length - 1)}`
+          : `| ${r.cells.map(mdCell).join(" | ")} |`,
+      ),
     ].join("\n");
   },
-  json: ({ table, rows }) => {
+  json: ({ table, rows, asColumn }) => {
     const keys = table.header ? rows[0]!.cells.map((k, i) => k || `column_${i + 1}`) : null;
     const obj = (cells: string[]) =>
       keys ? Object.fromEntries(keys.map((k, i) => [k, cells[i]])) : cells;
-    return JSON.stringify(
-      rows.slice(table.header ? 1 : 0).map((r) => obj(r.cells)),
-      null,
-      2,
-    );
+    const body = rows.slice(table.header ? 1 : 0);
+    if (!hasSectionHeaders(table) || asColumn)
+      return JSON.stringify(
+        body.map((r) => obj(r.cells)),
+        null,
+        2,
+      );
+    // As Rows: grouped by section.
+    const groups: { section: string | null; rows: unknown[] }[] = [];
+    let group: (typeof groups)[number] | null = null;
+    for (const r of body) {
+      if (r.section) {
+        group = { section: r.cells[0]!, rows: [] };
+        groups.push(group);
+        continue;
+      }
+      if (!group) {
+        group = { section: null, rows: [] };
+        groups.push(group);
+      }
+      group.rows.push(obj(r.cells));
+    }
+    return JSON.stringify(groups, null, 2);
   },
 };
 
 /** The Table as text in the given format, ready for the clipboard. */
-export function exportTable(table: Table, format: ExportFormat): string {
-  return WRITERS[format]({ table, rows: outputRows(table) });
+export function exportTable(
+  table: Table,
+  format: ExportFormat,
+  sectionMode: SectionMode = DEFAULT_SECTION_MODE,
+): string {
+  const asColumn = usesSectionColumn(table, sectionMode);
+  return WRITERS[format]({ table, rows: outputRows(table, asColumn), asColumn });
 }
 
 /**
@@ -89,7 +131,7 @@ export function exportTable(table: Table, format: ExportFormat): string {
  */
 export function numericColumns(table: Table): boolean[] {
   const body = table.grid.filter(
-    (_, r) => !(table.header && r === 0) && !table.sections.includes(r),
+    (_, r) => !(table.header && r === 0) && !isSectionHeader(table, r),
   );
   return Array.from({ length: table.grid[0]?.length ?? 0 }, (_, c) => {
     const v = body.map((r) => r[c]).filter(Boolean);
