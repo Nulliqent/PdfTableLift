@@ -6,6 +6,7 @@ import { Hud } from "./components/Hud";
 import { IconSprite } from "./components/Icon";
 import { Sidebar } from "./components/Sidebar";
 import { Toolbar } from "./components/Toolbar";
+import { loadColumnSpacing, saveColumnSpacing } from "./column-spacing-storage";
 import { registerSource, releaseSource } from "./documentSources";
 import { splitPdfs } from "./pdfFiles";
 import { useFileDrop } from "./useFileDrop";
@@ -17,7 +18,12 @@ const EXAMPLE_NAME = "Northwind Q3 Summary.pdf";
 
 /** macOS-style split view: translucent toolbar, source-list sidebar and content pane. */
 export function App() {
-  const [state, dispatch] = useReducer(reduce, initialWorkspace);
+  const [state, dispatch] = useReducer(reduce, initialWorkspace, (initial) => ({
+    ...initial,
+    settings: { ...initial.settings, columnSpacing: loadColumnSpacing() },
+  }));
+  const columnSpacing = state.settings.columnSpacing;
+  useEffect(() => saveColumnSpacing(columnSpacing), [columnSpacing]);
   const [hud, showHud] = useHud();
   const fileInput = useRef<HTMLInputElement>(null);
   const userOpened = useRef(false);
@@ -124,6 +130,8 @@ export function App() {
             }
             onOpen={chooseFiles}
             onRemove={removeDocument}
+            columnSpacing={columnSpacing}
+            onColumnSpacing={(value) => dispatch({ type: "columnSpacingChanged", value })}
           />
           <ContentPane
             document={selectedDocument(state)}

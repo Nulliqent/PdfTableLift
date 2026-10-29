@@ -10,10 +10,20 @@ type SidebarProps = {
   onSelect: (documentId: string, tableId: string) => void;
   onOpen: () => void;
   onRemove: (documentId: string) => void;
+  columnSpacing: number;
+  onColumnSpacing: (value: number) => void;
 };
 
 /** Source-list sidebar: drop area, Documents and the Column Spacing panel. */
-export function Sidebar({ documents, selection, onSelect, onOpen, onRemove }: SidebarProps) {
+export function Sidebar({
+  documents,
+  selection,
+  onSelect,
+  onOpen,
+  onRemove,
+  columnSpacing,
+  onColumnSpacing,
+}: SidebarProps) {
   return (
     <aside className={styles.sidebar} aria-label="Documents">
       <DropArea onOpen={onOpen} />
@@ -23,7 +33,7 @@ export function Sidebar({ documents, selection, onSelect, onOpen, onRemove }: Si
         onSelect={onSelect}
         onRemove={onRemove}
       />
-      <ColumnSpacingPanel />
+      <ColumnSpacingPanel value={columnSpacing} onChange={onColumnSpacing} />
     </aside>
   );
 }

@@ -1,7 +1,11 @@
 import { useState } from "react";
-import { exportTable, tableSize, type Document, type Table } from "../../engine";
+import { EXPORT_FORMATS, exportTable, tableSize, type Document, type Table } from "../../engine";
+import { copyText } from "../copy-text";
 import { pageLabel, plural } from "../format";
+import { useExportFormat } from "../useExportFormat";
 import { Button } from "./Button";
+import { CopySheet } from "./CopySheet";
+import { FormatControl } from "./FormatControl";
 import { Icon } from "./Icon";
 import { SourcePage } from "./SourcePage";
 import { TableView } from "./TableView";
@@ -57,12 +61,14 @@ function TableDetail({
 }) {
   const [view, setView] = useState<"table" | "source">("table");
   const { rows, cols } = tableSize(table);
-  const copy = () => {
-    // The fallback sheet for a blocked clipboard (US-49) arrives with the export formats (#10).
-    navigator.clipboard.writeText(exportTable(table, "csv")).then(
-      () => onCopied("Copied as CSV"),
-      () => undefined,
-    );
+  const [format, setFormat] = useExportFormat();
+  const [sheet, setSheet] = useState<string | null>(null);
+  const name = EXPORT_FORMATS.find((f) => f.format === format)!.name;
+  const copy = async () => {
+    const text = exportTable(table, format);
+    if (await copyText(text)) {
+      onCopied(format === "tsv" ? "Copied: paste into Numbers or Excel" : `Copied as ${name}`);
+    } else setSheet(text);
   };
   return (
     <>
@@ -84,8 +90,9 @@ function TableDetail({
             </button>
           ))}
         </div>
+        <FormatControl value={format} onChange={setFormat} />
         <span className={styles.spacer} />
-        <Button variant="primary" onClick={copy}>
+        <Button variant="primary" onClick={() => void copy()}>
           <Icon name="copy" />
           Copy
         </Button>
@@ -101,6 +108,9 @@ function TableDetail({
           />
         )}
       </div>
+      {sheet !== null && (
+        <CopySheet title={`Copy ${name}`} text={sheet} onDone={() => setSheet(null)} />
+      )}
       <div className={styles.foot}>
         <span>
           {plural(rows, "row")} × {plural(cols, "column")}

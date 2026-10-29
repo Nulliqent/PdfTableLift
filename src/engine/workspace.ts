@@ -66,7 +66,19 @@ export type WorkspaceAction =
   | { type: "documentRead"; id: string; pages: PageText[] }
   | { type: "tableSelected"; documentId: string; tableId: string }
   /** The user removed a Document. Selection moves to the next Document with Tables. */
-  | { type: "documentRemoved"; id: string };
+  | { type: "documentRemoved"; id: string }
+  /** The Column Spacing slider moved; every Document is re-detected. */
+  | { type: "columnSpacingChanged"; value: number };
+
+export const MIN_COLUMN_SPACING = 0.4;
+export const MAX_COLUMN_SPACING = 2.6;
+
+/** A stored or typed value as a valid Column Spacing (one decimal in range), else null. */
+export function parseColumnSpacing(value: unknown): number | null {
+  if (typeof value !== "number" || !Number.isFinite(value)) return null;
+  if (value < MIN_COLUMN_SPACING || value > MAX_COLUMN_SPACING) return null;
+  return Math.round(value * 10) / 10;
+}
 
 export const DEFAULT_SETTINGS: Settings = { columnSpacing: 1 };
 
@@ -123,11 +135,37 @@ export function reduce(state: WorkspaceState, action: WorkspaceAction): Workspac
       if (!doc?.tables.some((t) => t.id === action.tableId)) return state;
       return { ...state, selection: { documentId: action.documentId, tableId: action.tableId } };
     }
+    case "columnSpacingChanged": {
+      const columnSpacing = parseColumnSpacing(action.value);
+      if (columnSpacing === null || columnSpacing === state.settings.columnSpacing) return state;
+      const settings = { ...state.settings, columnSpacing };
+      const documents = state.documents.map((d) =>
+        d.status === "ready" ? { ...d, tables: detectDocument(d.id, d.pages, settings) } : d,
+      );
+      return { ...state, settings, documents, selection: keepSelection(state, documents) };
+    }
     default: {
       const unhandled: never = action;
       return unhandled;
     }
   }
+}
+
+/**
+ * After re-detection, keeps the selection by page and position among that page's Tables; if
+ * that Table is gone, falls back to the Document's first Table.
+ */
+function keepSelection(before: WorkspaceState, documents: Document[]): Selection | null {
+  const sel = before.selection;
+  if (!sel) return null;
+  const old = before.documents.find((d) => d.id === sel.documentId);
+  const now = documents.find((d) => d.id === sel.documentId);
+  const oldTable = old?.tables.find((t) => t.id === sel.tableId);
+  if (!old || !now || !oldTable) return null;
+  const position = old.tables.filter((t) => t.page === oldTable.page).indexOf(oldTable);
+  const same = now.tables.filter((t) => t.page === oldTable.page)[position];
+  const table = same ?? now.tables[0];
+  return table ? { documentId: now.id, tableId: table.id } : null;
 }
 
 /** Detects every Table in a Document, ordered by page and then top to bottom. */
