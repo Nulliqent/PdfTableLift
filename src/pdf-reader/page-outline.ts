@@ -1,0 +1,28 @@
+/** A box in PDF coordinates: [x0, y0, x1, y1], y up. */
+export type PdfBox = readonly [number, number, number, number];
+
+/** The part of a pdf.js PageViewport that outlines need. */
+export type ViewportLike = {
+  width: number;
+  height: number;
+  convertToViewportPoint(x: number, y: number): number[];
+};
+
+/** A box on a rendered page, as fractions (0 to 1) of the page's width and height. */
+export type OutlineBox = { left: number; top: number; width: number; height: number };
+
+/**
+ * Maps a bbox in PDF space (y up) to a box on the rendered page. Fractions keep the box aligned
+ * with the text when the canvas is scaled by CSS. Two points, because pdf.js 6 removed
+ * convertToViewportRectangle.
+ */
+export function outlineBox(viewport: ViewportLike, bbox: PdfBox): OutlineBox {
+  const [x1, y1] = viewport.convertToViewportPoint(bbox[0], bbox[1]) as [number, number];
+  const [x2, y2] = viewport.convertToViewportPoint(bbox[2], bbox[3]) as [number, number];
+  return {
+    left: Math.min(x1, x2) / viewport.width,
+    top: Math.min(y1, y2) / viewport.height,
+    width: Math.abs(x2 - x1) / viewport.width,
+    height: Math.abs(y2 - y1) / viewport.height,
+  };
+}

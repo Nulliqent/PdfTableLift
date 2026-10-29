@@ -131,6 +131,12 @@ test("removing a Document says Removed and selects the next Document with Tables
     await chooser
   ).setFiles([fixturePath("separate-tables.pdf"), fixturePath("embedded-bold.pdf")]);
   await expect(sidebar(page).getByText("embedded-bold.pdf")).toBeVisible();
+  // Both are read in parallel, so which one is selected first varies. Select the first one.
+  await expect(sidebar(page).getByRole("button", { name: /Table 1/ })).toHaveCount(2);
+  await sidebar(page)
+    .getByRole("button", { name: /Table 1/ })
+    .first()
+    .click();
   await expect(page.getByRole("main")).toContainText("separate-tables.pdf");
 
   await sidebar(page).getByRole("button", { name: "Remove separate-tables.pdf" }).click();
@@ -140,4 +146,30 @@ test("removing a Document says Removed and selects the next Document with Tables
   ).toBeVisible();
   await expect(sidebar(page).getByText("separate-tables.pdf")).toHaveCount(0);
   await expect(page.getByRole("main")).toContainText("embedded-bold.pdf");
+});
+
+async function expectSourcePageDrawn(page: Page) {
+  const main = page.getByRole("main");
+  await main.getByRole("button", { name: "Source Page" }).click();
+  await expect(main.getByTestId("source-page-1").locator("canvas")).toBeVisible();
+  await expect(main.getByText("This page couldn't be drawn.")).toHaveCount(0);
+}
+
+test("the Source Page draws for the Example Document", async ({ page }) => {
+  await page.goto("/");
+  await expect(example(page)).toBeVisible();
+  await expect(page.getByRole("main").getByRole("heading", { name: /Table/ })).toBeVisible();
+
+  await expectSourcePageDrawn(page);
+});
+
+test("the Source Page draws for a dropped file", async ({ page }) => {
+  await page.goto("/");
+  await expect(example(page)).toBeVisible();
+
+  const dragging = await dragFiles(page, [pdf("separate-tables.pdf")]);
+  await dragging.drop();
+  await expect(page.getByRole("main")).toContainText("separate-tables.pdf");
+
+  await expectSourcePageDrawn(page);
 });

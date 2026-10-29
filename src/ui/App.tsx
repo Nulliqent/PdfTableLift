@@ -6,6 +6,7 @@ import { Hud } from "./components/Hud";
 import { IconSprite } from "./components/Icon";
 import { Sidebar } from "./components/Sidebar";
 import { Toolbar } from "./components/Toolbar";
+import { registerSource, releaseSource } from "./documentSources";
 import { splitPdfs } from "./pdfFiles";
 import { useFileDrop } from "./useFileDrop";
 import { useHud } from "./useHud";
@@ -36,11 +37,16 @@ export function App() {
     if (files.length && !pdfs.length) showHud("Only PDF files can be read", "warn");
     else if (skipped)
       showHud(`Skipped ${skipped} file${skipped > 1 ? "s" : ""} that weren't PDFs`, "warn");
-    if (pdfs.length) userOpened.current = true;
+    if (pdfs.length) {
+      userOpened.current = true;
+      // The reducer drops the Example Document when the first own Document is added.
+      for (const d of state.documents) if (d.example) void releaseSource(d.id);
+    }
     await Promise.all(
       pdfs.map(async (file) => {
         const id = crypto.randomUUID();
         dispatch({ type: "documentAdded", id, name: file.name, size: file.size });
+        registerSource(id, async () => new Uint8Array(await file.arrayBuffer()));
         await read(id, new Uint8Array(await file.arrayBuffer()));
       }),
     );
@@ -68,6 +74,7 @@ export function App() {
         size: bytes.length,
         example: true,
       });
+      registerSource(id, () => Promise.resolve(bytes));
       await read(id, bytes);
     })();
   }, []);
@@ -88,6 +95,7 @@ export function App() {
   const removeDocument = (id: string) => {
     const doc = state.documents.find((d) => d.id === id);
     dispatch({ type: "documentRemoved", id });
+    void releaseSource(id);
     if (doc) showHud(`Removed ${doc.name}`);
   };
 
@@ -123,6 +131,9 @@ export function App() {
             loading={state.documents.some((d) => d.status === "loading")}
             onOpen={chooseFiles}
             onCopied={showHud}
+            onSelectTable={(documentId, tableId) =>
+              dispatch({ type: "tableSelected", documentId, tableId })
+            }
           />
         </div>
       </div>
