@@ -31,9 +31,14 @@ export type {
 export { HAND_DRAWN_OVERLAP, REMOVED_TABLE_OVERLAP, overlapRatio } from "./overlap";
 export {
   DEFAULT_EXPORT_FORMAT,
+  DEFAULT_SECTION_MODE,
   EXPORT_FORMATS,
+  hasSectionHeaders,
+  isSectionHeader,
+  isSectionMode,
+  usesSectionColumn,
   exportTable,
   isExportFormat,
   numericColumns,
 } from "./export";
-export type { ExportFormat } from "./export";
+export type { ExportFormat, SectionMode } from "./export";

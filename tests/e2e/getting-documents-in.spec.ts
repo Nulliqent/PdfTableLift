@@ -151,7 +151,12 @@ test("removing a Document says Removed and selects the next Document with Tables
 async function expectSourcePageDrawn(page: Page) {
   const main = page.getByRole("main");
   await main.getByRole("button", { name: "Source Page" }).click();
-  await expect(main.getByTestId("source-page-1").locator("canvas")).toBeVisible();
+  await expect(
+    main
+      .getByTestId(/^source-page-/)
+      .first()
+      .locator("canvas"),
+  ).toBeVisible();
   await expect(main.getByText("This page couldn't be drawn.")).toHaveCount(0);
 }
 

@@ -116,7 +116,9 @@ export type WorkspaceAction =
       value: string;
     }
   /** "First row is header" was switched. */
-  | { type: "headerToggled"; documentId: string; tableId: string; header: boolean };
+  | { type: "headerToggled"; documentId: string; tableId: string; header: boolean }
+  /** A row number was clicked: the grid row becomes a Section Header, or a data row again. */
+  | { type: "sectionHeaderToggled"; documentId: string; tableId: string; row: number };
 
 export const MIN_COLUMN_SPACING = 0.4;
 export const MAX_COLUMN_SPACING = 2.6;
@@ -173,11 +175,13 @@ export function reduce(state: WorkspaceState, action: WorkspaceAction): Workspac
       const tables = detectDocument(doc, action.pages, state.settings);
       const read: Document = { ...doc, status: "ready", pages: action.pages, tables };
       const next = { ...state, documents: state.documents.map((d) => (d === doc ? read : d)) };
-      // Keep what the user is looking at; otherwise show this Document's first Table.
+      // Keep what the user is looking at; otherwise show this Document's first Table. The Example
+      // Document opens on its first Table with Section Headers, which shows them off.
       if (selectedTable(next)) return next;
+      const shown = (doc.example && tables.find((t) => t.sections.some((r) => r > 0))) || tables[0];
       return {
         ...next,
-        selection: tables[0] ? { documentId: doc.id, tableId: tables[0].id } : null,
+        selection: shown ? { documentId: doc.id, tableId: shown.id } : null,
       };
     }
     case "tableSelected": {
@@ -261,11 +265,31 @@ export function reduce(state: WorkspaceState, action: WorkspaceAction): Workspac
       return updateTable(state, action.documentId, action.tableId, (t) =>
         t.header === action.header ? t : { ...t, header: action.header, edited: true },
       );
+    case "sectionHeaderToggled":
+      return updateTable(state, action.documentId, action.tableId, (t) =>
+        toggleSectionHeader(t, action.row),
+      );
     default: {
       const unhandled: never = action;
       return unhandled;
     }
   }
+}
+
+/**
+ * Marks a row as a Section Header (its text gathered into the first cell) or turns it back into a
+ * data row. Counts as a correction. The Header Row and rows outside the grid are left alone.
+ */
+function toggleSectionHeader(t: Table, row: number): Table {
+  if (!t.grid[row] || (t.header && row === 0)) return t;
+  if (t.sections.includes(row)) {
+    return { ...t, sections: t.sections.filter((r) => r !== row), edited: true };
+  }
+  const label = t.grid[row].filter(Boolean).join(" ");
+  const grid = t.grid.map((cells, r) =>
+    r === row ? cells.map((_, c) => (c ? "" : label)) : cells,
+  );
+  return { ...t, grid, sections: [...t.sections, row].sort((a, b) => a - b), edited: true };
 }
 
 /** Replaces a Document and re-detects its Tables (its Removed Tables already updated). */
