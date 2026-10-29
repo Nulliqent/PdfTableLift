@@ -32,6 +32,8 @@ export type Table = {
   cols: Band[];
   /** Repeated Header Rows dropped by joining. */
   repeats: number;
+  /** The user corrected a cell or the Header Row; re-detection would discard it. */
+  edited: boolean;
 };
 
 export type Document = {
@@ -51,10 +53,26 @@ export type Settings = {
 
 export type Selection = { documentId: string; tableId: string };
 
+/**
+ * An action that re-detects Tables and so would discard corrections. Without `discardEdits`, the
+ * reducer refuses to run it while any Table is edited and parks it in `pendingChange` instead.
+ */
+export type DiscardingAction = {
+  type: "columnSpacingChanged";
+  value: number;
+  discardEdits?: boolean;
+};
+
 export type WorkspaceState = {
   documents: Document[];
   selection: Selection | null;
   settings: Settings;
+  /**
+   * The change waiting for the user to confirm that edits may be discarded, or null. The UI shows
+   * a confirmation while it is set and answers with `changeConfirmed` or `changeCancelled`.
+   * To guard another action: add it to DiscardingAction and start its case with `guardEdits`.
+   */
+  pendingChange: DiscardingAction | null;
 };
 
 export type WorkspaceAction =
@@ -64,7 +82,22 @@ export type WorkspaceAction =
   | { type: "documentRead"; id: string; pages: PageText[] }
   | { type: "tableSelected"; documentId: string; tableId: string }
   /** The Column Spacing slider moved; every Document is re-detected. */
-  | { type: "columnSpacingChanged"; value: number };
+  | DiscardingAction
+  /** The user confirmed the pending change: it runs with the edits discarded. */
+  | { type: "changeConfirmed" }
+  /** The user cancelled the pending change: nothing changes. */
+  | { type: "changeCancelled" }
+  /** A cell was corrected (grid coordinates, Header Row included). */
+  | {
+      type: "cellEdited";
+      documentId: string;
+      tableId: string;
+      row: number;
+      col: number;
+      value: string;
+    }
+  /** "First row is header" was switched. */
+  | { type: "headerToggled"; documentId: string; tableId: string; header: boolean };
 
 export const MIN_COLUMN_SPACING = 0.4;
 export const MAX_COLUMN_SPACING = 2.6;
@@ -82,6 +115,7 @@ export const initialWorkspace: WorkspaceState = {
   documents: [],
   selection: null,
   settings: DEFAULT_SETTINGS,
+  pendingChange: null,
 };
 
 export function reduce(state: WorkspaceState, action: WorkspaceAction): WorkspaceState {
@@ -118,17 +152,73 @@ export function reduce(state: WorkspaceState, action: WorkspaceAction): Workspac
     case "columnSpacingChanged": {
       const columnSpacing = parseColumnSpacing(action.value);
       if (columnSpacing === null || columnSpacing === state.settings.columnSpacing) return state;
+      if (needsConfirmation(state, action)) return { ...state, pendingChange: action };
       const settings = { ...state.settings, columnSpacing };
       const documents = state.documents.map((d) =>
         d.status === "ready" ? { ...d, tables: detectDocument(d.id, d.pages, settings) } : d,
       );
-      return { ...state, settings, documents, selection: keepSelection(state, documents) };
+      return {
+        ...state,
+        settings,
+        documents,
+        selection: keepSelection(state, documents),
+        pendingChange: null,
+      };
     }
+    case "changeConfirmed": {
+      if (!state.pendingChange) return state;
+      return reduce(
+        { ...state, pendingChange: null },
+        { ...state.pendingChange, discardEdits: true },
+      );
+    }
+    case "changeCancelled":
+      return state.pendingChange ? { ...state, pendingChange: null } : state;
+    case "cellEdited": {
+      const value = action.value.replace(/\s+/g, " ").trim();
+      return updateTable(state, action.documentId, action.tableId, (t) => {
+        if (
+          t.grid[action.row]?.[action.col] === undefined ||
+          t.grid[action.row]![action.col] === value
+        ) {
+          return t;
+        }
+        const grid = t.grid.map((r, i) => (i === action.row ? r.with(action.col, value) : r));
+        return { ...t, grid, edited: true };
+      });
+    }
+    case "headerToggled":
+      return updateTable(state, action.documentId, action.tableId, (t) =>
+        t.header === action.header ? t : { ...t, header: action.header, edited: true },
+      );
     default: {
       const unhandled: never = action;
       return unhandled;
     }
   }
+}
+
+/** True when `action` would discard corrections the user has not agreed to lose. */
+function needsConfirmation(state: WorkspaceState, action: DiscardingAction): boolean {
+  return !action.discardEdits && state.documents.some((d) => d.tables.some((t) => t.edited));
+}
+
+function updateTable(
+  state: WorkspaceState,
+  documentId: string,
+  tableId: string,
+  change: (table: Table) => Table,
+): WorkspaceState {
+  const doc = state.documents.find((d) => d.id === documentId);
+  const table = doc?.tables.find((t) => t.id === tableId);
+  if (!doc || !table) return state;
+  const next = change(table);
+  if (next === table) return state;
+  const tables = doc.tables.map((t) => (t === table ? next : t));
+  return {
+    ...state,
+    documents: state.documents.map((d) => (d === doc ? { ...doc, tables } : d)),
+  };
 }
 
 /**
@@ -164,6 +254,7 @@ function detectDocument(documentId: string, pages: PageText[], settings: Setting
         sections: t.sections,
         cols: t.cols,
         repeats: 0,
+        edited: false,
       });
     });
   }
