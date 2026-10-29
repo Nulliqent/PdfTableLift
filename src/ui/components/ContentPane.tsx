@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, type ReactNode } from "react";
 import { EXPORT_FORMATS, exportTable, tableSize, type Document, type Table } from "../../engine";
 import { copyText } from "../copy-text";
 import { pageLabel, plural } from "../format";
@@ -19,6 +19,8 @@ type ContentPaneProps = {
   onOpen: () => void;
   onCopied: (message: string) => void;
   onSelectTable: (documentId: string, tableId: string) => void;
+  /** Select Region, shown in place of the selected Table while the user is drawing a Region. */
+  regionSelection?: ReactNode;
 };
 
 /** The content pane: the selected Table with Copy, or an empty state. */
@@ -29,11 +31,14 @@ export function ContentPane({
   onOpen,
   onCopied,
   onSelectTable,
+  regionSelection,
 }: ContentPaneProps) {
   return (
     <main className={styles.content}>
       <div className={styles.inner}>
-        {document && table ? (
+        {regionSelection ? (
+          regionSelection
+        ) : document && table ? (
           <TableDetail
             document={document}
             table={table}
@@ -81,6 +86,12 @@ function TableDetail({
           </span>
         </div>
         <h2>Table {table.n}</h2>
+        {table.region !== undefined && (
+          <span className={styles.tag}>
+            <Icon name="select" />
+            Selected by hand
+          </span>
+        )}
       </div>
       <div className={styles.bar}>
         <div className={styles.seg} role="group" aria-label="View">

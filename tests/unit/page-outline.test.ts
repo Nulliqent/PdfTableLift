@@ -4,7 +4,7 @@ import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import * as pdfjs from "pdfjs-dist/legacy/build/pdf.mjs";
 import { beforeAll, describe, expect, it } from "vitest";
-import { outlineBox } from "../../src/pdf-reader/page-outline";
+import { outlineBox, pdfBox } from "../../src/pdf-reader/page-outline";
 
 // A real 612 x 792 pt page, to get pdf.js's own viewports.
 let page: pdfjs.PDFPageProxy;
@@ -44,5 +44,28 @@ describe("outlineBox", () => {
     expect(box.left).toBeCloseTo(0);
     expect(box.width).toBeCloseTo(100 / 792);
     expect(box.height).toBeCloseTo(1);
+  });
+});
+
+describe("pdfBox", () => {
+  it("turns a box dragged on the page back into PDF coordinates, y up", () => {
+    const dragged = { left: 72 / 612, top: 92 / 792, width: 228 / 612, height: 100 / 792 };
+
+    const bbox = pdfBox(letter(1.3), dragged);
+
+    expect(bbox[0]).toBeCloseTo(72);
+    expect(bbox[1]).toBeCloseTo(600);
+    expect(bbox[2]).toBeCloseTo(300);
+    expect(bbox[3]).toBeCloseTo(700);
+  });
+
+  it("is the inverse of outlineBox, on a rotated page too", () => {
+    for (const rotation of [0, 90, 180, 270]) {
+      const bbox = [72, 600, 300, 700] as const;
+
+      const back = pdfBox(letter(1, rotation), outlineBox(letter(1, rotation), bbox));
+
+      back.forEach((v, i) => expect(v).toBeCloseTo(bbox[i]!));
+    }
   });
 });

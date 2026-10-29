@@ -8,6 +8,8 @@ type SidebarProps = {
   documents: Document[];
   selection: Selection | null;
   onSelect: (documentId: string, tableId: string) => void;
+  regionDocumentId: string | null;
+  onSelectRegion: (documentId: string) => void;
   columnSpacing: number;
   onColumnSpacing: (value: number) => void;
 };
@@ -17,13 +19,21 @@ export function Sidebar({
   documents,
   selection,
   onSelect,
+  regionDocumentId,
+  onSelectRegion,
   columnSpacing,
   onColumnSpacing,
 }: SidebarProps) {
   return (
     <aside className={styles.sidebar} aria-label="Documents">
       <DropArea />
-      <DocumentList documents={documents} selection={selection} onSelect={onSelect} />
+      <DocumentList
+        documents={documents}
+        selection={selection}
+        onSelect={onSelect}
+        regionDocumentId={regionDocumentId}
+        onSelectRegion={onSelectRegion}
+      />
       <ColumnSpacingPanel value={columnSpacing} onChange={onColumnSpacing} />
     </aside>
   );

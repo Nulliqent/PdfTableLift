@@ -9,6 +9,7 @@ export {
   MAX_COLUMN_SPACING,
   MIN_COLUMN_SPACING,
   parseColumnSpacing,
+  regionPreview,
   initialWorkspace,
   reduce,
   selectedDocument,
@@ -20,6 +21,8 @@ export type {
   Bbox,
   Document,
   Part,
+  Region,
+  RegionInProgress,
   Selection,
   Settings,
   Table,
@@ -28,3 +31,4 @@ export type {
 } from "./workspace";
 export { DEFAULT_EXPORT_FORMAT, EXPORT_FORMATS, exportTable, isExportFormat } from "./export";
 export type { ExportFormat } from "./export";
+export type { FoundTable } from "./detection";

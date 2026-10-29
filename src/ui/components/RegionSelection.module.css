@@ -1,0 +1,162 @@
+.lede {
+  margin: 4px 0 0;
+  color: var(--label2);
+  font-size: 14px;
+  max-width: 62ch;
+}
+
+.stepper {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  background: var(--fill);
+  border-radius: 9px;
+  padding: 2px;
+  font-size: 13px;
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+}
+
+.stepper span {
+  padding: 0 8px;
+  min-width: 88px;
+  text-align: center;
+}
+
+.stepper button {
+  border: 0;
+  background: none;
+  width: 30px;
+  height: 26px;
+  border-radius: 7px;
+  font-size: 18px;
+  line-height: 1;
+  cursor: pointer;
+  color: var(--label);
+}
+
+.stepper button:hover:not(:disabled) {
+  background: var(--thumb);
+}
+
+.stepper button:disabled {
+  color: var(--label3);
+  cursor: default;
+}
+
+.link {
+  border: 0;
+  background: none;
+  color: var(--accent);
+  font: inherit;
+  font-size: 13px;
+  font-weight: 500;
+  padding: 2px 4px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.link:hover {
+  background: var(--accent-tint);
+}
+
+.layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 16px;
+  align-items: start;
+}
+
+@media (min-width: 1180px) {
+  .layout {
+    grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr);
+  }
+
+  .preview {
+    position: sticky;
+    top: 0;
+  }
+}
+
+.pvHead {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding: 12px 14px;
+  border-bottom: 1px solid var(--separator);
+  font-size: 13px;
+}
+
+.pvHead span {
+  color: var(--label2);
+  font-variant-numeric: tabular-nums;
+}
+
+.scroll {
+  overflow-x: auto;
+}
+
+.pv {
+  border-collapse: collapse;
+  width: 100%;
+  font-size: 12.5px;
+  font-variant-numeric: tabular-nums;
+}
+
+.pv th,
+.pv td {
+  padding: 6px 10px;
+  text-align: left;
+  white-space: nowrap;
+  border-bottom: 1px solid var(--separator);
+}
+
+.pv thead th {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--label2);
+  background: var(--fill2);
+}
+
+.none {
+  color: var(--label3);
+}
+
+.more {
+  padding: 8px 14px;
+  font-size: 12px;
+  color: var(--label2);
+  border-top: 1px solid var(--separator);
+}
+
+.tip {
+  padding: 10px 14px;
+  font-size: 12px;
+  color: var(--label2);
+  background: var(--fill2);
+  border-top: 1px solid var(--separator);
+}
+
+.empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 6px;
+  padding: 36px 20px;
+  color: var(--label2);
+  font-size: 13px;
+}
+
+.empty b {
+  color: var(--label);
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.empty svg {
+  width: 32px;
+  height: 32px;
+  stroke-width: 1.3;
+  color: var(--label3);
+}

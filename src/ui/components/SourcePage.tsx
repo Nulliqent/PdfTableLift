@@ -152,7 +152,7 @@ function Outline({
 }
 
 /** Puts a canvas made outside React into the tree. */
-function CanvasHost({ canvas }: { canvas: HTMLCanvasElement }) {
+export function CanvasHost({ canvas }: { canvas: HTMLCanvasElement }) {
   const slot = useRef<HTMLDivElement>(null);
   useEffect(() => {
     slot.current?.replaceChildren(canvas);

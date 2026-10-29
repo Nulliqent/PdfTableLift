@@ -115,7 +115,9 @@ function defineComparisons(golden: Golden) {
       const plain = other.tables.filter((t) => !t.sections.length);
       const csv = (t: Table) => exportTable(t, "csv");
       const actual = found.filter((_, i) => !other.tables[i]?.sections.length).map(csv);
-      expect(plain[0]?.exports ? actual : actual.map(sha256)).toEqual(plain.map(goldenCsv));
+      expect(plain[0]?.exports ? actual : actual.map(sha256)).toEqual(
+        plain.map(goldenExport("csv")),
+      );
     });
   }
 }
