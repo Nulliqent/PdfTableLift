@@ -45,6 +45,8 @@ test("the preview build sends the security headers, and reading a PDF stays with
     });
   });
 
+  // One PDF, one worker: keep the Example Document (a second read) out of this check.
+  await page.route("**/example-document.pdf", (route) => route.abort());
   const response = await page.goto("/");
 
   expect(response?.headers()["content-security-policy"]).toBe(CONTENT_SECURITY_POLICY);

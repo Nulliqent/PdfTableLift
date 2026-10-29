@@ -7,10 +7,11 @@ type DocumentListProps = {
   documents: Document[];
   selection: Selection | null;
   onSelect: (documentId: string, tableId: string) => void;
+  onRemove: (documentId: string) => void;
 };
 
 /** The sidebar's Documents section: each Document and its Tables with page and size. */
-export function DocumentList({ documents, selection, onSelect }: DocumentListProps) {
+export function DocumentList({ documents, selection, onSelect, onRemove }: DocumentListProps) {
   return (
     <div>
       <div className={styles.heading}>Documents</div>
@@ -22,7 +23,17 @@ export function DocumentList({ documents, selection, onSelect }: DocumentListPro
                 <Icon name="doc" className={styles.docIcon} />
                 <span className={styles.name} title={doc.name}>
                   {doc.name}
+                  {doc.example && <span className={styles.tag}> (example)</span>}
                 </span>
+                <button
+                  type="button"
+                  className={styles.remove}
+                  aria-label={`Remove ${doc.name}`}
+                  title="Remove"
+                  onClick={() => onRemove(doc.id)}
+                >
+                  <Icon name="x" />
+                </button>
               </div>
               <DocumentBody doc={doc} selection={selection} onSelect={onSelect} />
             </div>
@@ -39,7 +50,7 @@ function DocumentBody({
   doc,
   selection,
   onSelect,
-}: { doc: Document } & Omit<DocumentListProps, "documents">) {
+}: { doc: Document } & Pick<DocumentListProps, "selection" | "onSelect">) {
   if (doc.status === "loading")
     return (
       <div className={styles.status}>
