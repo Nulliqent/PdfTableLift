@@ -93,7 +93,10 @@ describe("the Example Document", () => {
         { type: "documentAdded", id: "ex", name: "ex.pdf", size: 1, example },
         { type: "documentRead", id: "ex", pages: [page, sectioned] },
       ] as WorkspaceAction[]
-    ).reduce(reduce, initialWorkspace);
+    ).reduce(reduce, {
+      ...initialWorkspace,
+      settings: { ...initialWorkspace.settings, join: false },
+    });
 
   it("opens on its first Table with Section Headers", () => {
     const table = selectedTable(open(true))!;

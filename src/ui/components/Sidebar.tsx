@@ -15,6 +15,8 @@ type SidebarProps = {
   onRemove: (documentId: string) => void;
   columnSpacing: number;
   onColumnSpacing: (value: number) => void;
+  join: boolean;
+  onJoin: (value: boolean) => void;
 };
 
 /** Source-list sidebar: drop area, Documents and the Column Spacing panel. */
@@ -29,6 +31,8 @@ export function Sidebar({
   onRemove,
   columnSpacing,
   onColumnSpacing,
+  join,
+  onJoin,
 }: SidebarProps) {
   return (
     <aside className={styles.sidebar} aria-label="Documents">
@@ -42,7 +46,12 @@ export function Sidebar({
         onRestore={onRestore}
         onRemove={onRemove}
       />
-      <ColumnSpacingPanel value={columnSpacing} onChange={onColumnSpacing} />
+      <ColumnSpacingPanel
+        value={columnSpacing}
+        onChange={onColumnSpacing}
+        join={join}
+        onJoinChange={onJoin}
+      />
     </aside>
   );
 }

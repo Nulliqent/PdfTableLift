@@ -7,6 +7,7 @@
  */
 import type { PageText } from "../shared/page-text";
 import { detectTables, regionTable, type Band, type Bbox, type FoundTable } from "./detection";
+import { joinTables } from "./join";
 import { HAND_DRAWN_OVERLAP, REMOVED_TABLE_OVERLAP, overlapRatio } from "./overlap";
 
 export type { Band, Bbox } from "./detection";
@@ -74,6 +75,8 @@ export type Document = {
 export type Settings = {
   /** 0.4–2.6, default 1.0. */
   columnSpacing: number;
+  /** Join Tables that continue onto the next page. On by default. */
+  join: boolean;
 };
 
 export type Selection = { documentId: string; tableId: string };
@@ -84,6 +87,8 @@ export type Selection = { documentId: string; tableId: string };
  */
 export type DiscardingAction = { discardEdits?: boolean } & (
   | { type: "columnSpacingChanged"; value: number }
+  /** The join switch moved; every Document is re-detected. */
+  | { type: "joinChanged"; value: boolean }
   /** The user removed a Detected Table; it is hidden through re-detection until restored. */
   | { type: "tableRemoved"; documentId: string; tableId: string }
   /** The user restored a Removed Table from the sidebar. */
@@ -155,7 +160,7 @@ export function parseColumnSpacing(value: unknown): number | null {
   return Math.round(value * 10) / 10;
 }
 
-export const DEFAULT_SETTINGS: Settings = { columnSpacing: 1 };
+export const DEFAULT_SETTINGS: Settings = { columnSpacing: 1, join: true };
 
 export const initialWorkspace: WorkspaceState = {
   documents: [],
@@ -225,6 +230,21 @@ export function reduce(state: WorkspaceState, action: WorkspaceAction): Workspac
       if (columnSpacing === null || columnSpacing === state.settings.columnSpacing) return state;
       if (needsConfirmation(state, action)) return { ...state, pendingChange: action };
       const settings = { ...state.settings, columnSpacing };
+      const documents = state.documents.map((d) =>
+        d.status === "ready" ? { ...d, tables: detectDocument(d, d.pages, settings) } : d,
+      );
+      return {
+        ...state,
+        settings,
+        documents,
+        selection: keepSelection(state, documents),
+        pendingChange: null,
+      };
+    }
+    case "joinChanged": {
+      if (typeof action.value !== "boolean" || action.value === state.settings.join) return state;
+      if (needsConfirmation(state, action)) return { ...state, pendingChange: action };
+      const settings = { ...state.settings, join: action.value };
       const documents = state.documents.map((d) =>
         d.status === "ready" ? { ...d, tables: detectDocument(d, d.pages, settings) } : d,
       );
@@ -377,13 +397,13 @@ function sameTable(before: WorkspaceState, documents: Document[]): Selection | n
     .find((d) => d.id === sel?.documentId)
     ?.tables.find((t) => t.id === sel?.tableId);
   const now = documents.find((d) => d.id === sel?.documentId);
-  const table =
-    old &&
-    now?.tables.find(
-      (t) => t.page === old.page && t.parts[0]!.bbox.every((v, i) => v === old.parts[0]!.bbox[i]),
-    );
+  const table = old && now?.tables.find((t) => hasPart(t, old.parts[0]!));
   return table && now ? { documentId: now.id, tableId: table.id } : null;
 }
+
+/** Whether the Table has a Part on the same page and in the same box (Joined Tables included). */
+const hasPart = (table: Table, part: Part) =>
+  table.parts.some((p) => p.page === part.page && p.bbox.every((v, i) => v === part.bbox[i]));
 
 /** True when `action` would discard corrections the user has not agreed to lose. */
 function needsConfirmation(state: WorkspaceState, action: DiscardingAction): boolean {
@@ -433,16 +453,21 @@ function keepSelection(before: WorkspaceState, documents: Document[]): Selection
     const same = now.tables.find((t) => t.manual === oldTable.manual);
     if (same) return { documentId: now.id, tableId: same.id };
   }
+  // A Table that kept its first Part, which includes a Table joined to or split from its neighbour.
+  const kept = now.tables.find((t) => hasPart(t, oldTable.parts[0]!));
+  if (kept) return { documentId: now.id, tableId: kept.id };
   const position = old.tables.filter((t) => t.page === oldTable.page).indexOf(oldTable);
   const same = now.tables.filter((t) => t.page === oldTable.page)[position];
-  const table = same ?? now.tables[0];
+  const table =
+    same ?? now.tables.find((t) => t.parts.some((p) => p.page === oldTable.page)) ?? now.tables[0];
   return table ? { documentId: now.id, tableId: table.id } : null;
 }
 
 /** Detects every Table in a Document (minus its Removed Tables), ordered by page and then top to bottom. */
 function detectDocument(doc: Document, pages: PageText[], settings: Settings): Table[] {
   const documentId = doc.id;
-  const found: Table[] = [];
+  const detected: Table[] = [];
+  const handDrawn: Table[] = [];
   const table = (id: string, page: number, t: FoundTable, manual: string | null): Table => ({
     id,
     n: 0,
@@ -469,14 +494,17 @@ function detectDocument(doc: Document, pages: PageText[], settings: Settings): T
     detectTables(p.items, settings.columnSpacing).forEach((t, i) => {
       if (hidden(t.bbox)) return;
       if (covering.some((r) => overlapRatio(r.bbox, t.bbox) > HAND_DRAWN_OVERLAP)) return;
-      found.push(table(`${documentId}:${p.num}:${i}`, p.num, t, null));
+      detected.push(table(`${documentId}:${p.num}:${i}`, p.num, t, null));
     });
     for (const r of covering) {
       const t = regionTable(p.items, r.bbox, settings.columnSpacing);
-      if (t) found.push(table(`${documentId}:region:${r.id}`, p.num, t, r.id));
+      if (t) handDrawn.push(table(`${documentId}:region:${r.id}`, p.num, t, r.id));
     }
   }
-  return found
+  // Removed Tables and Hand-drawn Regions took their Tables out per page above, so a Joined Table
+  // never spans them. A Hand-drawn Table is added after joining and is never joined.
+  const joined = settings.join ? joinTables(pages, detected) : detected;
+  return [...joined, ...handDrawn]
     .sort((a, b) => a.page - b.page || b.parts[0]!.bbox[3] - a.parts[0]!.bbox[3])
     .map((t, i) => ({ ...t, n: i + 1 }));
 }
