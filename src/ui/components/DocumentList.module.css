@@ -157,3 +157,32 @@
     transform: rotate(360deg);
   }
 }
+
+.tag {
+  font-weight: 400;
+  color: var(--label2);
+}
+
+.remove {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 22px;
+  height: 22px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: none;
+  color: var(--label2);
+  cursor: pointer;
+}
+
+.remove:hover {
+  background: var(--fill);
+  color: var(--label);
+}
+
+.remove svg {
+  width: 14px;
+  height: 14px;
+}
