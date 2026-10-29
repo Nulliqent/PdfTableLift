@@ -65,3 +65,58 @@
 .table th.num {
   text-align: right;
 }
+
+.idxBtn {
+  border: 0;
+  background: none;
+  padding: 2px 4px;
+  border-radius: 5px;
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+}
+
+.idxBtn:hover {
+  background: var(--fill);
+  color: var(--label);
+}
+
+.idxBtn:focus-visible {
+  outline: var(--focus-ring);
+}
+
+.table tr.section td {
+  background: var(--fill2);
+  font-weight: 600;
+  font-size: 13px;
+  color: var(--label);
+  padding-top: 14px;
+  padding-bottom: 7px;
+}
+
+.table tr.section td.idx .idxBtn {
+  color: var(--accent);
+  font-weight: 600;
+}
+
+.table tr.section td.secFill {
+  padding: 0;
+}
+
+.table tr.section + tr td {
+  border-top: 0;
+}
+
+.table tbody tr.section:hover td {
+  background: var(--fill);
+}
+
+.secCol,
+.secColHead {
+  color: var(--label2);
+  font-weight: 600;
+}
+
+.none {
+  color: var(--label3);
+}

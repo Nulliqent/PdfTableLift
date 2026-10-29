@@ -1,12 +1,22 @@
 import { useState } from "react";
-import { EXPORT_FORMATS, exportTable, tableSize, type Document, type Table } from "../../engine";
+import {
+  EXPORT_FORMATS,
+  exportTable,
+  hasSectionHeaders,
+  isSectionHeader,
+  tableSize,
+  type Document,
+  type Table,
+} from "../../engine";
 import { copyText } from "../copy-text";
 import { pageLabel, plural } from "../format";
 import { useExportFormat } from "../useExportFormat";
+import { useSectionMode } from "../useSectionMode";
 import { Button } from "./Button";
 import { CopySheet } from "./CopySheet";
 import { FormatControl } from "./FormatControl";
 import { Icon } from "./Icon";
+import { SectionModeControl } from "./SectionModeControl";
 import { SourcePage } from "./SourcePage";
 import { TableView } from "./TableView";
 import styles from "./ContentPane.module.css";
@@ -27,6 +37,7 @@ type ContentPaneProps = {
     value: string,
   ) => void;
   onToggleHeader: (documentId: string, tableId: string, header: boolean) => void;
+  onToggleSection: (documentId: string, tableId: string, row: number) => void;
 };
 
 /** The content pane: the selected Table with Copy, or an empty state. */
@@ -39,6 +50,7 @@ export function ContentPane({
   onSelectTable,
   onEditCell,
   onToggleHeader,
+  onToggleSection,
 }: ContentPaneProps) {
   return (
     <main className={styles.content}>
@@ -51,6 +63,7 @@ export function ContentPane({
             onSelectTable={onSelectTable}
             onEditCell={onEditCell}
             onToggleHeader={onToggleHeader}
+            onToggleSection={onToggleSection}
           />
         ) : (
           <EmptyState loading={loading} onOpen={onOpen} />
@@ -67,6 +80,7 @@ function TableDetail({
   onSelectTable,
   onEditCell,
   onToggleHeader,
+  onToggleSection,
 }: {
   document: Document;
   table: Table;
@@ -74,14 +88,17 @@ function TableDetail({
   onSelectTable: (documentId: string, tableId: string) => void;
   onEditCell: ContentPaneProps["onEditCell"];
   onToggleHeader: ContentPaneProps["onToggleHeader"];
+  onToggleSection: ContentPaneProps["onToggleSection"];
 }) {
   const [view, setView] = useState<"table" | "source">("table");
   const { rows, cols } = tableSize(table);
   const [format, setFormat] = useExportFormat();
+  const [sectionMode, setSectionMode] = useSectionMode();
+  const sections = table.sections.filter((r) => isSectionHeader(table, r)).length;
   const [sheet, setSheet] = useState<string | null>(null);
   const name = EXPORT_FORMATS.find((f) => f.format === format)!.name;
   const copy = async () => {
-    const text = exportTable(table, format);
+    const text = exportTable(table, format, sectionMode);
     if (await copyText(text)) {
       onCopied(format === "tsv" ? "Copied: paste into Numbers or Excel" : `Copied as ${name}`);
     } else setSheet(text);
@@ -107,6 +124,9 @@ function TableDetail({
           ))}
         </div>
         <FormatControl value={format} onChange={setFormat} />
+        {hasSectionHeaders(table) && (
+          <SectionModeControl value={sectionMode} onChange={setSectionMode} />
+        )}
         <span className={styles.spacer} />
         {view === "table" && (
           <label className={styles.switch}>
@@ -128,7 +148,9 @@ function TableDetail({
         {view === "table" ? (
           <TableView
             table={table}
+            sectionMode={sectionMode}
             onEdit={(row, col, value) => onEditCell(document.id, table.id, row, col, value)}
+            onToggleSection={(row) => onToggleSection(document.id, table.id, row)}
           />
         ) : (
           <SourcePage
@@ -144,8 +166,9 @@ function TableDetail({
       <div className={styles.foot}>
         <span>
           {plural(rows, "row")} × {plural(cols, "column")}
+          {sections > 0 && ` in ${plural(sections, "section")}`}
           {view === "table"
-            ? " · Click a cell to correct it"
+            ? " · Click a cell to correct it · Click a row number to mark or unmark a section header"
             : " · Click an outline to switch tables"}
         </span>
       </div>

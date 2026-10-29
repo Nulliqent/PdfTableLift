@@ -159,11 +159,13 @@ export function reduce(state: WorkspaceState, action: WorkspaceAction): Workspac
       const tables = detectDocument(doc.id, action.pages, state.settings);
       const read: Document = { ...doc, status: "ready", pages: action.pages, tables };
       const next = { ...state, documents: state.documents.map((d) => (d === doc ? read : d)) };
-      // Keep what the user is looking at; otherwise show this Document's first Table.
+      // Keep what the user is looking at; otherwise show this Document's first Table. The Example
+      // Document opens on its first Table with Section Headers, which shows them off.
       if (selectedTable(next)) return next;
+      const shown = (doc.example && tables.find((t) => t.sections.some((r) => r > 0))) || tables[0];
       return {
         ...next,
-        selection: tables[0] ? { documentId: doc.id, tableId: tables[0].id } : null,
+        selection: shown ? { documentId: doc.id, tableId: shown.id } : null,
       };
     }
     case "tableSelected": {

@@ -149,6 +149,9 @@ export function App() {
             onToggleHeader={(documentId, tableId, header) =>
               dispatch({ type: "headerToggled", documentId, tableId, header })
             }
+            onToggleSection={(documentId, tableId, row) =>
+              dispatch({ type: "sectionHeaderToggled", documentId, tableId, row })
+            }
           />
         </div>
       </div>

@@ -75,6 +75,37 @@ describe("toggling a Section Header", () => {
   });
 });
 
+describe("the Example Document", () => {
+  const sectioned: PageText = {
+    num: 2,
+    w: 612,
+    h: 792,
+    items: [
+      ...row(710, ["Store", "Region", "Q1"], true),
+      ...row(696, ["West"]),
+      ...row(682, ["Portland", "West", "412.8"]),
+      ...row(668, ["Austin", "South", "1,204"]),
+    ],
+  };
+  const open = (example: boolean) =>
+    (
+      [
+        { type: "documentAdded", id: "ex", name: "ex.pdf", size: 1, example },
+        { type: "documentRead", id: "ex", pages: [page, sectioned] },
+      ] as WorkspaceAction[]
+    ).reduce(reduce, initialWorkspace);
+
+  it("opens on its first Table with Section Headers", () => {
+    const table = selectedTable(open(true))!;
+    expect(table.page).toBe(2);
+    expect(table.sections.some((r) => r > 0)).toBe(true);
+  });
+
+  it("is not special for a Document the user opened", () => {
+    expect(selectedTable(open(false))!.page).toBe(1);
+  });
+});
+
 describe("Section Modes", () => {
   const marked = () => selectedTable(toggle(opened(), 1))!;
 

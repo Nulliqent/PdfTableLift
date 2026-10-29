@@ -1,4 +1,4 @@
-import { tableSize, type Document, type Selection } from "../../engine";
+import { isSectionHeader, tableSize, type Document, type Selection } from "../../engine";
 import { pageLabel, plural } from "../format";
 import { Icon } from "./Icon";
 import styles from "./DocumentList.module.css";
@@ -64,6 +64,7 @@ function DocumentBody({
     );
   return doc.tables.map((t) => {
     const { rows, cols } = tableSize(t);
+    const sections = t.sections.filter((r) => isSectionHeader(t, r)).length;
     const current = selection?.documentId === doc.id && selection.tableId === t.id;
     return (
       <button
@@ -78,6 +79,7 @@ function DocumentBody({
           <b>Table {t.n}</b>
           <span className={styles.sub}>
             {pageLabel(t)} · {rows} × {cols}
+            {sections > 0 && ` · ${plural(sections, "section")}`}
           </span>
         </span>
       </button>

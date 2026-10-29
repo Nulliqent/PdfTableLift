@@ -1,28 +1,89 @@
-import { numericColumns, type Table } from "../../engine";
+import {
+  isSectionHeader,
+  numericColumns,
+  usesSectionColumn,
+  type SectionMode,
+  type Table,
+} from "../../engine";
 import styles from "./TableView.module.css";
 
 type TableViewProps = {
   table: Table;
   /** A cell was corrected; `row` and `col` are grid coordinates (the Header Row is row 0). */
   onEdit: (row: number, col: number, value: string) => void;
+  sectionMode: SectionMode;
+  /** A row number was clicked; `row` is a grid row. */
+  onToggleSection: (row: number) => void;
 };
 
 /**
  * The Table's grid, with the Header Row as column headers and numbered body rows. Every cell is
  * editable in place; Enter or leaving the cell commits it. Numeric columns are right-aligned.
- * Section Header rows arrive with #11.
+ * Section Header rows are shaded; in As Column mode they appear as a Section column instead. The
+ * row number toggles a row as a Section Header.
  */
-export function TableView({ table, onEdit }: TableViewProps) {
+export function TableView({ table, onEdit, sectionMode, onToggleSection }: TableViewProps) {
   const numeric = numericColumns(table);
   const first = table.header ? 1 : 0;
   const head = table.header ? table.grid[0]! : null;
-  const body = table.grid.slice(first);
+  const asColumn = usesSectionColumn(table, sectionMode);
+  const width = table.grid[0]?.length ?? 0;
+  let current = "";
+  let k = 0;
+  const rows: React.ReactNode[] = [];
+  table.grid.forEach((row, r) => {
+    if (r < first) return;
+    const section = isSectionHeader(table, r);
+    const idx = (
+      <td className={styles.idx}>
+        <button
+          type="button"
+          className={styles.idxBtn}
+          title={section ? "Treat as a data row" : "Mark as section header"}
+          aria-label={
+            section
+              ? "Row is a section header. Treat as a data row"
+              : `Row ${k + 1}. Mark as section header`
+          }
+          onClick={() => onToggleSection(r)}
+        >
+          {section ? "§" : k + 1}
+        </button>
+      </td>
+    );
+    if (section) {
+      current = row[0] ?? "";
+      if (asColumn) return; // Shown in the Section column instead.
+      rows.push(
+        <tr key={r} className={styles.section}>
+          {idx}
+          <Cell value={row[0] ?? ""} onEdit={(value) => onEdit(r, 0, value)} />
+          {width > 1 && <td colSpan={width - 1} className={styles.secFill} />}
+        </tr>,
+      );
+      return;
+    }
+    k++;
+    rows.push(
+      <tr key={r}>
+        {idx}
+        {asColumn && (
+          <td className={styles.secCol}>{current || <span className={styles.none}>—</span>}</td>
+        )}
+        {row.map((v, c) => (
+          <Cell key={c} value={v} numeric={numeric[c]} onEdit={(value) => onEdit(r, c, value)} />
+        ))}
+      </tr>,
+    );
+  });
   return (
     <div className={styles.scroll}>
       <table className={styles.table}>
         {head && (
           <thead>
             <tr>
+              <th className={styles.idx} aria-hidden="true" />
+              {asColumn && <th className={styles.secColHead}>Section</th>}
               {head.map((v, c) => (
                 <Cell
                   key={c}
@@ -35,21 +96,7 @@ export function TableView({ table, onEdit }: TableViewProps) {
             </tr>
           </thead>
         )}
-        <tbody>
-          {body.map((row, r) => (
-            <tr key={r}>
-              <td className={styles.idx}>{r + 1}</td>
-              {row.map((v, c) => (
-                <Cell
-                  key={c}
-                  value={v}
-                  numeric={numeric[c]}
-                  onEdit={(value) => onEdit(r + first, c, value)}
-                />
-              ))}
-            </tr>
-          ))}
-        </tbody>
+        <tbody>{rows}</tbody>
       </table>
     </div>
   );
