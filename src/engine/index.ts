@@ -24,6 +24,7 @@ export type {
   DiscardingAction,
   Document,
   Part,
+  Redraw,
   Region,
   RegionInProgress,
   RemovedTable,

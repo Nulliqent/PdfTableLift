@@ -34,6 +34,8 @@ type ContentPaneProps = {
   /** Select Region, shown in place of the selected Table while the user is drawing a Region. */
   regionSelection?: ReactNode;
   onRemoveTable: (documentId: string, tableId: string) => void;
+  /** Redraw the Region of a Table on the page of one of its Parts. */
+  onRedrawRegion: (documentId: string, tableId: string, page: number) => void;
   onEditCell: (
     documentId: string,
     tableId: string,
@@ -56,6 +58,7 @@ export function ContentPane({
   onSelectTable,
   regionSelection,
   onRemoveTable,
+  onRedrawRegion,
   onEditCell,
   onToggleHeader,
   onToggleSection,
@@ -72,6 +75,7 @@ export function ContentPane({
             onCopied={onCopied}
             onSelectTable={onSelectTable}
             onRemoveTable={onRemoveTable}
+            onRedrawRegion={onRedrawRegion}
             onEditCell={onEditCell}
             onToggleHeader={onToggleHeader}
             onToggleSection={onToggleSection}
@@ -90,6 +94,7 @@ function TableDetail({
   onCopied,
   onSelectTable,
   onRemoveTable,
+  onRedrawRegion,
   onEditCell,
   onToggleHeader,
   onToggleSection,
@@ -99,6 +104,7 @@ function TableDetail({
   onCopied: (message: string) => void;
   onSelectTable: (documentId: string, tableId: string) => void;
   onRemoveTable: (documentId: string, tableId: string) => void;
+  onRedrawRegion: ContentPaneProps["onRedrawRegion"];
   onEditCell: ContentPaneProps["onEditCell"];
   onToggleHeader: ContentPaneProps["onToggleHeader"];
   onToggleSection: ContentPaneProps["onToggleSection"];
@@ -134,6 +140,17 @@ function TableDetail({
           </span>
         )}
         <div className={styles.actions}>
+          {table.parts.map((part) => (
+            <button
+              key={part.page}
+              type="button"
+              className={styles.linkBtn}
+              onClick={() => onRedrawRegion(document.id, table.id, part.page)}
+            >
+              <Icon name="select" />
+              {table.parts.length > 1 ? `Redraw Region on Page ${part.page}` : "Redraw Region"}
+            </button>
+          ))}
           <button
             type="button"
             className={`${styles.linkBtn} ${styles.danger}`}

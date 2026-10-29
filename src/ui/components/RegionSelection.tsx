@@ -50,7 +50,7 @@ export function RegionSelection({
         <div className={pane.eyebrow}>
           <span>{document.name}</span>
           <span className={pane.dot}>·</span>
-          <span>New table</span>
+          <span>{region.redraw ? "Redraw" : "New table"}</span>
         </div>
         <h2>Select Table Region</h2>
         <p className={styles.lede}>
@@ -87,7 +87,7 @@ export function RegionSelection({
         <Button onClick={onCancel}>Cancel</Button>
         <Button variant="primary" disabled={!preview} onClick={onSave}>
           <Icon name="check" />
-          Add Table
+          {region.redraw ? "Replace Table" : "Add Table"}
         </Button>
       </div>
       <div className={styles.layout}>

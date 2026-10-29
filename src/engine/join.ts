@@ -75,11 +75,17 @@ function continuation(
  * dropped and counted in `repeats`; Section Headers keep their rows, so a section crossing the
  * page break covers the rows after it.
  */
-export function joinTables(pages: PageText[], tables: Table[]): Table[] {
+export function joinTables(
+  pages: PageText[],
+  tables: Table[],
+  /** Ids of Tables that stand on their own: never joined to the Table before or after. */
+  apart: ReadonlySet<string> = new Set(),
+): Table[] {
   const out: Table[] = [];
   for (const next of tables) {
     const table = out[out.length - 1];
-    const join = table && continuation(pages, table, next);
+    const stands = apart.has(next.id) || (table !== undefined && apart.has(table.id));
+    const join = table && !stands && continuation(pages, table, next);
     if (!table || !join) {
       out.push(next);
       continue;
