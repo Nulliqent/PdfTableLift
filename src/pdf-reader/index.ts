@@ -9,9 +9,11 @@
 import { getDocument, GlobalWorkerOptions } from "pdfjs-dist";
 import workerUrl from "pdfjs-dist/build/pdf.worker.min.mjs?url";
 import { createReadDocument } from "./read-document";
+import { createOpenPages } from "./render-pages";
 
 export type { PageText, TextItem } from "../shared/page-text";
 export type { ReadDocument, ReadError } from "./read-document";
+export type { OpenPages, OutlineBox, PageRenderer, PdfBox, RenderedPage } from "./render-pages";
 
 GlobalWorkerOptions.workerSrc = workerUrl;
 
@@ -20,7 +22,9 @@ GlobalWorkerOptions.workerSrc = workerUrl;
 const asset = (dir: string) =>
   new URL(`${import.meta.env.BASE_URL}pdfjs/${dir}/`, location.href).href;
 
-export const readDocument = createReadDocument(
-  { getDocument },
-  { wasmUrl: asset("wasm"), standardFontDataUrl: asset("standard_fonts") },
-);
+const options = { wasmUrl: asset("wasm"), standardFontDataUrl: asset("standard_fonts") };
+
+export const readDocument = createReadDocument({ getDocument }, options);
+
+/** Opens a Document's bytes again for drawing pages (the Source page). */
+export const openPages = createOpenPages({ getDocument }, options);

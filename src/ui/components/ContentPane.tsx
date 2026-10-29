@@ -1,7 +1,9 @@
+import { useState } from "react";
 import { exportTable, tableSize, type Document, type Table } from "../../engine";
 import { pageLabel, plural } from "../format";
 import { Button } from "./Button";
 import { Icon } from "./Icon";
+import { SourcePage } from "./SourcePage";
 import { TableView } from "./TableView";
 import styles from "./ContentPane.module.css";
 
@@ -12,15 +14,28 @@ type ContentPaneProps = {
   loading: boolean;
   onOpen: () => void;
   onCopied: (message: string) => void;
+  onSelectTable: (documentId: string, tableId: string) => void;
 };
 
 /** The content pane: the selected Table with Copy, or an empty state. */
-export function ContentPane({ document, table, loading, onOpen, onCopied }: ContentPaneProps) {
+export function ContentPane({
+  document,
+  table,
+  loading,
+  onOpen,
+  onCopied,
+  onSelectTable,
+}: ContentPaneProps) {
   return (
     <main className={styles.content}>
       <div className={styles.inner}>
         {document && table ? (
-          <TableDetail document={document} table={table} onCopied={onCopied} />
+          <TableDetail
+            document={document}
+            table={table}
+            onCopied={onCopied}
+            onSelectTable={onSelectTable}
+          />
         ) : (
           <EmptyState loading={loading} onOpen={onOpen} />
         )}
@@ -33,11 +48,14 @@ function TableDetail({
   document,
   table,
   onCopied,
+  onSelectTable,
 }: {
   document: Document;
   table: Table;
   onCopied: (message: string) => void;
+  onSelectTable: (documentId: string, tableId: string) => void;
 }) {
+  const [view, setView] = useState<"table" | "source">("table");
   const { rows, cols } = tableSize(table);
   const copy = () => {
     // The fallback sheet for a blocked clipboard (US-49) arrives with the export formats (#10).
@@ -59,6 +77,13 @@ function TableDetail({
         <h2>Table {table.n}</h2>
       </div>
       <div className={styles.bar}>
+        <div className={styles.seg} role="group" aria-label="View">
+          {(["table", "source"] as const).map((v) => (
+            <button key={v} type="button" aria-pressed={view === v} onClick={() => setView(v)}>
+              {v === "table" ? "Table" : "Source Page"}
+            </button>
+          ))}
+        </div>
         <span className={styles.spacer} />
         <Button variant="primary" onClick={copy}>
           <Icon name="copy" />
@@ -66,11 +91,20 @@ function TableDetail({
         </Button>
       </div>
       <div className={styles.card}>
-        <TableView table={table} />
+        {view === "table" ? (
+          <TableView table={table} />
+        ) : (
+          <SourcePage
+            document={document}
+            table={table}
+            onSelect={(tableId) => onSelectTable(document.id, tableId)}
+          />
+        )}
       </div>
       <div className={styles.foot}>
         <span>
           {plural(rows, "row")} × {plural(cols, "column")}
+          {view === "source" && " · Click an outline to switch tables"}
         </span>
       </div>
     </>
