@@ -4,6 +4,8 @@
  * the browser or a Web Worker. Its input is the PDF Reader's PageText.
  */
 export type { PageText, TextItem } from "../shared/page-text";
+export { READ_ERROR_MESSAGES } from "../shared/read-error";
+export type { ReadError } from "../shared/read-error";
 export {
   DEFAULT_SETTINGS,
   MAX_COLUMN_SPACING,

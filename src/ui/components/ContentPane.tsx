@@ -1,6 +1,7 @@
 import { useState, type ReactNode } from "react";
 import {
   EXPORT_FORMATS,
+  READ_ERROR_MESSAGES,
   exportTable,
   hasSectionHeaders,
   isSectionHeader,
@@ -24,8 +25,9 @@ import styles from "./ContentPane.module.css";
 type ContentPaneProps = {
   document: Document | null;
   table: Table | null;
-  /** A Document is still being read. */
-  loading: boolean;
+  /** Every Document, for the screens shown when no Table is selected. */
+  documents: Document[];
+  onSelectRegion: (documentId: string) => void;
   onOpen: () => void;
   onCopied: (message: string) => void;
   onSelectTable: (documentId: string, tableId: string) => void;
@@ -47,7 +49,8 @@ type ContentPaneProps = {
 export function ContentPane({
   document,
   table,
-  loading,
+  documents,
+  onSelectRegion,
   onOpen,
   onCopied,
   onSelectTable,
@@ -74,7 +77,7 @@ export function ContentPane({
             onToggleSection={onToggleSection}
           />
         ) : (
-          <EmptyState loading={loading} onOpen={onOpen} />
+          <EmptyState documents={documents} onOpen={onOpen} onSelectRegion={onSelectRegion} />
         )}
       </div>
     </main>
@@ -202,7 +205,55 @@ function TableDetail({
   );
 }
 
-function EmptyState({ loading, onOpen }: { loading: boolean; onOpen: () => void }) {
+/**
+ * What the pane shows when no Table is selected: the reading state, or, for the newest Document
+ * that needs the user's attention, why it has no Tables.
+ */
+function EmptyState({
+  documents,
+  onOpen,
+  onSelectRegion,
+}: {
+  documents: Document[];
+  onOpen: () => void;
+  onSelectRegion: (documentId: string) => void;
+}) {
+  const loading = documents.some((d) => d.status === "loading");
+  const attention = documents.findLast(
+    (d) => d.status === "error" || (d.status === "ready" && d.tables.length === 0),
+  );
+  if (!loading && attention?.status === "error") {
+    return (
+      <div className={styles.emptyState} role="alert">
+        <Icon name="warn" />
+        <h3>{attention.name}</h3>
+        <p>{READ_ERROR_MESSAGES[attention.error!]}</p>
+        <Button variant="primary" onClick={onOpen}>
+          <Icon name="plus" />
+          Open Another PDF
+        </Button>
+      </div>
+    );
+  }
+  if (!loading && attention?.status === "ready") {
+    return (
+      <div className={styles.emptyState}>
+        <Icon name="select" />
+        <h3>No tables were detected</h3>
+        <p>
+          Draw a box around the table on the page and Table Lift will read the rows and columns
+          inside it. Moving Column Spacing to the right can also help.
+        </p>
+        <div className={styles.buttons}>
+          <Button variant="primary" onClick={() => onSelectRegion(attention.id)}>
+            <Icon name="select" />
+            Select Table Region
+          </Button>
+          <Button onClick={onOpen}>Open Another PDF</Button>
+        </div>
+      </div>
+    );
+  }
   return (
     <div className={styles.emptyState}>
       <Icon name={loading ? "doc" : "table"} />

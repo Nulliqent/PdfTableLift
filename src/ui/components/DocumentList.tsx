@@ -1,4 +1,10 @@
-import { isSectionHeader, tableSize, type Document, type Selection } from "../../engine";
+import {
+  READ_ERROR_MESSAGES,
+  isSectionHeader,
+  tableSize,
+  type Document,
+  type Selection,
+} from "../../engine";
 import { pageLabel, plural } from "../format";
 import { Icon } from "./Icon";
 import styles from "./DocumentList.module.css";
@@ -103,6 +109,13 @@ function DocumentBody({
       <div className={styles.status}>
         <span className={styles.spinner} />
         Reading pages…
+      </div>
+    );
+  if (doc.status === "error")
+    return (
+      <div className={`${styles.status} ${styles.error}`}>
+        <Icon name="warn" />
+        <span>{READ_ERROR_MESSAGES[doc.error!]}</span>
       </div>
     );
   const selecting = regionDocumentId !== null;
