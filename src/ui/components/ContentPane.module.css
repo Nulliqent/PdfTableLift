@@ -254,3 +254,19 @@
     font-size: 24px;
   }
 }
+
+.joined {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+  font-size: 13px;
+  color: var(--label2);
+  margin-top: 4px;
+}
+
+.joined > svg {
+  width: 15px;
+  height: 15px;
+  color: var(--accent);
+}

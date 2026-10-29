@@ -41,7 +41,7 @@ function mapColumns(first: Band[], next: Band[]): number[] | null {
   return map;
 }
 
-/** How `next` continues `table`, or null when it does not. */
+/** How `next` continues `table`, or null when it does not. Ignores the Document's split pages. */
 function continuation(
   pages: PageText[],
   table: Table,
@@ -73,13 +73,16 @@ function continuation(
  * Joins Detected Tables (in page order) that continue onto the next page. The Joined Table keeps
  * the first Part's id, number and page, and gains a Part per page; a repeated Header Row is
  * dropped and counted in `repeats`; Section Headers keep their rows, so a section crossing the
- * page break covers the rows after it.
+ * page break covers the rows after it. A Table whose page is in `noJoin` (the pages the user
+ * split) is never joined to the one before it.
  */
 export function joinTables(
   pages: PageText[],
   tables: Table[],
   /** Ids of Tables that stand on their own: never joined to the Table before or after. */
   apart: ReadonlySet<string> = new Set(),
+  /** Pages the user split: a Table on one is never joined to the one before it. */
+  noJoin: number[] = [],
 ): Table[] {
   const out: Table[] = [];
   for (const next of tables) {
@@ -88,6 +91,11 @@ export function joinTables(
     const join = table && !stands && continuation(pages, table, next);
     if (!table || !join) {
       out.push(next);
+      continue;
+    }
+    // The user split the Joined Table here: keep the Part apart, and say Join Again would rejoin it.
+    if (noJoin.includes(next.page)) {
+      out.push({ ...next, splitFrom: true });
       continue;
     }
     const skip = join.repeated ? 1 : 0;

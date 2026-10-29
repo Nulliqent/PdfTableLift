@@ -135,6 +135,11 @@ export function App() {
     state.documents.some((d) => d.id === documentId && d.tables.some((t) => t.edited));
   const removedMessage = (n: number | undefined) =>
     `Removed Table ${n}: restore it from the sidebar`;
+  const splitMessage = (documentId: string, tableId: string) =>
+    `Split into ${
+      state.documents.find((d) => d.id === documentId)?.tables.find((t) => t.id === tableId)?.parts
+        .length
+    } tables`;
 
   const removeDocument = (id: string) => {
     const doc = state.documents.find((d) => d.id === id);
@@ -221,6 +226,14 @@ export function App() {
             onToggleSection={(documentId, tableId, row) =>
               dispatch({ type: "sectionHeaderToggled", documentId, tableId, row })
             }
+            onSplitByPage={(documentId, tableId) => {
+              dispatch({ type: "splitByPage", documentId, tableId });
+              if (!hasEdits(documentId)) showHud(splitMessage(documentId, tableId));
+            }}
+            onJoinAgain={(documentId, tableId) => {
+              dispatch({ type: "joinAgain", documentId, tableId });
+              if (!hasEdits(documentId)) showHud("Joined with the previous page");
+            }}
           />
         </div>
       </div>
@@ -238,6 +251,9 @@ export function App() {
                 ?.tables.find((t) => t.id === pending.tableId);
               showHud(removedMessage(table?.n));
             } else if (pending?.type === "tableRestored") showHud("Restored table");
+            else if (pending?.type === "splitByPage")
+              showHud(splitMessage(pending.documentId, pending.tableId));
+            else if (pending?.type === "joinAgain") showHud("Joined with the previous page");
             else if (pending?.type === "regionCommitted")
               showHud(
                 state.region?.redraw
