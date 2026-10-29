@@ -35,7 +35,8 @@
 
 .table .idx {
   width: 1%;
-  color: var(--label3);
+  /* The row numbers are buttons, so they need more contrast than label3 gives. */
+  color: var(--label2);
   font-size: 12px;
   text-align: right;
   padding-right: 6px;

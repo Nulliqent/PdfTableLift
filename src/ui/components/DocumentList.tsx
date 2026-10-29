@@ -107,7 +107,7 @@ function DocumentBody({
   if (doc.status === "loading")
     return (
       <div className={styles.status}>
-        <span className={styles.spinner} />
+        <span className={styles.spinner} aria-hidden="true" />
         Reading pages…
       </div>
     );

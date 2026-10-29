@@ -1,3 +1,4 @@
+import { Fragment } from "react";
 import type { HudMessage } from "../useHud";
 import { Icon } from "./Icon";
 import styles from "./Hud.module.css";
@@ -14,10 +15,10 @@ export function Hud({ message }: { message: HudMessage | null }) {
       aria-live="polite"
     >
       {message && (
-        <>
+        <Fragment key={message.id}>
           <Icon name={message.icon} />
           <span>{message.text}</span>
-        </>
+        </Fragment>
       )}
     </div>
   );
