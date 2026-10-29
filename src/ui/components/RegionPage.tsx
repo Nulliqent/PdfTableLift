@@ -65,7 +65,9 @@ export function RegionPage({
     void (async () => {
       try {
         const renderer = await pageRendererFor(document.id);
-        setResult({ key, page: await renderer.renderPage(pageNum, width, abort.signal) });
+        const drawn = await renderer.renderPage(pageNum, width, abort.signal);
+        // A render that finished after a newer one started must not overwrite its result.
+        if (!abort.signal.aborted) setResult({ key, page: drawn });
       } catch {
         if (!abort.signal.aborted) setResult({ key, page: "failed" });
       }

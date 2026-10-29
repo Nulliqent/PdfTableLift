@@ -62,7 +62,7 @@ export function SourcePage({
         for (const num of nums) {
           pages.push({ num, page: await renderer.renderPage(num, width, abort.signal) });
         }
-        setResult({ key, pages });
+        if (!abort.signal.aborted) setResult({ key, pages });
       } catch {
         if (!abort.signal.aborted) setResult({ key, pages: "failed" });
       }
