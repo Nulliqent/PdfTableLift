@@ -121,7 +121,8 @@ describe("opening a Document", () => {
 describe("selecting a Table", () => {
   it("shows the Table the user picked", () => {
     const twoPages = [stores, { ...stores, num: 2 }];
-    const state = opened(twoPages);
+    // Joining off, so the two identical pages stay two Tables.
+    const state = reduce(opened(twoPages), { type: "joinChanged", value: false });
     const second = state.documents[0]!.tables[1]!;
 
     const next = reduce(state, { type: "tableSelected", documentId: "d1", tableId: second.id });

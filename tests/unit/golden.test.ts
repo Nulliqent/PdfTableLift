@@ -22,23 +22,18 @@ import { readDocument } from "./support/node-reader";
 
 const sha256 = (text: string) => createHash("sha256").update(text, "utf8").digest("hex");
 
-/** Opens the pages as a Document and returns its Tables. */
-function detect(pages: PageText[]): Table[] {
-  const state = [
+/**
+ * Opens the pages as a Document (joining is on by default), then switches joining to `joining`
+ * and moves the slider to `columnSpacing`, as the user would. Returns the Document's Tables.
+ */
+function detect(pages: PageText[], joining: boolean, columnSpacing = 1): Table[] {
+  let state = [
     { type: "documentAdded", id: "golden", name: "golden.pdf", size: 0 } as const,
     { type: "documentRead", id: "golden", pages } as const,
   ].reduce(reduce, initialWorkspace);
+  state = reduce(state, { type: "joinChanged", value: joining });
+  state = reduce(state, { type: "columnSpacingChanged", value: columnSpacing });
   return state.documents[0]!.tables;
-}
-
-/** Opens the pages at the default Column Spacing, then moves the slider to `columnSpacing`. */
-function redetect(pages: PageText[], columnSpacing: number): Table[] {
-  const opened = [
-    { type: "documentAdded", id: "golden", name: "golden.pdf", size: 0 } as const,
-    { type: "documentRead", id: "golden", pages } as const,
-  ].reduce(reduce, initialWorkspace);
-  const moved = reduce(opened, { type: "columnSpacingChanged", value: columnSpacing });
-  return moved.documents[0]!.tables;
 }
 
 /** What this ticket covers of a Table: detection, the grid, its pages and size. */
@@ -60,6 +55,7 @@ const goldenSize = (t: GoldenTable) => ({
 });
 
 type Format = "csv" | "tsv" | "md" | "json";
+const FORMATS = ["csv", "tsv", "md", "json"] as const;
 const goldenExport =
   (format: Format, mode: SectionMode = "column") =>
   (t: GoldenTable) =>
@@ -117,7 +113,7 @@ function defineComparisons(golden: Golden) {
     const result = await readDocument(fixtureBytes(golden));
     if (typeof result === "string") throw new Error(`the PDF Reader returned ${result}`);
     pages = result;
-    tables = detect(pages);
+    tables = detect(pages, false);
   });
 
   it("reads the same pages and text items as the prototype", () => {
@@ -137,14 +133,15 @@ function defineComparisons(golden: Golden) {
     }
   }
 
-  it.todo("#12 joining: the runs with joining on");
-  for (const other of golden.runs.filter((r) => r.columnSpacing !== 1 && !r.joining)) {
-    it(`re-detects the same Tables at Column Spacing ${other.columnSpacing}, joining off`, () => {
-      const found = redetect(pages, other.columnSpacing);
+  for (const other of golden.runs.filter((r) => r.columnSpacing !== 1 || r.joining)) {
+    const how = `Column Spacing ${other.columnSpacing}, joining ${other.joining ? "on" : "off"}`;
+    it(`re-detects the same Tables at ${how}`, () => {
+      const found = detect(pages, other.joining, other.columnSpacing);
       expect(found.map(detectionOf)).toEqual(other.tables.map(detectionOf));
       expect(found.map(tableSize)).toEqual(other.tables.map(goldenSize));
-      expectExports(found, other.tables, "csv", "column");
-      expectExports(found, other.tables, "csv", "rows");
+      for (const mode of ["column", "rows"] as const)
+        for (const format of other.joining ? FORMATS : (["csv"] as const))
+          expectExports(found, other.tables, format, mode);
     });
   }
 }

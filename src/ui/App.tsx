@@ -16,6 +16,7 @@ import { RegionSelection } from "./components/RegionSelection";
 import { Sidebar } from "./components/Sidebar";
 import { Toolbar } from "./components/Toolbar";
 import { loadColumnSpacing, saveColumnSpacing } from "./column-spacing-storage";
+import { loadJoin, saveJoin } from "./join-storage";
 import { registerSource, releaseSource } from "./documentSources";
 import { splitPdfs } from "./pdfFiles";
 import { useFileDrop } from "./useFileDrop";
@@ -29,10 +30,12 @@ const EXAMPLE_NAME = "Northwind Q3 Summary.pdf";
 export function App() {
   const [state, dispatch] = useReducer(reduce, initialWorkspace, (initial) => ({
     ...initial,
-    settings: { ...initial.settings, columnSpacing: loadColumnSpacing() },
+    settings: { ...initial.settings, columnSpacing: loadColumnSpacing(), join: loadJoin() },
   }));
   const columnSpacing = state.settings.columnSpacing;
   useEffect(() => saveColumnSpacing(columnSpacing), [columnSpacing]);
+  const join = state.settings.join;
+  useEffect(() => saveJoin(join), [join]);
   const [hud, showHud] = useHud();
   const fileInput = useRef<HTMLInputElement>(null);
   const userOpened = useRef(false);
@@ -169,6 +172,8 @@ export function App() {
             onRemove={removeDocument}
             columnSpacing={columnSpacing}
             onColumnSpacing={(value) => dispatch({ type: "columnSpacingChanged", value })}
+            join={join}
+            onJoin={(value) => dispatch({ type: "joinChanged", value })}
           />
           <ContentPane
             document={selectedDocument(state)}
