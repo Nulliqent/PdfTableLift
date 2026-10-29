@@ -4,3 +4,24 @@
  * the browser or a Web Worker. Its input is the PDF Reader's PageText.
  */
 export type { PageText, TextItem } from "../shared/page-text";
+export {
+  DEFAULT_SETTINGS,
+  initialWorkspace,
+  reduce,
+  selectedDocument,
+  selectedTable,
+  tableSize,
+} from "./workspace";
+export type {
+  Band,
+  Bbox,
+  Document,
+  Part,
+  Selection,
+  Settings,
+  Table,
+  WorkspaceAction,
+  WorkspaceState,
+} from "./workspace";
+export { exportTable } from "./export";
+export type { ExportFormat } from "./export";
