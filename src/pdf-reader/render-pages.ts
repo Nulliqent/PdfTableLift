@@ -46,6 +46,8 @@ export function createOpenPages(pdfjs: PdfJs, options: ReaderOptions = {}): Open
     return {
       async renderPage(num, width, signal) {
         const page = await doc.getPage(num);
+        // Aborted while the page loaded (or before the call): don't start drawing it.
+        if (signal?.aborted) throw new DOMException("Render aborted", "AbortError");
         const base = page.getViewport({ scale: 1 });
         const viewport = page.getViewport({ scale: width / base.width });
         const ratio = Math.min(globalThis.devicePixelRatio || 1, MAX_PIXEL_RATIO);
