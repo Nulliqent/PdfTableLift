@@ -56,8 +56,8 @@ const goldenSize = (t: GoldenTable) => ({
   cols: t.grid[0]!.length,
 });
 
-const goldenCsv = (t: GoldenTable) =>
-  t.exports ? t.exports.column.csv : t.exportDigests!.column.csv;
+const goldenExport = (format: "csv" | "tsv" | "md" | "json") => (t: GoldenTable) =>
+  t.exports ? t.exports.column[format] : t.exportDigests!.column[format];
 
 for (const golden of loadGoldens()) {
   describe(golden.name, () => {
@@ -91,19 +91,21 @@ function defineComparisons(golden: Golden) {
     expect(tables.map(tableSize)).toEqual(run.tables.map(goldenSize));
   });
 
-  it("exports the same CSV for each Table without Section Headers", () => {
-    const expected = run.tables.filter((t) => !t.sections.length);
-    const actual = tables.filter((_, i) => !run.tables[i]?.sections.length);
-    const csv = (t: Table) => exportTable(t, "csv");
-    if (expected[0]?.exports) expect(actual.map(csv)).toEqual(expected.map(goldenCsv));
-    else expect(actual.map((t) => sha256(csv(t)))).toEqual(expected.map(goldenCsv));
-  });
+  for (const format of ["csv", "tsv", "md", "json"] as const) {
+    it(`exports the same ${format.toUpperCase()} for each Table without Section Headers`, () => {
+      const expected = run.tables.filter((t) => !t.sections.length);
+      const actual = tables.filter((_, i) => !run.tables[i]?.sections.length);
+      const write = (t: Table) => exportTable(t, format);
+      if (expected[0]?.exports)
+        expect(actual.map(write)).toEqual(expected.map(goldenExport(format)));
+      else expect(actual.map((t) => sha256(write(t)))).toEqual(expected.map(goldenExport(format)));
+    });
+  }
 
   if (withSections.length)
     it.todo(
       `#11 Section Headers: sections and As Column / As Rows exports of Tables ${withSections.map((t) => t.n).join(", ")}`,
     );
-  it.todo("#10 export formats: TSV, Markdown and JSON");
   it.todo("#12 joining: the runs with joining on");
   for (const other of golden.runs.filter((r) => r.columnSpacing !== 1 && !r.joining)) {
     it(`re-detects the same Tables at Column Spacing ${other.columnSpacing}, joining off`, () => {
