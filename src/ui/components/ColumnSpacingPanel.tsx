@@ -1,23 +1,24 @@
+import { MAX_COLUMN_SPACING, MIN_COLUMN_SPACING } from "../../engine";
 import styles from "./ColumnSpacingPanel.module.css";
 
-/**
- * Placeholder for the Column Spacing panel and the join switch.
- * The controls are uncontrolled and dispatch nothing yet.
- */
-export function ColumnSpacingPanel() {
+type ColumnSpacingPanelProps = { value: number; onChange: (value: number) => void };
+
+/** The Column Spacing slider and the join switch (the switch is still a placeholder, #12). */
+export function ColumnSpacingPanel({ value, onChange }: ColumnSpacingPanelProps) {
   return (
     <div className={styles.panel}>
       <div className={styles.header}>
         <label htmlFor="column-spacing">Column spacing</label>
-        <output htmlFor="column-spacing">1.0×</output>
+        <output htmlFor="column-spacing">{value.toFixed(1)}×</output>
       </div>
       <input
         type="range"
         id="column-spacing"
-        min="0.4"
-        max="2.6"
+        min={MIN_COLUMN_SPACING}
+        max={MAX_COLUMN_SPACING}
         step="0.1"
-        defaultValue="1"
+        value={value}
+        onChange={(e) => onChange(e.target.valueAsNumber)}
         className={styles.range}
       />
       <div className={styles.ends}>
