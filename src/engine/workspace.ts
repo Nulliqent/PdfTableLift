@@ -35,6 +35,8 @@ export type Table = {
   cols: Band[];
   /** Repeated Header Rows dropped by joining. */
   repeats: number;
+  /** The user split it from the Table before it, which Join Again would rejoin. */
+  splitFrom: boolean;
   /** The user corrected a cell or the Header Row; re-detection would discard it. */
   edited: boolean;
   /** The id of the Region a Hand-drawn Table is built from ("Selected by hand"); null if Detected. */
@@ -73,6 +75,8 @@ export type Document = {
   removed: RemovedTable[];
   /** Regions drawn by hand; each stands as a Hand-drawn Table. */
   regions: Region[];
+  /** Pages whose first Part must not join the page before: the user split a Joined Table there. */
+  noJoin: number[];
 };
 
 export type Settings = {
@@ -96,6 +100,10 @@ export type DiscardingAction = { discardEdits?: boolean } & (
   | { type: "tableRemoved"; documentId: string; tableId: string }
   /** The user restored a Removed Table from the sidebar. */
   | { type: "tableRestored"; documentId: string; removedId: string }
+  /** The user split a Joined Table into its Parts; each page is kept from joining the one before. */
+  | { type: "splitByPage"; documentId: string; tableId: string }
+  /** The user undid a split: the Table rejoins the one before it. */
+  | { type: "joinAgain"; documentId: string; tableId: string }
   /** Save the Region in progress as a Hand-drawn Table. Ignored while the Region holds no text. */
   | { type: "regionCommitted" }
 );
@@ -189,6 +197,7 @@ export function reduce(state: WorkspaceState, action: WorkspaceAction): Workspac
         tables: [],
         removed: [],
         regions: [],
+        noJoin: [],
       };
       // The Example Document steps aside when the user's first own Document opens.
       const kept = action.example ? state.documents : state.documents.filter((d) => !d.example);
@@ -309,6 +318,22 @@ export function reduce(state: WorkspaceState, action: WorkspaceAction): Workspac
       const first = next.documents.find((d) => d.id === doc.id)!.tables[0];
       return { ...next, selection: first ? { documentId: doc.id, tableId: first.id } : null };
     }
+    case "splitByPage": {
+      const doc = state.documents.find((d) => d.id === action.documentId);
+      const table = doc?.tables.find((t) => t.id === action.tableId);
+      if (!doc || !table || table.parts.length < 2) return state;
+      if (needsConfirmation(state, action)) return { ...state, pendingChange: action };
+      const noJoin = [...new Set([...doc.noJoin, ...table.parts.slice(1).map((p) => p.page)])];
+      return changeJoins(state, { ...doc, noJoin });
+    }
+    case "joinAgain": {
+      const doc = state.documents.find((d) => d.id === action.documentId);
+      const table = doc?.tables.find((t) => t.id === action.tableId);
+      if (!doc || !table?.splitFrom) return state;
+      if (needsConfirmation(state, action)) return { ...state, pendingChange: action };
+      const noJoin = doc.noJoin.filter((n) => n !== table.page);
+      return changeJoins(state, { ...doc, noJoin });
+    }
     case "regionCommitted": {
       const doc = state.documents.find((d) => d.id === state.region?.documentId);
       const region = state.region;
@@ -403,6 +428,15 @@ function redetect(state: WorkspaceState, doc: Document): WorkspaceState {
   };
 }
 
+/**
+ * Re-detects a Document whose split pages changed. The selection stays on the Table that kept its
+ * first Part: the first Part's Table after a split, the Joined Table after Join Again.
+ */
+function changeJoins(state: WorkspaceState, doc: Document): WorkspaceState {
+  const next = { ...redetect(state, doc), pendingChange: null };
+  return { ...next, selection: keepSelection(state, next.documents) };
+}
+
 /** The selection, re-pointed at the same Table (same page and box) after ids were renumbered. */
 function sameTable(before: WorkspaceState, documents: Document[]): Selection | null {
   const sel = before.selection;
@@ -492,6 +526,7 @@ function detectDocument(doc: Document, pages: PageText[], settings: Settings): T
     sections: t.sections,
     cols: t.cols,
     repeats: 0,
+    splitFrom: false,
     edited: false,
     manual,
   });
@@ -516,7 +551,7 @@ function detectDocument(doc: Document, pages: PageText[], settings: Settings): T
   }
   // Removed Tables and Hand-drawn Regions took their Tables out per page above, so a Joined Table
   // never spans them. A Hand-drawn Table is added after joining and is never joined.
-  const joined = settings.join ? joinTables(pages, detected) : detected;
+  const joined = settings.join ? joinTables(pages, detected, doc.noJoin) : detected;
   return [...joined, ...handDrawn]
     .sort((a, b) => a.page - b.page || b.parts[0]!.bbox[3] - a.parts[0]!.bbox[3])
     .map((t, i) => ({ ...t, n: i + 1 }));

@@ -300,3 +300,85 @@ describe("with Hand-drawn Tables", () => {
     expect(selectedTable(joinOff(state))!.manual).toBe(hand.manual);
   });
 });
+
+describe("Split by Page and Join Again", () => {
+  const three = () => [...continued, { ...continued[1]!, num: 3 }];
+  const id = (state: WorkspaceState, i: number) => tablesOf(state)[i]!.id;
+  const split = (state: WorkspaceState) =>
+    reduce(state, { type: "splitByPage", documentId: "d", tableId: id(state, 0) });
+  const rejoin = (state: WorkspaceState, i: number) =>
+    reduce(state, { type: "joinAgain", documentId: "d", tableId: id(state, i) });
+  const pagesOf = (state: WorkspaceState) => tablesOf(state).map((t) => t.parts.map((p) => p.page));
+
+  it("shows the Parts as separate Tables and keeps the first Part selected", () => {
+    const state = split(open(three()));
+    expect(pagesOf(state)).toEqual([[1], [2], [3]]);
+    expect(state.documents[0]!.noJoin).toEqual([2, 3]);
+    expect(selectedTable(state)!.parts.map((p) => p.page)).toEqual([1]);
+    expect(tablesOf(state).map((t) => t.splitFrom)).toEqual([false, true, true]);
+  });
+
+  it("ignores a Table that is not joined", () => {
+    const state = open([continued[0]!]);
+    expect(split(state)).toBe(state);
+  });
+
+  it("rejoins on Join Again, selecting the Joined Table, and clears the record", () => {
+    const split2 = split(open(continued));
+    const picked = reduce(split2, {
+      type: "tableSelected",
+      documentId: "d",
+      tableId: id(split2, 1),
+    });
+    const state = rejoin(picked, 1);
+    expect(state.documents[0]!.noJoin).toEqual([]);
+    expect(tablesOf(state)).toHaveLength(1);
+    expect(selectedTable(state)!.parts.map((p) => p.page)).toEqual([1, 2]);
+  });
+
+  it("ignores Join Again on a Table that was not split", () => {
+    const state = open(continued);
+    expect(rejoin(state, 0)).toBe(state);
+  });
+
+  it("survives Column Spacing changes and join-switch toggles", () => {
+    let state = split(open(continued));
+    state = reduce(state, { type: "columnSpacingChanged", value: 1.4 });
+    expect(tablesOf(state)).toHaveLength(2);
+    state = joinOn(joinOff(state));
+    expect(tablesOf(state)).toHaveLength(2);
+    expect(tablesOf(state)[1]!.splitFrom).toBe(true);
+    expect(joinOff(state).documents[0]!.tables.some((t) => t.splitFrom)).toBe(false);
+  });
+
+  it("rejoins one page at a time", () => {
+    const again = rejoin(split(open(three())), 1);
+    expect(pagesOf(again)).toEqual([[1, 2], [3]]);
+  });
+
+  it("asks before discarding corrections, and does nothing when cancelled", () => {
+    const base = open(continued);
+    const edited = reduce(base, {
+      type: "cellEdited",
+      documentId: "d",
+      tableId: id(base, 0),
+      row: 1,
+      col: 0,
+      value: "Bolts",
+    });
+    const asked = split(edited);
+    expect(asked.pendingChange?.type).toBe("splitByPage");
+    expect(tablesOf(asked)).toHaveLength(1);
+    expect(reduce(asked, { type: "changeCancelled" }).documents[0]!.noJoin).toEqual([]);
+    const done = reduce(asked, { type: "changeConfirmed" });
+    expect(tablesOf(done)).toHaveLength(2);
+    expect(done.pendingChange).toBeNull();
+  });
+
+  it("exports each split Part as its own table", () => {
+    const state = split(open(continued));
+    expect(exportTable(tablesOf(state)[1]!, "csv", "column")).toBe(
+      "Item,Qty,Price\nScrew,7,0.10\nWasher,3,0.05",
+    );
+  });
+});
