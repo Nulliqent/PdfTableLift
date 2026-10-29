@@ -38,3 +38,29 @@ test("redrawing one page of a Joined Table leaves the other Part on its own", as
   await expect(sidebar.getByRole("button", { name: /^Table \d/ })).toHaveCount(2);
   await expect(sidebar.getByText(/Pages 1–2 ·/)).toHaveCount(0);
 });
+
+test("Escape on the discard question dismisses only the question, not the Region", async ({
+  page,
+}) => {
+  await page.goto("/");
+  await openFixture(page, "separate-tables.pdf");
+  const main = page.getByRole("main");
+  await main.getByRole("cell", { name: "Portland" }).click();
+  await page.keyboard.type("X");
+  await page.keyboard.press("Enter");
+
+  await main.getByRole("button", { name: "Redraw Region" }).click();
+  await main.getByRole("button", { name: "Replace Table" }).click();
+  const dialog = page.getByRole("dialog", { name: "Discard your corrections?" });
+  await expect(dialog).toBeVisible();
+
+  await page.keyboard.press("Escape");
+  await expect(dialog).toBeHidden();
+  await expect(main.getByRole("heading", { name: "Select Table Region" })).toBeVisible();
+  await expect(main.getByText("Preview", { exact: true })).toBeVisible();
+
+  // The Region survived, so it can still be saved.
+  await main.getByRole("button", { name: "Replace Table" }).click();
+  await dialog.getByRole("button", { name: "Discard and Re-detect" }).click();
+  await expect(main.getByText("Selected by hand")).toBeVisible();
+});
