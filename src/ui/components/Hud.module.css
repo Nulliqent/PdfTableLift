@@ -1,0 +1,29 @@
+.hud {
+  position: fixed;
+  left: 50%;
+  bottom: calc(32px + env(safe-area-inset-bottom, 0px));
+  transform: translate(-50%, 12px);
+  opacity: 0;
+  z-index: 60;
+  pointer-events: none;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--hud);
+  color: var(--hud-fg);
+  padding: 10px 16px;
+  border-radius: 14px;
+  font-size: 14px;
+  font-weight: 500;
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  transition:
+    opacity 0.2s,
+    transform 0.25s cubic-bezier(0.3, 0.7, 0.4, 1);
+  max-width: calc(100% - 32px);
+}
+
+.show {
+  opacity: 1;
+  transform: translate(-50%, 0);
+}

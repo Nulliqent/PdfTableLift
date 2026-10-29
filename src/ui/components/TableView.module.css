@@ -1,0 +1,48 @@
+.scroll {
+  overflow-x: auto;
+}
+
+.table {
+  border-collapse: collapse;
+  width: 100%;
+  font-size: 14px;
+  font-variant-numeric: tabular-nums;
+}
+
+.table th,
+.table td {
+  padding: 9px 14px;
+  text-align: left;
+  white-space: nowrap;
+  border-bottom: 1px solid var(--separator);
+}
+
+.table tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+.table thead th {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--label2);
+  background: var(--fill2);
+  letter-spacing: 0.01em;
+}
+
+.table tbody tr:hover td {
+  background: var(--fill2);
+}
+
+.table .idx {
+  width: 1%;
+  color: var(--label3);
+  font-size: 12px;
+  text-align: right;
+  padding-right: 6px;
+  user-select: none;
+}
+
+.empty::after {
+  content: "—";
+  color: var(--label3);
+}
