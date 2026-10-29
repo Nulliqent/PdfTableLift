@@ -99,37 +99,41 @@ test("Select Whole Page works from the keyboard, and the stepper reaches every p
 });
 
 test("moving Column Spacing updates the preview while a Region is drawn", async ({ page }) => {
-  const { main, layer } = await enterSelectRegion(page, "separate-tables.pdf");
-  await dragWithMouse(page, layer, aroundBothTables);
+  const { main } = await enterSelectRegion(page, "spaced-strings-pdfkit.pdf");
+  await main.getByRole("button", { name: "Select Whole Page" }).click();
   const columns = main.getByRole("columnheader");
-  await expect(columns.first()).toBeVisible();
-  const before = await columns.count();
+  await expect(columns).toHaveCount(3);
 
   await page.getByRole("slider", { name: "Column spacing" }).fill("2.6");
 
-  await expect(columns).not.toHaveCount(before);
+  await expect(columns).toHaveCount(2);
 });
 
-test("drag a Region with a finger on the phone layout", async ({ page, browserName }) => {
-  test.skip(browserName !== "chromium", "Playwright can only send touch drags through Chromium");
-  await page.setViewportSize({ width: 375, height: 900 });
-  const { main, layer } = await enterSelectRegion(page, "separate-tables.pdf");
-  const b = (await layer.boundingBox())!;
-  const at = (fx: number, fy: number) => ({ x: b.x + b.width * fx, y: b.y + b.height * fy });
-  const cdp = await page.context().newCDPSession(page);
-  await cdp.send("Emulation.setTouchEmulationEnabled", { enabled: true, maxTouchPoints: 1 });
-  const touch = (type: "touchStart" | "touchMove" | "touchEnd", p?: { x: number; y: number }) =>
-    cdp.send("Input.dispatchTouchEvent", { type, touchPoints: p ? [p] : [] });
+test.describe("on a phone", () => {
+  test.use({ hasTouch: true, viewport: { width: 375, height: 900 } });
 
-  await touch("touchStart", at(aroundBothTables.x0, aroundBothTables.y0));
-  await touch("touchMove", at(0.5, 0.2));
-  await touch("touchMove", at(aroundBothTables.x1, aroundBothTables.y1));
-  await touch("touchEnd");
+  test("drag a Region with a finger on the phone layout", async ({ page, browserName }) => {
+    test.skip(browserName !== "chromium", "Playwright can only send touch drags through Chromium");
+    const { main, layer } = await enterSelectRegion(page, "separate-tables.pdf");
+    // The sidebar stacks above the content on a phone, so bring the page into view first.
+    await layer.scrollIntoViewIfNeeded();
+    const b = (await layer.boundingBox())!;
+    const at = (fx: number, fy: number) => ({ x: b.x + b.width * fx, y: b.y + b.height * fy });
+    const cdp = await page.context().newCDPSession(page);
+    await cdp.send("Emulation.setTouchEmulationEnabled", { enabled: true, maxTouchPoints: 1 });
+    const touch = (type: "touchStart" | "touchMove" | "touchEnd", p?: { x: number; y: number }) =>
+      cdp.send("Input.dispatchTouchEvent", { type, touchPoints: p ? [p] : [] });
 
-  await expect(main.getByText("Preview", { exact: true })).toBeVisible();
-  await expect(main.getByRole("columnheader", { name: "Store" })).toBeVisible();
-  const scrollWidth = await page.evaluate(() => document.documentElement.scrollWidth);
-  expect(scrollWidth).toBeLessThanOrEqual(375);
-  await main.getByRole("button", { name: "Add Table" }).click();
-  await expect(main.getByText("Selected by hand")).toBeVisible();
+    await touch("touchStart", at(aroundBothTables.x0, aroundBothTables.y0));
+    await touch("touchMove", at(0.5, 0.2));
+    await touch("touchMove", at(aroundBothTables.x1, aroundBothTables.y1));
+    await touch("touchEnd");
+
+    await expect(main.getByText("Preview", { exact: true })).toBeVisible();
+    await expect(main.getByRole("columnheader", { name: "Store" })).toBeVisible();
+    const scrollWidth = await page.evaluate(() => document.documentElement.scrollWidth);
+    expect(scrollWidth).toBeLessThanOrEqual(375);
+    await main.getByRole("button", { name: "Add Table" }).click();
+    await expect(main.getByText("Selected by hand")).toBeVisible();
+  });
 });
