@@ -1,0 +1,438 @@
+{
+  "fixture": "tests/fixtures/prose-between-pages.pdf",
+  "sha256": "6d1df4fbd953517562ae30cfab05bc565bd38e9732f662111ffd223a136783d5",
+  "pdfjs": "3.11.174",
+  "status": "ready",
+  "error": "",
+  "pages": [
+    {
+      "num": 1,
+      "w": 612,
+      "h": 792,
+      "items": [
+        {"str":"Quarterly costs","x":72,"y":740,"w":102.77400000000002,"h":14,"bold":true},
+        {"str":"Cost","x":72,"y":710,"w":19.998,"h":9,"bold":true},
+        {"str":"Centre","x":220,"y":710,"w":28.503000000000007,"h":9,"bold":true},
+        {"str":"Q1","x":387.994,"y":710,"w":12.006,"h":9,"bold":true},
+        {"str":"Q2","x":467.994,"y":710,"w":12.006,"h":9,"bold":true},
+        {"str":"Rent","x":72,"y":696,"w":19.008000000000003,"h":9,"bold":false},
+        {"str":"HQ","x":220,"y":696,"w":13.500000000000002,"h":9,"bold":false},
+        {"str":"120.0","x":377.482,"y":696,"w":22.518,"h":9,"bold":false},
+        {"str":"120.0","x":457.482,"y":696,"w":22.518,"h":9,"bold":false},
+        {"str":"Power","x":72,"y":682,"w":24.830999999999992,"h":9,"bold":false},
+        {"str":"HQ","x":220,"y":682,"w":13.500000000000002,"h":9,"bold":false},
+        {"str":"31.5","x":382.486,"y":682,"w":17.514000000000003,"h":9,"bold":false},
+        {"str":"28.9","x":462.486,"y":682,"w":17.514000000000003,"h":9,"bold":false},
+        {"str":"Cloud","x":72,"y":668,"w":23.508000000000006,"h":9,"bold":false},
+        {"str":"IT","x":220,"y":668,"w":8.001000000000001,"h":9,"bold":false},
+        {"str":"88.2","x":382.486,"y":668,"w":17.514000000000003,"h":9,"bold":false},
+        {"str":"93.4","x":462.486,"y":668,"w":17.514000000000003,"h":9,"bold":false},
+        {
+          "str": "Costs rose in the second quarter, mostly from cloud usage. The finance team",
+          "x": 72,
+          "y": 634,
+          "w": 339.9099999999999,
+          "h": 10,
+          "bold": false
+        },
+        {
+          "str": "expects this to level off once the migration finishes. A full breakdown by",
+          "x": 72,
+          "y": 621,
+          "w": 313.54999999999995,
+          "h": 10,
+          "bold": false
+        },
+        {
+          "str": "vendor follows on the next page, after the commentary from each centre.",
+          "x": 72,
+          "y": 608,
+          "w": 320.82,
+          "h": 10,
+          "bold": false
+        }
+      ]
+    },
+    {
+      "num": 2,
+      "w": 612,
+      "h": 792,
+      "items": [
+        {
+          "str": "Vendor spend is shown for the same two quarters. Amounts are in thousands",
+          "x": 72,
+          "y": 740,
+          "w": 340.12999999999994,
+          "h": 10,
+          "bold": false
+        },
+        {
+          "str": "and include tax. Vendors under one thousand are grouped as Other.",
+          "x": 72,
+          "y": 727,
+          "w": 299.89999999999986,
+          "h": 10,
+          "bold": false
+        },
+        {
+          "str": "Contract renewals are flagged separately in the procurement report.",
+          "x": 72,
+          "y": 714,
+          "w": 299.9799999999999,
+          "h": 10,
+          "bold": false
+        },
+        {"str":"Acme","x":72,"y":680,"w":23.004000000000005,"h":9,"bold":false},
+        {"str":"IT","x":220,"y":680,"w":8.001000000000001,"h":9,"bold":false},
+        {"str":"40.1","x":382.486,"y":680,"w":17.514000000000003,"h":9,"bold":false},
+        {"str":"44.0","x":462.486,"y":680,"w":17.514000000000003,"h":9,"bold":false},
+        {"str":"Globex","x":72,"y":666,"w":28.242000000000008,"h":9,"bold":false},
+        {"str":"HQ","x":220,"y":666,"w":13.500000000000002,"h":9,"bold":false},
+        {"str":"22.7","x":382.486,"y":666,"w":17.514000000000003,"h":9,"bold":false},
+        {"str":"21.9","x":462.486,"y":666,"w":17.514000000000003,"h":9,"bold":false},
+        {"str":"Other","x":72,"y":652,"w":22.509000000000004,"h":9,"bold":false},
+        {"str":"IT","x":220,"y":652,"w":8.001000000000001,"h":9,"bold":false},
+        {"str":"9.3","x":387.49,"y":652,"w":12.510000000000002,"h":9,"bold":false},
+        {"str":"9.8","x":467.49,"y":652,"w":12.510000000000002,"h":9,"bold":false}
+      ]
+    }
+  ],
+  "runs": [
+    {
+      "columnSpacing": 1,
+      "joining": true,
+      "tables": [
+        {
+          "n": 1,
+          "pages": [1],
+          "parts": [{"page":1,"bbox":[68,664.85,484,719.45]}],
+          "header": true,
+          "firstBold": true,
+          "grid": [["Cost","Centre","Q1","Q2"],["Rent","HQ","120.0","120.0"],["Power","HQ","31.5","28.9"],["Cloud","IT","88.2","93.4"]],
+          "sections": [],
+          "cols": [[72,96.83099999999999],[220,248.50300000000001],[377.482,400],[457.482,480]],
+          "repeats": 0,
+          "exports": {
+            "column": {
+              "csv": "Cost,Centre,Q1,Q2\nRent,HQ,120.0,120.0\nPower,HQ,31.5,28.9\nCloud,IT,88.2,93.4",
+              "tsv": "Cost\tCentre\tQ1\tQ2\nRent\tHQ\t120.0\t120.0\nPower\tHQ\t31.5\t28.9\nCloud\tIT\t88.2\t93.4",
+              "md": "| Cost | Centre | Q1 | Q2 |\n| --- | --- | ---: | ---: |\n| Rent | HQ | 120.0 | 120.0 |\n| Power | HQ | 31.5 | 28.9 |\n| Cloud | IT | 88.2 | 93.4 |",
+              "json": "[\n  {\n    \"Cost\": \"Rent\",\n    \"Centre\": \"HQ\",\n    \"Q1\": \"120.0\",\n    \"Q2\": \"120.0\"\n  },\n  {\n    \"Cost\": \"Power\",\n    \"Centre\": \"HQ\",\n    \"Q1\": \"31.5\",\n    \"Q2\": \"28.9\"\n  },\n  {\n    \"Cost\": \"Cloud\",\n    \"Centre\": \"IT\",\n    \"Q1\": \"88.2\",\n    \"Q2\": \"93.4\"\n  }\n]"
+            },
+            "rows": {
+              "csv": "Cost,Centre,Q1,Q2\nRent,HQ,120.0,120.0\nPower,HQ,31.5,28.9\nCloud,IT,88.2,93.4",
+              "tsv": "Cost\tCentre\tQ1\tQ2\nRent\tHQ\t120.0\t120.0\nPower\tHQ\t31.5\t28.9\nCloud\tIT\t88.2\t93.4",
+              "md": "| Cost | Centre | Q1 | Q2 |\n| --- | --- | ---: | ---: |\n| Rent | HQ | 120.0 | 120.0 |\n| Power | HQ | 31.5 | 28.9 |\n| Cloud | IT | 88.2 | 93.4 |",
+              "json": "[\n  {\n    \"Cost\": \"Rent\",\n    \"Centre\": \"HQ\",\n    \"Q1\": \"120.0\",\n    \"Q2\": \"120.0\"\n  },\n  {\n    \"Cost\": \"Power\",\n    \"Centre\": \"HQ\",\n    \"Q1\": \"31.5\",\n    \"Q2\": \"28.9\"\n  },\n  {\n    \"Cost\": \"Cloud\",\n    \"Centre\": \"IT\",\n    \"Q1\": \"88.2\",\n    \"Q2\": \"93.4\"\n  }\n]"
+            }
+          }
+        },
+        {
+          "n": 2,
+          "pages": [2],
+          "parts": [{"page":2,"bbox":[68,648.85,484,689.45]}],
+          "header": true,
+          "firstBold": false,
+          "grid": [["Acme","IT","40.1","44.0"],["Globex","HQ","22.7","21.9"],["Other","IT","9.3","9.8"]],
+          "sections": [],
+          "cols": [[72,100.242],[220,233.5],[382.486,400],[462.486,480]],
+          "repeats": 0,
+          "exports": {
+            "column": {
+              "csv": "Acme,IT,40.1,44.0\nGlobex,HQ,22.7,21.9\nOther,IT,9.3,9.8",
+              "tsv": "Acme\tIT\t40.1\t44.0\nGlobex\tHQ\t22.7\t21.9\nOther\tIT\t9.3\t9.8",
+              "md": "| Acme | IT | 40.1 | 44.0 |\n| --- | --- | ---: | ---: |\n| Globex | HQ | 22.7 | 21.9 |\n| Other | IT | 9.3 | 9.8 |",
+              "json": "[\n  {\n    \"Acme\": \"Globex\",\n    \"IT\": \"HQ\",\n    \"40.1\": \"22.7\",\n    \"44.0\": \"21.9\"\n  },\n  {\n    \"Acme\": \"Other\",\n    \"IT\": \"IT\",\n    \"40.1\": \"9.3\",\n    \"44.0\": \"9.8\"\n  }\n]"
+            },
+            "rows": {
+              "csv": "Acme,IT,40.1,44.0\nGlobex,HQ,22.7,21.9\nOther,IT,9.3,9.8",
+              "tsv": "Acme\tIT\t40.1\t44.0\nGlobex\tHQ\t22.7\t21.9\nOther\tIT\t9.3\t9.8",
+              "md": "| Acme | IT | 40.1 | 44.0 |\n| --- | --- | ---: | ---: |\n| Globex | HQ | 22.7 | 21.9 |\n| Other | IT | 9.3 | 9.8 |",
+              "json": "[\n  {\n    \"Acme\": \"Globex\",\n    \"IT\": \"HQ\",\n    \"40.1\": \"22.7\",\n    \"44.0\": \"21.9\"\n  },\n  {\n    \"Acme\": \"Other\",\n    \"IT\": \"IT\",\n    \"40.1\": \"9.3\",\n    \"44.0\": \"9.8\"\n  }\n]"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "columnSpacing": 1,
+      "joining": false,
+      "tables": [
+        {
+          "n": 1,
+          "pages": [1],
+          "parts": [{"page":1,"bbox":[68,664.85,484,719.45]}],
+          "header": true,
+          "firstBold": true,
+          "grid": [["Cost","Centre","Q1","Q2"],["Rent","HQ","120.0","120.0"],["Power","HQ","31.5","28.9"],["Cloud","IT","88.2","93.4"]],
+          "sections": [],
+          "cols": [[72,96.83099999999999],[220,248.50300000000001],[377.482,400],[457.482,480]],
+          "repeats": 0,
+          "exports": {
+            "column": {
+              "csv": "Cost,Centre,Q1,Q2\nRent,HQ,120.0,120.0\nPower,HQ,31.5,28.9\nCloud,IT,88.2,93.4",
+              "tsv": "Cost\tCentre\tQ1\tQ2\nRent\tHQ\t120.0\t120.0\nPower\tHQ\t31.5\t28.9\nCloud\tIT\t88.2\t93.4",
+              "md": "| Cost | Centre | Q1 | Q2 |\n| --- | --- | ---: | ---: |\n| Rent | HQ | 120.0 | 120.0 |\n| Power | HQ | 31.5 | 28.9 |\n| Cloud | IT | 88.2 | 93.4 |",
+              "json": "[\n  {\n    \"Cost\": \"Rent\",\n    \"Centre\": \"HQ\",\n    \"Q1\": \"120.0\",\n    \"Q2\": \"120.0\"\n  },\n  {\n    \"Cost\": \"Power\",\n    \"Centre\": \"HQ\",\n    \"Q1\": \"31.5\",\n    \"Q2\": \"28.9\"\n  },\n  {\n    \"Cost\": \"Cloud\",\n    \"Centre\": \"IT\",\n    \"Q1\": \"88.2\",\n    \"Q2\": \"93.4\"\n  }\n]"
+            },
+            "rows": {
+              "csv": "Cost,Centre,Q1,Q2\nRent,HQ,120.0,120.0\nPower,HQ,31.5,28.9\nCloud,IT,88.2,93.4",
+              "tsv": "Cost\tCentre\tQ1\tQ2\nRent\tHQ\t120.0\t120.0\nPower\tHQ\t31.5\t28.9\nCloud\tIT\t88.2\t93.4",
+              "md": "| Cost | Centre | Q1 | Q2 |\n| --- | --- | ---: | ---: |\n| Rent | HQ | 120.0 | 120.0 |\n| Power | HQ | 31.5 | 28.9 |\n| Cloud | IT | 88.2 | 93.4 |",
+              "json": "[\n  {\n    \"Cost\": \"Rent\",\n    \"Centre\": \"HQ\",\n    \"Q1\": \"120.0\",\n    \"Q2\": \"120.0\"\n  },\n  {\n    \"Cost\": \"Power\",\n    \"Centre\": \"HQ\",\n    \"Q1\": \"31.5\",\n    \"Q2\": \"28.9\"\n  },\n  {\n    \"Cost\": \"Cloud\",\n    \"Centre\": \"IT\",\n    \"Q1\": \"88.2\",\n    \"Q2\": \"93.4\"\n  }\n]"
+            }
+          }
+        },
+        {
+          "n": 2,
+          "pages": [2],
+          "parts": [{"page":2,"bbox":[68,648.85,484,689.45]}],
+          "header": true,
+          "firstBold": false,
+          "grid": [["Acme","IT","40.1","44.0"],["Globex","HQ","22.7","21.9"],["Other","IT","9.3","9.8"]],
+          "sections": [],
+          "cols": [[72,100.242],[220,233.5],[382.486,400],[462.486,480]],
+          "repeats": 0,
+          "exports": {
+            "column": {
+              "csv": "Acme,IT,40.1,44.0\nGlobex,HQ,22.7,21.9\nOther,IT,9.3,9.8",
+              "tsv": "Acme\tIT\t40.1\t44.0\nGlobex\tHQ\t22.7\t21.9\nOther\tIT\t9.3\t9.8",
+              "md": "| Acme | IT | 40.1 | 44.0 |\n| --- | --- | ---: | ---: |\n| Globex | HQ | 22.7 | 21.9 |\n| Other | IT | 9.3 | 9.8 |",
+              "json": "[\n  {\n    \"Acme\": \"Globex\",\n    \"IT\": \"HQ\",\n    \"40.1\": \"22.7\",\n    \"44.0\": \"21.9\"\n  },\n  {\n    \"Acme\": \"Other\",\n    \"IT\": \"IT\",\n    \"40.1\": \"9.3\",\n    \"44.0\": \"9.8\"\n  }\n]"
+            },
+            "rows": {
+              "csv": "Acme,IT,40.1,44.0\nGlobex,HQ,22.7,21.9\nOther,IT,9.3,9.8",
+              "tsv": "Acme\tIT\t40.1\t44.0\nGlobex\tHQ\t22.7\t21.9\nOther\tIT\t9.3\t9.8",
+              "md": "| Acme | IT | 40.1 | 44.0 |\n| --- | --- | ---: | ---: |\n| Globex | HQ | 22.7 | 21.9 |\n| Other | IT | 9.3 | 9.8 |",
+              "json": "[\n  {\n    \"Acme\": \"Globex\",\n    \"IT\": \"HQ\",\n    \"40.1\": \"22.7\",\n    \"44.0\": \"21.9\"\n  },\n  {\n    \"Acme\": \"Other\",\n    \"IT\": \"IT\",\n    \"40.1\": \"9.3\",\n    \"44.0\": \"9.8\"\n  }\n]"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "columnSpacing": 0.5,
+      "joining": true,
+      "tables": [
+        {
+          "n": 1,
+          "pages": [1],
+          "parts": [{"page":1,"bbox":[68,664.85,484,719.45]}],
+          "header": true,
+          "firstBold": true,
+          "grid": [["Cost","Centre","Q1","Q2"],["Rent","HQ","120.0","120.0"],["Power","HQ","31.5","28.9"],["Cloud","IT","88.2","93.4"]],
+          "sections": [],
+          "cols": [[72,96.83099999999999],[220,248.50300000000001],[377.482,400],[457.482,480]],
+          "repeats": 0,
+          "exports": {
+            "column": {
+              "csv": "Cost,Centre,Q1,Q2\nRent,HQ,120.0,120.0\nPower,HQ,31.5,28.9\nCloud,IT,88.2,93.4",
+              "tsv": "Cost\tCentre\tQ1\tQ2\nRent\tHQ\t120.0\t120.0\nPower\tHQ\t31.5\t28.9\nCloud\tIT\t88.2\t93.4",
+              "md": "| Cost | Centre | Q1 | Q2 |\n| --- | --- | ---: | ---: |\n| Rent | HQ | 120.0 | 120.0 |\n| Power | HQ | 31.5 | 28.9 |\n| Cloud | IT | 88.2 | 93.4 |",
+              "json": "[\n  {\n    \"Cost\": \"Rent\",\n    \"Centre\": \"HQ\",\n    \"Q1\": \"120.0\",\n    \"Q2\": \"120.0\"\n  },\n  {\n    \"Cost\": \"Power\",\n    \"Centre\": \"HQ\",\n    \"Q1\": \"31.5\",\n    \"Q2\": \"28.9\"\n  },\n  {\n    \"Cost\": \"Cloud\",\n    \"Centre\": \"IT\",\n    \"Q1\": \"88.2\",\n    \"Q2\": \"93.4\"\n  }\n]"
+            },
+            "rows": {
+              "csv": "Cost,Centre,Q1,Q2\nRent,HQ,120.0,120.0\nPower,HQ,31.5,28.9\nCloud,IT,88.2,93.4",
+              "tsv": "Cost\tCentre\tQ1\tQ2\nRent\tHQ\t120.0\t120.0\nPower\tHQ\t31.5\t28.9\nCloud\tIT\t88.2\t93.4",
+              "md": "| Cost | Centre | Q1 | Q2 |\n| --- | --- | ---: | ---: |\n| Rent | HQ | 120.0 | 120.0 |\n| Power | HQ | 31.5 | 28.9 |\n| Cloud | IT | 88.2 | 93.4 |",
+              "json": "[\n  {\n    \"Cost\": \"Rent\",\n    \"Centre\": \"HQ\",\n    \"Q1\": \"120.0\",\n    \"Q2\": \"120.0\"\n  },\n  {\n    \"Cost\": \"Power\",\n    \"Centre\": \"HQ\",\n    \"Q1\": \"31.5\",\n    \"Q2\": \"28.9\"\n  },\n  {\n    \"Cost\": \"Cloud\",\n    \"Centre\": \"IT\",\n    \"Q1\": \"88.2\",\n    \"Q2\": \"93.4\"\n  }\n]"
+            }
+          }
+        },
+        {
+          "n": 2,
+          "pages": [2],
+          "parts": [{"page":2,"bbox":[68,648.85,484,689.45]}],
+          "header": true,
+          "firstBold": false,
+          "grid": [["Acme","IT","40.1","44.0"],["Globex","HQ","22.7","21.9"],["Other","IT","9.3","9.8"]],
+          "sections": [],
+          "cols": [[72,100.242],[220,233.5],[382.486,400],[462.486,480]],
+          "repeats": 0,
+          "exports": {
+            "column": {
+              "csv": "Acme,IT,40.1,44.0\nGlobex,HQ,22.7,21.9\nOther,IT,9.3,9.8",
+              "tsv": "Acme\tIT\t40.1\t44.0\nGlobex\tHQ\t22.7\t21.9\nOther\tIT\t9.3\t9.8",
+              "md": "| Acme | IT | 40.1 | 44.0 |\n| --- | --- | ---: | ---: |\n| Globex | HQ | 22.7 | 21.9 |\n| Other | IT | 9.3 | 9.8 |",
+              "json": "[\n  {\n    \"Acme\": \"Globex\",\n    \"IT\": \"HQ\",\n    \"40.1\": \"22.7\",\n    \"44.0\": \"21.9\"\n  },\n  {\n    \"Acme\": \"Other\",\n    \"IT\": \"IT\",\n    \"40.1\": \"9.3\",\n    \"44.0\": \"9.8\"\n  }\n]"
+            },
+            "rows": {
+              "csv": "Acme,IT,40.1,44.0\nGlobex,HQ,22.7,21.9\nOther,IT,9.3,9.8",
+              "tsv": "Acme\tIT\t40.1\t44.0\nGlobex\tHQ\t22.7\t21.9\nOther\tIT\t9.3\t9.8",
+              "md": "| Acme | IT | 40.1 | 44.0 |\n| --- | --- | ---: | ---: |\n| Globex | HQ | 22.7 | 21.9 |\n| Other | IT | 9.3 | 9.8 |",
+              "json": "[\n  {\n    \"Acme\": \"Globex\",\n    \"IT\": \"HQ\",\n    \"40.1\": \"22.7\",\n    \"44.0\": \"21.9\"\n  },\n  {\n    \"Acme\": \"Other\",\n    \"IT\": \"IT\",\n    \"40.1\": \"9.3\",\n    \"44.0\": \"9.8\"\n  }\n]"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "columnSpacing": 0.5,
+      "joining": false,
+      "tables": [
+        {
+          "n": 1,
+          "pages": [1],
+          "parts": [{"page":1,"bbox":[68,664.85,484,719.45]}],
+          "header": true,
+          "firstBold": true,
+          "grid": [["Cost","Centre","Q1","Q2"],["Rent","HQ","120.0","120.0"],["Power","HQ","31.5","28.9"],["Cloud","IT","88.2","93.4"]],
+          "sections": [],
+          "cols": [[72,96.83099999999999],[220,248.50300000000001],[377.482,400],[457.482,480]],
+          "repeats": 0,
+          "exports": {
+            "column": {
+              "csv": "Cost,Centre,Q1,Q2\nRent,HQ,120.0,120.0\nPower,HQ,31.5,28.9\nCloud,IT,88.2,93.4",
+              "tsv": "Cost\tCentre\tQ1\tQ2\nRent\tHQ\t120.0\t120.0\nPower\tHQ\t31.5\t28.9\nCloud\tIT\t88.2\t93.4",
+              "md": "| Cost | Centre | Q1 | Q2 |\n| --- | --- | ---: | ---: |\n| Rent | HQ | 120.0 | 120.0 |\n| Power | HQ | 31.5 | 28.9 |\n| Cloud | IT | 88.2 | 93.4 |",
+              "json": "[\n  {\n    \"Cost\": \"Rent\",\n    \"Centre\": \"HQ\",\n    \"Q1\": \"120.0\",\n    \"Q2\": \"120.0\"\n  },\n  {\n    \"Cost\": \"Power\",\n    \"Centre\": \"HQ\",\n    \"Q1\": \"31.5\",\n    \"Q2\": \"28.9\"\n  },\n  {\n    \"Cost\": \"Cloud\",\n    \"Centre\": \"IT\",\n    \"Q1\": \"88.2\",\n    \"Q2\": \"93.4\"\n  }\n]"
+            },
+            "rows": {
+              "csv": "Cost,Centre,Q1,Q2\nRent,HQ,120.0,120.0\nPower,HQ,31.5,28.9\nCloud,IT,88.2,93.4",
+              "tsv": "Cost\tCentre\tQ1\tQ2\nRent\tHQ\t120.0\t120.0\nPower\tHQ\t31.5\t28.9\nCloud\tIT\t88.2\t93.4",
+              "md": "| Cost | Centre | Q1 | Q2 |\n| --- | --- | ---: | ---: |\n| Rent | HQ | 120.0 | 120.0 |\n| Power | HQ | 31.5 | 28.9 |\n| Cloud | IT | 88.2 | 93.4 |",
+              "json": "[\n  {\n    \"Cost\": \"Rent\",\n    \"Centre\": \"HQ\",\n    \"Q1\": \"120.0\",\n    \"Q2\": \"120.0\"\n  },\n  {\n    \"Cost\": \"Power\",\n    \"Centre\": \"HQ\",\n    \"Q1\": \"31.5\",\n    \"Q2\": \"28.9\"\n  },\n  {\n    \"Cost\": \"Cloud\",\n    \"Centre\": \"IT\",\n    \"Q1\": \"88.2\",\n    \"Q2\": \"93.4\"\n  }\n]"
+            }
+          }
+        },
+        {
+          "n": 2,
+          "pages": [2],
+          "parts": [{"page":2,"bbox":[68,648.85,484,689.45]}],
+          "header": true,
+          "firstBold": false,
+          "grid": [["Acme","IT","40.1","44.0"],["Globex","HQ","22.7","21.9"],["Other","IT","9.3","9.8"]],
+          "sections": [],
+          "cols": [[72,100.242],[220,233.5],[382.486,400],[462.486,480]],
+          "repeats": 0,
+          "exports": {
+            "column": {
+              "csv": "Acme,IT,40.1,44.0\nGlobex,HQ,22.7,21.9\nOther,IT,9.3,9.8",
+              "tsv": "Acme\tIT\t40.1\t44.0\nGlobex\tHQ\t22.7\t21.9\nOther\tIT\t9.3\t9.8",
+              "md": "| Acme | IT | 40.1 | 44.0 |\n| --- | --- | ---: | ---: |\n| Globex | HQ | 22.7 | 21.9 |\n| Other | IT | 9.3 | 9.8 |",
+              "json": "[\n  {\n    \"Acme\": \"Globex\",\n    \"IT\": \"HQ\",\n    \"40.1\": \"22.7\",\n    \"44.0\": \"21.9\"\n  },\n  {\n    \"Acme\": \"Other\",\n    \"IT\": \"IT\",\n    \"40.1\": \"9.3\",\n    \"44.0\": \"9.8\"\n  }\n]"
+            },
+            "rows": {
+              "csv": "Acme,IT,40.1,44.0\nGlobex,HQ,22.7,21.9\nOther,IT,9.3,9.8",
+              "tsv": "Acme\tIT\t40.1\t44.0\nGlobex\tHQ\t22.7\t21.9\nOther\tIT\t9.3\t9.8",
+              "md": "| Acme | IT | 40.1 | 44.0 |\n| --- | --- | ---: | ---: |\n| Globex | HQ | 22.7 | 21.9 |\n| Other | IT | 9.3 | 9.8 |",
+              "json": "[\n  {\n    \"Acme\": \"Globex\",\n    \"IT\": \"HQ\",\n    \"40.1\": \"22.7\",\n    \"44.0\": \"21.9\"\n  },\n  {\n    \"Acme\": \"Other\",\n    \"IT\": \"IT\",\n    \"40.1\": \"9.3\",\n    \"44.0\": \"9.8\"\n  }\n]"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "columnSpacing": 2,
+      "joining": true,
+      "tables": [
+        {
+          "n": 1,
+          "pages": [1],
+          "parts": [{"page":1,"bbox":[68,664.85,484,719.45]}],
+          "header": true,
+          "firstBold": true,
+          "grid": [["Cost","Centre","Q1","Q2"],["Rent","HQ","120.0","120.0"],["Power","HQ","31.5","28.9"],["Cloud","IT","88.2","93.4"]],
+          "sections": [],
+          "cols": [[72,96.83099999999999],[220,248.50300000000001],[377.482,400],[457.482,480]],
+          "repeats": 0,
+          "exports": {
+            "column": {
+              "csv": "Cost,Centre,Q1,Q2\nRent,HQ,120.0,120.0\nPower,HQ,31.5,28.9\nCloud,IT,88.2,93.4",
+              "tsv": "Cost\tCentre\tQ1\tQ2\nRent\tHQ\t120.0\t120.0\nPower\tHQ\t31.5\t28.9\nCloud\tIT\t88.2\t93.4",
+              "md": "| Cost | Centre | Q1 | Q2 |\n| --- | --- | ---: | ---: |\n| Rent | HQ | 120.0 | 120.0 |\n| Power | HQ | 31.5 | 28.9 |\n| Cloud | IT | 88.2 | 93.4 |",
+              "json": "[\n  {\n    \"Cost\": \"Rent\",\n    \"Centre\": \"HQ\",\n    \"Q1\": \"120.0\",\n    \"Q2\": \"120.0\"\n  },\n  {\n    \"Cost\": \"Power\",\n    \"Centre\": \"HQ\",\n    \"Q1\": \"31.5\",\n    \"Q2\": \"28.9\"\n  },\n  {\n    \"Cost\": \"Cloud\",\n    \"Centre\": \"IT\",\n    \"Q1\": \"88.2\",\n    \"Q2\": \"93.4\"\n  }\n]"
+            },
+            "rows": {
+              "csv": "Cost,Centre,Q1,Q2\nRent,HQ,120.0,120.0\nPower,HQ,31.5,28.9\nCloud,IT,88.2,93.4",
+              "tsv": "Cost\tCentre\tQ1\tQ2\nRent\tHQ\t120.0\t120.0\nPower\tHQ\t31.5\t28.9\nCloud\tIT\t88.2\t93.4",
+              "md": "| Cost | Centre | Q1 | Q2 |\n| --- | --- | ---: | ---: |\n| Rent | HQ | 120.0 | 120.0 |\n| Power | HQ | 31.5 | 28.9 |\n| Cloud | IT | 88.2 | 93.4 |",
+              "json": "[\n  {\n    \"Cost\": \"Rent\",\n    \"Centre\": \"HQ\",\n    \"Q1\": \"120.0\",\n    \"Q2\": \"120.0\"\n  },\n  {\n    \"Cost\": \"Power\",\n    \"Centre\": \"HQ\",\n    \"Q1\": \"31.5\",\n    \"Q2\": \"28.9\"\n  },\n  {\n    \"Cost\": \"Cloud\",\n    \"Centre\": \"IT\",\n    \"Q1\": \"88.2\",\n    \"Q2\": \"93.4\"\n  }\n]"
+            }
+          }
+        },
+        {
+          "n": 2,
+          "pages": [2],
+          "parts": [{"page":2,"bbox":[68,648.85,484,689.45]}],
+          "header": true,
+          "firstBold": false,
+          "grid": [["Acme","IT","40.1","44.0"],["Globex","HQ","22.7","21.9"],["Other","IT","9.3","9.8"]],
+          "sections": [],
+          "cols": [[72,100.242],[220,233.5],[382.486,400],[462.486,480]],
+          "repeats": 0,
+          "exports": {
+            "column": {
+              "csv": "Acme,IT,40.1,44.0\nGlobex,HQ,22.7,21.9\nOther,IT,9.3,9.8",
+              "tsv": "Acme\tIT\t40.1\t44.0\nGlobex\tHQ\t22.7\t21.9\nOther\tIT\t9.3\t9.8",
+              "md": "| Acme | IT | 40.1 | 44.0 |\n| --- | --- | ---: | ---: |\n| Globex | HQ | 22.7 | 21.9 |\n| Other | IT | 9.3 | 9.8 |",
+              "json": "[\n  {\n    \"Acme\": \"Globex\",\n    \"IT\": \"HQ\",\n    \"40.1\": \"22.7\",\n    \"44.0\": \"21.9\"\n  },\n  {\n    \"Acme\": \"Other\",\n    \"IT\": \"IT\",\n    \"40.1\": \"9.3\",\n    \"44.0\": \"9.8\"\n  }\n]"
+            },
+            "rows": {
+              "csv": "Acme,IT,40.1,44.0\nGlobex,HQ,22.7,21.9\nOther,IT,9.3,9.8",
+              "tsv": "Acme\tIT\t40.1\t44.0\nGlobex\tHQ\t22.7\t21.9\nOther\tIT\t9.3\t9.8",
+              "md": "| Acme | IT | 40.1 | 44.0 |\n| --- | --- | ---: | ---: |\n| Globex | HQ | 22.7 | 21.9 |\n| Other | IT | 9.3 | 9.8 |",
+              "json": "[\n  {\n    \"Acme\": \"Globex\",\n    \"IT\": \"HQ\",\n    \"40.1\": \"22.7\",\n    \"44.0\": \"21.9\"\n  },\n  {\n    \"Acme\": \"Other\",\n    \"IT\": \"IT\",\n    \"40.1\": \"9.3\",\n    \"44.0\": \"9.8\"\n  }\n]"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "columnSpacing": 2,
+      "joining": false,
+      "tables": [
+        {
+          "n": 1,
+          "pages": [1],
+          "parts": [{"page":1,"bbox":[68,664.85,484,719.45]}],
+          "header": true,
+          "firstBold": true,
+          "grid": [["Cost","Centre","Q1","Q2"],["Rent","HQ","120.0","120.0"],["Power","HQ","31.5","28.9"],["Cloud","IT","88.2","93.4"]],
+          "sections": [],
+          "cols": [[72,96.83099999999999],[220,248.50300000000001],[377.482,400],[457.482,480]],
+          "repeats": 0,
+          "exports": {
+            "column": {
+              "csv": "Cost,Centre,Q1,Q2\nRent,HQ,120.0,120.0\nPower,HQ,31.5,28.9\nCloud,IT,88.2,93.4",
+              "tsv": "Cost\tCentre\tQ1\tQ2\nRent\tHQ\t120.0\t120.0\nPower\tHQ\t31.5\t28.9\nCloud\tIT\t88.2\t93.4",
+              "md": "| Cost | Centre | Q1 | Q2 |\n| --- | --- | ---: | ---: |\n| Rent | HQ | 120.0 | 120.0 |\n| Power | HQ | 31.5 | 28.9 |\n| Cloud | IT | 88.2 | 93.4 |",
+              "json": "[\n  {\n    \"Cost\": \"Rent\",\n    \"Centre\": \"HQ\",\n    \"Q1\": \"120.0\",\n    \"Q2\": \"120.0\"\n  },\n  {\n    \"Cost\": \"Power\",\n    \"Centre\": \"HQ\",\n    \"Q1\": \"31.5\",\n    \"Q2\": \"28.9\"\n  },\n  {\n    \"Cost\": \"Cloud\",\n    \"Centre\": \"IT\",\n    \"Q1\": \"88.2\",\n    \"Q2\": \"93.4\"\n  }\n]"
+            },
+            "rows": {
+              "csv": "Cost,Centre,Q1,Q2\nRent,HQ,120.0,120.0\nPower,HQ,31.5,28.9\nCloud,IT,88.2,93.4",
+              "tsv": "Cost\tCentre\tQ1\tQ2\nRent\tHQ\t120.0\t120.0\nPower\tHQ\t31.5\t28.9\nCloud\tIT\t88.2\t93.4",
+              "md": "| Cost | Centre | Q1 | Q2 |\n| --- | --- | ---: | ---: |\n| Rent | HQ | 120.0 | 120.0 |\n| Power | HQ | 31.5 | 28.9 |\n| Cloud | IT | 88.2 | 93.4 |",
+              "json": "[\n  {\n    \"Cost\": \"Rent\",\n    \"Centre\": \"HQ\",\n    \"Q1\": \"120.0\",\n    \"Q2\": \"120.0\"\n  },\n  {\n    \"Cost\": \"Power\",\n    \"Centre\": \"HQ\",\n    \"Q1\": \"31.5\",\n    \"Q2\": \"28.9\"\n  },\n  {\n    \"Cost\": \"Cloud\",\n    \"Centre\": \"IT\",\n    \"Q1\": \"88.2\",\n    \"Q2\": \"93.4\"\n  }\n]"
+            }
+          }
+        },
+        {
+          "n": 2,
+          "pages": [2],
+          "parts": [{"page":2,"bbox":[68,648.85,484,689.45]}],
+          "header": true,
+          "firstBold": false,
+          "grid": [["Acme","IT","40.1","44.0"],["Globex","HQ","22.7","21.9"],["Other","IT","9.3","9.8"]],
+          "sections": [],
+          "cols": [[72,100.242],[220,233.5],[382.486,400],[462.486,480]],
+          "repeats": 0,
+          "exports": {
+            "column": {
+              "csv": "Acme,IT,40.1,44.0\nGlobex,HQ,22.7,21.9\nOther,IT,9.3,9.8",
+              "tsv": "Acme\tIT\t40.1\t44.0\nGlobex\tHQ\t22.7\t21.9\nOther\tIT\t9.3\t9.8",
+              "md": "| Acme | IT | 40.1 | 44.0 |\n| --- | --- | ---: | ---: |\n| Globex | HQ | 22.7 | 21.9 |\n| Other | IT | 9.3 | 9.8 |",
+              "json": "[\n  {\n    \"Acme\": \"Globex\",\n    \"IT\": \"HQ\",\n    \"40.1\": \"22.7\",\n    \"44.0\": \"21.9\"\n  },\n  {\n    \"Acme\": \"Other\",\n    \"IT\": \"IT\",\n    \"40.1\": \"9.3\",\n    \"44.0\": \"9.8\"\n  }\n]"
+            },
+            "rows": {
+              "csv": "Acme,IT,40.1,44.0\nGlobex,HQ,22.7,21.9\nOther,IT,9.3,9.8",
+              "tsv": "Acme\tIT\t40.1\t44.0\nGlobex\tHQ\t22.7\t21.9\nOther\tIT\t9.3\t9.8",
+              "md": "| Acme | IT | 40.1 | 44.0 |\n| --- | --- | ---: | ---: |\n| Globex | HQ | 22.7 | 21.9 |\n| Other | IT | 9.3 | 9.8 |",
+              "json": "[\n  {\n    \"Acme\": \"Globex\",\n    \"IT\": \"HQ\",\n    \"40.1\": \"22.7\",\n    \"44.0\": \"21.9\"\n  },\n  {\n    \"Acme\": \"Other\",\n    \"IT\": \"IT\",\n    \"40.1\": \"9.3\",\n    \"44.0\": \"9.8\"\n  }\n]"
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

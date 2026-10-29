@@ -1,0 +1,302 @@
+{
+  "fixture": "tests/fixtures/section-headers.pdf",
+  "sha256": "7236f668e6427c51985200f5264b66f63f7c0836a7c3dc97226013f2b9b224d6",
+  "pdfjs": "3.11.174",
+  "status": "ready",
+  "error": "",
+  "pages": [
+    {
+      "num": 1,
+      "w": 612,
+      "h": 792,
+      "items": [
+        {"str":"Sales by store","x":72,"y":740,"w":94.65400000000001,"h":14,"bold":true},
+        {"str":"Store","x":72,"y":710,"w":23.004000000000005,"h":9,"bold":true},
+        {"str":"Manager","x":220,"y":710,"w":37.007999999999996,"h":9,"bold":true},
+        {"str":"Q1","x":387.994,"y":710,"w":12.006,"h":9,"bold":true},
+        {"str":"Q2","x":467.994,"y":710,"w":12.006,"h":9,"bold":true},
+        {"str":"West","x":72,"y":696,"w":21.186000000000003,"h":9,"bold":true},
+        {"str":"Portland","x":72,"y":682,"w":33.426,"h":9,"bold":false},
+        {"str":"A. Rivera","x":220,"y":682,"w":36.15300000000002,"h":9,"bold":false},
+        {"str":"412.8","x":377.482,"y":682,"w":22.518,"h":9,"bold":false},
+        {"str":"430.1","x":457.482,"y":682,"w":22.518,"h":9,"bold":false},
+        {"str":"Seattle","x":72,"y":668,"w":28.017000000000003,"h":9,"bold":false},
+        {"str":"J. Chen","x":220,"y":668,"w":30.20400000000001,"h":9,"bold":false},
+        {"str":"455.0","x":377.482,"y":668,"w":22.518,"h":9,"bold":false},
+        {"str":"470.3","x":457.482,"y":668,"w":22.518,"h":9,"bold":false},
+        {"str":"Central","x":72,"y":654,"w":31.005000000000006,"h":9,"bold":true},
+        {"str":"Denver","x":72,"y":640,"w":28.602000000000004,"h":9,"bold":false},
+        {"str":"M. Okafor","x":220,"y":640,"w":38.70000000000001,"h":9,"bold":false},
+        {"str":"388.1","x":377.482,"y":640,"w":22.518,"h":9,"bold":false},
+        {"str":"391.7","x":457.482,"y":640,"w":22.518,"h":9,"bold":false},
+        {"str":"Omaha","x":72,"y":626,"w":29.511000000000006,"h":9,"bold":false},
+        {"str":"L. Novak","x":220,"y":626,"w":34.61400000000004,"h":9,"bold":false},
+        {"str":"301.4","x":377.482,"y":626,"w":22.518,"h":9,"bold":false},
+        {"str":"310.0","x":457.482,"y":626,"w":22.518,"h":9,"bold":false},
+        {"str":"East","x":72,"y":612,"w":19.008000000000003,"h":9,"bold":true},
+        {"str":"Boston","x":72,"y":598,"w":28.017000000000003,"h":9,"bold":false},
+        {"str":"S. Patel","x":220,"y":598,"w":30.438000000000002,"h":9,"bold":false},
+        {"str":"520.6","x":377.482,"y":598,"w":22.518,"h":9,"bold":false},
+        {"str":"533.2","x":457.482,"y":598,"w":22.518,"h":9,"bold":false},
+        {"str":"Raleigh","x":72,"y":584,"w":30.51000000000001,"h":9,"bold":false},
+        {"str":"D. Kim","x":220,"y":584,"w":25.830000000000027,"h":9,"bold":false},
+        {"str":"344.9","x":377.482,"y":584,"w":22.518,"h":9,"bold":false},
+        {"str":"362.5","x":457.482,"y":584,"w":22.518,"h":9,"bold":false}
+      ]
+    }
+  ],
+  "runs": [
+    {
+      "columnSpacing": 1,
+      "joining": true,
+      "tables": [
+        {
+          "n": 1,
+          "pages": [1],
+          "parts": [{"page":1,"bbox":[68,580.85,484,719.45]}],
+          "header": true,
+          "firstBold": true,
+          "grid": [
+            ["Store","Manager","Q1","Q2"],
+            ["West","","",""],
+            ["Portland","A. Rivera","412.8","430.1"],
+            ["Seattle","J. Chen","455.0","470.3"],
+            ["Central","","",""],
+            ["Denver","M. Okafor","388.1","391.7"],
+            ["Omaha","L. Novak","301.4","310.0"],
+            ["East","","",""],
+            ["Boston","S. Patel","520.6","533.2"],
+            ["Raleigh","D. Kim","344.9","362.5"]
+          ],
+          "sections": [1,4,7],
+          "cols": [[72,105.426],[220,258.7],[377.482,400],[457.482,480]],
+          "repeats": 0,
+          "exports": {
+            "column": {
+              "csv": "Section,Store,Manager,Q1,Q2\nWest,Portland,A. Rivera,412.8,430.1\nWest,Seattle,J. Chen,455.0,470.3\nCentral,Denver,M. Okafor,388.1,391.7\nCentral,Omaha,L. Novak,301.4,310.0\nEast,Boston,S. Patel,520.6,533.2\nEast,Raleigh,D. Kim,344.9,362.5",
+              "tsv": "Section\tStore\tManager\tQ1\tQ2\nWest\tPortland\tA. Rivera\t412.8\t430.1\nWest\tSeattle\tJ. Chen\t455.0\t470.3\nCentral\tDenver\tM. Okafor\t388.1\t391.7\nCentral\tOmaha\tL. Novak\t301.4\t310.0\nEast\tBoston\tS. Patel\t520.6\t533.2\nEast\tRaleigh\tD. Kim\t344.9\t362.5",
+              "md": "| Section | Store | Manager | Q1 | Q2 |\n| --- | --- | --- | ---: | ---: |\n| West | Portland | A. Rivera | 412.8 | 430.1 |\n| West | Seattle | J. Chen | 455.0 | 470.3 |\n| Central | Denver | M. Okafor | 388.1 | 391.7 |\n| Central | Omaha | L. Novak | 301.4 | 310.0 |\n| East | Boston | S. Patel | 520.6 | 533.2 |\n| East | Raleigh | D. Kim | 344.9 | 362.5 |",
+              "json": "[\n  {\n    \"Section\": \"West\",\n    \"Store\": \"Portland\",\n    \"Manager\": \"A. Rivera\",\n    \"Q1\": \"412.8\",\n    \"Q2\": \"430.1\"\n  },\n  {\n    \"Section\": \"West\",\n    \"Store\": \"Seattle\",\n    \"Manager\": \"J. Chen\",\n    \"Q1\": \"455.0\",\n    \"Q2\": \"470.3\"\n  },\n  {\n    \"Section\": \"Central\",\n    \"Store\": \"Denver\",\n    \"Manager\": \"M. Okafor\",\n    \"Q1\": \"388.1\",\n    \"Q2\": \"391.7\"\n  },\n  {\n    \"Section\": \"Central\",\n    \"Store\": \"Omaha\",\n    \"Manager\": \"L. Novak\",\n    \"Q1\": \"301.4\",\n    \"Q2\": \"310.0\"\n  },\n  {\n    \"Section\": \"East\",\n    \"Store\": \"Boston\",\n    \"Manager\": \"S. Patel\",\n    \"Q1\": \"520.6\",\n    \"Q2\": \"533.2\"\n  },\n  {\n    \"Section\": \"East\",\n    \"Store\": \"Raleigh\",\n    \"Manager\": \"D. Kim\",\n    \"Q1\": \"344.9\",\n    \"Q2\": \"362.5\"\n  }\n]"
+            },
+            "rows": {
+              "csv": "Store,Manager,Q1,Q2\nWest,,,\nPortland,A. Rivera,412.8,430.1\nSeattle,J. Chen,455.0,470.3\nCentral,,,\nDenver,M. Okafor,388.1,391.7\nOmaha,L. Novak,301.4,310.0\nEast,,,\nBoston,S. Patel,520.6,533.2\nRaleigh,D. Kim,344.9,362.5",
+              "tsv": "Store\tManager\tQ1\tQ2\nWest\t\t\t\nPortland\tA. Rivera\t412.8\t430.1\nSeattle\tJ. Chen\t455.0\t470.3\nCentral\t\t\t\nDenver\tM. Okafor\t388.1\t391.7\nOmaha\tL. Novak\t301.4\t310.0\nEast\t\t\t\nBoston\tS. Patel\t520.6\t533.2\nRaleigh\tD. Kim\t344.9\t362.5",
+              "md": "| Store | Manager | Q1 | Q2 |\n| --- | --- | ---: | ---: |\n| **West** | | | |\n| Portland | A. Rivera | 412.8 | 430.1 |\n| Seattle | J. Chen | 455.0 | 470.3 |\n| **Central** | | | |\n| Denver | M. Okafor | 388.1 | 391.7 |\n| Omaha | L. Novak | 301.4 | 310.0 |\n| **East** | | | |\n| Boston | S. Patel | 520.6 | 533.2 |\n| Raleigh | D. Kim | 344.9 | 362.5 |",
+              "json": "[\n  {\n    \"section\": \"West\",\n    \"rows\": [\n      {\n        \"Store\": \"Portland\",\n        \"Manager\": \"A. Rivera\",\n        \"Q1\": \"412.8\",\n        \"Q2\": \"430.1\"\n      },\n      {\n        \"Store\": \"Seattle\",\n        \"Manager\": \"J. Chen\",\n        \"Q1\": \"455.0\",\n        \"Q2\": \"470.3\"\n      }\n    ]\n  },\n  {\n    \"section\": \"Central\",\n    \"rows\": [\n      {\n        \"Store\": \"Denver\",\n        \"Manager\": \"M. Okafor\",\n        \"Q1\": \"388.1\",\n        \"Q2\": \"391.7\"\n      },\n      {\n        \"Store\": \"Omaha\",\n        \"Manager\": \"L. Novak\",\n        \"Q1\": \"301.4\",\n        \"Q2\": \"310.0\"\n      }\n    ]\n  },\n  {\n    \"section\": \"East\",\n    \"rows\": [\n      {\n        \"Store\": \"Boston\",\n        \"Manager\": \"S. Patel\",\n        \"Q1\": \"520.6\",\n        \"Q2\": \"533.2\"\n      },\n      {\n        \"Store\": \"Raleigh\",\n        \"Manager\": \"D. Kim\",\n        \"Q1\": \"344.9\",\n        \"Q2\": \"362.5\"\n      }\n    ]\n  }\n]"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "columnSpacing": 1,
+      "joining": false,
+      "tables": [
+        {
+          "n": 1,
+          "pages": [1],
+          "parts": [{"page":1,"bbox":[68,580.85,484,719.45]}],
+          "header": true,
+          "firstBold": true,
+          "grid": [
+            ["Store","Manager","Q1","Q2"],
+            ["West","","",""],
+            ["Portland","A. Rivera","412.8","430.1"],
+            ["Seattle","J. Chen","455.0","470.3"],
+            ["Central","","",""],
+            ["Denver","M. Okafor","388.1","391.7"],
+            ["Omaha","L. Novak","301.4","310.0"],
+            ["East","","",""],
+            ["Boston","S. Patel","520.6","533.2"],
+            ["Raleigh","D. Kim","344.9","362.5"]
+          ],
+          "sections": [1,4,7],
+          "cols": [[72,105.426],[220,258.7],[377.482,400],[457.482,480]],
+          "repeats": 0,
+          "exports": {
+            "column": {
+              "csv": "Section,Store,Manager,Q1,Q2\nWest,Portland,A. Rivera,412.8,430.1\nWest,Seattle,J. Chen,455.0,470.3\nCentral,Denver,M. Okafor,388.1,391.7\nCentral,Omaha,L. Novak,301.4,310.0\nEast,Boston,S. Patel,520.6,533.2\nEast,Raleigh,D. Kim,344.9,362.5",
+              "tsv": "Section\tStore\tManager\tQ1\tQ2\nWest\tPortland\tA. Rivera\t412.8\t430.1\nWest\tSeattle\tJ. Chen\t455.0\t470.3\nCentral\tDenver\tM. Okafor\t388.1\t391.7\nCentral\tOmaha\tL. Novak\t301.4\t310.0\nEast\tBoston\tS. Patel\t520.6\t533.2\nEast\tRaleigh\tD. Kim\t344.9\t362.5",
+              "md": "| Section | Store | Manager | Q1 | Q2 |\n| --- | --- | --- | ---: | ---: |\n| West | Portland | A. Rivera | 412.8 | 430.1 |\n| West | Seattle | J. Chen | 455.0 | 470.3 |\n| Central | Denver | M. Okafor | 388.1 | 391.7 |\n| Central | Omaha | L. Novak | 301.4 | 310.0 |\n| East | Boston | S. Patel | 520.6 | 533.2 |\n| East | Raleigh | D. Kim | 344.9 | 362.5 |",
+              "json": "[\n  {\n    \"Section\": \"West\",\n    \"Store\": \"Portland\",\n    \"Manager\": \"A. Rivera\",\n    \"Q1\": \"412.8\",\n    \"Q2\": \"430.1\"\n  },\n  {\n    \"Section\": \"West\",\n    \"Store\": \"Seattle\",\n    \"Manager\": \"J. Chen\",\n    \"Q1\": \"455.0\",\n    \"Q2\": \"470.3\"\n  },\n  {\n    \"Section\": \"Central\",\n    \"Store\": \"Denver\",\n    \"Manager\": \"M. Okafor\",\n    \"Q1\": \"388.1\",\n    \"Q2\": \"391.7\"\n  },\n  {\n    \"Section\": \"Central\",\n    \"Store\": \"Omaha\",\n    \"Manager\": \"L. Novak\",\n    \"Q1\": \"301.4\",\n    \"Q2\": \"310.0\"\n  },\n  {\n    \"Section\": \"East\",\n    \"Store\": \"Boston\",\n    \"Manager\": \"S. Patel\",\n    \"Q1\": \"520.6\",\n    \"Q2\": \"533.2\"\n  },\n  {\n    \"Section\": \"East\",\n    \"Store\": \"Raleigh\",\n    \"Manager\": \"D. Kim\",\n    \"Q1\": \"344.9\",\n    \"Q2\": \"362.5\"\n  }\n]"
+            },
+            "rows": {
+              "csv": "Store,Manager,Q1,Q2\nWest,,,\nPortland,A. Rivera,412.8,430.1\nSeattle,J. Chen,455.0,470.3\nCentral,,,\nDenver,M. Okafor,388.1,391.7\nOmaha,L. Novak,301.4,310.0\nEast,,,\nBoston,S. Patel,520.6,533.2\nRaleigh,D. Kim,344.9,362.5",
+              "tsv": "Store\tManager\tQ1\tQ2\nWest\t\t\t\nPortland\tA. Rivera\t412.8\t430.1\nSeattle\tJ. Chen\t455.0\t470.3\nCentral\t\t\t\nDenver\tM. Okafor\t388.1\t391.7\nOmaha\tL. Novak\t301.4\t310.0\nEast\t\t\t\nBoston\tS. Patel\t520.6\t533.2\nRaleigh\tD. Kim\t344.9\t362.5",
+              "md": "| Store | Manager | Q1 | Q2 |\n| --- | --- | ---: | ---: |\n| **West** | | | |\n| Portland | A. Rivera | 412.8 | 430.1 |\n| Seattle | J. Chen | 455.0 | 470.3 |\n| **Central** | | | |\n| Denver | M. Okafor | 388.1 | 391.7 |\n| Omaha | L. Novak | 301.4 | 310.0 |\n| **East** | | | |\n| Boston | S. Patel | 520.6 | 533.2 |\n| Raleigh | D. Kim | 344.9 | 362.5 |",
+              "json": "[\n  {\n    \"section\": \"West\",\n    \"rows\": [\n      {\n        \"Store\": \"Portland\",\n        \"Manager\": \"A. Rivera\",\n        \"Q1\": \"412.8\",\n        \"Q2\": \"430.1\"\n      },\n      {\n        \"Store\": \"Seattle\",\n        \"Manager\": \"J. Chen\",\n        \"Q1\": \"455.0\",\n        \"Q2\": \"470.3\"\n      }\n    ]\n  },\n  {\n    \"section\": \"Central\",\n    \"rows\": [\n      {\n        \"Store\": \"Denver\",\n        \"Manager\": \"M. Okafor\",\n        \"Q1\": \"388.1\",\n        \"Q2\": \"391.7\"\n      },\n      {\n        \"Store\": \"Omaha\",\n        \"Manager\": \"L. Novak\",\n        \"Q1\": \"301.4\",\n        \"Q2\": \"310.0\"\n      }\n    ]\n  },\n  {\n    \"section\": \"East\",\n    \"rows\": [\n      {\n        \"Store\": \"Boston\",\n        \"Manager\": \"S. Patel\",\n        \"Q1\": \"520.6\",\n        \"Q2\": \"533.2\"\n      },\n      {\n        \"Store\": \"Raleigh\",\n        \"Manager\": \"D. Kim\",\n        \"Q1\": \"344.9\",\n        \"Q2\": \"362.5\"\n      }\n    ]\n  }\n]"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "columnSpacing": 0.5,
+      "joining": true,
+      "tables": [
+        {
+          "n": 1,
+          "pages": [1],
+          "parts": [{"page":1,"bbox":[68,580.85,484,719.45]}],
+          "header": true,
+          "firstBold": true,
+          "grid": [
+            ["Store","Manager","Q1","Q2"],
+            ["West","","",""],
+            ["Portland","A. Rivera","412.8","430.1"],
+            ["Seattle","J. Chen","455.0","470.3"],
+            ["Central","","",""],
+            ["Denver","M. Okafor","388.1","391.7"],
+            ["Omaha","L. Novak","301.4","310.0"],
+            ["East","","",""],
+            ["Boston","S. Patel","520.6","533.2"],
+            ["Raleigh","D. Kim","344.9","362.5"]
+          ],
+          "sections": [1,4,7],
+          "cols": [[72,105.426],[220,258.7],[377.482,400],[457.482,480]],
+          "repeats": 0,
+          "exports": {
+            "column": {
+              "csv": "Section,Store,Manager,Q1,Q2\nWest,Portland,A. Rivera,412.8,430.1\nWest,Seattle,J. Chen,455.0,470.3\nCentral,Denver,M. Okafor,388.1,391.7\nCentral,Omaha,L. Novak,301.4,310.0\nEast,Boston,S. Patel,520.6,533.2\nEast,Raleigh,D. Kim,344.9,362.5",
+              "tsv": "Section\tStore\tManager\tQ1\tQ2\nWest\tPortland\tA. Rivera\t412.8\t430.1\nWest\tSeattle\tJ. Chen\t455.0\t470.3\nCentral\tDenver\tM. Okafor\t388.1\t391.7\nCentral\tOmaha\tL. Novak\t301.4\t310.0\nEast\tBoston\tS. Patel\t520.6\t533.2\nEast\tRaleigh\tD. Kim\t344.9\t362.5",
+              "md": "| Section | Store | Manager | Q1 | Q2 |\n| --- | --- | --- | ---: | ---: |\n| West | Portland | A. Rivera | 412.8 | 430.1 |\n| West | Seattle | J. Chen | 455.0 | 470.3 |\n| Central | Denver | M. Okafor | 388.1 | 391.7 |\n| Central | Omaha | L. Novak | 301.4 | 310.0 |\n| East | Boston | S. Patel | 520.6 | 533.2 |\n| East | Raleigh | D. Kim | 344.9 | 362.5 |",
+              "json": "[\n  {\n    \"Section\": \"West\",\n    \"Store\": \"Portland\",\n    \"Manager\": \"A. Rivera\",\n    \"Q1\": \"412.8\",\n    \"Q2\": \"430.1\"\n  },\n  {\n    \"Section\": \"West\",\n    \"Store\": \"Seattle\",\n    \"Manager\": \"J. Chen\",\n    \"Q1\": \"455.0\",\n    \"Q2\": \"470.3\"\n  },\n  {\n    \"Section\": \"Central\",\n    \"Store\": \"Denver\",\n    \"Manager\": \"M. Okafor\",\n    \"Q1\": \"388.1\",\n    \"Q2\": \"391.7\"\n  },\n  {\n    \"Section\": \"Central\",\n    \"Store\": \"Omaha\",\n    \"Manager\": \"L. Novak\",\n    \"Q1\": \"301.4\",\n    \"Q2\": \"310.0\"\n  },\n  {\n    \"Section\": \"East\",\n    \"Store\": \"Boston\",\n    \"Manager\": \"S. Patel\",\n    \"Q1\": \"520.6\",\n    \"Q2\": \"533.2\"\n  },\n  {\n    \"Section\": \"East\",\n    \"Store\": \"Raleigh\",\n    \"Manager\": \"D. Kim\",\n    \"Q1\": \"344.9\",\n    \"Q2\": \"362.5\"\n  }\n]"
+            },
+            "rows": {
+              "csv": "Store,Manager,Q1,Q2\nWest,,,\nPortland,A. Rivera,412.8,430.1\nSeattle,J. Chen,455.0,470.3\nCentral,,,\nDenver,M. Okafor,388.1,391.7\nOmaha,L. Novak,301.4,310.0\nEast,,,\nBoston,S. Patel,520.6,533.2\nRaleigh,D. Kim,344.9,362.5",
+              "tsv": "Store\tManager\tQ1\tQ2\nWest\t\t\t\nPortland\tA. Rivera\t412.8\t430.1\nSeattle\tJ. Chen\t455.0\t470.3\nCentral\t\t\t\nDenver\tM. Okafor\t388.1\t391.7\nOmaha\tL. Novak\t301.4\t310.0\nEast\t\t\t\nBoston\tS. Patel\t520.6\t533.2\nRaleigh\tD. Kim\t344.9\t362.5",
+              "md": "| Store | Manager | Q1 | Q2 |\n| --- | --- | ---: | ---: |\n| **West** | | | |\n| Portland | A. Rivera | 412.8 | 430.1 |\n| Seattle | J. Chen | 455.0 | 470.3 |\n| **Central** | | | |\n| Denver | M. Okafor | 388.1 | 391.7 |\n| Omaha | L. Novak | 301.4 | 310.0 |\n| **East** | | | |\n| Boston | S. Patel | 520.6 | 533.2 |\n| Raleigh | D. Kim | 344.9 | 362.5 |",
+              "json": "[\n  {\n    \"section\": \"West\",\n    \"rows\": [\n      {\n        \"Store\": \"Portland\",\n        \"Manager\": \"A. Rivera\",\n        \"Q1\": \"412.8\",\n        \"Q2\": \"430.1\"\n      },\n      {\n        \"Store\": \"Seattle\",\n        \"Manager\": \"J. Chen\",\n        \"Q1\": \"455.0\",\n        \"Q2\": \"470.3\"\n      }\n    ]\n  },\n  {\n    \"section\": \"Central\",\n    \"rows\": [\n      {\n        \"Store\": \"Denver\",\n        \"Manager\": \"M. Okafor\",\n        \"Q1\": \"388.1\",\n        \"Q2\": \"391.7\"\n      },\n      {\n        \"Store\": \"Omaha\",\n        \"Manager\": \"L. Novak\",\n        \"Q1\": \"301.4\",\n        \"Q2\": \"310.0\"\n      }\n    ]\n  },\n  {\n    \"section\": \"East\",\n    \"rows\": [\n      {\n        \"Store\": \"Boston\",\n        \"Manager\": \"S. Patel\",\n        \"Q1\": \"520.6\",\n        \"Q2\": \"533.2\"\n      },\n      {\n        \"Store\": \"Raleigh\",\n        \"Manager\": \"D. Kim\",\n        \"Q1\": \"344.9\",\n        \"Q2\": \"362.5\"\n      }\n    ]\n  }\n]"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "columnSpacing": 0.5,
+      "joining": false,
+      "tables": [
+        {
+          "n": 1,
+          "pages": [1],
+          "parts": [{"page":1,"bbox":[68,580.85,484,719.45]}],
+          "header": true,
+          "firstBold": true,
+          "grid": [
+            ["Store","Manager","Q1","Q2"],
+            ["West","","",""],
+            ["Portland","A. Rivera","412.8","430.1"],
+            ["Seattle","J. Chen","455.0","470.3"],
+            ["Central","","",""],
+            ["Denver","M. Okafor","388.1","391.7"],
+            ["Omaha","L. Novak","301.4","310.0"],
+            ["East","","",""],
+            ["Boston","S. Patel","520.6","533.2"],
+            ["Raleigh","D. Kim","344.9","362.5"]
+          ],
+          "sections": [1,4,7],
+          "cols": [[72,105.426],[220,258.7],[377.482,400],[457.482,480]],
+          "repeats": 0,
+          "exports": {
+            "column": {
+              "csv": "Section,Store,Manager,Q1,Q2\nWest,Portland,A. Rivera,412.8,430.1\nWest,Seattle,J. Chen,455.0,470.3\nCentral,Denver,M. Okafor,388.1,391.7\nCentral,Omaha,L. Novak,301.4,310.0\nEast,Boston,S. Patel,520.6,533.2\nEast,Raleigh,D. Kim,344.9,362.5",
+              "tsv": "Section\tStore\tManager\tQ1\tQ2\nWest\tPortland\tA. Rivera\t412.8\t430.1\nWest\tSeattle\tJ. Chen\t455.0\t470.3\nCentral\tDenver\tM. Okafor\t388.1\t391.7\nCentral\tOmaha\tL. Novak\t301.4\t310.0\nEast\tBoston\tS. Patel\t520.6\t533.2\nEast\tRaleigh\tD. Kim\t344.9\t362.5",
+              "md": "| Section | Store | Manager | Q1 | Q2 |\n| --- | --- | --- | ---: | ---: |\n| West | Portland | A. Rivera | 412.8 | 430.1 |\n| West | Seattle | J. Chen | 455.0 | 470.3 |\n| Central | Denver | M. Okafor | 388.1 | 391.7 |\n| Central | Omaha | L. Novak | 301.4 | 310.0 |\n| East | Boston | S. Patel | 520.6 | 533.2 |\n| East | Raleigh | D. Kim | 344.9 | 362.5 |",
+              "json": "[\n  {\n    \"Section\": \"West\",\n    \"Store\": \"Portland\",\n    \"Manager\": \"A. Rivera\",\n    \"Q1\": \"412.8\",\n    \"Q2\": \"430.1\"\n  },\n  {\n    \"Section\": \"West\",\n    \"Store\": \"Seattle\",\n    \"Manager\": \"J. Chen\",\n    \"Q1\": \"455.0\",\n    \"Q2\": \"470.3\"\n  },\n  {\n    \"Section\": \"Central\",\n    \"Store\": \"Denver\",\n    \"Manager\": \"M. Okafor\",\n    \"Q1\": \"388.1\",\n    \"Q2\": \"391.7\"\n  },\n  {\n    \"Section\": \"Central\",\n    \"Store\": \"Omaha\",\n    \"Manager\": \"L. Novak\",\n    \"Q1\": \"301.4\",\n    \"Q2\": \"310.0\"\n  },\n  {\n    \"Section\": \"East\",\n    \"Store\": \"Boston\",\n    \"Manager\": \"S. Patel\",\n    \"Q1\": \"520.6\",\n    \"Q2\": \"533.2\"\n  },\n  {\n    \"Section\": \"East\",\n    \"Store\": \"Raleigh\",\n    \"Manager\": \"D. Kim\",\n    \"Q1\": \"344.9\",\n    \"Q2\": \"362.5\"\n  }\n]"
+            },
+            "rows": {
+              "csv": "Store,Manager,Q1,Q2\nWest,,,\nPortland,A. Rivera,412.8,430.1\nSeattle,J. Chen,455.0,470.3\nCentral,,,\nDenver,M. Okafor,388.1,391.7\nOmaha,L. Novak,301.4,310.0\nEast,,,\nBoston,S. Patel,520.6,533.2\nRaleigh,D. Kim,344.9,362.5",
+              "tsv": "Store\tManager\tQ1\tQ2\nWest\t\t\t\nPortland\tA. Rivera\t412.8\t430.1\nSeattle\tJ. Chen\t455.0\t470.3\nCentral\t\t\t\nDenver\tM. Okafor\t388.1\t391.7\nOmaha\tL. Novak\t301.4\t310.0\nEast\t\t\t\nBoston\tS. Patel\t520.6\t533.2\nRaleigh\tD. Kim\t344.9\t362.5",
+              "md": "| Store | Manager | Q1 | Q2 |\n| --- | --- | ---: | ---: |\n| **West** | | | |\n| Portland | A. Rivera | 412.8 | 430.1 |\n| Seattle | J. Chen | 455.0 | 470.3 |\n| **Central** | | | |\n| Denver | M. Okafor | 388.1 | 391.7 |\n| Omaha | L. Novak | 301.4 | 310.0 |\n| **East** | | | |\n| Boston | S. Patel | 520.6 | 533.2 |\n| Raleigh | D. Kim | 344.9 | 362.5 |",
+              "json": "[\n  {\n    \"section\": \"West\",\n    \"rows\": [\n      {\n        \"Store\": \"Portland\",\n        \"Manager\": \"A. Rivera\",\n        \"Q1\": \"412.8\",\n        \"Q2\": \"430.1\"\n      },\n      {\n        \"Store\": \"Seattle\",\n        \"Manager\": \"J. Chen\",\n        \"Q1\": \"455.0\",\n        \"Q2\": \"470.3\"\n      }\n    ]\n  },\n  {\n    \"section\": \"Central\",\n    \"rows\": [\n      {\n        \"Store\": \"Denver\",\n        \"Manager\": \"M. Okafor\",\n        \"Q1\": \"388.1\",\n        \"Q2\": \"391.7\"\n      },\n      {\n        \"Store\": \"Omaha\",\n        \"Manager\": \"L. Novak\",\n        \"Q1\": \"301.4\",\n        \"Q2\": \"310.0\"\n      }\n    ]\n  },\n  {\n    \"section\": \"East\",\n    \"rows\": [\n      {\n        \"Store\": \"Boston\",\n        \"Manager\": \"S. Patel\",\n        \"Q1\": \"520.6\",\n        \"Q2\": \"533.2\"\n      },\n      {\n        \"Store\": \"Raleigh\",\n        \"Manager\": \"D. Kim\",\n        \"Q1\": \"344.9\",\n        \"Q2\": \"362.5\"\n      }\n    ]\n  }\n]"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "columnSpacing": 2,
+      "joining": true,
+      "tables": [
+        {
+          "n": 1,
+          "pages": [1],
+          "parts": [{"page":1,"bbox":[68,580.85,484,719.45]}],
+          "header": true,
+          "firstBold": true,
+          "grid": [
+            ["Store","Manager","Q1","Q2"],
+            ["West","","",""],
+            ["Portland","A. Rivera","412.8","430.1"],
+            ["Seattle","J. Chen","455.0","470.3"],
+            ["Central","","",""],
+            ["Denver","M. Okafor","388.1","391.7"],
+            ["Omaha","L. Novak","301.4","310.0"],
+            ["East","","",""],
+            ["Boston","S. Patel","520.6","533.2"],
+            ["Raleigh","D. Kim","344.9","362.5"]
+          ],
+          "sections": [1,4,7],
+          "cols": [[72,105.426],[220,258.7],[377.482,400],[457.482,480]],
+          "repeats": 0,
+          "exports": {
+            "column": {
+              "csv": "Section,Store,Manager,Q1,Q2\nWest,Portland,A. Rivera,412.8,430.1\nWest,Seattle,J. Chen,455.0,470.3\nCentral,Denver,M. Okafor,388.1,391.7\nCentral,Omaha,L. Novak,301.4,310.0\nEast,Boston,S. Patel,520.6,533.2\nEast,Raleigh,D. Kim,344.9,362.5",
+              "tsv": "Section\tStore\tManager\tQ1\tQ2\nWest\tPortland\tA. Rivera\t412.8\t430.1\nWest\tSeattle\tJ. Chen\t455.0\t470.3\nCentral\tDenver\tM. Okafor\t388.1\t391.7\nCentral\tOmaha\tL. Novak\t301.4\t310.0\nEast\tBoston\tS. Patel\t520.6\t533.2\nEast\tRaleigh\tD. Kim\t344.9\t362.5",
+              "md": "| Section | Store | Manager | Q1 | Q2 |\n| --- | --- | --- | ---: | ---: |\n| West | Portland | A. Rivera | 412.8 | 430.1 |\n| West | Seattle | J. Chen | 455.0 | 470.3 |\n| Central | Denver | M. Okafor | 388.1 | 391.7 |\n| Central | Omaha | L. Novak | 301.4 | 310.0 |\n| East | Boston | S. Patel | 520.6 | 533.2 |\n| East | Raleigh | D. Kim | 344.9 | 362.5 |",
+              "json": "[\n  {\n    \"Section\": \"West\",\n    \"Store\": \"Portland\",\n    \"Manager\": \"A. Rivera\",\n    \"Q1\": \"412.8\",\n    \"Q2\": \"430.1\"\n  },\n  {\n    \"Section\": \"West\",\n    \"Store\": \"Seattle\",\n    \"Manager\": \"J. Chen\",\n    \"Q1\": \"455.0\",\n    \"Q2\": \"470.3\"\n  },\n  {\n    \"Section\": \"Central\",\n    \"Store\": \"Denver\",\n    \"Manager\": \"M. Okafor\",\n    \"Q1\": \"388.1\",\n    \"Q2\": \"391.7\"\n  },\n  {\n    \"Section\": \"Central\",\n    \"Store\": \"Omaha\",\n    \"Manager\": \"L. Novak\",\n    \"Q1\": \"301.4\",\n    \"Q2\": \"310.0\"\n  },\n  {\n    \"Section\": \"East\",\n    \"Store\": \"Boston\",\n    \"Manager\": \"S. Patel\",\n    \"Q1\": \"520.6\",\n    \"Q2\": \"533.2\"\n  },\n  {\n    \"Section\": \"East\",\n    \"Store\": \"Raleigh\",\n    \"Manager\": \"D. Kim\",\n    \"Q1\": \"344.9\",\n    \"Q2\": \"362.5\"\n  }\n]"
+            },
+            "rows": {
+              "csv": "Store,Manager,Q1,Q2\nWest,,,\nPortland,A. Rivera,412.8,430.1\nSeattle,J. Chen,455.0,470.3\nCentral,,,\nDenver,M. Okafor,388.1,391.7\nOmaha,L. Novak,301.4,310.0\nEast,,,\nBoston,S. Patel,520.6,533.2\nRaleigh,D. Kim,344.9,362.5",
+              "tsv": "Store\tManager\tQ1\tQ2\nWest\t\t\t\nPortland\tA. Rivera\t412.8\t430.1\nSeattle\tJ. Chen\t455.0\t470.3\nCentral\t\t\t\nDenver\tM. Okafor\t388.1\t391.7\nOmaha\tL. Novak\t301.4\t310.0\nEast\t\t\t\nBoston\tS. Patel\t520.6\t533.2\nRaleigh\tD. Kim\t344.9\t362.5",
+              "md": "| Store | Manager | Q1 | Q2 |\n| --- | --- | ---: | ---: |\n| **West** | | | |\n| Portland | A. Rivera | 412.8 | 430.1 |\n| Seattle | J. Chen | 455.0 | 470.3 |\n| **Central** | | | |\n| Denver | M. Okafor | 388.1 | 391.7 |\n| Omaha | L. Novak | 301.4 | 310.0 |\n| **East** | | | |\n| Boston | S. Patel | 520.6 | 533.2 |\n| Raleigh | D. Kim | 344.9 | 362.5 |",
+              "json": "[\n  {\n    \"section\": \"West\",\n    \"rows\": [\n      {\n        \"Store\": \"Portland\",\n        \"Manager\": \"A. Rivera\",\n        \"Q1\": \"412.8\",\n        \"Q2\": \"430.1\"\n      },\n      {\n        \"Store\": \"Seattle\",\n        \"Manager\": \"J. Chen\",\n        \"Q1\": \"455.0\",\n        \"Q2\": \"470.3\"\n      }\n    ]\n  },\n  {\n    \"section\": \"Central\",\n    \"rows\": [\n      {\n        \"Store\": \"Denver\",\n        \"Manager\": \"M. Okafor\",\n        \"Q1\": \"388.1\",\n        \"Q2\": \"391.7\"\n      },\n      {\n        \"Store\": \"Omaha\",\n        \"Manager\": \"L. Novak\",\n        \"Q1\": \"301.4\",\n        \"Q2\": \"310.0\"\n      }\n    ]\n  },\n  {\n    \"section\": \"East\",\n    \"rows\": [\n      {\n        \"Store\": \"Boston\",\n        \"Manager\": \"S. Patel\",\n        \"Q1\": \"520.6\",\n        \"Q2\": \"533.2\"\n      },\n      {\n        \"Store\": \"Raleigh\",\n        \"Manager\": \"D. Kim\",\n        \"Q1\": \"344.9\",\n        \"Q2\": \"362.5\"\n      }\n    ]\n  }\n]"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "columnSpacing": 2,
+      "joining": false,
+      "tables": [
+        {
+          "n": 1,
+          "pages": [1],
+          "parts": [{"page":1,"bbox":[68,580.85,484,719.45]}],
+          "header": true,
+          "firstBold": true,
+          "grid": [
+            ["Store","Manager","Q1","Q2"],
+            ["West","","",""],
+            ["Portland","A. Rivera","412.8","430.1"],
+            ["Seattle","J. Chen","455.0","470.3"],
+            ["Central","","",""],
+            ["Denver","M. Okafor","388.1","391.7"],
+            ["Omaha","L. Novak","301.4","310.0"],
+            ["East","","",""],
+            ["Boston","S. Patel","520.6","533.2"],
+            ["Raleigh","D. Kim","344.9","362.5"]
+          ],
+          "sections": [1,4,7],
+          "cols": [[72,105.426],[220,258.7],[377.482,400],[457.482,480]],
+          "repeats": 0,
+          "exports": {
+            "column": {
+              "csv": "Section,Store,Manager,Q1,Q2\nWest,Portland,A. Rivera,412.8,430.1\nWest,Seattle,J. Chen,455.0,470.3\nCentral,Denver,M. Okafor,388.1,391.7\nCentral,Omaha,L. Novak,301.4,310.0\nEast,Boston,S. Patel,520.6,533.2\nEast,Raleigh,D. Kim,344.9,362.5",
+              "tsv": "Section\tStore\tManager\tQ1\tQ2\nWest\tPortland\tA. Rivera\t412.8\t430.1\nWest\tSeattle\tJ. Chen\t455.0\t470.3\nCentral\tDenver\tM. Okafor\t388.1\t391.7\nCentral\tOmaha\tL. Novak\t301.4\t310.0\nEast\tBoston\tS. Patel\t520.6\t533.2\nEast\tRaleigh\tD. Kim\t344.9\t362.5",
+              "md": "| Section | Store | Manager | Q1 | Q2 |\n| --- | --- | --- | ---: | ---: |\n| West | Portland | A. Rivera | 412.8 | 430.1 |\n| West | Seattle | J. Chen | 455.0 | 470.3 |\n| Central | Denver | M. Okafor | 388.1 | 391.7 |\n| Central | Omaha | L. Novak | 301.4 | 310.0 |\n| East | Boston | S. Patel | 520.6 | 533.2 |\n| East | Raleigh | D. Kim | 344.9 | 362.5 |",
+              "json": "[\n  {\n    \"Section\": \"West\",\n    \"Store\": \"Portland\",\n    \"Manager\": \"A. Rivera\",\n    \"Q1\": \"412.8\",\n    \"Q2\": \"430.1\"\n  },\n  {\n    \"Section\": \"West\",\n    \"Store\": \"Seattle\",\n    \"Manager\": \"J. Chen\",\n    \"Q1\": \"455.0\",\n    \"Q2\": \"470.3\"\n  },\n  {\n    \"Section\": \"Central\",\n    \"Store\": \"Denver\",\n    \"Manager\": \"M. Okafor\",\n    \"Q1\": \"388.1\",\n    \"Q2\": \"391.7\"\n  },\n  {\n    \"Section\": \"Central\",\n    \"Store\": \"Omaha\",\n    \"Manager\": \"L. Novak\",\n    \"Q1\": \"301.4\",\n    \"Q2\": \"310.0\"\n  },\n  {\n    \"Section\": \"East\",\n    \"Store\": \"Boston\",\n    \"Manager\": \"S. Patel\",\n    \"Q1\": \"520.6\",\n    \"Q2\": \"533.2\"\n  },\n  {\n    \"Section\": \"East\",\n    \"Store\": \"Raleigh\",\n    \"Manager\": \"D. Kim\",\n    \"Q1\": \"344.9\",\n    \"Q2\": \"362.5\"\n  }\n]"
+            },
+            "rows": {
+              "csv": "Store,Manager,Q1,Q2\nWest,,,\nPortland,A. Rivera,412.8,430.1\nSeattle,J. Chen,455.0,470.3\nCentral,,,\nDenver,M. Okafor,388.1,391.7\nOmaha,L. Novak,301.4,310.0\nEast,,,\nBoston,S. Patel,520.6,533.2\nRaleigh,D. Kim,344.9,362.5",
+              "tsv": "Store\tManager\tQ1\tQ2\nWest\t\t\t\nPortland\tA. Rivera\t412.8\t430.1\nSeattle\tJ. Chen\t455.0\t470.3\nCentral\t\t\t\nDenver\tM. Okafor\t388.1\t391.7\nOmaha\tL. Novak\t301.4\t310.0\nEast\t\t\t\nBoston\tS. Patel\t520.6\t533.2\nRaleigh\tD. Kim\t344.9\t362.5",
+              "md": "| Store | Manager | Q1 | Q2 |\n| --- | --- | ---: | ---: |\n| **West** | | | |\n| Portland | A. Rivera | 412.8 | 430.1 |\n| Seattle | J. Chen | 455.0 | 470.3 |\n| **Central** | | | |\n| Denver | M. Okafor | 388.1 | 391.7 |\n| Omaha | L. Novak | 301.4 | 310.0 |\n| **East** | | | |\n| Boston | S. Patel | 520.6 | 533.2 |\n| Raleigh | D. Kim | 344.9 | 362.5 |",
+              "json": "[\n  {\n    \"section\": \"West\",\n    \"rows\": [\n      {\n        \"Store\": \"Portland\",\n        \"Manager\": \"A. Rivera\",\n        \"Q1\": \"412.8\",\n        \"Q2\": \"430.1\"\n      },\n      {\n        \"Store\": \"Seattle\",\n        \"Manager\": \"J. Chen\",\n        \"Q1\": \"455.0\",\n        \"Q2\": \"470.3\"\n      }\n    ]\n  },\n  {\n    \"section\": \"Central\",\n    \"rows\": [\n      {\n        \"Store\": \"Denver\",\n        \"Manager\": \"M. Okafor\",\n        \"Q1\": \"388.1\",\n        \"Q2\": \"391.7\"\n      },\n      {\n        \"Store\": \"Omaha\",\n        \"Manager\": \"L. Novak\",\n        \"Q1\": \"301.4\",\n        \"Q2\": \"310.0\"\n      }\n    ]\n  },\n  {\n    \"section\": \"East\",\n    \"rows\": [\n      {\n        \"Store\": \"Boston\",\n        \"Manager\": \"S. Patel\",\n        \"Q1\": \"520.6\",\n        \"Q2\": \"533.2\"\n      },\n      {\n        \"Store\": \"Raleigh\",\n        \"Manager\": \"D. Kim\",\n        \"Q1\": \"344.9\",\n        \"Q2\": \"362.5\"\n      }\n    ]\n  }\n]"
+            }
+          }
+        }
+      ]
+    }
+  ]
+}
