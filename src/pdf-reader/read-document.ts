@@ -83,14 +83,14 @@ async function readPage(page: PDFPageProxy, num: number): Promise<PageText> {
     const [, b, c, d, x, y] = item.transform as number[];
     if (Math.abs(b!) > 0.01 || Math.abs(c!) > 0.01) continue; // rotated text
     const h = Math.abs(d!) || item.height || 10;
-    items.push({
-      str: item.str,
-      x: x!,
-      y: y!,
-      w: item.width,
-      h,
-      bold: await isBold(item.fontName),
-    });
+    const bold = await isBold(item.fontName);
+    if (/\S\s{3,}\S/.test(item.str)) {
+      // US-14: some PDFs set a whole row as one string with runs of spaces between columns.
+      const cw = item.width / item.str.length;
+      for (const m of item.str.matchAll(/\S+(?:\s{1,2}\S+)*/g)) {
+        items.push({ str: m[0], x: x! + m.index * cw, y: y!, w: m[0].length * cw, h, bold });
+      }
+    } else items.push({ str: item.str, x: x!, y: y!, w: item.width, h, bold });
   }
   return { num, w: viewport.width, h: viewport.height, items };
 }
