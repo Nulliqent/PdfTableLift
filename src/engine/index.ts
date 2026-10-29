@@ -6,6 +6,9 @@
 export type { PageText, TextItem } from "../shared/page-text";
 export {
   DEFAULT_SETTINGS,
+  MAX_COLUMN_SPACING,
+  MIN_COLUMN_SPACING,
+  parseColumnSpacing,
   initialWorkspace,
   reduce,
   selectedDocument,

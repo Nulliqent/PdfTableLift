@@ -29,6 +29,16 @@ function detect(pages: PageText[]): Table[] {
   return state.documents[0]!.tables;
 }
 
+/** Opens the pages at the default Column Spacing, then moves the slider to `columnSpacing`. */
+function redetect(pages: PageText[], columnSpacing: number): Table[] {
+  const opened = [
+    { type: "documentAdded", id: "golden", name: "golden.pdf", size: 0 } as const,
+    { type: "documentRead", id: "golden", pages } as const,
+  ].reduce(reduce, initialWorkspace);
+  const moved = reduce(opened, { type: "columnSpacingChanged", value: columnSpacing });
+  return moved.documents[0]!.tables;
+}
+
 /** What this ticket covers of a Table: detection, the grid, its pages and size. */
 const detectionOf = (t: Table | GoldenTable) => ({
   n: t.n,
@@ -95,6 +105,15 @@ function defineComparisons(golden: Golden) {
     );
   it.todo("#10 export formats: TSV, Markdown and JSON");
   it.todo("#12 joining: the runs with joining on");
-  if (golden.runs.some((r) => r.columnSpacing !== 1))
-    it.todo("#7 Column Spacing: the runs at 0.5 and 2.0 with joining off");
+  for (const other of golden.runs.filter((r) => r.columnSpacing !== 1 && !r.joining)) {
+    it(`re-detects the same Tables at Column Spacing ${other.columnSpacing}, joining off`, () => {
+      const found = redetect(pages, other.columnSpacing);
+      expect(found.map(detectionOf)).toEqual(other.tables.map(detectionOf));
+      expect(found.map(tableSize)).toEqual(other.tables.map(goldenSize));
+      const plain = other.tables.filter((t) => !t.sections.length);
+      const csv = (t: Table) => exportTable(t, "csv");
+      const actual = found.filter((_, i) => !other.tables[i]?.sections.length).map(csv);
+      expect(plain[0]?.exports ? actual : actual.map(sha256)).toEqual(plain.map(goldenCsv));
+    });
+  }
 }
