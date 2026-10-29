@@ -15,6 +15,10 @@ describe("exportTable", () => {
     expect(exportTable(table([["a\tb", "c\nd"]]), "tsv")).toBe("a b\tc d");
   });
 
+  it("CSV quotes a cell containing a carriage return", () => {
+    expect(exportTable(table([["a\rb", "c"]]), "csv")).toBe('"a\rb",c');
+  });
+
   it("Markdown right-aligns numeric columns and escapes pipes", () => {
     expect(exportTable(table(grid), "md")).toBe(
       "| Item | Qty | Price |\n| --- | ---: | ---: |\n| Tea \\| green | 2 | $1,200.50 |\n| Cup | 10 | (3.00) |",

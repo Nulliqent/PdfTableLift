@@ -74,7 +74,7 @@ function uniqueKeys(headers: string[]): string[] {
 
 const isNum = (v: string) => /^[\s$€£¥(+\-−]*\d[\d,.\s]*%?\)?\s*$/.test(v);
 
-const csvCell = (v: string) => (/[",\n]/.test(v) ? `"${v.replace(/"/g, '""')}"` : v);
+const csvCell = (v: string) => (/[",\r\n]/.test(v) ? `"${v.replace(/"/g, '""')}"` : v);
 const mdCell = (v: string) => v.replace(/\|/g, "\\|");
 
 const WRITERS: Record<ExportFormat, (out: Output) => string> = {
