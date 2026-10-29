@@ -46,3 +46,22 @@
   content: "—";
   color: var(--label3);
 }
+
+.cell {
+  cursor: text;
+  outline: none;
+}
+
+.cell:focus {
+  background: var(--accent-tint) !important;
+  box-shadow: inset 0 0 0 2px var(--accent);
+}
+
+.cell:focus.empty::after {
+  content: "";
+}
+
+.table td.num,
+.table th.num {
+  text-align: right;
+}

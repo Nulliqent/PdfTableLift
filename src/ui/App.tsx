@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useReducer, useRef } from "react";
 import { initialWorkspace, reduce, selectedDocument, selectedTable } from "../engine";
 import { ContentPane } from "./components/ContentPane";
+import { ConfirmSheet } from "./components/ConfirmSheet";
 import { Hud } from "./components/Hud";
 import { IconSprite } from "./components/Icon";
 import { Sidebar } from "./components/Sidebar";
@@ -70,9 +71,24 @@ export function App() {
             onSelectTable={(documentId, tableId) =>
               dispatch({ type: "tableSelected", documentId, tableId })
             }
+            onEditCell={(documentId, tableId, row, col, value) =>
+              dispatch({ type: "cellEdited", documentId, tableId, row, col, value })
+            }
+            onToggleHeader={(documentId, tableId, header) =>
+              dispatch({ type: "headerToggled", documentId, tableId, header })
+            }
           />
         </div>
       </div>
+      {state.pendingChange && (
+        <ConfirmSheet
+          title="Discard your corrections?"
+          message="Changing the column spacing detects the tables again, which discards the cells you corrected and any header change."
+          confirmLabel="Discard and Re-detect"
+          onConfirm={() => dispatch({ type: "changeConfirmed" })}
+          onCancel={() => dispatch({ type: "changeCancelled" })}
+        />
+      )}
       <Hud message={hud} />
     </>
   );
