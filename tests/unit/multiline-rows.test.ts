@@ -250,7 +250,7 @@ describe("#24 Rows can span several lines", () => {
 // --- #25 Two Cells wrapping at once, and Section Headers ---------------------------------------
 
 describe("#25 Two Cells wrapping at once, and Section Headers stay correct", () => {
-  it.skip("#25: in the wrapped-cells fixture, F-103 is one Row", () => {
+  it("#25: in the wrapped-cells fixture, F-103 is one Row", () => {
     const tables = tablesOf(opened(wrappedCells));
 
     expect(tables).toHaveLength(1);
@@ -273,7 +273,7 @@ describe("#25 Two Cells wrapping at once, and Section Headers stay correct", () 
     ]);
   });
 
-  it.skip("#25: two right-aligned Cells wrapping at once stay one Row", () => {
+  it("#25: two right-aligned Cells wrapping at once stay one Row", () => {
     const left = (y: number, a: string, b: string) => [at(a, 72, y), at(b, 150, y)];
     const right = (y: number, c: string, d: string) => [
       at(c, 420, y, false, "right"),
@@ -298,7 +298,7 @@ describe("#25 Two Cells wrapping at once, and Section Headers stay correct", () 
     ]);
   });
 
-  it.skip("#25: a Wrapped Cell's lone second line is never a Section Header, a real one still is", () => {
+  it("#25: a Wrapped Cell's lone second line is never a Section Header, a real one still is", () => {
     const xs = [72, 200, 320, 440];
     const line = (y: number, cells: string[], bold = false) =>
       cells.map((c, i) => at(c, xs[i]!, y, bold));
@@ -324,7 +324,24 @@ describe("#25 Two Cells wrapping at once, and Section Headers stay correct", () 
     expect(table.sections).toEqual([2]);
   });
 
-  it.skip("#25: the statement's lone Description lines are never Section Headers", () => {
+  // The ambiguity policy: two tight lines with nothing around them give no evidence that they are
+  // one Row, even when the lower one could continue every Cell of the upper one.
+  it("#25: a Region around just two lines of a dense table keeps them apart", () => {
+    const xs = [72, 150, 320, 440];
+    const line = (y: number, cells: string[]) =>
+      cells.flatMap((c, i) => (c ? [at(c, xs[i]!, y)] : []));
+    const dense = page([
+      ...line(667, ["A3", "Washers", "5", "0.40"]),
+      ...line(656, ["", "Screws", "8", "0.95"]),
+    ]);
+
+    expect(selectedTable(committed([dense], [60, 650, 560, 675]))!.grid).toEqual([
+      ["A3", "Washers", "5", "0.40"],
+      ["", "Screws", "8", "0.95"],
+    ]);
+  });
+
+  it("#25: the statement's lone Description lines are never Section Headers", () => {
     expect(tablesOf(opened(statement)).map((t) => t.sections)).toEqual([[]]);
     expect(selectedTable(committed(statement, TABLE_BOX))!.sections).toEqual([]);
   });

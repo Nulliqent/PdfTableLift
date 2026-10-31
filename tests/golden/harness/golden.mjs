@@ -25,6 +25,10 @@ const LARGE = new Set(["perf-200-pages"]);
 // Fixtures whose snapshot comes from the app's engine, not the prototype: the prototype gets them
 // wrong (spec #22), so they are left out of the default run and never overwritten here.
 const NOT_FROM_PROTOTYPE = new Set(["statement"]);
+// Fixtures whose text items come from the prototype but whose Tables (`runs`) come from the app's
+// engine, a deliberate departure (spec #22, #25: F-103 in wrapped-cells). This harness writes their
+// text items and keeps the `runs` already on disk; `npm run golden:engine` writes those.
+const RUNS_FROM_ENGINE = new Set(["wrapped-cells"]);
 const SECTION_MODES = ["column", "rows"];
 const FORMATS = ["csv", "tsv", "md", "json"];
 
@@ -117,6 +121,8 @@ for (const path of inputs) {
     })),
     runs,
   };
+  if (RUNS_FROM_ENGINE.has(name))
+    snapshot.runs = JSON.parse(readFileSync(join(snapDir, `${name}.json`), "utf8")).runs;
   writeFileSync(join(snapDir, `${name}.json`), format(snapshot) + "\n");
   summary.push(
     `${name}: ${f.status}${f.error ? ` (${f.error})` : ""}, ${runs.map((r) => r.tables.length).join("/")} tables`,
