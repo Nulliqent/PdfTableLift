@@ -43,6 +43,12 @@ type Rhythm = { gap: number };
 
 /** How much wider than every gap inside a Row the gaps between Rows must be. */
 const ROW_GAP_RATIO = 1.75;
+/**
+ * For a tight line (under 1.5 line heights below its Row) that continues several Cells at once, or
+ * the first column: how much wider than its gap the gaps above its Row and below it must be. The
+ * wrapped-cells fixture has 14 against 11; a dense table has one even spacing and never merges.
+ */
+const WRAP_GAP_RATIO = 1.2;
 
 const bottomOf = (l: Line) => l.bottom ?? l.y;
 const overlap = (a: Cell, b: Cell) => Math.min(a.x1, b.x1) - Math.max(a.x0, b.x0) > 0;
@@ -100,7 +106,8 @@ export function linesFromItems(items: TextItem[], columnSpacing: number): Line[]
  * that are not regrouped are returned unchanged, so tables without multi-line Rows detect as they
  * always did. Left apart on purpose: a dense table (one even spacing), a Row whose lines wrap in
  * two Cells at once (two anchors), lines in the first column, and Rows at the edge of a chain
- * with no clear gap beyond them.
+ * with no clear gap beyond them. The tight wraps among these (two Cells at once, the first
+ * column) are joined later, in `buildTable`, by the gaps around the Row (WRAP_GAP_RATIO).
  */
 function groupRows(input: Line[]): Line[] {
   const lines = input.slice();
@@ -349,36 +356,53 @@ export function buildTable(rows: Line[], manual = false): FoundTable | null {
   const ends: number[][] = [];
   const bolds: boolean[][] = [];
   const sections = new Set<number>();
+  /** The gap from the line above rows[i] down to it; Infinity at either end of the run. */
+  const gapAbove = (i: number) =>
+    i > 0 && i < rows.length ? bottomOf(rows[i - 1]!) - rows[i]!.y : Infinity;
   let prev: Line | null = null;
-  for (const r of rows) {
-    if (r.cells.length === 1 && prev) {
-      const c = r.cells[0]!;
-      const b = pick(c);
-      const gi = grid.length - 1;
-      const g = grid[gi];
-      const spans = bands.filter(([a, z]) => Math.min(z, c.x1) - Math.max(a, c.x0) > 1).length;
-      const tight = bottomOf(prev) - r.y < r.h * 1.5;
-      const bandW = bands[b]![1] - bands[b]![0];
-      const filledToEdge = g && g[b] && ends[gi]![b]! >= bands[b]![1] - Math.max(6, bandW * 0.18);
-      const boldShift = c.bold && !bolds[gi]![b];
-      // A wrapped cell: tight line spacing, stays inside one column, and continues text in that
-      // column. In the first column it must also follow text that ran to the column's edge,
-      // since section labels live there.
-      if (
-        tight &&
-        spans <= 1 &&
-        g &&
-        g[b] &&
-        (b > 0 || filledToEdge) &&
-        !boldShift &&
-        !sections.has(gi)
-      ) {
-        g[b] += " " + c.text;
-        ends[gi]![b] = Math.max(ends[gi]![b]!, c.x1);
+  /** Index in `rows` of the first line of the last grid Row. */
+  let top = 0;
+  for (let i = 0; i < rows.length; i++) {
+    const r = rows[i]!;
+    const li = grid.length - 1;
+    const lastRow = grid[li];
+    if (prev && lastRow && !sections.has(li)) {
+      const p = bottomOf(prev) - r.y;
+      const tight = p < r.h * 1.5;
+      const parts = r.cells.map((c) => ({ c, b: pick(c) }));
+      // Every Cell stays inside one column, a different one each, and continues text there.
+      const continues = parts.every(
+        ({ c, b }) =>
+          bands.filter(([a, z]) => Math.min(z, c.x1) - Math.max(a, c.x0) > 1).length <= 1 &&
+          lastRow[b] &&
+          !(c.bold && !bolds[li]![b]) &&
+          parts.filter((q) => q.b === b).length === 1,
+      );
+      // The prototype's wrapped cell: one Cell. In the first column it must also follow text that
+      // ran to the column's edge, since section labels live there.
+      const b0 = parts[0]!.b;
+      const bandW = bands[b0]![1] - bands[b0]![0];
+      const filledToEdge = ends[li]![b0]! >= bands[b0]![1] - Math.max(6, bandW * 0.18);
+      const prototypeWrap = parts.length === 1 && (b0 > 0 || filledToEdge);
+      // Spec #22: several Cells wrapping at once, or a first-column wrap, when the line sits
+      // clearly closer to its Row than the Row does to the lines around it. With no line on
+      // either side there is no evidence, so the lines stay apart.
+      const above = gapAbove(top);
+      const below = gapAbove(i + 1);
+      const clearWrap =
+        (above < Infinity || below < Infinity) &&
+        above >= WRAP_GAP_RATIO * p &&
+        below >= WRAP_GAP_RATIO * p;
+      if (tight && continues && (prototypeWrap || clearWrap)) {
+        for (const { c, b } of parts) {
+          lastRow[b] += " " + c.text;
+          ends[li]![b] = Math.max(ends[li]![b]!, c.x1);
+        }
         prev = r;
         continue;
       }
     }
+    top = i;
     if (r.cells.length === 1 && grid.length && bands.length > 1) {
       // A lone label inside the table body is a Section Header.
       const g: string[] = Array(bands.length).fill("");

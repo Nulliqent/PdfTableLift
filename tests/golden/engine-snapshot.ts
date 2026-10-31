@@ -1,7 +1,12 @@
 // Writes golden snapshots from the app's own engine, for fixtures the prototype gets wrong
 // (spec #22: `statement`). Same format and settings matrix as harness/golden.mjs, but the text
 // items come from the app's PDF Reader and the Tables from the workspace reducer and export.
-// These snapshots are NOT from the prototype; see README.md. Run with `npm run golden:engine`.
+// These snapshots are NOT from the prototype; see README.md. Run with `npm run golden:engine`,
+// after `npm run golden`.
+//
+// It also rewrites the `runs` of the snapshots in RUNS_FROM_ENGINE (spec #22, #25:
+// `wrapped-cells`, where F-103 wraps two Cells at once and the prototype makes an extra Row). Their
+// text items, `pdfjs` and every other field stay the prototype's; only the Tables are the app's.
 import { createHash } from "node:crypto";
 import { readFileSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
@@ -20,6 +25,8 @@ const root = join(import.meta.dirname, "..", "..");
 const snapDir = join(import.meta.dirname, "snapshots");
 /** Fixtures snapshotted from the app's engine (harness/golden.mjs leaves these out). */
 const FROM_ENGINE = ["statement"];
+/** Prototype snapshots whose Tables (`runs`) come from the app's engine; harness/golden.mjs keeps them. */
+const RUNS_FROM_ENGINE = ["wrapped-cells"];
 const COLUMN_SPACINGS = [1, 0.5, 2];
 const JOINING = [true, false];
 const SECTION_MODES = ["column", "rows"] as const;
@@ -92,4 +99,21 @@ for (const name of FROM_ENGINE) {
   };
   writeFileSync(join(snapDir, `${name}.json`), format(snapshot) + "\n");
   console.log(`${name}: ${runs.map((r) => r.tables.length).join("/")} tables (app engine)`);
+}
+
+for (const name of RUNS_FROM_ENGINE) {
+  const path = join(snapDir, `${name}.json`);
+  const snapshot = JSON.parse(readFileSync(path, "utf8")) as { pages: PageText[]; runs: unknown };
+  // The prototype's own text items, which golden.test.ts checks the app's PDF Reader reproduces.
+  const runs = COLUMN_SPACINGS.flatMap((columnSpacing) =>
+    JOINING.map((joining) => ({
+      columnSpacing,
+      joining,
+      tables: detect(snapshot.pages, joining, columnSpacing).map(snapTable),
+    })),
+  );
+  writeFileSync(path, format({ ...snapshot, runs }) + "\n");
+  console.log(
+    `${name}: ${runs.map((r) => r.tables.length).join("/")} tables (runs from app engine)`,
+  );
 }
