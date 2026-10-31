@@ -316,6 +316,7 @@ export function buildTable(rows: Line[], manual = false): FoundTable | null {
     if (cur && a < cur[1] - 0.5) cur[1] = Math.max(cur[1], b);
     else bands.push([a, b]);
   }
+  if (manual) addEveryLine(bands, rows, basis);
   if (!bands.length && manual) {
     const all = rows.flatMap((r) => r.cells);
     bands.push([Math.min(...all.map((c) => c.x0)), Math.max(...all.map((c) => c.x1))]);
@@ -423,6 +424,59 @@ export function buildTable(rows: Line[], manual = false): FoundTable | null {
 }
 
 /**
+ * Columns for a Region (spec #22): a Region is the user saying where the table is, so every line
+ * inside it counts, not only the lines holding most of the columns. The Cells of the other lines
+ * are added narrowest first; a Cell that would join two columns (a title or caption spanning
+ * them) is left out, and so are Cells inside a column already found.
+ */
+function addEveryLine(bands: Band[], rows: Line[], basis: Line[]): void {
+  const rest = rows
+    .filter((r) => !basis.includes(r))
+    .flatMap((r) => r.cells)
+    .sort((p, q) => p.x1 - p.x0 - (q.x1 - q.x0) || p.x0 - q.x0);
+  for (const c of rest) {
+    const hit = bands.filter(([a, b]) => Math.min(b, c.x1) - Math.max(a, c.x0) > 0.5);
+    if (hit.length > 1) continue;
+    const band = hit[0];
+    if (band) {
+      band[0] = Math.min(band[0], c.x0);
+      band[1] = Math.max(band[1], c.x1);
+    } else bands.push([c.x0, c.x1]);
+  }
+  bands.sort((p, q) => p[0] - q[0]);
+}
+
+/**
+ * The Rows inside a Region. A Region says where the table is, not where its Rows are, so the
+ * evidence for Rows is the page's rhythm: the lines of the Region's columns, over the whole page
+ * height, are grouped as a Detected Table's would be, and every Row lying wholly inside the Region
+ * is kept. A Region around one Row of a longer table therefore gets that Row whole, while a lone
+ * Row with no rhythm around it keeps its lines apart (the ambiguity policy). The Region's own lines
+ * grouped alone are used instead when they give fewer Rows, so a Region never groups less than it
+ * did before.
+ */
+function regionRows(items: TextItem[], inside: TextItem[], region: Bbox, cs: number): Line[] {
+  const own = groupRows(linesFromItems(inside, cs));
+  const [x0, , x1] = region;
+  const isIn = new Set(inside);
+  const column = items.filter((it) => it.x + it.w / 2 >= x0 && it.x + it.w / 2 <= x1);
+  const rows: Line[] = [];
+  for (const r of groupRows(linesFromItems(column, cs))) {
+    const n = r.items.filter((it) => isIn.has(it)).length;
+    if (n === r.items.length) rows.push(r);
+    else if (n)
+      rows.push(
+        ...linesFromItems(
+          r.items.filter((it) => isIn.has(it)),
+          cs,
+        ),
+      );
+  }
+  rows.sort((p, q) => q.y - p.y);
+  return rows.length < own.length ? rows : own;
+}
+
+/**
  * Builds a Hand-drawn Table from the text items whose centre lies inside a Region (PDF
  * coordinates), allowing a single column. Returns null when the Region holds no text.
  * The Table's bbox is the Region itself.
@@ -439,7 +493,7 @@ export function regionTable(
     return cx >= x0 && cx <= x1 && cy >= y0 && cy <= y1;
   });
   if (!inside.length) return null;
-  const rows = groupRows(linesFromItems(inside, columnSpacing));
+  const rows = regionRows(items, inside, region, columnSpacing);
   const table = rows.length ? buildTable(rows, true) : null;
   return table && { ...table, bbox: region };
 }

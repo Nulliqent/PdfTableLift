@@ -334,7 +334,7 @@ describe("#25 Two Cells wrapping at once, and Section Headers stay correct", () 
 // --- #26 Region columns from every line ----------------------------------------------------------
 
 describe("#26 Region columns from every line", () => {
-  it.skip("#26: a Region around one statement Row gives one Row with four columns", () => {
+  it("#26: a Region around one statement Row gives one Row with four columns", () => {
     ENTRY_BOXES.forEach((bbox, i) => {
       const table = selectedTable(committed(statement, bbox))!;
       expect(table.grid, `entry ${i + 1}`).toEqual([ENTRIES[i]]);
@@ -342,20 +342,59 @@ describe("#26 Region columns from every line", () => {
     });
   });
 
-  it.skip("#26: a Region around several statement Rows gives one Row per entry, with or without the Header Row", () => {
+  it("#26: a Region around several statement Rows gives one Row per entry, with or without the Header Row", () => {
     expect(selectedTable(committed(statement, TABLE_BOX))!.grid).toEqual([HEADER, ...ENTRIES]);
     expect(selectedTable(committed(statement, ROWS_BOX))!.grid).toEqual(ENTRIES);
   });
 
-  it.skip("#26: the live preview matches the saved Table", () => {
+  it("#26: the live preview matches the saved Table", () => {
     expect(regionPreview(draw(opened(statement), ENTRY_BOXES[0]!))!.grid).toEqual([ENTRIES[0]]);
   });
 
-  it.skip("#26: a title spanning columns inside a Region does not merge them", () => {
+  it("#26: a title spanning columns inside a Region does not merge them", () => {
     const table = selectedTable(committed(statement, TITLE_BOX))!;
 
     expect(table.cols).toHaveLength(4);
     expect(table.grid.slice(-ENTRIES.length - 1)).toEqual([HEADER, ...ENTRIES]);
+  });
+
+  // With no other Rows on the page there is no rhythm to show the lines are one Row, so they stay
+  // apart (the ambiguity policy; #27's switch is for this). The columns still come from every line.
+  it("#26: a lone Row with no rhythm on the page keeps its lines apart, each Cell in its own column", () => {
+    const xs = [72, 150, 240, 500];
+    const items = [
+      at("ALPHA STORE", xs[2]!, 682),
+      at("01 MAR", xs[0]!, 669),
+      at("01 MAR", xs[1]!, 669),
+      at("-1.00", xs[3]!, 669),
+    ];
+    const table = selectedTable(committed([page(items)], [60, 660, 560, 695]))!;
+
+    expect(table.cols).toHaveLength(4);
+    expect(table.grid).toEqual([
+      ["", "", "ALPHA STORE", ""],
+      ["01 MAR", "01 MAR", "", "-1.00"],
+    ]);
+  });
+
+  it("#26: a caption spanning columns below the Rows does not merge them", () => {
+    const xs = [72, 150, 240, 500];
+    const line = (y: number, cells: string[], bold = false) =>
+      cells.map((c, i) => at(c, xs[i]!, y, bold));
+    const items = [
+      ...line(700, ["Posted", "Date", "Description", "Amount"], true),
+      ...line(680, ["01 MAR", "01 MAR", "ALPHA STORE", "-1.00"]),
+      ...line(660, ["02 MAR", "02 MAR", "BETA SHOP", "-2.00"]),
+      at("Amounts are provisional until the statement closes each month", xs[2]!, 640),
+    ];
+    const table = selectedTable(committed([page(items)], [60, 630, 560, 712]))!;
+
+    expect(table.cols).toHaveLength(4);
+    expect(table.grid.slice(0, 3)).toEqual([
+      ["Posted", "Date", "Description", "Amount"],
+      ["01 MAR", "01 MAR", "ALPHA STORE", "-1.00"],
+      ["02 MAR", "02 MAR", "BETA SHOP", "-2.00"],
+    ]);
   });
 
   // Passes today, and must keep passing.
