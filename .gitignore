@@ -6,3 +6,6 @@ playwright-report/
 .DS_Store
 .claude/worktrees/
 .claude/settings.local.json
+
+# Personal samples shared for bug reports; never commit
+screenshot/
