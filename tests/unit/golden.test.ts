@@ -1,7 +1,9 @@
 // Golden snapshots: each fixture PDF goes through the PDF Reader (seam B) and then the workspace
 // reducer and export (seam A), and the result is compared with what the prototype produced on
 // pdf.js 3.11 (tests/golden/snapshots). A snapshot is never updated to make a test pass: a
-// difference is a regression, or a pdf.js change to report.
+// difference is a regression, or a pdf.js change to report. Two snapshots are the app engine's on
+// purpose (spec #22): `statement`, and the Tables of `wrapped-cells` (F-103 is one Row since #25);
+// see tests/golden/README.md.
 //
 // Cases a later ticket enables are listed as todos named after that ticket. To enable one,
 // replace the todo with a comparison in the same style.
