@@ -112,7 +112,7 @@ const singleRowOf = (x: unknown) => (x as { singleRow?: boolean } | null | undef
 // --- #24 Rows can span several lines -------------------------------------------------------------
 
 describe("#24 Rows can span several lines", () => {
-  it.skip("#24: each statement entry is one Row of a Detected Table that includes the Header Row", () => {
+  it("#24: each statement entry is one Row of a Detected Table that includes the Header Row", () => {
     const tables = tablesOf(opened(statement));
 
     expect(tables).toHaveLength(1);
@@ -122,19 +122,19 @@ describe("#24 Rows can span several lines", () => {
     expect(tables[0]!.sections).toEqual([]);
   });
 
-  it.skip("#24: dates and amount stay in their columns beside the first, a middle or the last line", () => {
+  it("#24: dates and amount stay in their columns beside the first, a middle or the last line", () => {
     const grid = tablesOf(opened(statement))[0]!.grid.slice(1);
 
     expect(grid.map((r) => [r[0], r[1], r[3]])).toEqual(ENTRIES.map((r) => [r[0], r[1], r[3]]));
   });
 
-  it.skip("#24: a Wrapped Cell joins its lines top to bottom with one space, grey lines included", () => {
+  it("#24: a Wrapped Cell joins its lines top to bottom with one space, grey lines included", () => {
     const grid = tablesOf(opened(statement))[0]!.grid;
 
     expect(grid.map((r) => r[2])).toEqual([HEADER[2], ...ENTRIES.map((r) => r[2])]);
   });
 
-  it.skip("#24: every export shows each Wrapped Cell as one Cell, in both Section Modes", () => {
+  it("#24: every export shows each Wrapped Cell as one Cell, in both Section Modes", () => {
     const table = tablesOf(opened(statement))[0]!;
     const all = [HEADER, ...ENTRIES];
     const expected = {
@@ -185,6 +185,66 @@ describe("#24 Rows can span several lines", () => {
 
     expect(tablesOf(opened([dense])).map((t) => t.grid)).toEqual([expected]);
     expect(selectedTable(committed([dense], [60, 625, 560, 712]))!.grid).toEqual(expected);
+  });
+
+  // A statement layout whose Rows sit only a little further apart (18pt) than the lines inside a
+  // Row (13pt): the rhythm is not clear, so the result is exactly what the engine gave before #24.
+  it("#24: when the rhythm is not clear, the lines stay apart as before", () => {
+    const xs = [72, 150, 240, 500];
+    const line = (y: number, cells: string[], bold = false) =>
+      cells.flatMap((c, i) => (c ? [at(c, xs[i]!, y, bold)] : []));
+    const items = [
+      ...line(700, ["Posted", "Date", "Description", "Amount"], true),
+      at("ALPHA STORE", 240, 682),
+      ...line(669, ["01 MAR", "01 MAR", "", "-1.00"]),
+      at("BETA SHOP", 240, 651),
+      ...line(638, ["02 MAR", "02 MAR", "", "-2.00"]),
+      at("GAMMA CAFE", 240, 620),
+      ...line(607, ["03 MAR", "03 MAR", "", "-3.00"]),
+    ];
+
+    const tables = tablesOf(opened([page(items)]));
+    expect(tables.map((t) => t.grid)).toEqual([
+      [
+        ["Posted", "Date", "Description", "Amount"],
+        ["ALPHA STORE", "", "", ""],
+        ["01 MAR", "01 MAR", "", "-1.00"],
+        ["BETA SHOP", "", "", ""],
+        ["02 MAR", "02 MAR", "", "-2.00"],
+        ["GAMMA CAFE", "", "", ""],
+        ["03 MAR", "03 MAR", "", "-3.00"],
+      ],
+    ]);
+    expect(tables[0]!.sections).toEqual([1, 3, 5]);
+  });
+
+  // A lone line in the first column is never folded into a Row, even close above one: it stays a
+  // Section Header. The Rows around it still group.
+  it("#24: a first-column label close above a Row stays a Section Header", () => {
+    const xs = [72, 150, 240, 500];
+    const line = (y: number, cells: string[], bold = false) =>
+      cells.flatMap((c, i) => (c ? [at(c, xs[i]!, y, bold)] : []));
+    const items = [
+      ...line(700, ["Posted", "Date", "Description", "Amount"], true),
+      at("ALPHA STORE", 240, 670),
+      ...line(657, ["01 MAR", "01 MAR", "", "-1.00"]),
+      at("Card Payment", 240, 644),
+      at("Travel", 72, 614),
+      ...line(602, ["02 MAR", "02 MAR", "BETA AIR", "-2.00"]),
+      ...line(572, ["03 MAR", "03 MAR", "GAMMA CAFE", "-3.00"]),
+    ];
+
+    const tables = tablesOf(opened([page(items)]));
+    expect(tables.map((t) => t.grid)).toEqual([
+      [
+        ["Posted", "Date", "Description", "Amount"],
+        ["01 MAR", "01 MAR", "ALPHA STORE Card Payment", "-1.00"],
+        ["Travel", "", "", ""],
+        ["02 MAR", "02 MAR", "BETA AIR", "-2.00"],
+        ["03 MAR", "03 MAR", "GAMMA CAFE", "-3.00"],
+      ],
+    ]);
+    expect(tables[0]!.sections).toEqual([2]);
   });
 });
 

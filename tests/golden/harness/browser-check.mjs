@@ -89,6 +89,8 @@ for (const file of readdirSync(snapDir)
   .filter((f) => f.endsWith(".json"))
   .sort()) {
   const snap = JSON.parse(readFileSync(join(snapDir, file), "utf8"));
+  // Snapshots written by the app's engine (engine-snapshot.ts) are not the prototype's output.
+  if (snap.engine === "app") continue;
   const page = await browser.newPage();
   await page.goto("file://" + join(here, "prototype.html"));
   // Wait for the prototype to finish loading its own Example Document first.

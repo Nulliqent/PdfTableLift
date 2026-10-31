@@ -1,7 +1,8 @@
 /**
- * Table detection, ported from the prototype (prototype.html, "Table detection") with its
- * behaviour unchanged: text items → lines → cells (split by Column Spacing × line height) →
- * runs of multi-cell lines → Tables with column bands, wrapped cells and Section Headers.
+ * Table detection, ported from the prototype (prototype.html, "Table detection"): text items →
+ * lines → cells (split by Column Spacing × line height) → multi-line Rows (`groupRows`, spec #22,
+ * not in the prototype) → runs of multi-cell lines → Tables with column bands, wrapped cells and
+ * Section Headers. Where no multi-line Row is found, the behaviour is the prototype's, unchanged.
  * Internal to the Engine: covered through the workspace reducer and the golden snapshots.
  */
 import type { TextItem } from "../shared/page-text";
@@ -23,7 +24,28 @@ export type FoundTable = {
 };
 
 type Cell = { x0: number; x1: number; text: string; bold: boolean };
-type Line = { y: number; h: number; items: TextItem[]; cells: Cell[] };
+/**
+ * One line of text, or (after `groupRows`) one Row made of several lines. A Row keeps the first
+ * line's `y` and `h`; `bottom`/`bottomH` are those of its last line.
+ */
+type Line = {
+  y: number;
+  h: number;
+  items: TextItem[];
+  cells: Cell[];
+  bottom?: number;
+  bottomH?: number;
+  /** The Row rhythm this line belongs to: lines of one rhythm share the object. */
+  rhythm?: Rhythm;
+};
+/** The vertical rhythm of a stretch of Rows: `gap` is the smallest gap between two Rows. */
+type Rhythm = { gap: number };
+
+/** How much wider than every gap inside a Row the gaps between Rows must be. */
+const ROW_GAP_RATIO = 1.75;
+
+const bottomOf = (l: Line) => l.bottom ?? l.y;
+const overlap = (a: Cell, b: Cell) => Math.min(a.x1, b.x1) - Math.max(a.x0, b.x0) > 0;
 
 function median(a: number[]): number {
   if (!a.length) return 0;
@@ -66,9 +88,174 @@ export function linesFromItems(items: TextItem[], columnSpacing: number): Line[]
   return lines.filter((r) => r.cells.length);
 }
 
+/**
+ * Groups lines into multi-line Rows by the vertical rhythm of the page (spec #22).
+ *
+ * An anchor is a line with two or more Cells. The one-Cell lines between two anchors are split at
+ * the widest gap: those above it belong to the upper anchor's Row, those below to the lower one's.
+ * Anchors linked this way form a chain, and a chain is regrouped only when its rhythm is clear:
+ * every gap between two Rows (including anchor to anchor) is at least ROW_GAP_RATIO times every
+ * gap inside a Row. Otherwise, and whenever a one-Cell line could be something else (a first-column
+ * label, a bold label, a line spanning columns), the lines stay apart exactly as before. Lines
+ * that are not regrouped are returned unchanged, so tables without multi-line Rows detect as they
+ * always did. Left apart on purpose: a dense table (one even spacing), a Row whose lines wrap in
+ * two Cells at once (two anchors), lines in the first column, and Rows at the edge of a chain
+ * with no clear gap beyond them.
+ */
+function groupRows(input: Line[]): Line[] {
+  const lines = input.slice();
+  const anchors = lines.flatMap((l, i) => (l.cells.length >= 2 ? [i] : []));
+  if (anchors.length < 2) return input;
+  /** The gap from line i down to line i + 1. */
+  const pitch = (i: number) => lines[i]!.y - lines[i + 1]!.y;
+
+  /** Can these one-Cell lines be the Wrapped Cell (part of) the anchor's Row? */
+  const fits = (singles: number[], anchor: number) => {
+    if (!singles.length) return true;
+    const a = lines[anchor]!;
+    const cs = singles.map((i) => lines[i]!.cells[0]!);
+    const first = a.cells[0]!;
+    const hit = (c: Cell) => a.cells.filter((ac) => overlap(ac, c));
+    const own = hit(cs[0]!)[0];
+    return cs.every(
+      (c) =>
+        // Not in (or left of) the first column, where Section Headers and labels live.
+        c.x0 >= first.x1 &&
+        // Inside one column, the same one as the other lines of the Wrapped Cell.
+        hit(c).length <= 1 &&
+        hit(c)[0] === own &&
+        overlap(c, cs[0]!) &&
+        // A bold line under plain text is a label, not a continuation.
+        !(c.bold && !a.cells.some((ac) => ac.bold)),
+    );
+  };
+
+  type Chain = { anchors: number[]; joins: Map<number, number>; inside: number; between: number };
+  const chains: Chain[] = [];
+  const start = (a: number): Chain => ({
+    anchors: [a],
+    joins: new Map(),
+    inside: 0,
+    between: Infinity,
+  });
+  let chain = start(anchors[0]!);
+  for (let k = 0; k + 1 < anchors.length; k++) {
+    const a = anchors[k]!;
+    const b = anchors[k + 1]!;
+    if (b === a + 1) {
+      chain.between = Math.min(chain.between, pitch(a));
+      chain.anchors.push(b);
+      continue;
+    }
+    const ps: number[] = [];
+    for (let i = a; i < b; i++) ps.push(pitch(i));
+    const split = ps.indexOf(Math.max(...ps));
+    const others = Math.max(...ps.filter((_, i) => i !== split));
+    const upper: number[] = [];
+    const lower: number[] = [];
+    for (let i = a + 1; i < b; i++) (i <= a + split ? upper : lower).push(i);
+    if (ps[split]! < ROW_GAP_RATIO * others || !fits(upper, a) || !fits(lower, b)) {
+      chains.push(chain);
+      chain = start(b);
+      continue;
+    }
+    upper.forEach((i) => chain.joins.set(i, a));
+    lower.forEach((i) => chain.joins.set(i, b));
+    chain.inside = Math.max(chain.inside, others);
+    chain.between = Math.min(chain.between, ps[split]!);
+    chain.anchors.push(b);
+  }
+  chains.push(chain);
+
+  const joined = new Map<number, number>();
+  for (const c of chains) {
+    if (!c.joins.size || c.between < ROW_GAP_RATIO * c.inside) continue;
+    // One-Cell lines above the first anchor and below the last one join them when they keep the
+    // chain's rhythm and a clear gap (or the end of the page) follows.
+    const edge = (anchor: number, step: 1 | -1) => {
+      const taken: number[] = [];
+      let i = anchor + step;
+      const gap = (j: number) => (step === 1 ? pitch(j - 1) : pitch(j));
+      while (
+        i >= 0 &&
+        i < lines.length &&
+        lines[i]!.cells.length === 1 &&
+        !joined.has(i) &&
+        gap(i) <= c.inside
+      ) {
+        taken.push(i);
+        i += step;
+      }
+      const beyond = i >= 0 && i < lines.length ? gap(i) : Infinity;
+      if (taken.length && beyond >= ROW_GAP_RATIO * c.inside && fits(taken, anchor))
+        taken.forEach((j) => c.joins.set(j, anchor));
+    };
+    edge(c.anchors[0]!, -1);
+    edge(c.anchors[c.anchors.length - 1]!, 1);
+    const rhythm: Rhythm = { gap: c.between };
+    for (const a of c.anchors) lines[a] = { ...lines[a]!, rhythm };
+    c.joins.forEach((a, i) => joined.set(i, a));
+  }
+  if (!joined.size) return input;
+
+  const members = new Map<number, number[]>();
+  joined.forEach((a, i) => members.set(a, [...(members.get(a) ?? []), i]));
+  const out: Line[] = [];
+  lines.forEach((l, i) => {
+    if (joined.has(i)) return;
+    const more = members.get(i);
+    out.push(
+      more
+        ? mergeRow(
+            l,
+            more.map((j) => lines[j]!),
+          )
+        : l,
+    );
+  });
+  return out;
+}
+
+/** One Row from an anchor line and the one-Cell lines of its Wrapped Cell, top to bottom. */
+function mergeRow(anchor: Line, singles: Line[]): Line {
+  const all = [anchor, ...singles].sort((p, q) => q.y - p.y);
+  const parts = singles.map((l) => ({ y: l.y, cell: l.cells[0]! }));
+  const own = anchor.cells.find((ac) => parts.some((p) => overlap(ac, p.cell)));
+  if (own) parts.push({ y: anchor.y, cell: own });
+  parts.sort((p, q) => q.y - p.y);
+  const wrapped: Cell = {
+    x0: Math.min(...parts.map((p) => p.cell.x0)),
+    x1: Math.max(...parts.map((p) => p.cell.x1)),
+    text: parts.map((p) => p.cell.text).join(" "),
+    bold: parts.every((p) => p.cell.bold),
+  };
+  const top = all[0]!;
+  const last = all[all.length - 1]!;
+  return {
+    y: top.y,
+    h: top.h,
+    items: all.flatMap((l) => l.items),
+    cells: [...anchor.cells.filter((c) => c !== own), wrapped].sort((p, q) => p.x0 - q.x0),
+    bottom: last.y,
+    bottomH: last.h,
+    rhythm: anchor.rhythm,
+  };
+}
+
+/**
+ * The widest gap allowed between the first two lines of a run. Lines of one Row rhythm may sit as
+ * far apart as that rhythm's Rows do.
+ */
+function firstGapLimit(last: Line, r: Line): number {
+  const limit = Math.max(last.h, r.h) * 3;
+  return last.rhythm && last.rhythm === r.rhythm
+    ? Math.max(limit, last.rhythm.gap * 1.75 + 1)
+    : limit;
+}
+
 /** Finds every Table on a page: runs of two or more lines with two or more cells. */
 export function detectTables(items: TextItem[], columnSpacing: number): FoundTable[] {
-  const lines = linesFromItems(items, columnSpacing);
+  const lines = groupRows(linesFromItems(items, columnSpacing));
   const tables: FoundTable[] = [];
   let run: { rows: Line[]; gaps: number[] } | null = null;
   let pending: Line[] = [];
@@ -88,16 +275,16 @@ export function detectTables(items: TextItem[], columnSpacing: number): FoundTab
         ? pending[pending.length - 1]!
         : cur.rows[cur.rows.length - 1]!
       : null;
-    const gap = last ? last.y - r.y : Infinity;
+    const gap = last ? bottomOf(last) - r.y : Infinity;
     const limit = cur
       ? cur.gaps.length
         ? median(cur.gaps) * 1.75 + 1
-        : Math.max(last!.h, r.h) * 3
+        : firstGapLimit(last!, r)
       : 0;
     if (r.cells.length >= 2) {
       if (cur && gap <= limit) {
         const prevMulti = cur.rows[cur.rows.length - 1]!;
-        if (!pending.length) cur.gaps.push(prevMulti.y - r.y);
+        if (!pending.length) cur.gaps.push(bottomOf(prevMulti) - r.y);
         cur.rows.push(...pending, r);
         pending = [];
       } else {
@@ -169,7 +356,7 @@ export function buildTable(rows: Line[], manual = false): FoundTable | null {
       const gi = grid.length - 1;
       const g = grid[gi];
       const spans = bands.filter(([a, z]) => Math.min(z, c.x1) - Math.max(a, c.x0) > 1).length;
-      const tight = prev.y - r.y < r.h * 1.5;
+      const tight = bottomOf(prev) - r.y < r.h * 1.5;
       const bandW = bands[b]![1] - bands[b]![0];
       const filledToEdge = g && g[b] && ends[gi]![b]! >= bands[b]![1] - Math.max(6, bandW * 0.18);
       const boldShift = c.bold && !bolds[gi]![b];
@@ -228,7 +415,7 @@ export function buildTable(rows: Line[], manual = false): FoundTable | null {
     firstBold: first.cells.every((c) => c.bold),
     bbox: [
       Math.min(...bands.map((b) => b[0])) - 4,
-      lastR.y - lastR.h * 0.35,
+      bottomOf(lastR) - (lastR.bottomH ?? lastR.h) * 0.35,
       Math.max(...bands.map((b) => b[1])) + 4,
       first.y + first.h * 1.05,
     ],
@@ -252,7 +439,7 @@ export function regionTable(
     return cx >= x0 && cx <= x1 && cy >= y0 && cy <= y1;
   });
   if (!inside.length) return null;
-  const rows = linesFromItems(inside, columnSpacing);
+  const rows = groupRows(linesFromItems(inside, columnSpacing));
   const table = rows.length ? buildTable(rows, true) : null;
   return table && { ...table, bbox: region };
 }

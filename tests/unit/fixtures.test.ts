@@ -14,9 +14,9 @@ const snapshotDir = join(root, "tests", "golden", "snapshots");
 const examplePath = join(root, "public", "example-document.pdf");
 const sha256 = (path: string) => createHash("sha256").update(readFileSync(path)).digest("hex");
 const fixtures = readdirSync(fixtureDir).filter((f) => f.endsWith(".pdf"));
-// Fixtures with no snapshot yet. statement.pdf's snapshot comes from the new engine, not the
-// prototype (whose output for it is the bug of spec #22): #24 records it and removes it from here.
-const awaitingSnapshot = new Set(["statement.pdf"]);
+// Fixtures with no snapshot yet (none today). statement.pdf's snapshot comes from the app's engine
+// (`npm run golden:engine`), not the prototype, whose output for it is the bug of spec #22.
+const awaitingSnapshot = new Set<string>();
 
 describe("fixture PDFs", () => {
   const out = mkdtempSync(join(tmpdir(), "table-lift-fixtures-"));
