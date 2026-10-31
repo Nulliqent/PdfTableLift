@@ -14,6 +14,9 @@ const snapshotDir = join(root, "tests", "golden", "snapshots");
 const examplePath = join(root, "public", "example-document.pdf");
 const sha256 = (path: string) => createHash("sha256").update(readFileSync(path)).digest("hex");
 const fixtures = readdirSync(fixtureDir).filter((f) => f.endsWith(".pdf"));
+// Fixtures with no snapshot yet. statement.pdf's snapshot comes from the new engine, not the
+// prototype (whose output for it is the bug of spec #22): #24 records it and removes it from here.
+const awaitingSnapshot = new Set(["statement.pdf"]);
 
 describe("fixture PDFs", () => {
   const out = mkdtempSync(join(tmpdir(), "table-lift-fixtures-"));
@@ -35,7 +38,9 @@ describe("fixture PDFs", () => {
 describe("golden snapshots", () => {
   it("exist for every fixture and the Example Document", () => {
     const snapshots = readdirSync(snapshotDir).filter((f) => f.endsWith(".json"));
-    const expected = ["example-document.pdf", ...fixtures].map((f) => f.replace(/\.pdf$/, ".json"));
+    const expected = ["example-document.pdf", ...fixtures]
+      .filter((f) => !awaitingSnapshot.has(f))
+      .map((f) => f.replace(/\.pdf$/, ".json"));
     expect(snapshots.sort()).toEqual(expected.sort());
   });
 
