@@ -18,6 +18,8 @@ type RegionSelectionProps = {
   onPage: (page: number) => void;
   onDrag: (bbox: Bbox) => void;
   onWholePage: () => void;
+  /** "Treat selection as one row" was switched. */
+  onSingleRow: (value: boolean) => void;
   onCancel: () => void;
   onSave: () => void;
 };
@@ -33,6 +35,7 @@ export function RegionSelection({
   onPage,
   onDrag,
   onWholePage,
+  onSingleRow,
   onCancel,
   onSave,
 }: RegionSelectionProps) {
@@ -43,7 +46,11 @@ export function RegionSelection({
   }, [onCancel]);
 
   const last = Math.max(...document.pages.map((p) => p.num));
-  const label = preview ? `${preview.grid.length - 1} × ${preview.grid[0]!.length}` : "No text";
+  // A Single-Row Region's one Row is data: its Table starts with First row is header off.
+  const header = !region.singleRow;
+  const label = preview
+    ? `${preview.grid.length - (header ? 1 : 0)} × ${preview.grid[0]!.length}`
+    : "No text";
   return (
     <>
       <div className={pane.head}>
@@ -83,6 +90,15 @@ export function RegionSelection({
         <button type="button" className={styles.link} onClick={onWholePage}>
           Select Whole Page
         </button>
+        <label className={pane.switch}>
+          <input
+            type="checkbox"
+            role="switch"
+            checked={region.singleRow}
+            onChange={(e) => onSingleRow(e.target.checked)}
+          />
+          Treat selection as one row
+        </label>
         <span className={pane.spacer} />
         <Button onClick={onCancel}>Cancel</Button>
         <Button variant="primary" disabled={!preview} onClick={onSave}>
@@ -101,14 +117,23 @@ export function RegionSelection({
           />
         </div>
         <div className={`${pane.card} ${styles.preview}`} aria-live="polite">
-          <Preview drawn={region.bbox !== null} table={preview} />
+          <Preview drawn={region.bbox !== null} table={preview} header={header} />
         </div>
       </div>
     </>
   );
 }
 
-function Preview({ drawn, table }: { drawn: boolean; table: FoundTable | null }) {
+function Preview({
+  drawn,
+  table,
+  header,
+}: {
+  drawn: boolean;
+  table: FoundTable | null;
+  /** The first row is shown as the Header Row. */
+  header: boolean;
+}) {
   if (!drawn)
     return (
       <div className={styles.empty}>
@@ -130,8 +155,10 @@ function Preview({ drawn, table }: { drawn: boolean; table: FoundTable | null })
         </span>
       </div>
     );
-  const [head, ...body] = table.grid;
-  const cols = head!.length;
+  const head = header ? table.grid[0]! : null;
+  const body = header ? table.grid.slice(1) : table.grid;
+  const cols = table.grid[0]!.length;
+  const shown = PREVIEW_ROWS - (header ? 1 : 0);
   return (
     <>
       <div className={styles.pvHead}>
@@ -142,15 +169,17 @@ function Preview({ drawn, table }: { drawn: boolean; table: FoundTable | null })
       </div>
       <div className={styles.scroll}>
         <table className={styles.pv}>
-          <thead>
-            <tr>
-              {head!.map((v, c) => (
-                <th key={c}>{v}</th>
-              ))}
-            </tr>
-          </thead>
+          {head && (
+            <thead>
+              <tr>
+                {head.map((v, c) => (
+                  <th key={c}>{v}</th>
+                ))}
+              </tr>
+            </thead>
+          )}
           <tbody>
-            {body.slice(0, PREVIEW_ROWS - 1).map((row, r) => (
+            {body.slice(0, shown).map((row, r) => (
               <tr key={r}>
                 {row.map((v, c) => (
                   <td key={c} className={v ? undefined : styles.none}>
@@ -162,10 +191,8 @@ function Preview({ drawn, table }: { drawn: boolean; table: FoundTable | null })
           </tbody>
         </table>
       </div>
-      {body.length > PREVIEW_ROWS - 1 && (
-        <div className={styles.more}>
-          and {plural(body.length - (PREVIEW_ROWS - 1), "more row")}
-        </div>
+      {body.length > shown && (
+        <div className={styles.more}>and {plural(body.length - shown, "more row")}</div>
       )}
       <div className={styles.tip}>
         {cols === 1

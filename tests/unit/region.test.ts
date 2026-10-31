@@ -70,7 +70,13 @@ describe("selecting a Region", () => {
       page: 2,
     });
 
-    expect(state.region).toEqual({ documentId: "d1", page: 2, bbox: null, redraw: null });
+    expect(state.region).toEqual({
+      documentId: "d1",
+      page: 2,
+      bbox: null,
+      redraw: null,
+      singleRow: false,
+    });
     expect(regionPreview(state)).toBeNull();
   });
 
@@ -119,7 +125,13 @@ describe("selecting a Region", () => {
       bbox: null,
     });
 
-    expect(state.region).toEqual({ documentId: "d1", page: 2, bbox: null, redraw: null });
+    expect(state.region).toEqual({
+      documentId: "d1",
+      page: 2,
+      bbox: null,
+      redraw: null,
+      singleRow: false,
+    });
   });
 
   it("ignores a page the Document does not have", () => {
