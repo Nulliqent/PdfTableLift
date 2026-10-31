@@ -171,6 +171,81 @@ await write("wrapped-cells", {}, (d) => {
   );
 });
 
+// --- A card statement: Rows several lines tall (spec #22) -----------------------------------------
+// Imitates a bank-statement layout: Posted Date, Transaction Date, Description, Amount (right-
+// aligned). The Description runs over several lines: the merchant in body text, then secondary
+// lines in a smaller grey font. The dates and amount sit beside the first, a middle or the last
+// line. Inside a Row lines are 13pt apart; between Rows the gap is about 30pt.
+// Every merchant, date and amount is invented. Never copy values from a real statement.
+await write("statement", {}, (d) => {
+  const STATEMENT_PITCH = 13;
+  const ROW_GAP = 30;
+  const x = { posted: 72, txn: 150, desc: 240, amount: 560 };
+  const grey = (str, y) => {
+    d.fillColor("#6e6e73");
+    at(d, str, x.desc, y, { size: 7.5 });
+    d.fillColor("black");
+  };
+  // lines: the Description, first line in body text and the rest grey. side: the index of the
+  // Description line the dates and amount line up with, or a fraction to sit between two lines.
+  const entry = (y, posted, txn, lines, amount, side) => {
+    lines.forEach((l, i) =>
+      i === 0 || l.main
+        ? at(d, l.str ?? l, x.desc, y - i * STATEMENT_PITCH)
+        : grey(l, y - i * STATEMENT_PITCH),
+    );
+    const sy = y - side * STATEMENT_PITCH;
+    at(d, posted, x.posted, sy);
+    at(d, txn, x.txn, sy);
+    at(d, amount, x.amount, sy, { align: "right" });
+    return y - (lines.length - 1) * STATEMENT_PITCH - ROW_GAP;
+  };
+  heading(d, "Card account statement", 750);
+  at(d, "Posted Date", x.posted, 710, { bold: true });
+  at(d, "Transaction Date", x.txn, 710, { bold: true });
+  at(d, "Description", x.desc, 710, { bold: true });
+  at(d, "Amount", x.amount, 710, { bold: true, align: "right" });
+  let y = 680;
+  // Dates and amount centred between the 2nd and 3rd lines; the merchant breaks mid-word.
+  y = entry(
+    y,
+    "04 MAR",
+    "02 MAR",
+    ["BRIGHTWATER LANTERNFISH NOO", { str: "DLES", main: true }, "Card Payment", "NZD 42.80"],
+    "-24.15",
+    1.5,
+  );
+  // Dates and amount beside the 2nd line.
+  y = entry(
+    y,
+    "05 MAR",
+    "03 MAR",
+    ["PEBBLE & FERN STATIONERY", "Card Payment", "NZD 18.00"],
+    "-9.60",
+    1,
+  );
+  // A single-line Row.
+  y = entry(y, "06 MAR", "06 MAR", ["ORCHARD LANE BAKERY"], "-3.75", 0);
+  // Dates and amount beside the first line.
+  y = entry(
+    y,
+    "08 MAR",
+    "07 MAR",
+    ["RIVERSTONE CYCLE WORKS", "Card Payment", "NZD 98.00"],
+    "-56.40",
+    0,
+  );
+  // Dates and amount beside the last line.
+  entry(
+    y,
+    "10 MAR",
+    "10 MAR",
+    ["INTERNAL TRANSFER", "From Savings 0412", "Standing order"],
+    "250.00",
+    2,
+  );
+});
+
 // --- Section Headers ------------------------------------------------------------------------------
 await write("section-headers", {}, (d) => {
   heading(d, "Sales by store", 740);

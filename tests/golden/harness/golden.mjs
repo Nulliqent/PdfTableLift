@@ -22,6 +22,9 @@ const JOINING = [true, false];
 // Fixtures too big to keep in full: snapshotted at the default Column Spacing only, and with each
 // export stored as its SHA-256 digest ("exportDigests") instead of the text ("exports").
 const LARGE = new Set(["perf-200-pages"]);
+// Fixtures whose snapshot comes from the app's engine, not the prototype: the prototype gets them
+// wrong (spec #22), so they are left out of the default run and never overwritten here.
+const NOT_FROM_PROTOTYPE = new Set(["statement"]);
 const SECTION_MODES = ["column", "rows"];
 const FORMATS = ["csv", "tsv", "md", "json"];
 
@@ -67,7 +70,7 @@ const inputs = args.length
   : [
       join(root, "public", "example-document.pdf"),
       ...readdirSync(fixtureDir)
-        .filter((f) => f.endsWith(".pdf"))
+        .filter((f) => f.endsWith(".pdf") && !NOT_FROM_PROTOTYPE.has(basename(f, ".pdf")))
         .sort()
         .map((f) => join(fixtureDir, f)),
     ];
