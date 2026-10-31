@@ -301,9 +301,10 @@ export function detectTables(items: TextItem[], columnSpacing: number): FoundTab
 
 /**
  * Builds a grid from a run of lines. `manual` (a Region the user drew) allows one column.
- * Returns null when there are too few columns.
+ * `oneRow` (a Single-Row Region) puts every line in one Row. Returns null when there are too few
+ * columns.
  */
-export function buildTable(rows: Line[], manual = false): FoundTable | null {
+export function buildTable(rows: Line[], manual = false, oneRow = false): FoundTable | null {
   const multi = rows.filter((r) => r.cells.length >= 2);
   const maxC = multi.length ? Math.max(...multi.map((r) => r.cells.length)) : 1;
   const basis = multi.filter((r) => r.cells.length >= Math.max(2, Math.ceil(maxC * 0.6)));
@@ -345,6 +346,7 @@ export function buildTable(rows: Line[], manual = false): FoundTable | null {
     }
     return best;
   };
+  if (oneRow) return singleRowTable(rows, bands, pick);
   const grid: string[][] = [];
   const ends: number[][] = [];
   const bolds: boolean[][] = [];
@@ -424,6 +426,32 @@ export function buildTable(rows: Line[], manual = false): FoundTable | null {
 }
 
 /**
+ * The Table of a Single-Row Region: every Cell of every line in one Row, with no Section Headers.
+ * Each Cell goes to its column by position, and a column's Cells join with a space, top to bottom.
+ */
+function singleRowTable(lines: Line[], bands: Band[], pick: (c: Cell) => number): FoundTable {
+  const row: string[] = Array(bands.length).fill("");
+  for (const c of lines.flatMap((l) => l.cells)) {
+    const b = pick(c);
+    row[b] = row[b] ? `${row[b]} ${c.text}` : c.text;
+  }
+  const first = lines[0]!;
+  const last = lines[lines.length - 1]!;
+  return {
+    grid: [row],
+    sections: [],
+    cols: bands,
+    firstBold: lines.every((l) => l.cells.every((c) => c.bold)),
+    bbox: [
+      Math.min(...bands.map((b) => b[0])) - 4,
+      bottomOf(last) - (last.bottomH ?? last.h) * 0.35,
+      Math.max(...bands.map((b) => b[1])) + 4,
+      first.y + first.h * 1.05,
+    ],
+  };
+}
+
+/**
  * Columns for a Region (spec #22): a Region is the user saying where the table is, so every line
  * inside it counts, not only the lines holding most of the columns. The Cells of the other lines
  * are added narrowest first; a Cell that would join two columns (a title or caption spanning
@@ -479,12 +507,14 @@ function regionRows(items: TextItem[], inside: TextItem[], region: Bbox, cs: num
 /**
  * Builds a Hand-drawn Table from the text items whose centre lies inside a Region (PDF
  * coordinates), allowing a single column. Returns null when the Region holds no text.
- * The Table's bbox is the Region itself.
+ * The Table's bbox is the Region itself. A Single-Row Region (`singleRow`) makes everything inside
+ * it one Row, whatever its line spacing.
  */
 export function regionTable(
   items: TextItem[],
   region: Bbox,
   columnSpacing: number,
+  singleRow = false,
 ): FoundTable | null {
   const [x0, y0, x1, y1] = region;
   const inside = items.filter((it) => {
@@ -493,7 +523,9 @@ export function regionTable(
     return cx >= x0 && cx <= x1 && cy >= y0 && cy <= y1;
   });
   if (!inside.length) return null;
-  const rows = regionRows(items, inside, region, columnSpacing);
-  const table = rows.length ? buildTable(rows, true) : null;
+  const rows = singleRow
+    ? linesFromItems(inside, columnSpacing)
+    : regionRows(items, inside, region, columnSpacing);
+  const table = rows.length ? buildTable(rows, true, singleRow) : null;
   return table && { ...table, bbox: region };
 }

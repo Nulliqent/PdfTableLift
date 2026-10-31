@@ -103,11 +103,10 @@ const at = (str: string, x: number, y: number, bold = false, align = "left"): Te
 });
 const page = (items: TextItem[]): PageText => ({ num: 1, w: 612, h: 792, items });
 
-// #27 adds the Single-Row setting to the reducer. Until then these go through casts; #27 removes
-// them (and may rename the action, keeping what the tests expect).
-const singleRowChanged = (value: boolean) =>
-  ({ type: "regionSingleRowChanged", value }) as unknown as WorkspaceAction;
-const singleRowOf = (x: unknown) => (x as { singleRow?: boolean } | null | undefined)?.singleRow;
+const singleRowChanged = (value: boolean): WorkspaceAction => ({
+  type: "regionSingleRowChanged",
+  value,
+});
 
 // --- #24 Rows can span several lines -------------------------------------------------------------
 
@@ -419,13 +418,13 @@ describe("#27 Single-Row Region switch", () => {
   ];
   const singleRow = (bbox: Bbox) => run(draw(opened(statement), bbox), singleRowChanged(true));
 
-  it.skip("#27: the switch is off by default", () => {
+  it("#27: the switch is off by default", () => {
     const state = run(opened(statement), { type: "regionStarted", documentId: "d1", page: 1 });
 
-    expect(singleRowOf(state.region)).toBe(false);
+    expect(state.region?.singleRow).toBe(false);
   });
 
-  it.skip("#27: flipping the switch updates the preview at once", () => {
+  it("#27: flipping the switch updates the preview at once", () => {
     const drawn = draw(opened(statement), TWO_ENTRIES);
     const on = run(drawn, singleRowChanged(true));
     const off = run(on, singleRowChanged(false));
@@ -435,7 +434,25 @@ describe("#27 Single-Row Region switch", () => {
     expect(regionPreview(off)!.grid).toEqual(ENTRIES.slice(0, 2));
   });
 
-  it.skip("#27: Column Spacing still decides the columns of a Single-Row Region", () => {
+  // The case #26 leaves apart on purpose: one Row with no rhythm on the page. The switch joins it.
+  it("#27: a lone Row with no rhythm on the page becomes one Row with the switch on", () => {
+    const xs = [72, 150, 240, 500];
+    const items = [
+      at("ALPHA STORE", xs[2]!, 682),
+      at("01 MAR", xs[0]!, 669),
+      at("01 MAR", xs[1]!, 669),
+      at("-1.00", xs[3]!, 669),
+      at("Card Payment", xs[2]!, 656),
+    ];
+    const state = run(draw(opened([page(items)]), [60, 650, 560, 695]), singleRowChanged(true));
+    const table = selectedTable(run(state, { type: "regionCommitted" }))!;
+
+    expect(table.cols).toHaveLength(4);
+    expect(table.grid).toEqual([["01 MAR", "01 MAR", "ALPHA STORE Card Payment", "-1.00"]]);
+    expect(table.sections).toEqual([]);
+  });
+
+  it("#27: Column Spacing still decides the columns of a Single-Row Region", () => {
     const xs = [72, 107, 142, 177];
     const tight = page([
       ...["Ant", "Bee", "Cat", "Dog"].map((c, i) => at(c, xs[i]!, 700)),
@@ -449,7 +466,7 @@ describe("#27 Single-Row Region switch", () => {
     expect(regionPreview(wide)!.grid[0]).toHaveLength(1);
   });
 
-  it.skip("#27: everything inside becomes one Row, with no Section Headers", () => {
+  it("#27: everything inside becomes one Row, with no Section Headers", () => {
     const preview = regionPreview(singleRow(TITLE_BOX))!;
 
     expect(preview.grid).toHaveLength(1);
@@ -457,13 +474,13 @@ describe("#27 Single-Row Region switch", () => {
     expect(preview.sections).toEqual([]);
   });
 
-  it.skip("#27: a Single-Row Region's Table starts with First row is header off, and the user can turn it on", () => {
+  it("#27: a Single-Row Region's Table starts with First row is header off, and the user can turn it on", () => {
     const state = run(singleRow(TWO_ENTRIES), { type: "regionCommitted" });
     const table = selectedTable(state)!;
 
     expect(table.grid).toEqual([AS_ONE_ROW]);
     expect(table.header).toBe(false);
-    expect(singleRowOf(state.documents[0]!.regions[0])).toBe(true);
+    expect(state.documents[0]!.regions[0]!.singleRow).toBe(true);
 
     const on = run(state, {
       type: "headerToggled",
@@ -474,11 +491,11 @@ describe("#27 Single-Row Region switch", () => {
     expect(selectedTable(on)!.header).toBe(true);
   });
 
-  it.skip("#27: other Hand-drawn Tables keep First row is header on", () => {
+  it("#27: other Hand-drawn Tables keep First row is header on", () => {
     expect(selectedTable(committed(statement, TWO_ENTRIES))!.header).toBe(true);
   });
 
-  it.skip("#27: the setting survives Column Spacing changes, the join switch and a redraw", () => {
+  it("#27: the setting survives Column Spacing changes, the join switch and a redraw", () => {
     const saved = run(singleRow(TWO_ENTRIES), { type: "regionCommitted" });
     const respaced = run(saved, { type: "columnSpacingChanged", value: 0.5 });
     const rejoined = run(respaced, { type: "joinChanged", value: false });
@@ -491,7 +508,7 @@ describe("#27 Single-Row Region switch", () => {
       page: 1,
       tableId: selectedTable(rejoined)!.id,
     });
-    expect(singleRowOf(redrawing.region)).toBe(true);
+    expect(redrawing.region?.singleRow).toBe(true);
 
     const redrawn = run(
       redrawing,
@@ -499,17 +516,17 @@ describe("#27 Single-Row Region switch", () => {
       { type: "regionCommitted" },
     );
     expect(selectedTable(redrawn)!.grid).toEqual([ENTRIES[0]]);
-    expect(singleRowOf(redrawn.documents[0]!.regions[0])).toBe(true);
+    expect(redrawn.documents[0]!.regions[0]!.singleRow).toBe(true);
   });
 
-  it.skip("#27: a Single-Row Region with no text is still refused", () => {
+  it("#27: a Single-Row Region with no text is still refused", () => {
     const empty = singleRow(EMPTY_BOX);
 
     expect(regionPreview(empty)).toBeNull();
     expect(run(empty, { type: "regionCommitted" })).toBe(empty);
   });
 
-  it.skip("#27: saving a Single-Row Region goes through the edit warning", () => {
+  it("#27: saving a Single-Row Region goes through the edit warning", () => {
     const saved = committed(statement, ENTRY_BOXES[2]!);
     const edited = run(saved, {
       type: "cellEdited",
@@ -520,6 +537,9 @@ describe("#27 Single-Row Region switch", () => {
       value: "07 MAR",
     });
     const drawn = run(draw(edited, TWO_ENTRIES), singleRowChanged(true));
+    // Flipping the switch re-detects nothing, so only saving asks, once.
+    expect(drawn.pendingChange).toBeNull();
+    expect(drawn.documents).toBe(edited.documents);
 
     const asked = run(drawn, { type: "regionCommitted" });
     expect(asked.pendingChange).toEqual({ type: "regionCommitted" });

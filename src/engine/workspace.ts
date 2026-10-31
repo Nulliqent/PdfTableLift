@@ -52,6 +52,8 @@ export type Region = {
   replaces: Part | null;
   /** The other Parts of the Joined Table that Part belonged to; they stand on their own, never joined. */
   apart: Part[];
+  /** A Single-Row Region: everything inside it is one Row ("Treat selection as one row"). */
+  singleRow: boolean;
 };
 
 /** What a redraw carries over from the Table whose Region is being redrawn. */
@@ -64,13 +66,15 @@ export type Redraw = {
 
 /**
  * The Region being selected: the page shown and the box dragged so far (null before any drag).
- * `redraw` is set when it was opened from a Table, else null.
+ * `redraw` is set when it was opened from a Table, else null. `singleRow` is the Single-Row
+ * switch: off for a new Region, the Region's own setting when a Hand-drawn Table is redrawn.
  */
 export type RegionInProgress = {
   documentId: string;
   page: number;
   bbox: Bbox | null;
   redraw: Redraw | null;
+  singleRow: boolean;
 };
 
 /** A Detected Table the user dismissed, recorded by page and bounding box so it survives re-detection. */
@@ -173,6 +177,11 @@ export type WorkspaceAction =
   | { type: "wholePageSelected" }
   /** Escape or Cancel: leave Region selection with no changes. */
   | { type: "regionCancelled" }
+  /**
+   * "Treat selection as one row" was switched for the Region in progress. Nothing is re-detected
+   * until the Region is saved, so only `regionCommitted` goes through the edit warning.
+   */
+  | { type: "regionSingleRowChanged"; value: boolean }
   /** A cell was corrected (grid coordinates, Header Row included). */
   | {
       type: "cellEdited";
@@ -390,7 +399,9 @@ export function reduce(state: WorkspaceState, action: WorkspaceAction): Workspac
       const own = redraw?.regionId ?? null;
       const regions = own
         ? doc.regions.map((r) =>
-            r.id === own ? { ...r, page: region.page, bbox: region.bbox! } : r,
+            r.id === own
+              ? { ...r, page: region.page, bbox: region.bbox!, singleRow: region.singleRow }
+              : r,
           )
         : [
             ...doc.regions,
@@ -400,6 +411,7 @@ export function reduce(state: WorkspaceState, action: WorkspaceAction): Workspac
               bbox: region.bbox,
               replaces: redraw?.replaces ?? null,
               apart: redraw?.apart ?? [],
+              singleRow: region.singleRow,
             },
           ];
       const next = redetect({ ...state, region: null, pendingChange: null }, { ...doc, regions });
@@ -414,7 +426,13 @@ export function reduce(state: WorkspaceState, action: WorkspaceAction): Workspac
       if (action.tableId === undefined) {
         return {
           ...state,
-          region: { documentId: doc.id, page: action.page, bbox: null, redraw: null },
+          region: {
+            documentId: doc.id,
+            page: action.page,
+            bbox: null,
+            redraw: null,
+            singleRow: false,
+          },
         };
       }
       const table = doc.tables.find((t) => t.id === action.tableId);
@@ -425,7 +443,8 @@ export function reduce(state: WorkspaceState, action: WorkspaceAction): Workspac
         ? { regionId: own.id, replaces: own.replaces, apart: own.apart }
         : { regionId: null, replaces: part, apart: table.parts.filter((p) => p !== part) };
       const bbox = own?.bbox ?? part.bbox;
-      return { ...state, region: { documentId: doc.id, page: part.page, bbox, redraw } };
+      const singleRow = own?.singleRow ?? false;
+      return { ...state, region: { documentId: doc.id, page: part.page, bbox, redraw, singleRow } };
     }
     case "regionChanged": {
       const doc = regionDocument(state);
@@ -441,6 +460,9 @@ export function reduce(state: WorkspaceState, action: WorkspaceAction): Workspac
     }
     case "regionCancelled":
       return state.region ? { ...state, region: null } : state;
+    case "regionSingleRowChanged":
+      if (!state.region || state.region.singleRow === action.value) return state;
+      return { ...state, region: { ...state.region, singleRow: action.value } };
     case "changeConfirmed": {
       if (!state.pendingChange) return state;
       return reduce(
@@ -597,12 +619,18 @@ function detectDocument(doc: Document, pages: PageText[], settings: Settings): T
   const detected: Table[] = [];
   const apart = new Set<string>();
   const handDrawn: Table[] = [];
-  const table = (id: string, page: number, t: FoundTable, manual: string | null): Table => ({
+  const table = (
+    id: string,
+    page: number,
+    t: FoundTable,
+    manual: string | null,
+    header = true,
+  ): Table => ({
     id,
     n: 0,
     page,
     parts: [{ page, bbox: t.bbox }],
-    header: true,
+    header,
     firstBold: t.firstBold,
     grid: t.grid,
     sections: t.sections,
@@ -642,8 +670,9 @@ function detectDocument(doc: Document, pages: PageText[], settings: Settings): T
       detected.push(table(id, p.num, t, null));
     });
     for (const r of covering) {
-      const t = regionTable(p.items, r.bbox, settings.columnSpacing);
-      if (t) handDrawn.push(table(`${documentId}:region:${r.id}`, p.num, t, r.id));
+      const t = regionTable(p.items, r.bbox, settings.columnSpacing, r.singleRow);
+      // A Single-Row Region's one Row is data, so its Table starts with "First row is header" off.
+      if (t) handDrawn.push(table(`${documentId}:region:${r.id}`, p.num, t, r.id, !r.singleRow));
     }
   }
   // Removed Tables and Hand-drawn Regions took their Tables out per page above, so a Joined Table
@@ -692,5 +721,5 @@ export function regionPreview(state: WorkspaceState): FoundTable | null {
   const doc = regionDocument(state);
   const page = doc && region && pageOf(doc, region.page);
   if (!region?.bbox || !page) return null;
-  return regionTable(page.items, region.bbox, state.settings.columnSpacing);
+  return regionTable(page.items, region.bbox, state.settings.columnSpacing, region.singleRow);
 }

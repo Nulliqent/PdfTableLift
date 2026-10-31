@@ -220,6 +220,7 @@ export function App() {
                   onPage={(page) => dispatch({ type: "regionChanged", page, bbox: null })}
                   onDrag={(bbox) => dispatch({ type: "regionChanged", page: region.page, bbox })}
                   onWholePage={() => dispatch({ type: "wholePageSelected" })}
+                  onSingleRow={(value) => dispatch({ type: "regionSingleRowChanged", value })}
                   onCancel={() => dispatch({ type: "regionCancelled" })}
                   onSave={saveRegion}
                 />
