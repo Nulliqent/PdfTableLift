@@ -269,3 +269,120 @@ test("a Region added but never drawn disables Save with the reason, until it is 
   await drag(page, layer, ROWS_BELOW_NOTE);
   await expect(main.getByRole("button", { name: "Add Table" })).toBeEnabled();
 });
+
+test("Combine and Split back work on a Table with a Header Region, the Header Row menu included", async ({
+  page,
+}) => {
+  const { main, layer } = await enterSelectRegion(page);
+  await drawTitlesAndRows(page, main, layer);
+  await main.getByRole("button", { name: "Add Table" }).click();
+  await expect(main.getByRole("columnheader", { name: "PART NUMBER" })).toBeVisible();
+
+  // The Header Row's menu has Combine with Row below, and no Row above.
+  await main.getByRole("button", { name: "Header Row. Row actions" }).click();
+  const menu = page.getByRole("menu", { name: "Header Row" });
+  await expect(menu.getByRole("menuitem", { name: "Combine with Row above" })).toHaveCount(0);
+  await menu.getByRole("menuitem", { name: "Combine with Row below" }).click();
+  await expect(page.getByRole("status")).toHaveText("Rows combined");
+  await expect(main.getByRole("columnheader", { name: "ITEM 1" })).toBeVisible();
+
+  await main.getByRole("button", { name: "Header Row. Row actions" }).click();
+  await page
+    .getByRole("menu", { name: "Header Row" })
+    .getByRole("menuitem", { name: "Split back" })
+    .click();
+  await expect(main.getByRole("columnheader", { name: "ITEM", exact: true })).toBeVisible();
+  await expect(main.getByRole("cell", { name: "BK-1001" })).toBeVisible();
+
+  // A Body Row combined with the Row above, then split back.
+  await main.getByRole("button", { name: /^Row 2\./ }).click();
+  await page
+    .getByRole("menu", { name: "Row 2" })
+    .getByRole("menuitem", { name: "Combine with Row above" })
+    .click();
+  await expect(main.getByRole("cell", { name: "BK-1001 BK-1002" })).toBeVisible();
+  await main.getByRole("button", { name: /^Row 1\./ }).click();
+  await page
+    .getByRole("menu", { name: "Row 1" })
+    .getByRole("menuitem", { name: "Split back" })
+    .click();
+  await expect(main.getByRole("cell", { name: "BK-1002", exact: true })).toBeVisible();
+});
+
+// section-headers.pdf: Store/Manager/Q1/Q2 at y 710, then West (a Section Header), two stores,
+// Central, two stores, East, two stores.
+test("a Section Header opening the Body Region keeps its place under a Header Region, As Rows and As Column", async ({
+  page,
+}) => {
+  await page.goto("/");
+  await openFixture(page, "section-headers.pdf");
+  const main = page.getByRole("main");
+  await page
+    .getByRole("button", { name: /Select Table Region/ })
+    .first()
+    .click();
+  const layer = main.getByLabel("Drag to select a table region");
+  await drag(page, layer, [60, 580, 520, 702]);
+  await main.getByRole("button", { name: "Add Region" }).click();
+  await drag(page, layer, [60, 705, 520, 722]);
+  await setRole(main, 2, "Header");
+  await main.getByRole("button", { name: "Add Table" }).click();
+
+  await main.getByRole("button", { name: "As Rows" }).click();
+  await expect(main.getByRole("columnheader", { name: "Store" })).toBeVisible();
+  // West sits right under the Header Row as a Section Header, and so do Central and East.
+  const sections = main.getByRole("button", { name: /^Row is a Section Header\. Row actions/ });
+  await expect(sections).toHaveCount(3);
+  await expect(main.getByRole("cell", { name: "West", exact: true })).toBeVisible();
+  await expect(main.getByRole("button", { name: /^Row 1\. Row actions/ })).toBeVisible();
+
+  await main.getByRole("button", { name: "As Column" }).click();
+  await expect(main.getByRole("columnheader", { name: "Section" })).toBeVisible();
+  await expect(main.getByRole("cell", { name: "West", exact: true }).first()).toBeVisible();
+  await expect(main.getByRole("cell", { name: "Portland" })).toBeVisible();
+});
+
+test.describe("phone width", () => {
+  test.use({ viewport: { width: 390, height: 844 }, hasTouch: true });
+
+  test("add a Region, toggle its role, remove it and save", async ({ page }) => {
+    await page.goto("/");
+    await openFixture(page, "parts-list-drawing.pdf");
+    const main = page.getByRole("main");
+    await page
+      .getByRole("button", { name: /Select Table Region/ })
+      .first()
+      .click();
+    await main.getByRole("button", { name: "Select Whole Page" }).tap();
+    await main.getByRole("button", { name: "Add Region" }).tap();
+    await expect(main.getByText("Region 2 is not drawn yet")).toBeVisible();
+    await main.getByRole("button", { name: "Select Whole Page" }).tap();
+
+    // Every control of the list fits inside the phone's width.
+    for (const control of [
+      entry(main, 2).getByRole("button", { name: "Header", exact: true }),
+      entry(main, 2).getByRole("button", { name: "Body", exact: true }),
+      entry(main, 2).getByRole("button", { name: /Remove/ }),
+    ]) {
+      const box = (await control.boundingBox())!;
+      expect(box.x).toBeGreaterThanOrEqual(0);
+      expect(box.x + box.width).toBeLessThanOrEqual(390);
+    }
+    const overflow = await page.evaluate(
+      () => document.documentElement.scrollWidth - document.documentElement.clientWidth,
+    );
+    expect(overflow, "no horizontal page scroll").toBeLessThanOrEqual(0);
+
+    await entry(main, 2).getByRole("button", { name: "Header", exact: true }).tap();
+    await expect(entry(main, 2)).toContainText("Region 2 · Header");
+    await expect(main.getByRole("button", { name: "Add Table" })).toBeDisabled();
+    await entry(main, 2).getByRole("button", { name: "Body", exact: true }).tap();
+    await entry(main, 2)
+      .getByRole("button", { name: /Remove/ })
+      .tap();
+    await expect(page.getByRole("status").filter({ hasText: /Region 2 removed/ })).toBeVisible();
+
+    await main.getByRole("button", { name: "Add Table" }).tap();
+    await expect(main.getByText("Selected by hand")).toBeVisible();
+  });
+});
