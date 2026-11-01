@@ -1,3 +1,4 @@
+import { useLayoutEffect, useRef, useState } from "react";
 import {
   isSectionHeader,
   numericColumns,
@@ -5,6 +6,7 @@ import {
   type SectionMode,
   type Table,
 } from "../../engine";
+import { RowMenu, type RowMenuItem } from "./RowMenu";
 import styles from "./TableView.module.css";
 
 type TableViewProps = {
@@ -12,7 +14,7 @@ type TableViewProps = {
   /** A cell was corrected; `row` and `col` are grid coordinates (the Header Row is row 0). */
   onEdit: (row: number, col: number, value: string) => void;
   sectionMode: SectionMode;
-  /** A row number was clicked; `row` is a grid row. */
+  /** Mark or Unmark Section Header was chosen from a row's menu; `row` is a grid row. */
   onToggleSection: (row: number) => void;
 };
 
@@ -20,9 +22,42 @@ type TableViewProps = {
  * The Table's grid, with the Header Row as column headers and numbered body rows. Every cell is
  * editable in place; Enter or leaving the cell commits it. Numeric columns are right-aligned.
  * Section Header rows are shaded; in As Column mode they appear as a Section column instead. The
- * row number toggles a row as a Section Header.
+ * row number opens the row's menu (Mark or Unmark Section Header).
  */
 export function TableView({ table, onEdit, sectionMode, onToggleSection }: TableViewProps) {
+  const [menu, setMenu] = useState<{ row: number; anchor: HTMLButtonElement } | null>(null);
+  /** The press began on the row number of the open menu: that click only closes the menu. */
+  const pressedOpen = useRef(false);
+  const tableEl = useRef<HTMLTableElement>(null);
+  /** The grid row whose row number gets focus back once the menu's action has rendered. */
+  const refocus = useRef<number | null>(null);
+
+  useLayoutEffect(() => {
+    const row = refocus.current;
+    if (row === null) return;
+    refocus.current = null;
+    const buttons = Array.from(
+      tableEl.current?.querySelectorAll<HTMLButtonElement>("button[data-row]") ?? [],
+    );
+    // The row itself, or, when it left the grid (marked in As Column mode), the nearest one below
+    // it, else above it.
+    const target = buttons.find((b) => Number(b.dataset.row) >= row) ?? buttons[buttons.length - 1];
+    target?.focus();
+  });
+
+  const closeMenu = (restoreFocus: boolean) => {
+    if (!menu) return;
+    if (restoreFocus) refocus.current = menu.row;
+    setMenu(null);
+  };
+
+  const menuItems = (row: number): RowMenuItem[] => [
+    {
+      label: isSectionHeader(table, row) ? "Unmark Section Header" : "Mark as Section Header",
+      onSelect: () => onToggleSection(row),
+    },
+  ];
+
   const numeric = numericColumns(table);
   const first = table.header ? 1 : 0;
   const head = table.header ? table.grid[0]! : null;
@@ -34,18 +69,35 @@ export function TableView({ table, onEdit, sectionMode, onToggleSection }: Table
   table.grid.forEach((row, r) => {
     if (r < first) return;
     const section = isSectionHeader(table, r);
+    const open = menu?.row === r;
     const idx = (
       <td className={styles.idx}>
         <button
           type="button"
           className={styles.idxBtn}
-          title={section ? "Treat as a data row" : "Mark as section header"}
+          data-row={r}
+          title="Row actions"
           aria-label={
-            section
-              ? "Row is a section header. Treat as a data row"
-              : `Row ${k + 1}. Mark as section header`
+            section ? "Row is a section header. Row actions" : `Row ${k + 1}. Row actions`
           }
-          onClick={() => onToggleSection(r)}
+          aria-haspopup="menu"
+          aria-expanded={open}
+          onPointerDown={() => {
+            // The popover's light dismiss closes the menu before this press's click arrives.
+            pressedOpen.current = open;
+          }}
+          onClick={(e) => {
+            if (pressedOpen.current) {
+              pressedOpen.current = false;
+              return;
+            }
+            setMenu({ row: r, anchor: e.currentTarget });
+          }}
+          onKeyDown={(e) => {
+            if (e.key !== "ArrowDown" && e.key !== "ArrowUp") return;
+            e.preventDefault();
+            setMenu({ row: r, anchor: e.currentTarget });
+          }}
         >
           {section ? "§" : k + 1}
         </button>
@@ -78,7 +130,7 @@ export function TableView({ table, onEdit, sectionMode, onToggleSection }: Table
   });
   return (
     <div className={styles.scroll}>
-      <table className={styles.table}>
+      <table ref={tableEl} className={styles.table}>
         {head && (
           <thead>
             <tr>
@@ -98,8 +150,25 @@ export function TableView({ table, onEdit, sectionMode, onToggleSection }: Table
         )}
         <tbody>{rows}</tbody>
       </table>
+      {menu && (
+        <RowMenu
+          key={menu.row}
+          label={menuLabel(table, menu.row)}
+          anchor={menu.anchor}
+          items={menuItems(menu.row)}
+          onClose={closeMenu}
+        />
+      )}
     </div>
   );
+}
+
+/** The menu's name: the row's number among data rows, or its Section Header text. */
+function menuLabel(table: Table, row: number): string {
+  if (isSectionHeader(table, row)) return `Section header row ${table.grid[row]?.[0] ?? ""}`.trim();
+  let n = 0;
+  for (let r = table.header ? 1 : 0; r <= row; r++) if (!isSectionHeader(table, r)) n++;
+  return `Row ${n}`;
 }
 
 type CellProps = {
