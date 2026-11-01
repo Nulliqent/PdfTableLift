@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   EXPORT_FORMATS,
   exportFile,
@@ -8,6 +8,7 @@ import {
   tableSize,
   type BuiltStackedTable,
   type Document,
+  type StackedMember,
 } from "../../engine";
 import { copyText } from "../copy-text";
 import { downloadFile } from "../download-file";
@@ -17,7 +18,7 @@ import { useSectionMode } from "../useSectionMode";
 import { Button } from "./Button";
 import { CopySheet } from "./CopySheet";
 import { FormatControl } from "./FormatControl";
-import { Icon } from "./Icon";
+import { Icon, type IconName } from "./Icon";
 import { SectionModeControl } from "./SectionModeControl";
 import { SourcePage } from "./SourcePage";
 import { TableView } from "./TableView";
@@ -26,11 +27,34 @@ import styles from "./ContentPane.module.css";
 type StackedTableDetailProps = {
   document: Document;
   stacked: BuiltStackedTable;
-  onAnnounce: (message: string) => void;
+  onAnnounce: (message: string, icon?: IconName) => void;
   onSelectTable: (documentId: string, tableId: string) => void;
   /** The Source switch: a leading Source column with each Row's page. */
   onToggleSource: (documentId: string, stackedId: string, source: boolean) => void;
 };
+
+const pageList = (pages: number[]) => {
+  const ps = pages.map((p) => `p${p}`);
+  return ps.length < 2 ? ps.join("") : `${ps.slice(0, -1).join(", ")} and ${ps.at(-1)}`;
+};
+
+/**
+ * What changed in the Members since stacking, one sentence each: a Member that no longer matches
+ * the Header Row, Parts split off a Joined Member, and a Member no Table is any more.
+ */
+function memberNotices(doc: Document, members: StackedMember[]): string[] {
+  return members.flatMap((m) => {
+    const t = m.table;
+    if (!t) return [`The Member on p${m.ref.page} is no longer a Table of its own and is left out`];
+    if (m.leftOut === "no-match")
+      return [`Table ${t.n} no longer matches the Header Row and is left out (${m.reason})`];
+    if (!m.dropped.length) return [];
+    const pages = [...new Set(m.dropped.map((p) => p.page))];
+    return pages.every((p) => doc.noJoin.includes(p))
+      ? [`Table ${t.n} was split by page: its Rows on ${pageList(pages)} are left out`]
+      : [`Table ${t.n} no longer continues onto ${pageList(pages)}: those Rows are left out`];
+  });
+}
 
 /**
  * The preview of a Stacked Table: read-only, with a note that sends the user to its Members, any
@@ -53,6 +77,16 @@ export function StackedTableDetail({
   const [sheet, setSheet] = useState<string | null>(null);
   const name = EXPORT_FORMATS.find((f) => f.format === format)!.name;
   const found = members.flatMap((m) => (m.table ? [m.table] : []));
+  const notices = memberNotices(document, members);
+  // Each notice is announced when it appears, including those already standing when it is opened.
+  const announced = useRef(new Set<string>());
+  const noticeKey = notices.join("\n");
+  useEffect(() => {
+    const now = noticeKey ? noticeKey.split("\n") : [];
+    const fresh = now.filter((n) => !announced.current.has(n));
+    announced.current = new Set(now);
+    if (fresh.length) onAnnounce(fresh.join(". "), "warn");
+  }, [noticeKey, onAnnounce]);
   const copy = async () => {
     const text = exportTable(table, format, sectionMode, source);
     if (await copyText(text)) {
@@ -89,16 +123,12 @@ export function StackedTableDetail({
             </button>
           ))}
         </div>
-        {members.map((m, i) =>
-          m.leftOut === "no-match" && m.table ? (
-            <div key={i} className={styles.joined}>
-              <Icon name="warn" />
-              <span>
-                Table {m.table.n} no longer matches the Header Row and is left out ({m.reason})
-              </span>
-            </div>
-          ) : null,
-        )}
+        {notices.map((notice) => (
+          <div key={notice} className={styles.joined} data-member-notice>
+            <Icon name="warn" />
+            <span>{notice}</span>
+          </div>
+        ))}
       </div>
       <div className={styles.bar}>
         <div className={styles.seg} role="group" aria-label="View">

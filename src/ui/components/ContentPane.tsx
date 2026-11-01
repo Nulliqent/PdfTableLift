@@ -21,7 +21,7 @@ import { useSectionMode } from "../useSectionMode";
 import { Button } from "./Button";
 import { CopySheet } from "./CopySheet";
 import { FormatControl } from "./FormatControl";
-import { Icon } from "./Icon";
+import { Icon, type IconName } from "./Icon";
 import { SectionModeControl } from "./SectionModeControl";
 import { SourcePage } from "./SourcePage";
 import { StackedTableDetail } from "./StackedTableDetail";
@@ -38,7 +38,7 @@ type ContentPaneProps = {
   onSelectRegion: (documentId: string) => void;
   onOpen: () => void;
   /** Shows a message in the HUD (copied, Section Header marked, Rows combined, and so on). */
-  onAnnounce: (message: string) => void;
+  onAnnounce: (message: string, icon?: IconName) => void;
   onSelectTable: (documentId: string, tableId: string) => void;
   /** Select Region, shown in place of the selected Table while the user is drawing a Region. */
   regionSelection?: ReactNode;

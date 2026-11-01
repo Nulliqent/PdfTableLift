@@ -245,3 +245,38 @@ test("a left-out Member is outlined on the Source Page but marked as left out", 
   await five.click();
   await expect(main.getByRole("heading", { name: "Table 5" })).toBeVisible();
 });
+
+// #52: a Stacked Table follows its Members as they stand.
+
+test("a Cell fixed in a Member shows in the Stacked Table", async ({ page }) => {
+  const { sidebar, main } = await stackFiveThenFour(page);
+  await sidebar.getByRole("button", { name: /^Table 5/ }).click();
+  await main.getByRole("cell", { name: "Madison Willy St" }).click();
+  await page.keyboard.press("ControlOrMeta+A");
+  await page.keyboard.type("Madison East");
+  await page.keyboard.press("Enter");
+  await sidebar.getByRole("button", { name: /^Stacked Table 1/ }).click();
+  await expect(main.getByRole("cell", { name: "Madison East" })).toBeVisible();
+  await expect(main.getByRole("cell", { name: "Madison Willy St" })).toHaveCount(0);
+});
+
+test("a Member that stops matching is left out with a notice, and comes back", async ({ page }) => {
+  const { sidebar, main } = await stackFiveThenFour(page);
+  await sidebar.getByRole("button", { name: /^Table 4/ }).click();
+  await main.getByRole("switch", { name: "First row is header" }).uncheck();
+  await sidebar.getByRole("button", { name: /^Stacked Table 1/ }).click();
+
+  const notice = "Table 4 no longer matches the Header Row and is left out (No Header Row)";
+  await expect(main.getByText(notice)).toBeVisible();
+  await expect(status(page)).toHaveText(notice);
+  // Table 5, the first Member, still gives the Header Row; Table 4's Rows are gone.
+  await expect(main.getByRole("columnheader", { name: "Store" })).toHaveCount(1);
+  await expect(main.getByRole("cell", { name: "Madison Willy St" })).toBeVisible();
+  await expect(main.getByRole("cell", { name: "Portland Pearl" })).toHaveCount(0);
+
+  await main.getByRole("button", { name: "Table 4", exact: true }).click();
+  await main.getByRole("switch", { name: "First row is header" }).check();
+  await sidebar.getByRole("button", { name: /^Stacked Table 1/ }).click();
+  await expect(main.getByRole("cell", { name: "Portland Pearl" })).toBeVisible();
+  await expect(main.getByText(notice)).toHaveCount(0);
+});
