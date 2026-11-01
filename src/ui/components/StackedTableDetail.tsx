@@ -1,9 +1,5 @@
 import { useEffect, useRef, useState } from "react";
 import {
-  EXPORT_FORMATS,
-  exportFile,
-  exportTable,
-  hasSectionHeaders,
   isSectionHeader,
   tableSize,
   type BuiltStackedTable,
@@ -11,16 +7,10 @@ import {
   type StackedMember,
   type StackedTableRef,
 } from "../../engine";
-import { copyText } from "../copy-text";
-import { downloadFile } from "../download-file";
 import { plural } from "../format";
-import { useExportFormat } from "../useExportFormat";
 import { useSectionMode } from "../useSectionMode";
-import { Button } from "./Button";
-import { CopySheet } from "./CopySheet";
-import { FormatControl } from "./FormatControl";
+import { ExportBar, type DetailView } from "./ExportBar";
 import { Icon, type IconName } from "./Icon";
-import { SectionModeControl } from "./SectionModeControl";
 import { SourcePage } from "./SourcePage";
 import { TableView } from "./TableView";
 import styles from "./ContentPane.module.css";
@@ -78,13 +68,10 @@ export function StackedTableDetail({
 }: StackedTableDetailProps) {
   const { table, members, record, source } = stacked;
   const ref = { documentId: document.id, stackedId: record.id };
-  const [view, setView] = useState<"table" | "source">("table");
+  const [view, setView] = useState<DetailView>("table");
   const { rows, cols } = tableSize(table);
-  const [format, setFormat] = useExportFormat();
   const [sectionMode, setSectionMode] = useSectionMode();
   const sections = table.sections.filter((r) => isSectionHeader(table, r)).length;
-  const [sheet, setSheet] = useState<string | null>(null);
-  const name = EXPORT_FORMATS.find((f) => f.format === format)!.name;
   const found = members.flatMap((m) => (m.table ? [m.table] : []));
   const notices = memberNotices(document, members);
   // Each notice is announced when it appears, including those already standing when it is opened.
@@ -96,17 +83,6 @@ export function StackedTableDetail({
     announced.current = new Set(now);
     if (fresh.length) onAnnounce(fresh.join(". "), "warn");
   }, [noticeKey, onAnnounce]);
-  const copy = async () => {
-    const text = exportTable(table, format, sectionMode, source);
-    if (await copyText(text)) {
-      onAnnounce(format === "tsv" ? "Copied: paste into Numbers or Excel" : `Copied as ${name}`);
-    } else setSheet(text);
-  };
-  const download = () => {
-    const title = `Stacked Table ${record.n}`;
-    downloadFile(exportFile(document.name, title, table, format, sectionMode, source));
-    onAnnounce("Downloaded");
-  };
   return (
     <>
       <div className={styles.head}>
@@ -160,19 +136,17 @@ export function StackedTableDetail({
           </button>
         </div>
       </div>
-      <div className={styles.bar}>
-        <div className={styles.seg} role="group" aria-label="View">
-          {(["table", "source"] as const).map((v) => (
-            <button key={v} type="button" aria-pressed={view === v} onClick={() => setView(v)}>
-              {v === "table" ? "Table" : "Source Page"}
-            </button>
-          ))}
-        </div>
-        <FormatControl value={format} onChange={setFormat} />
-        {hasSectionHeaders(table) && (
-          <SectionModeControl value={sectionMode} onChange={setSectionMode} />
-        )}
-        <span className={styles.spacer} />
+      <ExportBar
+        documentName={document.name}
+        title={`Stacked Table ${record.n}`}
+        table={table}
+        source={source}
+        view={view}
+        onView={setView}
+        sectionMode={sectionMode}
+        onSectionMode={setSectionMode}
+        onAnnounce={onAnnounce}
+      >
         <label className={styles.switch}>
           <input
             type="checkbox"
@@ -185,15 +159,7 @@ export function StackedTableDetail({
           />
           Source
         </label>
-        <Button onClick={download}>
-          <Icon name="tray" />
-          Download
-        </Button>
-        <Button variant="primary" onClick={() => void copy()}>
-          <Icon name="copy" />
-          Copy
-        </Button>
-      </div>
+      </ExportBar>
       <div className={styles.card}>
         {view === "table" ? (
           <TableView table={table} sectionMode={sectionMode} readOnly source={source} />
@@ -205,9 +171,6 @@ export function StackedTableDetail({
           />
         )}
       </div>
-      {sheet !== null && (
-        <CopySheet title={`Copy ${name}`} text={sheet} onDone={() => setSheet(null)} />
-      )}
       <div className={styles.foot}>
         <span>
           {plural(rows, "row")} × {plural(cols, "column")}

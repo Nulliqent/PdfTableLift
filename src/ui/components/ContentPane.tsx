@@ -1,11 +1,7 @@
 import { useState, type ReactNode } from "react";
 import {
-  EXPORT_FORMATS,
   READ_ERROR_MESSAGES,
-  exportFile,
-  exportTable,
   hasHeaderRegion,
-  hasSectionHeaders,
   isSectionHeader,
   tableSize,
   type BuiltStackedTable,
@@ -14,16 +10,11 @@ import {
   type StackedTableRef,
   type Table,
 } from "../../engine";
-import { copyText } from "../copy-text";
-import { downloadFile } from "../download-file";
 import { pageLabel, plural } from "../format";
-import { useExportFormat } from "../useExportFormat";
 import { useSectionMode } from "../useSectionMode";
 import { Button } from "./Button";
-import { CopySheet } from "./CopySheet";
-import { FormatControl } from "./FormatControl";
+import { ExportBar, type DetailView } from "./ExportBar";
 import { Icon, type IconName } from "./Icon";
-import { SectionModeControl } from "./SectionModeControl";
 import { SourcePage } from "./SourcePage";
 import { StackedTableDetail } from "./StackedTableDetail";
 import { TableView } from "./TableView";
@@ -153,24 +144,11 @@ function TableDetail({
   onSplitByPage: ContentPaneProps["onSplitByPage"];
   onJoinAgain: ContentPaneProps["onJoinAgain"];
 }) {
-  const [view, setView] = useState<"table" | "source">("table");
+  const [view, setView] = useState<DetailView>("table");
   const { rows, cols } = tableSize(table);
-  const [format, setFormat] = useExportFormat();
   const [sectionMode, setSectionMode] = useSectionMode();
   const sections = table.sections.filter((r) => isSectionHeader(table, r)).length;
-  const [sheet, setSheet] = useState<string | null>(null);
-  const name = EXPORT_FORMATS.find((f) => f.format === format)!.name;
   const ids = { documentId: document.id, tableId: table.id };
-  const copy = async () => {
-    const text = exportTable(table, format, sectionMode);
-    if (await copyText(text)) {
-      onAnnounce(format === "tsv" ? "Copied: paste into Numbers or Excel" : `Copied as ${name}`);
-    } else setSheet(text);
-  };
-  const download = () => {
-    downloadFile(exportFile(document.name, `Table ${table.n}`, table, format, sectionMode));
-    onAnnounce("Downloaded");
-  };
   return (
     <>
       <div className={styles.head}>
@@ -239,19 +217,16 @@ function TableDetail({
           </button>
         </div>
       </div>
-      <div className={styles.bar}>
-        <div className={styles.seg} role="group" aria-label="View">
-          {(["table", "source"] as const).map((v) => (
-            <button key={v} type="button" aria-pressed={view === v} onClick={() => setView(v)}>
-              {v === "table" ? "Table" : "Source Page"}
-            </button>
-          ))}
-        </div>
-        <FormatControl value={format} onChange={setFormat} />
-        {hasSectionHeaders(table) && (
-          <SectionModeControl value={sectionMode} onChange={setSectionMode} />
-        )}
-        <span className={styles.spacer} />
+      <ExportBar
+        documentName={document.name}
+        title={`Table ${table.n}`}
+        table={table}
+        view={view}
+        onView={setView}
+        sectionMode={sectionMode}
+        onSectionMode={setSectionMode}
+        onAnnounce={onAnnounce}
+      >
         {view === "table" && !hasHeaderRegion(document, table) && (
           <label className={styles.switch}>
             <input
@@ -263,15 +238,7 @@ function TableDetail({
             First row is header
           </label>
         )}
-        <Button onClick={download}>
-          <Icon name="tray" />
-          Download
-        </Button>
-        <Button variant="primary" onClick={() => void copy()}>
-          <Icon name="copy" />
-          Copy
-        </Button>
-      </div>
+      </ExportBar>
       <div className={styles.card}>
         {view === "table" ? (
           <TableView
@@ -306,9 +273,6 @@ function TableDetail({
           />
         )}
       </div>
-      {sheet !== null && (
-        <CopySheet title={`Copy ${name}`} text={sheet} onDone={() => setSheet(null)} />
-      )}
       <div className={styles.foot}>
         <span>
           {plural(rows, "row")} × {plural(cols, "column")}
