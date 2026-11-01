@@ -438,7 +438,7 @@ describe("#27 Single-Row Region switch", () => {
   it("#27: the switch is off by default", () => {
     const state = run(opened(statement), { type: "regionStarted", documentId: "d1", page: 1 });
 
-    expect(state.region?.singleRow).toBe(false);
+    expect(state.region?.regions[0]?.singleRow).toBe(false);
   });
 
   it("#27: flipping the switch updates the preview at once", () => {
@@ -497,7 +497,7 @@ describe("#27 Single-Row Region switch", () => {
 
     expect(table.grid).toEqual([AS_ONE_ROW]);
     expect(table.header).toBe(false);
-    expect(state.documents[0]!.regions[0]!.singleRow).toBe(true);
+    expect(state.documents[0]!.handDrawn[0]!.regions[0]!.singleRow).toBe(true);
 
     const on = run(state, {
       type: "headerToggled",
@@ -557,7 +557,7 @@ describe("#27 Single-Row Region switch", () => {
       page: 1,
       tableId: selectedTable(rejoined)!.id,
     });
-    expect(redrawing.region?.singleRow).toBe(true);
+    expect(redrawing.region?.regions[0]?.singleRow).toBe(true);
 
     const redrawn = run(
       redrawing,
@@ -565,7 +565,7 @@ describe("#27 Single-Row Region switch", () => {
       { type: "regionCommitted" },
     );
     expect(selectedTable(redrawn)!.grid).toEqual([ENTRIES[0]]);
-    expect(redrawn.documents[0]!.regions[0]!.singleRow).toBe(true);
+    expect(redrawn.documents[0]!.handDrawn[0]!.regions[0]!.singleRow).toBe(true);
   });
 
   it("#27: a Single-Row Region with no text is still refused", () => {
