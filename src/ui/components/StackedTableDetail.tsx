@@ -17,6 +17,7 @@ import { CopySheet } from "./CopySheet";
 import { FormatControl } from "./FormatControl";
 import { Icon } from "./Icon";
 import { SectionModeControl } from "./SectionModeControl";
+import { SourcePage } from "./SourcePage";
 import { TableView } from "./TableView";
 import styles from "./ContentPane.module.css";
 
@@ -45,6 +46,7 @@ export function StackedTableDetail({
   onRemoveStacked,
 }: StackedTableDetailProps) {
   const { table, members, record } = stacked;
+  const [view, setView] = useState<"table" | "source">("table");
   const { rows, cols } = tableSize(table);
   const [format, setFormat] = useExportFormat();
   const [sectionMode, setSectionMode] = useSectionMode();
@@ -116,6 +118,13 @@ export function StackedTableDetail({
         </div>
       </div>
       <div className={styles.bar}>
+        <div className={styles.seg} role="group" aria-label="View">
+          {(["table", "source"] as const).map((v) => (
+            <button key={v} type="button" aria-pressed={view === v} onClick={() => setView(v)}>
+              {v === "table" ? "Table" : "Source Page"}
+            </button>
+          ))}
+        </div>
         <FormatControl value={format} onChange={setFormat} />
         {hasSectionHeaders(table) && (
           <SectionModeControl value={sectionMode} onChange={setSectionMode} />
@@ -127,7 +136,15 @@ export function StackedTableDetail({
         </Button>
       </div>
       <div className={styles.card}>
-        <TableView table={table} sectionMode={sectionMode} readOnly />
+        {view === "table" ? (
+          <TableView table={table} sectionMode={sectionMode} readOnly />
+        ) : (
+          <SourcePage
+            document={document}
+            members={members}
+            onSelect={(tableId) => onSelectTable(document.id, tableId)}
+          />
+        )}
       </div>
       {sheet !== null && (
         <CopySheet title={`Copy ${name}`} text={sheet} onDone={() => setSheet(null)} />
@@ -136,7 +153,8 @@ export function StackedTableDetail({
         <span>
           {plural(rows, "row")} × {plural(cols, "column")}
           {sections > 0 && ` in ${plural(sections, "section")}`} · Stacked from{" "}
-          {plural(found.length, "Table")} · Read-only
+          {plural(found.length, "Table")} ·{" "}
+          {view === "table" ? "Read-only" : "Click an outline to open that Member"}
         </span>
       </div>
     </>

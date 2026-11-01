@@ -316,8 +316,17 @@ test.describe("keyboard", () => {
       ).toBe(true);
     expectFocusVisibleEverywhere(stops);
 
+    // #54: on its Source Page, each Member's outline is a stop with visible focus.
+    const main = page.getByRole("main");
+    await main.getByRole("button", { name: "Source Page" }).click();
+    await expect(main.getByTestId("source-page-3").locator("canvas")).toBeVisible();
+    stops = await tabThrough(page);
+    labels = stops.map((s) => s.label);
+    expect(labels.filter((l) => /^Table [45]$/.test(l)).length).toBeGreaterThanOrEqual(4);
+    expectFocusVisibleEverywhere(stops);
+
     // Edit Members (#53): every move control, ends included, is reachable with Save and Cancel.
-    await page.getByRole("main").getByRole("button", { name: "Edit Members" }).click();
+    await main.getByRole("button", { name: "Edit Members" }).click();
     stops = await tabThrough(page);
     labels = stops.map((s) => s.label);
     for (const expected of [
@@ -512,6 +521,14 @@ test.describe("phone layout", () => {
       page.getByRole("main").getByRole("heading", { name: "Stacked Table 1" }),
     ).toBeVisible();
     await expectOneColumn(page);
+
+    // #54: its Source Page fits too, and an outline opens its Member by touch.
+    const main = page.getByRole("main");
+    await main.getByRole("button", { name: "Source Page" }).tap();
+    await expect(main.getByTestId("source-page-3").locator("canvas")).toBeVisible();
+    await expectOneColumn(page);
+    await main.getByTestId("source-page-3").getByRole("button", { name: "Table 5" }).tap();
+    await expect(main.getByRole("heading", { name: "Table 5" })).toBeVisible();
   });
 
   test("the row-number menu fits the phone's width and works by touch", async ({ page }) => {

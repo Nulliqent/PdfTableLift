@@ -246,3 +246,69 @@ test("a Table without a Header Row can't be ticked", async ({ page }) => {
   await expect(three).toHaveAttribute("aria-disabled", "true");
   await expect(three).toHaveAccessibleDescription("No Header Row");
 });
+
+// #54: Source Page on a Stacked Table.
+
+/** Stacks Tables 5 and 4, in that order, of the unjoined Example Document. */
+async function stackFiveThenFour(page: Page) {
+  const ui = await exampleUnjoined(page);
+  await ui.sidebar.getByRole("button", { name: /^Select Tables/ }).click();
+  await ui.sidebar.getByRole("checkbox", { name: /^Table 5(?!\d)/ }).check();
+  await ui.sidebar.getByRole("checkbox", { name: /^Table 4(?!\d)/ }).check();
+  await ui.sidebar.getByRole("button", { name: "Stack 2 Tables" }).click();
+  await expect(ui.main.getByRole("heading", { name: "Stacked Table 1" })).toBeVisible();
+  return ui;
+}
+
+test("Source Page on a Stacked Table outlines every Member, page by page", async ({ page }) => {
+  const { main } = await stackFiveThenFour(page);
+  await main.getByRole("button", { name: "Source Page" }).click();
+
+  // Each Member's page once, in page order, though Table 5 was ticked first.
+  const pages = main.getByTestId(/^source-page-/);
+  await expect(pages).toHaveCount(2);
+  await expect(pages.nth(0)).toHaveAttribute("data-testid", "source-page-2");
+  await expect(pages.nth(1)).toHaveAttribute("data-testid", "source-page-3");
+  await expect(main.getByText("Page 2", { exact: true })).toBeVisible();
+
+  // Only the Members are outlined, each labelled by its Table number in text.
+  const four = main.getByTestId("source-page-2").getByRole("button", { name: "Table 4" });
+  const five = main.getByTestId("source-page-3").getByRole("button", { name: "Table 5" });
+  await expect(four).toHaveText("Table 4");
+  await expect(five).toHaveText("Table 5");
+  await expect(pages.getByRole("button")).toHaveCount(2);
+  await expect(four).toHaveCSS("border-top-style", "solid");
+
+  // Clicking an outline selects that Member.
+  await five.click();
+  await expect(main.getByRole("heading", { name: "Table 5" })).toBeVisible();
+});
+
+test("pressing Enter on a Member's outline selects it", async ({ page }) => {
+  const { main } = await stackFiveThenFour(page);
+  await main.getByRole("button", { name: "Source Page" }).click();
+  const four = main.getByTestId("source-page-2").getByRole("button", { name: "Table 4" });
+  await four.focus();
+  await page.keyboard.press("Enter");
+  await expect(main.getByRole("heading", { name: "Table 4" })).toBeVisible();
+});
+
+test("a left-out Member is outlined on the Source Page but marked as left out", async ({
+  page,
+}) => {
+  const { sidebar, main } = await stackFiveThenFour(page);
+  await sidebar.getByRole("button", { name: /^Table 5/ }).click();
+  await main.getByRole("switch", { name: "First row is header" }).uncheck();
+  await sidebar.getByRole("button", { name: /^Stacked Table 1/ }).click();
+  await main.getByRole("button", { name: "Source Page" }).click();
+
+  const five = main.getByTestId("source-page-3").getByRole("button", { name: /^Table 5/ });
+  await expect(five).toHaveAccessibleName("Table 5 · left out");
+  await expect(five).toHaveText("Table 5 · left out");
+  await expect(five).toHaveCSS("border-top-style", "dashed");
+  const four = main.getByTestId("source-page-2").getByRole("button", { name: "Table 4" });
+  await expect(four).toHaveCSS("border-top-style", "solid");
+
+  await five.click();
+  await expect(main.getByRole("heading", { name: "Table 5" })).toBeVisible();
+});
