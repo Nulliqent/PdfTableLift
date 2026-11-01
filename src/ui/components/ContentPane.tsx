@@ -57,6 +57,10 @@ type ContentPaneProps = {
   onRowAction: (action: RowAction) => void;
   onSplitByPage: (documentId: string, tableId: string) => void;
   onJoinAgain: (documentId: string, tableId: string) => void;
+  /** The Stacked Table whose Members are being edited in the sidebar, if any. */
+  editingStackedId: string | null;
+  onEditMembers: (documentId: string, stackedId: string) => void;
+  onRemoveStacked: (documentId: string, stackedId: string) => void;
 };
 
 /** The content pane: the selected Table with Copy, or an empty state. */
@@ -77,6 +81,9 @@ export function ContentPane({
   onRowAction,
   onSplitByPage,
   onJoinAgain,
+  editingStackedId,
+  onEditMembers,
+  onRemoveStacked,
 }: ContentPaneProps) {
   return (
     <main className={styles.content}>
@@ -90,6 +97,9 @@ export function ContentPane({
             stacked={stacked}
             onAnnounce={onAnnounce}
             onSelectTable={onSelectTable}
+            editing={editingStackedId === stacked.record.id}
+            onEditMembers={onEditMembers}
+            onRemoveStacked={onRemoveStacked}
           />
         ) : document && table ? (
           <TableDetail

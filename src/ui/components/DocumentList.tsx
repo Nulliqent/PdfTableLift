@@ -32,6 +32,10 @@ type DocumentListProps = {
   onStartStacking: (documentId: string) => void;
   onTick: (tableId: string, ticked: boolean) => void;
   onStack: () => void;
+  /** Edit Members: move a ticked Table one place up or down in the Member order. */
+  onMoveMember: (tableId: string, direction: "up" | "down") => void;
+  /** Edit Members: Save. */
+  onSaveMembers: () => void;
   onCancelStacking: () => void;
   onSelectStacked: (documentId: string, stackedId: string) => void;
 };
@@ -127,6 +131,8 @@ function DocumentBody({
   onStartStacking,
   onTick,
   onStack,
+  onMoveMember,
+  onSaveMembers,
   onCancelStacking,
   onSelectStacked,
 }: BodyProps) {
@@ -165,6 +171,8 @@ function DocumentBody({
         stacking={stacking}
         onTick={onTick}
         onStack={onStack}
+        onMove={onMoveMember}
+        onSave={onSaveMembers}
         onCancel={onCancelStacking}
       />
     );
@@ -267,35 +275,51 @@ function TableName({ table: t, id }: { table: Table; id?: string }) {
  * Select Tables: a checkbox per Table of the Document. A Table that fails the matching rule against
  * the first ticked Table stays listed, greyed out and marked unavailable, with the reason beneath it
  * in words. Ticked Tables show their tick order. The bar holds Stack N Tables and Cancel.
+ *
+ * In Edit Members the ticked Tables come first, in Member order, each with Move Up and Move Down;
+ * the bar holds Save, which needs one ticked Table, and Cancel.
  */
 function SelectTables({
   doc,
   stacking,
   onTick,
   onStack,
+  onMove,
+  onSave,
   onCancel,
 }: {
   doc: Document;
   stacking: TablesInProgress;
   onTick: (tableId: string, ticked: boolean) => void;
   onStack: () => void;
+  onMove: (tableId: string, direction: "up" | "down") => void;
+  onSave: () => void;
   onCancel: () => void;
 }) {
-  const ticked = tickedTables(doc, stacking.ticked).map((t) => t.id);
+  const tickedList = tickedTables(doc, stacking.ticked);
+  const ticked = tickedList.map((t) => t.id);
   const n = ticked.length;
+  const record = doc.stacked.find((s) => s.id === stacking.stackedId);
+  const editing = record !== undefined;
+  const least = editing ? 1 : 2;
   const hintId = `stack-hint-${doc.id}`;
   const group = useRef<HTMLDivElement>(null);
   useEffect(() => {
     group.current?.querySelector<HTMLElement>("input")?.focus();
   }, []);
+  const listed = editing
+    ? [...tickedList, ...doc.tables.filter((t) => !ticked.includes(t.id))]
+    : doc.tables;
   return (
     <div
       ref={group}
       role="group"
-      aria-label={`Select Tables of ${doc.name}`}
+      aria-label={
+        editing ? `Edit Members of Stacked Table ${record.n}` : `Select Tables of ${doc.name}`
+      }
       className={styles.group}
     >
-      {doc.tables.map((t) => {
+      {listed.map((t) => {
         const order = ticked.indexOf(t.id) + 1;
         const match = tickMatch(doc, stacking.ticked, t);
         const reason = match.matches ? null : match.reason;
@@ -327,22 +351,46 @@ function SelectTables({
                 {order}
               </span>
             )}
+            {editing && order > 0 && (
+              <span className={styles.moves}>
+                {(["up", "down"] as const).map((direction) => {
+                  // At either end the control stays focusable but does nothing, so focus is never lost.
+                  const end = direction === "up" ? order === 1 : order === n;
+                  return (
+                    <button
+                      key={direction}
+                      type="button"
+                      className={styles.move}
+                      aria-label={`Move Table ${t.n} ${direction}`}
+                      title={direction === "up" ? "Move Up" : "Move Down"}
+                      aria-disabled={end ? true : undefined}
+                      onClick={(e) => {
+                        e.preventDefault();
+                        if (!end) onMove(t.id, direction);
+                      }}
+                    >
+                      <Icon name={direction} />
+                    </button>
+                  );
+                })}
+              </span>
+            )}
           </label>
         );
       })}
       <div className={styles.stackBar}>
         <Button
           variant="primary"
-          disabled={n < 2}
-          aria-describedby={n < 2 ? hintId : undefined}
-          onClick={onStack}
+          disabled={n < least}
+          aria-describedby={n < least ? hintId : undefined}
+          onClick={editing ? onSave : onStack}
         >
-          Stack {plural(n, "Table")}
+          {editing ? "Save" : `Stack ${plural(n, "Table")}`}
         </Button>
         <Button onClick={onCancel}>Cancel</Button>
-        {n < 2 && (
+        {n < least && (
           <span id={hintId} className={styles.hint}>
-            Tick at least two Tables
+            {editing ? "Tick at least one Table" : "Tick at least two Tables"}
           </span>
         )}
       </div>

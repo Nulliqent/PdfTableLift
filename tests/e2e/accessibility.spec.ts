@@ -301,11 +301,34 @@ test.describe("keyboard", () => {
     ).toBeVisible();
     stops = await tabThrough(page);
     labels = stops.map((s) => s.label);
-    for (const expected of ["Stacked Table 1", "Table 4", "Table 5", "CSV", "Copy"])
+    for (const expected of [
+      "Stacked Table 1",
+      "Table 4",
+      "Table 5",
+      "Edit Members",
+      "Remove Stacked Table",
+      "CSV",
+      "Copy",
+    ])
       expect(
         labels.some((l) => l.startsWith(expected)),
         `Tab reaches "${expected}"`,
       ).toBe(true);
+    expectFocusVisibleEverywhere(stops);
+
+    // Edit Members (#53): every move control, ends included, is reachable with Save and Cancel.
+    await page.getByRole("main").getByRole("button", { name: "Edit Members" }).click();
+    stops = await tabThrough(page);
+    labels = stops.map((s) => s.label);
+    for (const expected of [
+      "Move Table 4 up",
+      "Move Table 4 down",
+      "Move Table 5 up",
+      "Move Table 5 down",
+      "Save",
+      "Cancel",
+    ])
+      expect(labels, `Tab reaches "${expected}"`).toContain(expected);
     expectFocusVisibleEverywhere(stops);
   });
 

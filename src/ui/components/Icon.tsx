@@ -43,6 +43,8 @@ const SYMBOLS = {
     </>
   ),
   trash: <path d="M5 7h14M10 7V5h4v2M7 7l1 12.5h8L17 7" />,
+  up: <path d="M6.5 14.5L12 9l5.5 5.5" />,
+  down: <path d="M6.5 9.5L12 15l5.5-5.5" />,
   stack: (
     <>
       <rect x="4" y="3.5" width="16" height="7" rx="2" />

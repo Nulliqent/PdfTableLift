@@ -122,6 +122,15 @@
   height: 15px;
 }
 
+.linkBtn[aria-disabled="true"] {
+  opacity: 0.45;
+  cursor: default;
+}
+
+.linkBtn[aria-disabled="true"]:hover {
+  background: none;
+}
+
 .danger {
   color: var(--red);
 }

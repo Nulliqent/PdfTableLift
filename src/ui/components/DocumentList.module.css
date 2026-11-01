@@ -271,6 +271,52 @@
   font-variant-numeric: tabular-nums;
 }
 
+/* Edit Members: Move Up and Move Down beside each ticked Table. */
+.moves {
+  flex: none;
+  display: flex;
+  gap: 2px;
+  margin-left: 4px;
+}
+
+.move {
+  display: grid;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  border: 0;
+  border-radius: 5px;
+  background: none;
+  color: var(--label2);
+  cursor: pointer;
+}
+
+.move:hover {
+  background: var(--fill);
+  color: var(--label);
+}
+
+.move:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: 1px;
+}
+
+.move[aria-disabled="true"] {
+  opacity: 0.35;
+  cursor: default;
+}
+
+.move[aria-disabled="true"]:hover {
+  background: none;
+  color: var(--label2);
+}
+
+.move svg {
+  width: 14px;
+  height: 14px;
+}
+
 .stackBar {
   display: flex;
   flex-wrap: wrap;

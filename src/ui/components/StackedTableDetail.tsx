@@ -25,6 +25,10 @@ type StackedTableDetailProps = {
   stacked: BuiltStackedTable;
   onAnnounce: (message: string) => void;
   onSelectTable: (documentId: string, tableId: string) => void;
+  /** Its Members are being edited in the sidebar. */
+  editing: boolean;
+  onEditMembers: (documentId: string, stackedId: string) => void;
+  onRemoveStacked: (documentId: string, stackedId: string) => void;
 };
 
 /**
@@ -36,6 +40,9 @@ export function StackedTableDetail({
   stacked,
   onAnnounce,
   onSelectTable,
+  editing,
+  onEditMembers,
+  onRemoveStacked,
 }: StackedTableDetailProps) {
   const { table, members, record } = stacked;
   const { rows, cols } = tableSize(table);
@@ -86,6 +93,27 @@ export function StackedTableDetail({
             </div>
           ) : null,
         )}
+        <div className={styles.actions}>
+          <button
+            type="button"
+            className={styles.linkBtn}
+            aria-disabled={editing ? true : undefined}
+            onClick={() => {
+              if (!editing) onEditMembers(document.id, record.id);
+            }}
+          >
+            <Icon name="stack" />
+            Edit Members
+          </button>
+          <button
+            type="button"
+            className={`${styles.linkBtn} ${styles.danger}`}
+            onClick={() => onRemoveStacked(document.id, record.id)}
+          >
+            <Icon name="trash" />
+            Remove Stacked Table
+          </button>
+        </div>
       </div>
       <div className={styles.bar}>
         <FormatControl value={format} onChange={setFormat} />
