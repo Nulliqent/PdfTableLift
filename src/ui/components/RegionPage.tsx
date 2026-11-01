@@ -1,20 +1,15 @@
-import { useEffect, useRef, useState, type PointerEvent } from "react";
-import type { RenderedPage } from "../../pdf-reader";
+import { useRef, useState, type PointerEvent } from "react";
 import type { Bbox, Document } from "../../engine";
-import { pageRendererFor } from "../documentSources";
 import { Icon } from "./Icon";
-import { CanvasHost } from "./SourcePage";
+import { frame, useDrawnPages, usePageWidth } from "../page-drawing";
+import { CanvasHost } from "./CanvasHost";
 import source from "./SourcePage.module.css";
 import styles from "./RegionPage.module.css";
 
-const MAX_PAGE_WIDTH = 900;
-const MIN_PAGE_WIDTH = 240;
-const GUTTER = 16;
 /** A drag smaller than this, in CSS pixels, in either direction is a tap, not a Region. */
 const MIN_DRAG = 8;
 
 type Fractions = { x: number; y: number };
-type Result = { key: string; page: RenderedPage | "failed" };
 
 /**
  * One page of a Document with a layer to drag a Region on, using the mouse, a pen or a finger.
@@ -38,44 +33,12 @@ export function RegionPage({
   const host = useRef<HTMLDivElement>(null);
   const layer = useRef<HTMLDivElement>(null);
   const start = useRef<Fractions | null>(null);
-  const [width, setWidth] = useState(0);
   // A finger scrolls the pane unless Draw is on; it turns itself off when the drag ends.
   const [fingerDraws, setFingerDraws] = useState(false);
-  // The last result, tagged with what it shows. While the pane is resized the old page stays up
-  // (the boxes are fractions, so they still line up) until the redraw lands.
-  const [result, setResult] = useState<Result | null>(null);
-  const key = `${document.id}|${pageNum}`;
-  const failed = result?.key === key && result.page === "failed";
-  const page = result?.page !== "failed" && result?.key === key ? result.page : null;
-
-  useEffect(() => {
-    const el = host.current;
-    if (!el) return;
-    const measure = () =>
-      setWidth(
-        Math.round(Math.min(Math.max(el.clientWidth - 2 * GUTTER, MIN_PAGE_WIDTH), MAX_PAGE_WIDTH)),
-      );
-    measure();
-    const observer = new ResizeObserver(measure);
-    observer.observe(el);
-    return () => observer.disconnect();
-  }, []);
-
-  useEffect(() => {
-    if (!width) return;
-    const abort = new AbortController();
-    void (async () => {
-      try {
-        const renderer = await pageRendererFor(document.id);
-        const drawn = await renderer.renderPage(pageNum, width, abort.signal);
-        // A render that finished after a newer one started must not overwrite its result.
-        if (!abort.signal.aborted) setResult({ key, page: drawn });
-      } catch {
-        if (!abort.signal.aborted) setResult({ key, page: "failed" });
-      }
-    })();
-    return () => abort.abort();
-  }, [document.id, key, pageNum, width]);
+  const width = usePageWidth(host);
+  const drawn = useDrawnPages(document.id, [pageNum], width);
+  const failed = drawn === "failed";
+  const page = drawn && drawn !== "failed" ? drawn[0]!.page : null;
 
   const at = (e: PointerEvent): Fractions => {
     const b = layer.current!.getBoundingClientRect();
@@ -122,7 +85,7 @@ export function RegionPage({
           <Icon name="warn" />
           <p>This page couldn&apos;t be drawn.</p>
         </div>
-      ) : !result || !page ? (
+      ) : !page ? (
         <div className={source.message} role="status">
           <p>Drawing the page…</p>
         </div>
@@ -179,10 +142,3 @@ export function RegionPage({
     </div>
   );
 }
-
-const frame = (o: { left: number; top: number; width: number; height: number }) => ({
-  left: `${o.left * 100}%`,
-  top: `${o.top * 100}%`,
-  width: `${o.width * 100}%`,
-  height: `${o.height * 100}%`,
-});
