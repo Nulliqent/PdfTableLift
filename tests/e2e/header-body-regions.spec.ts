@@ -225,7 +225,7 @@ test.skip("#44: the Single-Row switch is on each Body Region and not on the Head
   await expect(oneRow(1)).toBeChecked();
 });
 
-test.skip("#45: redrawing a multi-Region Table reopens every Region, and saving updates the same Table", async ({
+test("#45: redrawing a multi-Region Table reopens every Region, and saving updates the same Table", async ({
   page,
 }) => {
   const { main, layer } = await enterSelectRegion(page);
@@ -233,30 +233,26 @@ test.skip("#45: redrawing a multi-Region Table reopens every Region, and saving 
   await main.getByRole("button", { name: "Add Table" }).click();
   await expect(main.getByText("Selected by hand")).toBeVisible();
 
-  await page
-    .getByRole("button", { name: /Select Table Region/ })
-    .first()
-    .click();
+  await main.getByRole("button", { name: "Redraw Region" }).click();
   await expect(entry(main, 1)).toContainText("Region 1 · Body");
   await expect(entry(main, 2)).toContainText("Region 2 · Header");
 
   await main.getByRole("button", { name: "Add Region" }).click();
   await drag(page, layer, ROWS_BELOW_NOTE);
-  await main.getByRole("button", { name: "Add Table" }).click();
+  await main.getByRole("button", { name: "Replace Table" }).click();
   await expect(main.getByRole("heading", { name: /^Table 1/ })).toBeVisible();
   await expect(main.getByText("Selected by hand")).toBeVisible();
   await expect(main.getByRole("cell", { name: "FS-2010" })).toBeVisible();
 });
 
-test.skip("#45: deleting a Hand-drawn Table with several Regions removes them all", async ({
-  page,
-}) => {
+test("#45: deleting a Hand-drawn Table with several Regions removes them all", async ({ page }) => {
   const { main, layer } = await enterSelectRegion(page);
   await drawTitlesAndRows(page, main, layer);
   await main.getByRole("button", { name: "Add Table" }).click();
+  await main.getByRole("button", { name: "Source Page" }).click();
   await expect(main.getByTestId("region-outline")).toHaveCount(2);
 
-  await main.getByRole("button", { name: /Delete Table/ }).click();
+  await main.getByRole("button", { name: "Remove Table" }).click();
   await expect(main.getByTestId("region-outline")).toHaveCount(0);
   await expect(main.getByText("Selected by hand")).toHaveCount(0);
 });

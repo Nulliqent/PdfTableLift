@@ -440,16 +440,16 @@ describe("a Single-Row switch on each Body Region", () => {
 describe("redrawing and deleting a Table with several Regions", () => {
   const three = [header(BOX.titles1), body(BOX.rowsAboveNote1), body(BOX.rowsBelowNote1)];
 
-  it.skip("#45: hides every Detected Table that a Region covers", () => {
+  it("#45: hides every Detected Table that a Region covers", () => {
     const state = saved(drawing, 1, three);
-    const detected = tablesOf(state).filter((x) => x.manual === null);
+    const detected = tablesOf(state).filter((x) => x.manual === null && x.page === 1);
 
-    // Only the title block can still be detected; nothing over the titles or the Rows.
+    // Only the title block can still be detected on this page; nothing over the titles or the Rows.
     for (const x of detected)
       for (const p of x.parts) expect(p.bbox[0] > 400 || p.bbox[3] < 520).toBe(true);
   });
 
-  it.skip("#45: reopens every Region with its role when the Table is redrawn", () => {
+  it("#45: reopens every Region with its role when the Table is redrawn", () => {
     const state = saved(drawing, 1, three);
     const reopened = reduce(state, {
       type: "regionStarted",
@@ -468,7 +468,7 @@ describe("redrawing and deleting a Table with several Regions", () => {
     ]);
   });
 
-  it.skip("#45: updates the same Table when one Region is changed and saved", () => {
+  it("#45: updates the same Table when one Region is changed and saved", () => {
     const state = saved(drawing, 1, three);
     const before = selectedTable(state)!;
     const redrawn = run(
@@ -484,7 +484,7 @@ describe("redrawing and deleting a Table with several Regions", () => {
     expect(after.grid.slice(-2).map((r) => r[0])).toEqual(["5", "6"]);
   });
 
-  it.skip("#45: replaces a redrawn Detected Table with one Hand-drawn Table when a Header Region is added", () => {
+  it("#45: replaces a redrawn Detected Table with one Hand-drawn Table when a Header Region is added", () => {
     const detected = opened([
       page1([
         ...line(700, ["Bolt", "4", "1.20"]),
@@ -512,9 +512,24 @@ describe("redrawing and deleting a Table with several Regions", () => {
     expect(tablesOf(state)[0]!.grid[0]![2]).toBe("PRICE");
   });
 
-  it.skip("#45: deleting the Table removes all its Regions, and a replaced Part becomes a Removed Table that can be restored", () => {
-    const state = saved(drawing, 1, three);
+  it("#45: deleting the Table removes all its Regions, and a replaced Part becomes a Removed Table that can be restored", () => {
+    // Redraw the Detected Table of the Rows as a Header Region and two Body Regions, then delete it.
+    const start = opened(drawing);
+    const rows = tablesOf(start).find(
+      (x) => x.page === 1 && x.grid.some((r) => r[1] === "BK-1001"),
+    )!;
+    const state = run(
+      reduce(start, { type: "regionStarted", documentId: "d1", page: 1, tableId: rows.id }),
+      { type: "regionChanged", page: 1, bbox: BOX.rowsAboveNote1 },
+      act({ type: "regionAdded" }),
+      { type: "regionChanged", page: 1, bbox: BOX.titles1 },
+      act({ type: "regionRoleChanged", index: 1, role: "header" }),
+      act({ type: "regionAdded" }),
+      { type: "regionChanged", page: 1, bbox: BOX.rowsBelowNote1 },
+      { type: "regionCommitted" },
+    );
     const tableId = selectedTable(state)!.id;
+    expect(selectedTable(state)!.manual).not.toBeNull();
     const gone = reduce(state, { type: "tableRemoved", documentId: "d1", tableId });
 
     expect(tablesOf(gone).every((x) => x.manual === null)).toBe(true);
@@ -526,7 +541,7 @@ describe("redrawing and deleting a Table with several Regions", () => {
     expect(tablesOf(restored).some((x) => x.manual === null && x.page === 1)).toBe(true);
   });
 
-  it.skip("#45: asks before a redraw discards corrected Cells, and Cancel keeps the Table", () => {
+  it("#45: asks before a redraw discards corrected Cells, and Cancel keeps the Table", () => {
     const state = saved(drawing, 1, three);
     const edited = reduce(state, {
       type: "cellEdited",
