@@ -101,15 +101,16 @@ const WRITERS: Record<ExportFormat, (out: Output) => string> = {
     const body = rows.slice(table.header ? 1 : 0);
     const numeric = numericColumns(table);
     const align = [...(source ? [false] : []), ...(asColumn ? [false] : []), ...numeric];
-    // A Section Header's empty Source Cell comes before its name.
-    const lead = source ? "|  " : "";
-    const rest = source ? 2 : 1;
+    // A Section Header's empty Source Cell comes before its name; the Cells it doesn't fill
+    // (all but the Source Cell and the name) stay empty after it.
+    const sourceCell = source ? "|  " : "";
+    const filledCells = source ? 2 : 1;
     return [
       `| ${head.map(mdCell).join(" | ")} |`,
       `| ${align.map((n) => (n ? "---:" : "---")).join(" | ")} |`,
       ...body.map((r) =>
         r.section
-          ? `${lead}| **${mdCell(r.label!)}** |${" |".repeat(r.cells.length - rest)}`
+          ? `${sourceCell}| **${mdCell(r.label!)}** |${" |".repeat(r.cells.length - filledCells)}`
           : `| ${r.cells.map(mdCell).join(" | ")} |`,
       ),
     ].join("\n");
