@@ -152,6 +152,45 @@ test.describe("keyboard", () => {
     await expect(oneRow).toBeChecked();
   });
 
+  test("the row-number menu works from the keyboard alone", async ({ page }) => {
+    await page.goto("/");
+    await openFixture(page, "section-headers.pdf");
+    const main = page.getByRole("main");
+    await main.getByRole("button", { name: "As Rows" }).click();
+    const rowNumber = main.getByRole("button", { name: /^Row 1\./ });
+    await expect(rowNumber).toHaveAttribute("aria-haspopup", "menu");
+    await expect(rowNumber).toHaveAttribute("aria-expanded", "false");
+
+    // Enter opens it with focus on the first item; the arrow keys stay inside; Escape closes it
+    // and returns focus to the row number.
+    await rowNumber.focus();
+    await page.keyboard.press("Enter");
+    const menu = page.getByRole("menu", { name: "Row 1" });
+    const mark = menu.getByRole("menuitem", { name: "Mark as Section Header" });
+    await expect(mark).toBeFocused();
+    await expect(rowNumber).toHaveAttribute("aria-expanded", "true");
+    await page.keyboard.press("ArrowDown");
+    await expect(mark).toBeFocused();
+    await page.keyboard.press("ArrowUp");
+    await expect(mark).toBeFocused();
+    await page.keyboard.press("Escape");
+    await expect(menu).toBeHidden();
+    await expect(rowNumber).toBeFocused();
+    await expect(rowNumber).toHaveAttribute("aria-expanded", "false");
+
+    // Space opens it too, and Enter chooses: the result is announced and focus comes back.
+    await page.keyboard.press("Space");
+    await expect(mark).toBeFocused();
+    await page.keyboard.press("Enter");
+    await expect(menu).toBeHidden();
+    await expect(page.getByRole("status")).toHaveText("Marked as Section Header");
+    const marked = main.getByRole("button", { name: /^Row is a section header/ }).nth(1);
+    await expect(marked).toBeFocused();
+    await expect(page.getByRole("complementary", { name: "Documents" })).toContainText(
+      "4 sections",
+    );
+  });
+
   test("a cell is edited from the keyboard alone and Enter finishes the edit", async ({ page }) => {
     await page.goto("/");
     await openFixture(page, "separate-tables.pdf");
@@ -248,13 +287,18 @@ test.describe("section headers in As Column mode", () => {
     await openFixture(page, "separate-tables.pdf");
     const main = page.getByRole("main");
     await main.getByRole("button", { name: /^Row 2\./ }).click();
+    await page.getByRole("menuitem", { name: "Mark as Section Header" }).click();
     await expect(
       page.getByRole("status").filter({ hasText: "Marked as section · switch to As Rows" }),
     ).toBeVisible();
     await expect(main.getByText(/switch to As Rows to edit or unmark/)).toBeVisible();
+    // The marked row left the grid; focus moved to the next row number rather than being lost.
+    await expect(main.getByRole("button", { name: /^Row 2\./ })).toBeFocused();
     await main.getByRole("button", { name: "As Rows" }).click();
     await main.getByRole("button", { name: /Row is a section header/ }).click();
-    await expect(main.getByText(/Click a row number to mark or unmark/)).toBeVisible();
+    await page.getByRole("menuitem", { name: "Unmark Section Header" }).click();
+    await expect(page.getByRole("status")).toHaveText("Unmarked Section Header");
+    await expect(main.getByText(/Click a row number for its menu/)).toBeVisible();
   });
 });
 
@@ -316,6 +360,26 @@ test.describe("phone layout", () => {
     await expectOneColumn(page);
   });
 
+  test("the row-number menu fits the phone's width and works by touch", async ({ page }) => {
+    await page.goto("/");
+    await openFixture(page, "section-headers.pdf");
+    const main = page.getByRole("main");
+    await main.getByRole("button", { name: "As Rows" }).click();
+    await main.getByRole("button", { name: /^Row 1\./ }).tap();
+    const menu = page.getByRole("menu", { name: "Row 1" });
+    await expect(menu).toBeVisible();
+    const box = (await menu.boundingBox())!;
+    expect(box.x).toBeGreaterThanOrEqual(0);
+    expect(box.x + box.width).toBeLessThanOrEqual(390);
+    const item = menu.getByRole("menuitem", { name: "Mark as Section Header" });
+    // Its laid-out height: the box can be scaled down while the menu appears.
+    const height = await item.evaluate((el) => (el as HTMLElement).offsetHeight);
+    expect(height, "a full-size tap target").toBeGreaterThanOrEqual(44);
+    await item.tap();
+    await expect(menu).toBeHidden();
+    await expect(page.getByRole("status")).toHaveText("Marked as Section Header");
+  });
+
   test("the sheets and the HUD fit inside the phone's width", async ({ page }) => {
     await page.addInitScript(() => {
       navigator.clipboard.writeText = () =>
@@ -366,6 +430,18 @@ test.describe("reduced motion", () => {
     expect(await hud.evaluate((el) => getComputedStyle(el).transitionDuration)).toBe("0s");
   });
 
+  test("the row-number menu appears without animation", async ({ page }) => {
+    await page.goto("/");
+    await openFixture(page, "separate-tables.pdf");
+    await page
+      .getByRole("main")
+      .getByRole("button", { name: /^Row 1\./ })
+      .click();
+    const menu = page.getByRole("menu", { name: "Row 1" });
+    await expect(menu).toBeVisible();
+    await expect(menu).toHaveCSS("animation-name", "none");
+  });
+
   test("without the preference, the HUD does animate (the check above can fail)", async ({
     browser,
   }) => {
@@ -377,6 +453,13 @@ test.describe("reduced motion", () => {
     await page.goto("/");
     const hud = page.locator('[role="status"][aria-live="polite"]');
     expect(await hud.evaluate((el) => getComputedStyle(el).transitionDuration)).not.toBe("0s");
+    // And so does the row-number menu.
+    await openFixture(page, "separate-tables.pdf");
+    await page
+      .getByRole("main")
+      .getByRole("button", { name: /^Row 1\./ })
+      .click();
+    await expect(page.getByRole("menu", { name: "Row 1" })).not.toHaveCSS("animation-name", "none");
     await context.close();
   });
 });

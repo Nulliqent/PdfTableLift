@@ -239,8 +239,10 @@ function TableDetail({
               const marking = !isSectionHeader(table, row);
               onToggleSection(document.id, table.id, row);
               // In As Column mode the new Section Header leaves the grid, so say where it went.
-              if (marking && sectionMode === "column")
+              if (!marking) onCopied("Unmarked Section Header");
+              else if (sectionMode === "column")
                 onCopied("Marked as section · switch to As Rows to edit its name");
+              else onCopied("Marked as Section Header");
             }}
           />
         ) : (
@@ -261,7 +263,7 @@ function TableDetail({
           {view === "table"
             ? sections > 0 && sectionMode === "column"
               ? " · Click a cell to correct it · Section headers are in the Section column: switch to As Rows to edit or unmark them"
-              : " · Click a cell to correct it · Click a row number to mark or unmark a section header"
+              : " · Click a cell to correct it · Click a row number for its menu, such as marking a section header"
             : " · Click an outline to switch tables"}
         </span>
       </div>
