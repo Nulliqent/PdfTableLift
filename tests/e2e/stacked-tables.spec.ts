@@ -1,5 +1,6 @@
 import { readFile } from "node:fs/promises";
 import { expect, test, type Page } from "@playwright/test";
+import { openFixture } from "./support/open-fixture";
 
 // #50: Select Tables, the matching rule's reasons, Stack N Tables and the read-only Stacked Table.
 // The Example Document with joining off has Tables 4 and 5 sharing "Store, Lead, FTE, Open roles,
@@ -391,4 +392,26 @@ test("a Member that stops matching is left out with a notice, and comes back", a
   await sidebar.getByRole("button", { name: /^Stacked Table 1/ }).click();
   await expect(main.getByRole("cell", { name: "Portland Pearl" })).toBeVisible();
   await expect(main.getByText(notice)).toHaveCount(0);
+});
+
+test("Select Tables is shown for a Document with one Table, unavailable with the reason", async ({
+  page,
+}) => {
+  await page.goto("/");
+  const sidebar = page.getByRole("complementary");
+  await expect(sidebar.getByRole("button", { name: /^Select Tables/ })).not.toHaveAttribute(
+    "aria-disabled",
+    "true",
+  );
+  // One Joined Table: nothing to stack it with.
+  await openFixture(page, "section-page-break.pdf");
+  await expect(sidebar.getByRole("button", { name: /^Table 1/ })).toBeVisible();
+  const start = sidebar.getByRole("button", { name: /^Select Tables/ });
+  await expect(start).toHaveAttribute("aria-disabled", "true");
+  await expect(start).toHaveAccessibleDescription("Needs at least 2 Tables");
+  await start.focus();
+  await expect(start).toBeFocused();
+  await page.keyboard.press("Enter");
+  await start.click({ force: true });
+  await expect(sidebar.getByRole("checkbox")).toHaveCount(0);
 });

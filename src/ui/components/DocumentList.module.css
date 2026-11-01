@@ -220,6 +220,19 @@
   cursor: pointer;
 }
 
+.add[data-unavailable="true"] {
+  cursor: default;
+}
+
+.add[data-unavailable="true"]:hover {
+  background: none;
+}
+
+.add[data-unavailable="true"] > :not(.t),
+.add[data-unavailable="true"] .t > b {
+  opacity: 0.5;
+}
+
 .pick[data-unavailable="true"] {
   cursor: default;
 }

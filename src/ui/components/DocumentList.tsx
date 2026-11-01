@@ -237,21 +237,48 @@ function DocumentBody({
           <span className={styles.sub}>When a table is missed or cut off</span>
         </span>
       </button>
-      {doc.tables.length >= 2 && (
-        <button
-          type="button"
-          className={`${styles.row} ${styles.add}`}
-          data-select-tables
-          onClick={() => onStartStacking(doc.id)}
-        >
-          <Icon name="stack" />
-          <span className={styles.t}>
-            <b>Select Tables…</b>
-            <span className={styles.sub}>Stack Tables that share a Header Row</span>
-          </span>
-        </button>
-      )}
+      <SelectTablesButton doc={doc} onStart={onStartStacking} />
     </div>
+  );
+}
+
+/**
+ * Select Tables…, shown in every Document's section. With fewer than 2 Tables it stays focusable
+ * but does nothing, marked unavailable with the reason in words beneath it.
+ */
+function SelectTablesButton({
+  doc,
+  onStart,
+}: {
+  doc: Document;
+  onStart: (documentId: string) => void;
+}) {
+  const unavailable = doc.tables.length < 2;
+  const reasonId = `select-tables-reason-${doc.id}`;
+  return (
+    <button
+      type="button"
+      className={`${styles.row} ${styles.add}`}
+      data-select-tables
+      data-unavailable={unavailable}
+      aria-disabled={unavailable ? true : undefined}
+      aria-describedby={unavailable ? reasonId : undefined}
+      onClick={() => {
+        if (!unavailable) onStart(doc.id);
+      }}
+    >
+      <Icon name="stack" />
+      <span className={styles.t}>
+        <b>Select Tables…</b>
+        {unavailable ? (
+          <span id={reasonId} className={styles.reason}>
+            Needs at least 2 Tables
+          </span>
+        ) : (
+          <span className={styles.sub}>Stack Tables that share a Header Row</span>
+        )}
+      </span>
+    </button>
   );
 }
 
