@@ -21,10 +21,14 @@ import { joinTables } from "./join";
 import { HAND_DRAWN_OVERLAP, REMOVED_TABLE_OVERLAP, overlapRatio } from "./overlap";
 import {
   buildStackedTable,
+  coversPart,
+  findMember,
   memberRef,
   tickMatch,
   tickedTables,
+  withMembers,
   type BuiltStackedTable,
+  type MemberRef,
   type StackedTable,
   type TablesInProgress,
 } from "./stack";
@@ -457,7 +461,15 @@ export function reduce(state: WorkspaceState, action: WorkspaceAction): Workspac
           noJoin: [...new Set([...doc.noJoin, ...alone])],
         };
       } else gone = { ...doc, handDrawn: doc.handDrawn.filter((r) => r.id !== table.manual) };
+      gone = withoutMember(gone, table);
       const next = { ...redetect(state, gone), pendingChange: null };
+      // A Stacked Table that lost its last Member is gone with it: show that Document's first Table.
+      if (state.selection && "stackedId" in state.selection) {
+        const kept = sameTable(state, next.documents);
+        const first = next.documents.find((d) => d.id === doc.id)!.tables[0];
+        const fallback = first ? { documentId: doc.id, tableId: first.id } : null;
+        return { ...next, selection: kept ?? fallback };
+      }
       // Move to the neighbour that took the removed Table's place, else the previous one.
       const was = isTableSelected(state.selection, doc.id, table.id);
       if (!was) return { ...next, selection: sameTable(state, next.documents) };
@@ -696,12 +708,11 @@ export function reduce(state: WorkspaceState, action: WorkspaceAction): Workspac
       const tables = tickedTables(doc, stacking.ticked);
       if (tables.length < 2) return state;
       const n = Math.max(0, ...doc.stacked.map((s) => s.n)) + 1;
-      const record: StackedTable = {
-        id: `${doc.id}:stacked:${n}`,
-        n,
-        members: tables.map(memberRef),
-        source: false,
-      };
+      const record = withMembers(
+        doc,
+        { id: `${doc.id}:stacked:${n}`, n, members: [], header: [], source: false },
+        tables.map(memberRef),
+      );
       const stacked = { ...doc, stacked: [...doc.stacked, record] };
       return {
         ...state,
@@ -895,6 +906,22 @@ function withSettings(state: WorkspaceState, settings: Settings): WorkspaceState
     selection: keepSelection(state, documents),
     pendingChange: null,
   };
+}
+
+/**
+ * Drops a Table the user removed from every Stacked Table it is a Member of, for good: restoring
+ * it does not bring it back. That includes a Member that had become a later Part of it. A Stacked
+ * Table left with one Member still stands; one left with none is gone.
+ */
+function withoutMember(doc: Document, table: Table): Document {
+  const isTable = (ref: MemberRef) =>
+    findMember(doc, ref) === table ||
+    (ref.manual === null && table.manual === null && coversPart(table, ref));
+  if (!doc.stacked.some((s) => s.members.some(isTable))) return doc;
+  const stacked = doc.stacked
+    .map((s) => ({ ...s, members: s.members.filter((ref) => !isTable(ref)) }))
+    .filter((s) => s.members.length > 0);
+  return { ...doc, stacked };
 }
 
 /** Replaces a Document and re-detects its Tables (its Removed Tables already updated). */

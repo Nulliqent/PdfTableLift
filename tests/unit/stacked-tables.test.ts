@@ -3,6 +3,7 @@ import { describe, expect, it } from "vitest";
 import {
   EXPORT_FORMATS,
   exportFile,
+  buildStackedTable,
   exportTable,
   headerMatch,
   initialWorkspace,
@@ -10,8 +11,10 @@ import {
   selectedStackedTable,
   selectedTable,
   tickMatch,
+  withMembers,
   type Document,
   type PageText,
+  type TextItem,
   type WorkspaceAction,
   type WorkspaceState,
 } from "../../src/engine";
@@ -473,5 +476,223 @@ describe("Download of a Stacked Table", () => {
           expect(file.name).toBe(`example-document.pdf - Stacked Table 1.${format}`);
         }
     }
+  });
+});
+
+describe("live Members", () => {
+  const headerCell = (state: WorkspaceState, n: number, col: number, value: string) =>
+    reduce(state, {
+      type: "cellEdited",
+      documentId: "d",
+      tableId: tableId(state, n),
+      row: 0,
+      col,
+      value,
+    });
+  const headerOn = (state: WorkspaceState, n: number, header: boolean) =>
+    reduce(state, { type: "headerToggled", documentId: "d", tableId: tableId(state, n), header });
+  const built = (state: WorkspaceState) => selectedStackedTable(state)!;
+  /** Each Member as its Table number, with how it is left out (null while its Rows are in). */
+  const standing = (state: WorkspaceState) =>
+    built(state).members.map((m) => [m.table?.n ?? null, m.leftOut, m.reason]);
+  const remove = (state: WorkspaceState, n: number) =>
+    reduce(state, { type: "tableRemoved", documentId: "d", tableId: tableId(state, n) });
+
+  it("saves the titles of the Header Row it was made with", () => {
+    const stacked = stack(open("repeated-header"), 2, 1);
+    expect(doc(stacked).stacked[0]!.header).toEqual(["Order", "City", "Units", "Total"]);
+  });
+
+  it("follows a Member's Cell edit in its export", () => {
+    const stacked = stack(open("repeated-header"), 1, 2);
+    const edited = reduce(stacked, {
+      type: "cellEdited",
+      documentId: "d",
+      tableId: tableId(stacked, 2),
+      row: 1,
+      col: 1,
+      value: "Gary, IN",
+    });
+    expect(exportTable(built(edited).table, "csv").split("\n")[7]).toBe(
+      'A-1007,"Gary, IN",78,566.6',
+    );
+  });
+
+  it("leaves out a Member whose Header Row stops matching, and takes it back once it matches", () => {
+    const stacked = stack(open("repeated-header"), 1, 2, 3);
+    const edited = headerCell(stacked, 2, 1, "Town");
+    expect(standing(edited)).toEqual([
+      [1, null, null],
+      [2, "no-match", "'Town' instead of 'City'"],
+      [3, null, null],
+    ]);
+    expect(built(edited).table.grid).toHaveLength(13);
+    expect(built(edited).origin.some((o) => o.member === 1)).toBe(false);
+    const back = headerCell(edited, 2, 1, "city");
+    expect(standing(back).every(([, leftOut]) => leftOut === null)).toBe(true);
+    expect(built(back).table.grid).toHaveLength(19);
+  });
+
+  it("leaves out an edited first Member on its own, under the next Member's Header Row", () => {
+    const stacked = stack(open("repeated-header"), 1, 2, 3);
+    const edited = headerCell(stacked, 1, 1, "Town");
+    expect(standing(edited)).toEqual([
+      [1, "no-match", "'Town' instead of 'City'"],
+      [2, null, null],
+      [3, null, null],
+    ]);
+    expect(built(edited).table.grid[0]).toEqual(["Order", "City", "Units", "Total"]);
+    expect(built(edited).table.grid[1]![0]).toBe("A-1007");
+    expect(built(edited).origin[0]).toEqual({ member: 1, row: 0 });
+  });
+
+  it("shows the Header Row of the first Member that still matches, as written there", () => {
+    const stacked = stack(open("repeated-header"), 1, 2);
+    const edited = headerCell(headerCell(stacked, 1, 1, "Town"), 2, 1, "  CITY ");
+    expect(built(edited).table.grid[0]).toEqual(["Order", "CITY", "Units", "Total"]);
+  });
+
+  it("leaves out a Member with 'First row is header' off, and takes it back when it is on", () => {
+    const stacked = stack(open("repeated-header"), 1, 2);
+    const off = headerOn(stacked, 2, false);
+    expect(standing(off)).toEqual([
+      [1, null, null],
+      [2, "no-match", "No Header Row"],
+    ]);
+    expect(built(off).table.grid).toHaveLength(7);
+    expect(standing(headerOn(off, 2, true))[1]).toEqual([2, null, null]);
+  });
+
+  it("drops a Removed Member for good, and still stands with one Member", () => {
+    const stacked = stack(open("repeated-header"), 1, 2);
+    const removed = remove(stacked, 2);
+    expect(doc(removed).stacked[0]!.members).toHaveLength(1);
+    expect(selectedStackedTable(removed)?.record.id).toBe(doc(stacked).stacked[0]!.id);
+    expect(standing(removed)).toEqual([[1, null, null]]);
+    expect(built(removed).table.grid).toHaveLength(7);
+    const restored = reduce(removed, {
+      type: "tableRestored",
+      documentId: "d",
+      removedId: doc(removed).removed[0]!.id,
+    });
+    expect(doc(restored).tables).toHaveLength(3);
+    expect(standing(restored)).toEqual([[1, null, null]]);
+  });
+
+  it("drops a Removed Member from every Stacked Table it is in, and leaves the others alone", () => {
+    const removed = remove(stack(stack(open("repeated-header"), 1, 2), 2, 3), 2);
+    const now = doc(removed);
+    expect(
+      now.stacked.map((s) =>
+        buildStackedTable(now, s).members.map((m) => m.table && now.tables.indexOf(m.table)),
+      ),
+    ).toEqual([[0], [1]]);
+  });
+
+  it("is gone once its last Member is removed", () => {
+    const empty = remove(remove(stack(open("repeated-header"), 1, 2), 2), 1);
+    expect(doc(empty).stacked).toEqual([]);
+    expect(selectedTable(empty)?.n).toBe(1);
+  });
+
+  it("renews its saved Header Row from a new first Member", () => {
+    const stacked = stack(open("repeated-header"), 1, 2, 3);
+    const edited = headerCell(headerCell(stacked, 2, 1, "Town"), 3, 1, "Town");
+    expect(standing(edited).map(([, leftOut]) => leftOut)).toEqual([null, "no-match", "no-match"]);
+    const record = doc(edited).stacked[0]!;
+    const renewed = withMembers(doc(edited), record, record.members.slice(1));
+    expect(renewed.header).toEqual(["Order", "Town", "Units", "Total"]);
+    expect(buildStackedTable(doc(edited), renewed).members.map((m) => m.leftOut)).toEqual([
+      null,
+      null,
+    ]);
+  });
+});
+
+describe("live Members through Column Spacing and Split by Page", () => {
+  // Invented pages: a Table at the foot of page 1 that continues at the top of page 2 (one Joined
+  // Table, wide columns), and a Table with the same Header Row and narrow columns mid-page 3.
+  const at = (str: string, x: number, y: number, bold = false): TextItem => ({
+    str,
+    x,
+    y,
+    w: str.length * 5,
+    h: 9,
+    bold,
+  });
+  const HEAD = ["Item", "Qty", "Price"];
+  const table = (xs: number[], y: number, rows: string[][]) =>
+    [HEAD, ...rows].flatMap((r, i) => r.map((c, j) => at(c, xs[j]!, y - i * 14, i === 0)));
+  const page = (num: number, items: TextItem[]): PageText => ({ num, w: 612, h: 792, items });
+  const WIDE = [72, 200, 320];
+  const pages = [
+    page(
+      1,
+      table(WIDE, 164, [
+        ["Bolt", "4", "1.20"],
+        ["Nut", "9", "0.40"],
+      ]),
+    ),
+    page(
+      2,
+      table(WIDE, 734, [
+        ["Screw", "7", "0.10"],
+        ["Washer", "3", "0.05"],
+      ]),
+    ),
+    page(
+      3,
+      table([72, 120, 160], 400, [
+        ["Pin", "2", "0.02"],
+        ["Rivet", "5", "0.08"],
+      ]),
+    ),
+  ];
+  const opened = run(
+    initialWorkspace,
+    { type: "documentAdded", id: "d", name: "parts.pdf", size: 1 },
+    { type: "documentRead", id: "d", pages },
+  );
+  const stacked = stack(opened, 1, 2);
+  const built = (state: WorkspaceState) => selectedStackedTable(state)!;
+  const items = (state: WorkspaceState) => built(state).table.grid.map((r) => r[0]);
+
+  it("stacks a Joined Member with all its Parts", () => {
+    expect(doc(stacked).tables.map((t) => t.parts.length)).toEqual([2, 1]);
+    expect(items(stacked)).toEqual(["Item", "Bolt", "Nut", "Screw", "Washer", "Pin", "Rivet"]);
+    expect(built(stacked).members.map((m) => m.dropped)).toEqual([[], []]);
+  });
+
+  it("keeps every Member that still matches through a Column Spacing change", () => {
+    const spaced = reduce(stacked, { type: "columnSpacingChanged", value: 2.6 });
+    expect(built(spaced).members.map((m) => [m.table?.n, m.leftOut, m.reason])).toEqual([
+      [1, null, null],
+      [2, "no-match", "2 columns, not 3"],
+    ]);
+    expect(items(spaced)).toEqual(["Item", "Bolt", "Nut", "Screw", "Washer"]);
+    const back = reduce(spaced, { type: "columnSpacingChanged", value: 1 });
+    expect(items(back)).toEqual(items(stacked));
+  });
+
+  it("keeps a split Joined Member's first Part and reports the split-off Parts as dropped", () => {
+    const split = reduce(stacked, {
+      type: "splitByPage",
+      documentId: "d",
+      tableId: tableId(stacked, 1),
+    });
+    expect(doc(split).tables.map((t) => t.parts.length)).toEqual([1, 1, 1]);
+    const [first, second] = built(split).members;
+    expect(first!.table?.n).toBe(1);
+    expect(first!.leftOut).toBeNull();
+    expect(first!.dropped.map((p) => p.page)).toEqual([2]);
+    expect(second!.dropped).toEqual([]);
+    expect(items(split)).toEqual(["Item", "Bolt", "Nut", "Pin", "Rivet"]);
+    const rejoined = reduce(split, {
+      type: "joinAgain",
+      documentId: "d",
+      tableId: tableId(split, 2),
+    });
+    expect(built(rejoined).members.map((m) => m.dropped)).toEqual([[], []]);
+    expect(items(rejoined)).toEqual(items(stacked));
   });
 });

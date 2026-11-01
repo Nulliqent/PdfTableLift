@@ -10,8 +10,9 @@ import type { Document, Part, Table } from "./workspace";
 /**
  * How a Member is recognised after re-detection, the way a Removed Table is: by the page and
  * bounding box of its first Part (a Joined Table's first Part), or by its Hand-drawn record id.
+ * `parts` are where its Parts lay when it was ticked, so Parts later split off can be reported.
  */
-export type MemberRef = { page: number; bbox: Bbox; manual: string | null };
+export type MemberRef = { page: number; bbox: Bbox; manual: string | null; parts: Part[] };
 
 /** A Stacked Table as saved on its Document: its ordered Members, never their grids. */
 export type StackedTable = {
@@ -20,6 +21,11 @@ export type StackedTable = {
   /** Its own sequence per Document ("Stacked Table 1"); never renumbered. */
   n: number;
   members: MemberRef[];
+  /**
+   * The titles of the Header Row it was made with (renewed when its Members are saved): every
+   * Member is matched against them. Only titles are kept, never the Members' grids.
+   */
+  header: string[];
   /** The Source switch: a leading column with each Row's page. Off by default. */
   source: boolean;
 };
@@ -41,6 +47,8 @@ export type StackedMember = {
   leftOut: LeftOut | null;
   /** The matching rule's reason when it is left out for not matching, else null. */
   reason: string | null;
+  /** Parts it had when ticked that are no longer in its Table (split off by page), in page order. */
+  dropped: Part[];
 };
 
 /** A Stacked Table as built from its Members' current Tables. */
@@ -73,7 +81,12 @@ const quoted = (s: string) => (s.trim() ? `'${s.trim()}'` : "an empty title");
 export function headerMatch(first: Table, table: Table): HeaderMatch {
   if (!table.header || !table.grid[0]) return { matches: false, reason: "No Header Row" };
   if (!first.header || !first.grid[0]) return { matches: false, reason: "No Header Row to match" };
-  const a = first.grid[0];
+  return titlesMatch(first.grid[0], table);
+}
+
+/** The matching rule against Header Row titles, such as those a Stacked Table saved. */
+function titlesMatch(a: string[], table: Table): HeaderMatch {
+  if (!table.header || !table.grid[0]) return { matches: false, reason: "No Header Row" };
   const b = table.grid[0];
   if (a.length !== b.length)
     return {
@@ -90,7 +103,27 @@ export const memberRef = (table: Table): MemberRef => ({
   page: table.parts[0]!.page,
   bbox: table.parts[0]!.bbox,
   manual: table.manual,
+  parts: table.parts,
 });
+
+/**
+ * The record with these Members, its saved Header Row renewed from the first of them that is a
+ * Table with a Header Row now. Stacking uses it; saving Members in Edit Members should too.
+ */
+export function withMembers(
+  doc: Document,
+  record: StackedTable,
+  members: MemberRef[],
+): StackedTable {
+  const first = tickedTables(doc, members).find((t) => t.header && t.grid[0]);
+  return { ...record, members, header: first ? [...first.grid[0]!] : record.header };
+}
+
+/** Whether one of the Table's Parts lies on the Part's page over its box, as `findMember` judges. */
+export const coversPart = (table: Table, part: Part) =>
+  table.parts.some(
+    (p) => p.page === part.page && overlapRatio(p.bbox, part.bbox) > REMOVED_TABLE_OVERLAP,
+  );
 
 /**
  * The Table of the Document that is this Member now, or null. A Hand-drawn Member is its record's
@@ -131,25 +164,26 @@ export function tickMatch(doc: Document, ticked: MemberRef[], table: Table): Hea
 }
 
 /**
- * Builds a Stacked Table from the Document's current Tables. The Header Row is the first found
- * Member's with a Header Row, as written there; every other Member is judged against it by the
- * matching rule and, when it matches, adds its Rows minus its Header Row. Section Headers keep their
- * Cells, with their row indexes shifted.
+ * Builds a Stacked Table from the Document's current Tables. Every Member is judged by the matching
+ * rule against the Header Row saved with the record, so a Member edited afterwards is left out on
+ * its own and comes back once it matches again. The Header Row shown is the first matching Member's,
+ * as written there (the saved titles while none matches); each matching Member adds its Rows minus
+ * its Header Row. Section Headers keep their Cells, with their row indexes shifted.
  */
 export function buildStackedTable(doc: Document, record: StackedTable): BuiltStackedTable {
-  const found = record.members.map((ref) => ({ ref, table: findMember(doc, ref) }));
-  const head = found.find((m) => m.table?.header && m.table.grid[0])?.table ?? null;
-  const members: StackedMember[] = found.map(({ ref, table }) => {
-    if (!table) return { ref, table, leftOut: "missing", reason: null };
-    const match = head ? headerMatch(head, table) : headerMatch(table, table);
+  const members: StackedMember[] = record.members.map((ref) => {
+    const table = findMember(doc, ref);
+    if (!table) return { ref, table, leftOut: "missing", reason: null, dropped: [] };
+    const dropped = ref.parts.filter((p) => !coversPart(table, p));
+    const match = titlesMatch(record.header, table);
     return match.matches
-      ? { ref, table, leftOut: null, reason: null }
-      : { ref, table, leftOut: "no-match", reason: match.reason };
+      ? { ref, table, leftOut: null, reason: null, dropped }
+      : { ref, table, leftOut: "no-match", reason: match.reason, dropped };
   });
-  const grid: string[][] = head ? [head.grid[0]!] : [];
-  const origin: BuiltStackedTable["origin"] = head
-    ? [{ member: members.findIndex((m) => m.table === head), row: 0 }]
-    : [];
+  const headIndex = members.findIndex((m) => m.leftOut === null);
+  const head = members[headIndex]?.table ?? null;
+  const grid: string[][] = [head ? head.grid[0]! : record.header];
+  const origin: BuiltStackedTable["origin"] = head ? [{ member: headIndex, row: 0 }] : [];
   const sections: number[] = [];
   const sectionCells: Record<number, string[]> = {};
   const parts: Part[] = [];
@@ -168,13 +202,15 @@ export function buildStackedTable(doc: Document, record: StackedTable): BuiltSta
       origin.push({ member: i, row: r + 1 });
     });
   });
-  const rowPages = origin.map((o) => members[o.member]!.table!.rowPages[o.row]!);
+  const rowPages = head
+    ? origin.map((o) => members[o.member]!.table!.rowPages[o.row]!)
+    : [record.members[0]?.page ?? 1];
   const table: Table = {
     id: record.id,
     n: record.n,
     page: parts[0]?.page ?? record.members[0]?.page ?? 1,
     parts,
-    header: head !== null,
+    header: true,
     firstBold: false,
     grid,
     rowPages,

@@ -34,6 +34,7 @@ export {
   memberRef,
   tickMatch,
   tickedTables,
+  withMembers,
 } from "./stack";
 export type {
   BuiltStackedTable,
