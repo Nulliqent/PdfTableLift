@@ -59,6 +59,9 @@ _Avoid_: Combined table (Combine is for Rows), joined table (reserved for Joined
 **Member**:
 One of the Tables a Stacked Table is made from.
 
+**Source column**:
+A leading column on a Stacked Table giving the page each Row came from.
+
 ## Structure
 
 **Cell**:
