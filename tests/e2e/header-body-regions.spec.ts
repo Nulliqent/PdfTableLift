@@ -120,7 +120,8 @@ test("#42: Save is disabled with a short reason while the Header Region or every
   await expect(main.getByRole("button", { name: "Add Table" })).toBeDisabled();
   await expect(main.getByText("No text in the Header Region")).toBeVisible();
 
-  // A Header Region alone has no Rows.
+  // A Header Region with text, alone, has no Rows.
+  await drag(page, layer, TITLES);
   await entry(main, 1)
     .getByRole("button", { name: /Remove/ })
     .click();
@@ -253,4 +254,18 @@ test("#45: deleting a Hand-drawn Table with several Regions removes them all", a
   await main.getByRole("button", { name: "Remove Table" }).click();
   await expect(main.getByTestId("region-outline")).toHaveCount(0);
   await expect(main.getByText("Selected by hand")).toHaveCount(0);
+});
+
+test("a Region added but never drawn disables Save with the reason, until it is drawn or removed", async ({
+  page,
+}) => {
+  const { main, layer } = await enterSelectRegion(page);
+  await drag(page, layer, ROWS_ABOVE_NOTE);
+  await main.getByRole("button", { name: "Add Region" }).click();
+
+  await expect(main.getByRole("button", { name: "Add Table" })).toBeDisabled();
+  await expect(main.getByText("Region 2 is not drawn yet")).toBeVisible();
+
+  await drag(page, layer, ROWS_BELOW_NOTE);
+  await expect(main.getByRole("button", { name: "Add Table" })).toBeEnabled();
 });

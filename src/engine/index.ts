@@ -37,6 +37,7 @@ export type {
   Region,
   RegionInProgress,
   RegionRole,
+  RegionBlocked,
   RegionTable,
   RemovedTable,
   RowAction,

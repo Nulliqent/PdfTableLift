@@ -25,6 +25,7 @@ import {
   initialWorkspace,
   reduce,
   selectedTable,
+  regionBlocked,
   type Bbox,
   type PageText,
   type Table,
@@ -402,6 +403,45 @@ describe("several Body Regions down the page", () => {
     const table = tableOf(grouped, 1, [body([60, 605, 560, 650]), body([60, 525, 560, 570])]);
 
     expect(table.sections).toEqual([0, 3]);
+  });
+});
+
+// --- Review fixes --------------------------------------------------------------------------------
+
+describe("guards on saving several Regions", () => {
+  it("does not save while a Region was added but never drawn, and says so", () => {
+    const state = run(
+      drawAll(opened(drawing), 1, [body(BOX.rowsAboveNote1)]),
+      act({ type: "regionAdded" }),
+    );
+
+    expect(regionBlocked(state)).toBe("undrawn");
+    const after = run(state, { type: "regionCommitted" });
+    expect(tablesOf(after).every((x) => x.manual === null)).toBe(true);
+    expect(after.region).not.toBeNull();
+    // Drawing it (or removing it) lifts the block.
+    expect(regionBlocked(run(state, act({ type: "regionRemoved", index: 1 })))).toBeNull();
+    expect(
+      regionBlocked(run(state, { type: "regionChanged", page: 1, bbox: BOX.rowsBelowNote1 })),
+    ).toBeNull();
+  });
+
+  it("names an empty Header Region first when the Body Regions are empty too", () => {
+    const state = drawAll(opened(drawing), 1, [
+      header([60, 440, 400, 470]),
+      body([60, 400, 400, 430]),
+    ]);
+
+    expect(regionBlocked(state)).toBe("no-header");
+  });
+
+  it("orders Rows by where their text sits on the page, not by the Regions' top edges", () => {
+    // Region A is taller (top edge 650) but holds only the first column, which starts at y 600;
+    // Region B, with a lower top edge, holds a line at y 620 that sits above all of A's text.
+    const sheet = page1([t("Qty", 200, 620), ...BODY.items]);
+    const table = tableOf(sheet, 1, [body([60, 560, 150, 650]), body([150, 590, 560, 630])]);
+
+    expect(table.grid[0]!.join(" ")).toContain("Qty");
   });
 });
 

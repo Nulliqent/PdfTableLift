@@ -446,7 +446,7 @@ export function reduce(state: WorkspaceState, action: WorkspaceAction): Workspac
     case "regionCommitted": {
       const doc = state.documents.find((d) => d.id === state.region?.documentId);
       const region = state.region;
-      if (!doc || !region || !regionPreview(state)) return state;
+      if (!doc || !region || regionBlocked(state)) return state;
       if (needsConfirmation(state, action)) return { ...state, pendingChange: action };
       const id = `r${Math.max(0, ...doc.handDrawn.map((r) => Number(r.id.slice(1)))) + 1}`;
       const { redraw } = region;
@@ -961,6 +961,9 @@ const pageOf = (doc: Document, num: number): PageText | undefined =>
 const regionDocument = (state: WorkspaceState): Document | undefined =>
   state.documents.find((d) => d.id === state.region?.documentId);
 
+/** Why Regions in progress cannot be saved: the engine's reasons, or a Region not yet drawn. */
+export type RegionBlocked = RegionsBlocked | "undrawn";
+
 /** What a Region yields: the Table found inside it, and whether it starts with a Header Row. */
 export type RegionTable = FoundTable & { header: boolean };
 
@@ -993,13 +996,16 @@ export const hasHeaderRegion = (doc: Document, table: Table): boolean =>
 
 /**
  * Why the Regions in progress cannot be saved, or null when they can. "nothing" is nothing drawn
- * yet, "no-body" is no Body Region with text, "no-header" is a Header Region without text.
+ * yet, "undrawn" is a Region added but not yet dragged, "no-body" is no Body Region with text,
+ * "no-header" is a Header Region without text.
  */
-export function regionBlocked(state: WorkspaceState): RegionsBlocked | null {
+export function regionBlocked(state: WorkspaceState): RegionBlocked | null {
   const { region } = state;
   const doc = regionDocument(state);
   const page = doc && region && pageOf(doc, region.page);
   if (!region || !page) return "nothing";
+  // A Region added but never dragged would be dropped silently on Save, so Save waits for it.
+  if (region.regions.some((r) => !r.bbox) && region.regions.some((r) => r.bbox)) return "undrawn";
   const out = regionsOutcome(page.items, drawn(region.regions), state.settings.columnSpacing);
   return "blocked" in out ? out.blocked : null;
 }

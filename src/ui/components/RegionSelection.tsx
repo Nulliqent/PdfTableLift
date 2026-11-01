@@ -4,7 +4,7 @@ import type {
   Document,
   RegionInProgress,
   RegionRole,
-  RegionsBlocked,
+  RegionBlocked,
   RegionTable,
 } from "../../engine";
 import { plural } from "../format";
@@ -23,7 +23,7 @@ type RegionSelectionProps = {
   /** The Table the Region would make now, or null while nothing is drawn or it holds no text. */
   preview: RegionTable | null;
   /** Why the Regions cannot be saved, or null when they can. */
-  blocked: RegionsBlocked | null;
+  blocked: RegionBlocked | null;
   onPage: (page: number) => void;
   onDrag: (bbox: Bbox) => void;
   onWholePage: () => void;
@@ -115,7 +115,7 @@ export function RegionSelection({
         </button>
         <span className={pane.spacer} />
         <Button onClick={onCancel}>Cancel</Button>
-        <Button variant="primary" disabled={!preview} onClick={onSave}>
+        <Button variant="primary" disabled={!preview || blocked !== null} onClick={onSave}>
           <Icon name="check" />
           {region.redraw ? "Replace Table" : "Add Table"}
         </Button>
@@ -186,6 +186,7 @@ export function RegionSelection({
             table={preview}
             blocked={blocked}
             lone={region.regions.length === 1 && edited.role === "body"}
+            undrawn={region.regions.findIndex((r) => !r.bbox)}
           />
         </div>
       </div>
@@ -202,11 +203,14 @@ function Preview({
   table,
   blocked,
   lone,
+  undrawn,
 }: {
   drawn: boolean;
   table: RegionTable | null;
-  blocked: RegionsBlocked | null;
+  blocked: RegionBlocked | null;
   lone: boolean;
+  /** Index of the first Region not yet dragged, or -1. */
+  undrawn: number;
 }) {
   if (!drawn)
     return (
@@ -217,6 +221,14 @@ function Preview({
           Drag across the page to select a table. The rows and columns found inside will appear
           here.
         </span>
+      </div>
+    );
+  if (blocked === "undrawn")
+    return (
+      <div className={styles.empty}>
+        <Icon name="warn" />
+        <b>Region {undrawn + 1} is not drawn yet</b>
+        <span>Drag across the page to draw it, or remove it, to save the Table.</span>
       </div>
     );
   if (!table) {

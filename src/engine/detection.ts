@@ -806,6 +806,9 @@ function bodiesTable(items: TextItem[], bodies: RegionSpec[], cs: number): Found
     if (rows.length) parts.push({ spec, rows });
   }
   if (!parts.length) return null;
+  // Rows run down the page by where their text sits, not by the Regions' top edges.
+  const topOf = (p: { rows: Line[] }) => Math.max(...p.rows.map((r) => r.y));
+  parts.sort((p, q) => topOf(q) - topOf(p));
   const shared = buildTable(
     parts.flatMap((p) => p.rows),
     true,
@@ -879,6 +882,8 @@ export function regionsOutcome(
   const titles = header ? items.filter((it) => insideBox(it, header.bbox)) : [];
   const claimed = new Set(titles);
   const pool = header ? items.filter((it) => !claimed.has(it)) : items;
+  // An empty Header Region is named first, before any Body Region is looked at.
+  if (header && !titles.some((it) => it.str.trim())) return { blocked: "no-header" };
   const bodies = regions.filter((r) => r.role === "body");
   const table =
     bodies.length === 1
@@ -886,7 +891,6 @@ export function regionsOutcome(
       : bodiesTable(pool, bodies, columnSpacing);
   if (!table) return { blocked: "no-body" };
   if (!header) return { table };
-  if (!titles.some((it) => it.str.trim())) return { blocked: "no-header" };
   const sectionCells: Record<number, string[]> = {};
   for (const [row, cells] of Object.entries(table.sectionCells))
     sectionCells[Number(row) + 1] = cells;
