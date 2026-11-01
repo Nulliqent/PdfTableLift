@@ -19,11 +19,31 @@ export {
   roleLabel,
   tableRegions,
   initialWorkspace,
+  isStackedSelected,
+  isTableSelected,
   reduce,
   selectedDocument,
+  selectedStackedTable,
   selectedTable,
   tableSize,
 } from "./workspace";
+export {
+  buildStackedTable,
+  findMember,
+  headerMatch,
+  memberRef,
+  tickMatch,
+  tickedTables,
+} from "./stack";
+export type {
+  BuiltStackedTable,
+  HeaderMatch,
+  LeftOut,
+  MemberRef,
+  StackedMember,
+  StackedTable,
+  TablesInProgress,
+} from "./stack";
 export type {
   Band,
   Bbox,
