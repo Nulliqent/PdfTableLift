@@ -386,14 +386,14 @@ describe("#32 Section Headers beside multi-line Rows", () => {
 // --- #33 Multi-line text in the first column ------------------------------------------------------
 
 describe("#33 Multi-line text in the first column", () => {
-  it.skip("#33: without Section Headers, every Row keeps all its lines and there are no Section Headers", () => {
+  it("#33: without Section Headers, every Row keeps all its lines and there are no Section Headers", () => {
     const table = tablesOf(opened(firstColumn)).find((x) => x.parts[0]!.page === 2)!;
 
     expect(table.grid).toEqual(FIRST_COLUMN_PLAIN_GRID);
     expect(table.sections).toEqual([]);
   });
 
-  it.skip("#33: with Section Headers, the bold labels are Section Headers and every Row keeps its first line", () => {
+  it("#33: with Section Headers, the bold labels are Section Headers and every Row keeps its first line", () => {
     const table = tablesOf(opened(firstColumn)).find((x) => x.parts[0]!.page === 1)!;
 
     expect(table.grid).toEqual(FIRST_COLUMN_SECTIONS_GRID);
@@ -407,7 +407,7 @@ describe("#33 Multi-line text in the first column", () => {
     expect(tables.map((x) => x.parts.map((p) => p.page))).toEqual([[1], [2]]);
   });
 
-  it.skip("#33: a Region over each page gives the same Rows and Section Headers", () => {
+  it("#33: a Region over each page gives the same Rows and Section Headers", () => {
     const withSections = committed(firstColumn, FIRST_COLUMN_BOX[1], 1);
     expect(withSections.grid).toEqual(FIRST_COLUMN_SECTIONS_GRID);
     expect(withSections.sections).toEqual([1, 4]);
@@ -419,7 +419,7 @@ describe("#33 Multi-line text in the first column", () => {
 
   // The reproduction's first-column variant (repro-30): every Row's first line became a Section
   // Header, with no real Section Headers on the page.
-  it.skip("#33: a first-column Wrapped Cell whose lines are spaced like a Row's lines stays one Cell", () => {
+  it("#33: a first-column Wrapped Cell whose lines are spaced like a Row's lines stays one Cell", () => {
     const xs = { desc: 40, date: 250 };
     const repro = page([
       t("Description", 40, 100, 60, 10, true),
@@ -444,7 +444,92 @@ describe("#33 Multi-line text in the first column", () => {
     expect(region.sections).toEqual([]);
   });
 
-  it.skip("#33: As Column and As Rows put each first-column Row under its Section Header", () => {
+  /** The reproduction's first-column page, with these labels between its Rows. */
+  const firstColumnPage = (label: (py: number, s: string) => TextItem) => {
+    const xs = { desc: 40, date: 250 };
+    return page([
+      t("Description", 40, 100, 60, 10, true),
+      t("Date", 250, 100, 30, 10, true),
+      t("Amount", 400, 100, 40, 10, true),
+      label(125, "OCTOBER"),
+      ...entry(145, "02 OCT", "-12.00", ["COFFEE HOUSE", "Card Payment", "SGD 12.00"], xs),
+      ...entry(200, "03 OCT", "-8.50", ["BOOK STORE", "Card Payment", "SGD 8.50"], xs),
+      label(255, "NOVEMBER"),
+      ...entry(275, "01 NOV", "-30.00", ["GROCERY MART", "Card Payment", "SGD 30.00"], xs),
+    ]);
+  };
+
+  it("#33: bold first-column labels between first-column Rows are Section Headers, as a Region too", () => {
+    const repro = firstColumnPage(sec);
+    const expected = [
+      ["Description", "Date", "Amount"],
+      ["OCTOBER", "", ""],
+      ["COFFEE HOUSE Card Payment SGD 12.00", "02 OCT", "-12.00"],
+      ["BOOK STORE Card Payment SGD 8.50", "03 OCT", "-8.50"],
+      ["NOVEMBER", "", ""],
+      ["GROCERY MART Card Payment SGD 30.00", "01 NOV", "-30.00"],
+    ];
+
+    const detected = tablesOf(opened([repro]));
+    expect(detected.map((x) => x.grid)).toEqual([expected]);
+    expect(detected[0]!.sections).toEqual([1, 4]);
+    const region = committed([repro], [0, 480, 600, 710]);
+    expect(region.grid).toEqual(expected);
+    expect(region.sections).toEqual([1, 4]);
+  });
+
+  // The ambiguity policy, and #32's fallback: a plain label 20pt above a Row whose lines are 13pt
+  // apart is neither clearly a Section Header nor clearly a Row's line. The label path gives up and
+  // the old path still refuses first-column lines, so the labels and the Rows beside them come out
+  // as they did before #33. Only the Row between two Rows, with no label in the way, is grouped:
+  // the same output as #32's guard with the Description second.
+  it("#33: a plain first-column label barely set apart from first-column Rows leaves the lines beside it as they were", () => {
+    const plain = (py: number, s: string) => t(s, 40, py, s.length * 6);
+
+    const table = tablesOf(opened([firstColumnPage(plain)]))[0]!;
+    expect(table.grid).toEqual([
+      ["Description", "Date", "Amount"],
+      ["OCTOBER", "", ""],
+      ["COFFEE HOUSE", "", ""],
+      ["Card Payment SGD 12.00", "02 OCT", "-12.00"],
+      ["BOOK STORE Card Payment SGD 8.50", "03 OCT", "-8.50"],
+      ["NOVEMBER", "", ""],
+      ["GROCERY MART", "", ""],
+      ["Card Payment", "01 NOV", "-30.00"],
+    ]);
+    expect(table.sections).toEqual([1, 2, 5, 6]);
+  });
+
+  // The dense-table guard in the first column: with every line 13pt apart, a first-column line is
+  // as close to the Row below as to its own, so groupRows folds nothing and the result is the one
+  // the engine gave before #33 (these first-column wraps come from buildTable, as since #25).
+  it("#33: first-column lines evenly spaced between Rows stay apart", () => {
+    const xs = [72, 250, 400];
+    const line = (py: number, cells: string[]) =>
+      cells.flatMap((c, i) => (c ? [t(c, xs[i]!, py, c.length * 5)] : []));
+    const dense = page([
+      ...line(100, ["Item", "Qty", "Price"]),
+      ...line(113, ["steel"]),
+      ...line(126, ["Bolts", "10", "1.20"]),
+      ...line(139, ["zinc"]),
+      ...line(152, ["M6"]),
+      ...line(165, ["Nuts", "4", "0.80"]),
+      ...line(178, ["brass"]),
+      ...line(191, ["M4"]),
+      ...line(204, ["Pins", "3", "0.40"]),
+      ...line(217, ["steel"]),
+    ]);
+
+    const table = tablesOf(opened([dense]))[0]!;
+    expect(table.grid).toEqual([
+      ["Item steel", "Qty", "Price"],
+      ["Bolts zinc M6", "10", "1.20"],
+      ["Nuts brass M4", "4", "0.80"],
+      ["Pins", "3", "0.40"],
+    ]);
+  });
+
+  it("#33: As Column and As Rows put each first-column Row under its Section Header", () => {
     const table = tablesOf(opened(firstColumn)).find((x) => x.parts[0]!.page === 1)!;
     const [head, , oct1, oct2, , nov1, nov2] = FIRST_COLUMN_SECTIONS_GRID as [
       string[],

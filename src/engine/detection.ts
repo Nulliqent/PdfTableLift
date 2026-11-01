@@ -118,6 +118,8 @@ export function linesFromItems(items: TextItem[], columnSpacing: number): Line[]
  * two Cells at once (two anchors), lines in the first column, and Rows at the edge of a chain
  * with no clear gap beyond them. The tight wraps among these (two Cells at once, the first
  * column) are joined later, in `buildTable`, by the gaps around the Row (WRAP_GAP_RATIO).
+ * The exception (spec #30, #33) is multi-line text in the first column: lines a Row clearly owns
+ * there (`firstColumnClaims`) join it like any other Wrapped Cell, and are never labels.
  */
 function groupRows(input: Line[]): Line[] {
   const lines = input.slice();
@@ -125,6 +127,8 @@ function groupRows(input: Line[]): Line[] {
   if (anchors.length < 2) return input;
   /** The gap from line i down to line i + 1. */
   const pitch = (i: number) => lines[i]!.y - lines[i + 1]!.y;
+
+  const claims = firstColumnClaims(lines, anchors);
 
   /** Can these one-Cell lines be the Wrapped Cell (part of) the anchor's Row? */
   const fits = (singles: number[], anchor: number) => {
@@ -135,9 +139,10 @@ function groupRows(input: Line[]): Line[] {
     const hit = (c: Cell) => a.cells.filter((ac) => overlap(ac, c));
     const own = hit(cs[0]!)[0];
     return cs.every(
-      (c) =>
-        // Not in (or left of) the first column, where Section Headers and labels live.
-        c.x0 >= first.x1 &&
+      (c, k) =>
+        // Not in (or left of) the first column, where Section Headers and labels live, unless
+        // the line is one of this Row's own first-column lines (spec #30, #33).
+        (c.x0 >= first.x1 || claims.get(singles[k]!) === anchor) &&
         // Inside one column, the same one as the other lines of the Wrapped Cell.
         hit(c).length <= 1 &&
         hit(c)[0] === own &&
@@ -149,12 +154,13 @@ function groupRows(input: Line[]): Line[] {
 
   /**
    * Is line i a label alone in the first column of these anchors' Rows: one Cell that starts in
-   * or left of their first Cell and touches none of their other Cells? `fits` never lets such a
-   * line into a Row, so it can only be a Section Header (spec #30).
+   * or left of their first Cell and touches none of their other Cells, and is not one of a Row's
+   * own first-column lines (`claims`)? `fits` never lets such a line into a Row, so it can only be
+   * a Section Header (spec #30).
    */
   const isLabel = (i: number, by: number[]) => {
     const l = lines[i]!;
-    if (l.cells.length !== 1) return false;
+    if (l.cells.length !== 1 || claims.has(i)) return false;
     const c = l.cells[0]!;
     return by.every((a) => {
       const [first, ...rest] = lines[a]!.cells;
@@ -235,6 +241,25 @@ function groupRows(input: Line[]): Line[] {
     const lower: number[] = [];
     for (let i = a + 1; i < b; i++) (i <= a + split ? upper : lower).push(i);
     if (ps[split]! < ROW_GAP_RATIO * others || !fits(upper, a) || !fits(lower, b)) {
+      // Spec #30 (#33): when every line between the two anchors is a first-column line claimed by
+      // one of their Rows, the Rows' own shape says where the split is. The gap there must only
+      // be clearly wider than the lines' spacing (WRAP_GAP_RATIO, as for a first-column wrap), but
+      // it is not a gap between Rows the chain's rhythm can be measured by.
+      let u = a + 1;
+      while (u < b && claims.get(u) === a) u++;
+      let v = b - 1;
+      while (v > a && claims.get(v) === b) v--;
+      if (u === v + 1 && b - a > 1) {
+        const at = u - 1 - a;
+        const inside = Math.max(chain.inside, ...ps.filter((_, i) => i !== at));
+        if (inside > 0 && ps[at]! >= WRAP_GAP_RATIO * inside) {
+          for (let i = a + 1; i < u; i++) chain.joins.set(i, a);
+          for (let i = u; i < b; i++) chain.joins.set(i, b);
+          chain.inside = inside;
+          chain.anchors.push(b);
+          continue;
+        }
+      }
       chains.push(chain);
       chain = start(b);
       continue;
@@ -304,6 +329,51 @@ function groupRows(input: Line[]): Line[] {
     );
   });
   return out;
+}
+
+/**
+ * The first-column lines each anchor's Row is made of, by line index (spec #30, #33): when the
+ * first column holds multi-line text, a Row's other lines sit alone in that column, where a
+ * Section Header would. Walking up and down from an anchor, a line is the Row's own when it is one
+ * Cell inside the anchor's first Cell and none of its others, with the same weight (a bold line
+ * beside plain text is a label), and sits within the Row's line spacing: closer than
+ * WRAP_GAP_RATIO times the anchor's nearest such line. A Row is claimed only with two or more such
+ * lines, so its spacing is measured on the Row itself; a lone line next to a one-line Row is no
+ * evidence, and stays apart (the #24 "Travel" label). A line two anchors claim makes both Rows
+ * unclear, and neither claims anything.
+ */
+function firstColumnClaims(lines: Line[], anchors: number[]): Map<number, number> {
+  const claims = new Map<number, number>();
+  const unclear = new Set<number>();
+  for (const a of anchors) {
+    const [first, ...rest] = lines[a]!.cells;
+    const candidate = (i: number) => {
+      const l = lines[i];
+      if (!l || l.cells.length !== 1) return false;
+      const c = l.cells[0]!;
+      return overlap(c, first!) && !rest.some((ac) => overlap(ac, c)) && c.bold === first!.bold;
+    };
+    /** The gap from line i to the next one in the direction of `step`. */
+    const gap = (i: number, step: 1 | -1) => Math.abs(lines[i]!.y - lines[i + step]!.y);
+    const near = [-1, 1].flatMap((s) => (candidate(a + s) ? [gap(a, s as 1 | -1)] : []));
+    if (!near.length) continue;
+    const spacing = Math.min(...near);
+    const own: number[] = [];
+    for (const step of [-1, 1] as const)
+      for (
+        let i = a + step;
+        candidate(i) && gap(i - step, step) < WRAP_GAP_RATIO * spacing;
+        i += step
+      )
+        own.push(i);
+    if (own.length < 2) continue;
+    for (const i of own) {
+      if (claims.has(i)) unclear.add(claims.get(i)!).add(a);
+      claims.set(i, a);
+    }
+  }
+  for (const [i, a] of claims) if (unclear.has(a)) claims.delete(i);
+  return claims;
 }
 
 /** One Row from an anchor line and the one-Cell lines of its Wrapped Cell, top to bottom. */
