@@ -13,6 +13,7 @@ import {
   type Band,
   type Bbox,
   type FoundTable,
+  type RegionRole,
   type RegionsBlocked,
 } from "./detection";
 import { isSectionHeader, usesSectionColumn, type SectionMode } from "./export";
@@ -72,8 +73,14 @@ export type CombineDirection = "above" | "below";
 /** One Combine: the two grid rows, upper first, that became one Row in the upper Row's place. */
 export type Combine = { upper: RowBeforeCombine; lower: RowBeforeCombine };
 
-/** What a Region is for: the Header Region holds the column titles, a Body Region holds the Rows. */
-export type RegionRole = "header" | "body";
+export type { RegionRole };
+
+/** A role as the user reads it: "Header" or "Body". */
+export const roleLabel = (role: RegionRole) => (role === "header" ? "Header" : "Body");
+
+/** "Region 2 · Header": the name of a Region in the list, on the page and in announcements. */
+export const regionName = (index: number, role: RegionRole) =>
+  `Region ${index + 1} · ${roleLabel(role)}`;
 
 /** A Region the user drew on a page: its bounds, its role and its Single-Row setting. */
 export type Region = {
@@ -451,7 +458,7 @@ export function reduce(state: WorkspaceState, action: WorkspaceAction): Workspac
       const id = `r${Math.max(0, ...doc.handDrawn.map((r) => Number(r.id.slice(1)))) + 1}`;
       const { redraw } = region;
       // Only Regions with bounds are saved; the preview has already refused a list with none.
-      const regions = drawn(region.regions);
+      const regions = withBounds(region.regions);
       // Redrawing a Hand-drawn Table changes its own record; anything else adds one.
       const own = redraw?.handDrawnId ?? null;
       const handDrawn = own
@@ -504,7 +511,9 @@ export function reduce(state: WorkspaceState, action: WorkspaceAction): Workspac
       const doc = regionDocument(state);
       if (!state.region || !doc || !pageOf(doc, action.page)) return state;
       const { region } = state;
-      // Stepping to another page starts that page's selection over; the Single-Row switch carries on.
+      // Spec #39 decision: stepping to another page starts that page's Regions over, as one fresh
+      // Body Region, and only the Single-Row switch carries on. Regions of a table do not follow
+      // the user to another page.
       if (action.page !== region.page) {
         const carried = editedRegion(region).singleRow;
         const fresh = { ...draftRegion(action.bbox), singleRow: carried };
@@ -1006,11 +1015,10 @@ export function regionBlocked(state: WorkspaceState): RegionBlocked | null {
   if (!region || !page) return "nothing";
   // A Region added but never dragged would be dropped silently on Save, so Save waits for it.
   if (region.regions.some((r) => !r.bbox) && region.regions.some((r) => r.bbox)) return "undrawn";
-  const out = regionsOutcome(page.items, drawn(region.regions), state.settings.columnSpacing);
+  const out = regionsOutcome(page.items, withBounds(region.regions), state.settings.columnSpacing);
   return "blocked" in out ? out.blocked : null;
 }
 
-/** A new Body Region, with the given bounds (null until dragged). */
 /** A Region in another role. A Header Region has no Single-Row setting; it is kept for the way back to Body. */
 const toRole = (r: DraftRegion, role: RegionRole): DraftRegion => {
   if (role === "header") return { ...r, role, singleRow: false, keptSingleRow: r.singleRow };
@@ -1018,12 +1026,13 @@ const toRole = (r: DraftRegion, role: RegionRole): DraftRegion => {
   return { ...rest, role, singleRow: keptSingleRow ?? r.singleRow };
 };
 
+/** A new Body Region, with the given bounds (null until dragged). */
 const draftRegion = (bbox: Bbox | null): DraftRegion => ({ bbox, role: "body", singleRow: false });
 
 const editedRegion = (region: RegionInProgress): DraftRegion => region.regions[region.edited]!;
 
 /** The Regions that have bounds. */
-const drawn = (regions: DraftRegion[]): Region[] =>
+const withBounds = (regions: DraftRegion[]): Region[] =>
   regions.flatMap((r) => (r.bbox ? [{ ...r, bbox: r.bbox }] : []));
 
 /** The Region in progress with the edited Region changed. */
@@ -1041,5 +1050,5 @@ export function regionPreview(state: WorkspaceState): RegionTable | null {
   const doc = regionDocument(state);
   const page = doc && region && pageOf(doc, region.page);
   if (!region || !page) return null;
-  return handDrawnTable(page, drawn(region.regions), state.settings);
+  return handDrawnTable(page, withBounds(region.regions), state.settings);
 }

@@ -10,6 +10,7 @@ import {
   type PageText,
   type ReadError,
   type RegionInProgress,
+  roleLabel,
   type RegionRole,
 } from "../engine";
 import { ContentPane } from "./components/ContentPane";
@@ -262,7 +263,7 @@ export function App() {
                         ? region.regions.findIndex((r, i) => i !== index && r.role === "header")
                         : -1;
                     const now = (i: number, r: RegionRole) =>
-                      `Region ${i + 1} is now ${r === "header" ? "Header" : "Body"}`;
+                      `Region ${i + 1} is now ${roleLabel(r)}`;
                     showHud(now(index, role) + (demoted >= 0 ? `. ${now(demoted, "body")}` : ""));
                   }}
                   onCancel={() => dispatch({ type: "regionCancelled" })}

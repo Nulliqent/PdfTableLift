@@ -459,16 +459,23 @@ export function detectTables(items: TextItem[], columnSpacing: number): FoundTab
   return tables;
 }
 
+/** What `buildTable` takes besides the lines. */
+export type BuildOptions = {
+  /** The lines come from a Region the user drew, which allows one column. */
+  manual?: boolean;
+  /** A Single-Row Region: every line goes in one Row. */
+  oneRow?: boolean;
+  /** Use these columns instead of finding them in the lines. */
+  fixedBands?: Band[];
+};
+
 /**
- * Builds a grid from a run of lines. `manual` (a Region the user drew) allows one column.
- * `oneRow` (a Single-Row Region) puts every line in one Row. Returns null when there are too few
+ * Builds a grid from a run of lines (see `BuildOptions`). Returns null when there are too few
  * columns.
  */
 export function buildTable(
   rows: Line[],
-  manual = false,
-  oneRow = false,
-  fixedBands?: Band[],
+  { manual = false, oneRow = false, fixedBands }: BuildOptions = {},
 ): FoundTable | null {
   const multi = rows.filter((r) => r.cells.length >= 2);
   const maxC = multi.length ? Math.max(...multi.map((r) => r.cells.length)) : 1;
@@ -476,20 +483,18 @@ export function buildTable(
   const iv = basis
     .flatMap((r) => r.cells.map((c): Band => [c.x0, c.x1]))
     .sort((a, b) => a[0] - b[0]);
-  const bands: Band[] = [];
-  for (const [a, b] of iv) {
-    const cur = bands[bands.length - 1];
-    if (cur && a < cur[1] - 0.5) cur[1] = Math.max(cur[1], b);
-    else bands.push([a, b]);
-  }
-  if (fixedBands) {
-    bands.length = 0;
-    bands.push(...fixedBands.map((b): Band => [b[0], b[1]]));
-  } else if (manual) addEveryLine(bands, rows, basis);
-  if (!bands.length && manual) {
-    const all = rows.flatMap((r) => r.cells);
-    bands.push([Math.min(...all.map((c) => c.x0)), Math.max(...all.map((c) => c.x1))]);
-  }
+  const merged = iv.reduce<Band[]>((acc, [a, b]) => {
+    const cur = acc[acc.length - 1];
+    return cur && a < cur[1] - 0.5
+      ? [...acc.slice(0, -1), [cur[0], Math.max(cur[1], b)]]
+      : [...acc, [a, b]];
+  }, []);
+  const found = fixedBands
+    ? fixedBands.map((b): Band => [b[0], b[1]])
+    : manual
+      ? addEveryLine(merged, rows, basis)
+      : merged;
+  const bands: Band[] = found.length || !manual ? found : [spanOf(rows)];
   if (bands.length < (manual ? 1 : 2)) return null;
   const pick = (c: Cell) => {
     let best = -1;
@@ -658,7 +663,8 @@ function singleRowTable(lines: Line[], bands: Band[], pick: (c: Cell) => number)
  * are added narrowest first; a Cell that would join two columns (a title or caption spanning
  * them) is left out, and so are Cells inside a column already found.
  */
-function addEveryLine(bands: Band[], rows: Line[], basis: Line[]): void {
+function addEveryLine(found: Band[], rows: Line[], basis: Line[]): Band[] {
+  const bands = found.map((b): Band => [b[0], b[1]]);
   const rest = rows
     .filter((r) => !basis.includes(r))
     .flatMap((r) => r.cells)
@@ -672,8 +678,14 @@ function addEveryLine(bands: Band[], rows: Line[], basis: Line[]): void {
       band[1] = Math.max(band[1], c.x1);
     } else bands.push([c.x0, c.x1]);
   }
-  bands.sort((p, q) => p[0] - q[0]);
+  return bands.sort((p, q) => p[0] - q[0]);
 }
+
+/** One column across all the lines' Cells. */
+const spanOf = (rows: Line[]): Band => {
+  const all = rows.flatMap((r) => r.cells);
+  return [Math.min(...all.map((c) => c.x0)), Math.max(...all.map((c) => c.x1))];
+};
 
 /**
  * The Rows inside a Region. A Region says where the table is, not where its Rows are, so the
@@ -685,7 +697,7 @@ function addEveryLine(bands: Band[], rows: Line[], basis: Line[]): void {
  * did before.
  */
 function regionRows(items: TextItem[], inside: TextItem[], region: Bbox, cs: number): Line[] {
-  const own = groupRows(linesFromItems(inside, cs));
+  const groupedAlone = groupRows(linesFromItems(inside, cs));
   const [x0, , x1] = region;
   const isIn = new Set(inside);
   const column = items.filter((it) => it.x + it.w / 2 >= x0 && it.x + it.w / 2 <= x1);
@@ -702,7 +714,7 @@ function regionRows(items: TextItem[], inside: TextItem[], region: Bbox, cs: num
       );
   }
   rows.sort((p, q) => q.y - p.y);
-  return rows.length < own.length ? rows : own;
+  return rows.length < groupedAlone.length ? rows : groupedAlone;
 }
 
 /**
@@ -727,12 +739,41 @@ export function regionTable(
   const rows = singleRow
     ? linesFromItems(inside, columnSpacing)
     : regionRows(items, inside, region, columnSpacing);
-  const table = rows.length ? buildTable(rows, true, singleRow) : null;
+  const table = rows.length ? buildTable(rows, { manual: true, oneRow: singleRow }) : null;
   return table && { ...table, bbox: region };
 }
 
+/** What a Region is for: the Header Region holds the column titles, a Body Region holds the Rows. */
+export type RegionRole = "header" | "body";
+
 /** A Region as the engine takes it: its bounds, its role and its Single-Row setting. */
-export type RegionSpec = { bbox: Bbox; role: "header" | "body"; singleRow: boolean };
+export type RegionSpec = { bbox: Bbox; role: RegionRole; singleRow: boolean };
+
+/** The index of the column `x` lies in, or else the one whose edge is nearest to it. */
+function nearestColumn(cols: Band[], x: number): number {
+  let best = 0;
+  let nearest = Infinity;
+  cols.forEach(([a, b], i) => {
+    const d = x >= a && x <= b ? 0 : Math.min(Math.abs(x - a), Math.abs(x - b));
+    if (d < nearest) {
+      nearest = d;
+      best = i;
+    }
+  });
+  return best;
+}
+
+/** The smallest box holding all of `boxes`. */
+const unionBbox = (boxes: Bbox[]): Bbox =>
+  boxes.reduce<Bbox>(
+    (u, b) => [
+      Math.min(u[0], b[0]),
+      Math.min(u[1], b[1]),
+      Math.max(u[2], b[2]),
+      Math.max(u[3], b[3]),
+    ],
+    [Infinity, Infinity, -Infinity, -Infinity],
+  );
 
 /** Why Regions cannot be saved: nothing is drawn, no Body Region has text, or the Header Region has none. */
 export type RegionsBlocked = "nothing" | "no-body" | "no-header";
@@ -760,17 +801,7 @@ function headerRow(items: TextItem[], cols: Band[], columnSpacing: number): stri
         best = i;
       }
     });
-    if (best >= 0) return best;
-    const mid = (x0 + x1) / 2;
-    let nearest = Infinity;
-    cols.forEach(([a, b], i) => {
-      const d = Math.abs((a + b) / 2 - mid);
-      if (d < nearest) {
-        nearest = d;
-        best = i;
-      }
-    });
-    return best;
+    return best >= 0 ? best : nearestColumn(cols, (x0 + x1) / 2);
   };
   for (const l of linesFromItems(items, columnSpacing)) {
     for (const it of l.items.slice().sort((p, q) => p.x - q.x)) {
@@ -794,12 +825,12 @@ function headerRow(items: TextItem[], cols: Band[], columnSpacing: number): stri
  * Text in two Regions belongs to the upper one; a Region with no text is ignored.
  */
 function bodiesTable(items: TextItem[], bodies: RegionSpec[], cs: number): FoundTable | null {
-  const claimed = new Set<TextItem>();
+  const taken = new Set<TextItem>();
   const parts: { spec: RegionSpec; rows: Line[] }[] = [];
   for (const spec of [...bodies].sort((p, q) => q.bbox[3] - p.bbox[3] || q.bbox[1] - p.bbox[1])) {
-    const inside = items.filter((it) => !claimed.has(it) && insideBox(it, spec.bbox));
+    const inside = items.filter((it) => !taken.has(it) && insideBox(it, spec.bbox));
     if (!inside.length) continue;
-    inside.forEach((it) => claimed.add(it));
+    inside.forEach((it) => taken.add(it));
     const rows = spec.singleRow
       ? linesFromItems(inside, cs)
       : regionRows(items, inside, spec.bbox, cs);
@@ -811,10 +842,16 @@ function bodiesTable(items: TextItem[], bodies: RegionSpec[], cs: number): Found
   parts.sort((p, q) => topOf(q) - topOf(p));
   const shared = buildTable(
     parts.flatMap((p) => p.rows),
-    true,
+    { manual: true },
   );
   if (!shared) return null;
-  const tables = parts.map((p) => buildTable(p.rows, true, p.spec.singleRow, shared.cols));
+  const tables = parts.map((p) =>
+    buildTable(p.rows, {
+      manual: true,
+      oneRow: p.spec.singleRow,
+      fixedBands: shared.cols,
+    }),
+  );
   // A Region that opens with a lone bold label and has Rows after it opens with a Section Header:
   // the Region boundary stands where the group above would have ended.
   parts.forEach((p, i) => {
@@ -822,16 +859,7 @@ function bodiesTable(items: TextItem[], bodies: RegionSpec[], cs: number): Found
     const lead = p.rows[0]!.cells;
     if (!t || p.spec.singleRow || t.grid.length < 2 || t.sections.includes(0)) return;
     if (lead.length !== 1 || !lead[0]!.bold) return;
-    const mid = (lead[0]!.x0 + lead[0]!.x1) / 2;
-    let at = 0;
-    let best = Infinity;
-    shared.cols.forEach(([a, b], k) => {
-      const d = mid >= a && mid <= b ? 0 : Math.min(Math.abs(mid - a), Math.abs(mid - b));
-      if (d < best) {
-        best = d;
-        at = k;
-      }
-    });
+    const at = nearestColumn(shared.cols, (lead[0]!.x0 + lead[0]!.x1) / 2);
     const data: string[] = Array(shared.cols.length).fill("");
     data[at] = lead[0]!.text;
     t.sections = [0, ...t.sections];
@@ -854,15 +882,7 @@ function bodiesTable(items: TextItem[], bodies: RegionSpec[], cs: number): Found
     sectionCells,
     cols: shared.cols,
     firstBold: first!.firstBold,
-    bbox: parts.reduce<Bbox>(
-      (u, p) => [
-        Math.min(u[0], p.spec.bbox[0]),
-        Math.min(u[1], p.spec.bbox[1]),
-        Math.max(u[2], p.spec.bbox[2]),
-        Math.max(u[3], p.spec.bbox[3]),
-      ],
-      [Infinity, Infinity, -Infinity, -Infinity],
-    ),
+    bbox: unionBbox(parts.map((p) => p.spec.bbox)),
   };
 }
 
@@ -880,8 +900,8 @@ export function regionsOutcome(
   if (!regions.length) return { blocked: "nothing" };
   const header = regions.find((r) => r.role === "header");
   const titles = header ? items.filter((it) => insideBox(it, header.bbox)) : [];
-  const claimed = new Set(titles);
-  const pool = header ? items.filter((it) => !claimed.has(it)) : items;
+  const titleItems = new Set(titles);
+  const pool = header ? items.filter((it) => !titleItems.has(it)) : items;
   // An empty Header Region is named first, before any Body Region is looked at.
   if (header && !titles.some((it) => it.str.trim())) return { blocked: "no-header" };
   const bodies = regions.filter((r) => r.role === "body");
@@ -903,25 +923,7 @@ export function regionsOutcome(
       sectionCells,
       cols: table.cols,
       firstBold: titles.every((it) => it.bold),
-      bbox: regions.reduce<Bbox>(
-        (u, r) => [
-          Math.min(u[0], r.bbox[0]),
-          Math.min(u[1], r.bbox[1]),
-          Math.max(u[2], r.bbox[2]),
-          Math.max(u[3], r.bbox[3]),
-        ],
-        [Infinity, Infinity, -Infinity, -Infinity],
-      ),
+      bbox: unionBbox(regions.map((r) => r.bbox)),
     },
   };
-}
-
-/** The Table `regionsOutcome` builds, or null when the Regions cannot be saved. */
-export function regionsTable(
-  items: TextItem[],
-  regions: RegionSpec[],
-  columnSpacing: number,
-): FoundTable | null {
-  const out = regionsOutcome(items, regions, columnSpacing);
-  return "table" in out ? out.table : null;
 }

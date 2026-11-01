@@ -1,6 +1,6 @@
 import { useRef } from "react";
 import type { OutlineBox } from "../../pdf-reader";
-import { tableRegions, type Document, type Table } from "../../engine";
+import { regionName, roleLabel, tableRegions, type Document, type Table } from "../../engine";
 import { Icon } from "./Icon";
 import { frame, useDrawnPages, usePageWidth } from "../page-drawing";
 import { CanvasHost } from "./CanvasHost";
@@ -54,7 +54,7 @@ export function SourcePage({
                     return regions.map((r, k) => (
                       <RegionOutline
                         key={`${t.id}:region:${k}`}
-                        name={`Region ${k + 1} · ${r.role === "header" ? "Header" : "Body"}`}
+                        name={regionName(k, r.role)}
                         header={r.role === "header"}
                         box={page.locate(r.bbox)}
                       />
@@ -93,7 +93,7 @@ function RegionOutline({ name, header, box }: { name: string; header: boolean; b
       style={frame(box)}
       data-testid="region-outline"
     >
-      <span aria-hidden="true">{header ? "Header" : "Body"}</span>
+      <span aria-hidden="true">{roleLabel(header ? "header" : "body")}</span>
     </div>
   );
 }

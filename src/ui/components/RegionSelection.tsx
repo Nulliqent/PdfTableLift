@@ -1,11 +1,13 @@
 import { useEffect } from "react";
-import type {
-  Bbox,
-  Document,
-  RegionInProgress,
-  RegionRole,
-  RegionBlocked,
-  RegionTable,
+import {
+  regionName,
+  roleLabel,
+  type Bbox,
+  type Document,
+  type RegionInProgress,
+  type RegionRole,
+  type RegionBlocked,
+  type RegionTable,
 } from "../../engine";
 import { plural } from "../format";
 import { Button } from "./Button";
@@ -139,7 +141,7 @@ export function RegionSelection({
                   aria-pressed={r.role === role}
                   onClick={() => onRole(i, role)}
                 >
-                  {role === "header" ? "Header" : "Body"}
+                  {roleLabel(role)}
                 </button>
               ))}
             </div>
@@ -182,10 +184,10 @@ export function RegionSelection({
         </div>
         <div className={`${pane.card} ${styles.preview}`} aria-live="polite">
           <Preview
-            drawn={region.regions.some((r) => r.bbox !== null)}
+            hasDrawn={region.regions.some((r) => r.bbox !== null)}
             table={preview}
             blocked={blocked}
-            lone={region.regions.length === 1 && edited.role === "body"}
+            onlyBody={region.regions.length === 1 && edited.role === "body"}
             undrawn={region.regions.findIndex((r) => !r.bbox)}
           />
         </div>
@@ -194,25 +196,22 @@ export function RegionSelection({
   );
 }
 
-/** "Region 2 · Header": the name of a Region in the list, on the page and in announcements. */
-const regionName = (index: number, role: RegionRole) =>
-  `Region ${index + 1} · ${role === "header" ? "Header" : "Body"}`;
-
 function Preview({
-  drawn,
+  hasDrawn,
   table,
   blocked,
-  lone,
+  onlyBody,
   undrawn,
 }: {
-  drawn: boolean;
+  hasDrawn: boolean;
   table: RegionTable | null;
   blocked: RegionBlocked | null;
-  lone: boolean;
+  /** The only Region is a Body Region: its reasons keep the single-Region wording. */
+  onlyBody: boolean;
   /** Index of the first Region not yet dragged, or -1. */
   undrawn: number;
 }) {
-  if (!drawn)
+  if (!hasDrawn)
     return (
       <div className={styles.empty}>
         <Icon name="select" />
@@ -236,7 +235,7 @@ function Preview({
     const reason =
       blocked === "no-header"
         ? "No text in the Header Region"
-        : lone
+        : onlyBody
           ? "No text in this Region"
           : "No Body Region with text";
     return (
