@@ -57,6 +57,8 @@ type ContentPaneProps = {
   onRowAction: (action: RowAction) => void;
   onSplitByPage: (documentId: string, tableId: string) => void;
   onJoinAgain: (documentId: string, tableId: string) => void;
+  /** A Stacked Table's Source switch was turned on or off. */
+  onToggleSource: (documentId: string, stackedId: string, source: boolean) => void;
 };
 
 /** The content pane: the selected Table with Copy, or an empty state. */
@@ -77,6 +79,7 @@ export function ContentPane({
   onRowAction,
   onSplitByPage,
   onJoinAgain,
+  onToggleSource,
 }: ContentPaneProps) {
   return (
     <main className={styles.content}>
@@ -90,6 +93,7 @@ export function ContentPane({
             stacked={stacked}
             onAnnounce={onAnnounce}
             onSelectTable={onSelectTable}
+            onToggleSource={onToggleSource}
           />
         ) : document && table ? (
           <TableDetail

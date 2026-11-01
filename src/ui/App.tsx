@@ -348,6 +348,9 @@ export function App() {
               dispatch({ type: "joinAgain", documentId, tableId });
               if (!hasEdits(documentId)) showHud("Joined with the previous page");
             }}
+            onToggleSource={(documentId, stackedId, source) =>
+              dispatch({ type: "stackedSourceToggled", documentId, stackedId, source })
+            }
           />
         </div>
       </div>
