@@ -2,6 +2,7 @@ import { useState, type ReactNode } from "react";
 import {
   EXPORT_FORMATS,
   READ_ERROR_MESSAGES,
+  exportFile,
   exportTable,
   hasHeaderRegion,
   hasSectionHeaders,
@@ -13,6 +14,7 @@ import {
   type Table,
 } from "../../engine";
 import { copyText } from "../copy-text";
+import { downloadFile } from "../download-file";
 import { pageLabel, plural } from "../format";
 import { useExportFormat } from "../useExportFormat";
 import { useSectionMode } from "../useSectionMode";
@@ -150,6 +152,10 @@ function TableDetail({
       onAnnounce(format === "tsv" ? "Copied: paste into Numbers or Excel" : `Copied as ${name}`);
     } else setSheet(text);
   };
+  const download = () => {
+    downloadFile(exportFile(document.name, `Table ${table.n}`, table, format, sectionMode));
+    onAnnounce("Downloaded");
+  };
   return (
     <>
       <div className={styles.head}>
@@ -242,6 +248,10 @@ function TableDetail({
             First row is header
           </label>
         )}
+        <Button onClick={download}>
+          <Icon name="tray" />
+          Download
+        </Button>
         <Button variant="primary" onClick={() => void copy()}>
           <Icon name="copy" />
           Copy

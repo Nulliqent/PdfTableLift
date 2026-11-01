@@ -150,3 +150,33 @@ export function numericColumns(table: Table): boolean[] {
     return v.length > 0 && v.filter((x) => isNum(x!)).length / v.length >= 0.7;
   });
 }
+
+/** Each format's file extension and MIME type, for Download. */
+const FILE_TYPES: Record<ExportFormat, { extension: string; type: string }> = {
+  csv: { extension: "csv", type: "text/csv" },
+  tsv: { extension: "tsv", type: "text/tab-separated-values" },
+  md: { extension: "md", type: "text/markdown" },
+  json: { extension: "json", type: "application/json" },
+};
+
+/** A file to download: its name, MIME type and contents. */
+export type ExportFile = { name: string; type: string; text: string };
+
+/**
+ * The Table as a file to download: the same text as Copy, named `<Document name> - <title>.<ext>`.
+ * The title is what the Table is called in the app, such as "Table 3" or "Stacked Table 1".
+ */
+export function exportFile(
+  documentName: string,
+  title: string,
+  table: Table,
+  format: ExportFormat,
+  sectionMode: SectionMode = DEFAULT_SECTION_MODE,
+): ExportFile {
+  const { extension, type } = FILE_TYPES[format];
+  return {
+    name: `${documentName} - ${title}.${extension}`,
+    type,
+    text: exportTable(table, format, sectionMode),
+  };
+}

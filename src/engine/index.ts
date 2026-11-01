@@ -79,9 +79,10 @@ export {
   isSectionHeader,
   isSectionMode,
   usesSectionColumn,
+  exportFile,
   exportTable,
   isExportFormat,
   numericColumns,
 } from "./export";
-export type { ExportFormat, SectionMode } from "./export";
+export type { ExportFile, ExportFormat, SectionMode } from "./export";
 export type { FoundTable, RegionsBlocked } from "./detection";
