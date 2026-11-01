@@ -8,6 +8,7 @@ import {
   selectedStackedTable,
   selectedTable,
   tickMatch,
+  tickedTables,
   type Document,
   type PageText,
   type WorkspaceAction,
@@ -297,5 +298,137 @@ describe("a Stacked Table", () => {
     const stacked = stack(open("repeated-header"), 1, 2);
     const removed = reduce(stacked, { type: "documentRemoved", id: "d" });
     expect(removed.selection).toBeNull();
+  });
+});
+
+describe("Edit Members", () => {
+  const stacked = stack(open("repeated-header"), 1, 2);
+  const id = doc(stacked).stacked[0]!.id;
+  const editing = reduce(stacked, { type: "membersEditStarted", documentId: "d", stackedId: id });
+
+  it("opens the checkboxes with the current Members ticked, in order", () => {
+    expect(editing.stacking?.stackedId).toBe(id);
+    expect(tickedTables(doc(editing), editing.stacking!.ticked).map((t) => t.n)).toEqual([1, 2]);
+  });
+
+  it("adds, removes and reorders Members on Save, and the grid follows the new order", () => {
+    const saved = run(
+      tick(editing, 3),
+      { type: "tableTicked", tableId: tableId(editing, 1), ticked: false },
+      { type: "memberMoved", tableId: tableId(editing, 3), direction: "up" },
+      { type: "membersSaved" },
+    );
+    expect(saved.stacking).toBeNull();
+    expect(doc(saved).stacked).toHaveLength(1);
+    const built = selectedStackedTable(saved)!;
+    expect(built.record.id).toBe(id);
+    expect(built.members.map((m) => m.table?.n)).toEqual([3, 2]);
+    expect(built.table.grid.map((r) => r[0])).toEqual([
+      "Order",
+      "A-1013",
+      "A-1014",
+      "A-1015",
+      "A-1016",
+      "A-1017",
+      "A-1018",
+      "A-1007",
+      "A-1008",
+      "A-1009",
+      "A-1010",
+      "A-1011",
+      "A-1012",
+    ]);
+    // The Members themselves are untouched.
+    expect(doc(saved).tables).toEqual(doc(stacked).tables);
+  });
+
+  it("moves a Member up or down, and not past either end", () => {
+    const three = tick(editing, 3);
+    const order = (s: WorkspaceState) => tickedTables(doc(s), s.stacking!.ticked).map((t) => t.n);
+    const move = (s: WorkspaceState, n: number, direction: "up" | "down") =>
+      reduce(s, { type: "memberMoved", tableId: tableId(s, n), direction });
+    expect(order(move(three, 1, "down"))).toEqual([2, 1, 3]);
+    expect(order(move(three, 3, "up"))).toEqual([1, 3, 2]);
+    expect(move(three, 1, "up")).toBe(three);
+    expect(move(three, 3, "down")).toBe(three);
+  });
+
+  it("leaves the Members as they were on Cancel", () => {
+    const cancelled = run(
+      tick(editing, 3),
+      { type: "memberMoved", tableId: tableId(editing, 3), direction: "up" },
+      { type: "stackingCancelled" },
+    );
+    expect(cancelled.stacking).toBeNull();
+    expect(doc(cancelled).stacked).toEqual(doc(stacked).stacked);
+  });
+
+  it("keeps a Stacked Table saved with one Member, and refuses to save with none", () => {
+    const one = run(
+      editing,
+      { type: "tableTicked", tableId: tableId(editing, 1), ticked: false },
+      { type: "membersSaved" },
+    );
+    const built = selectedStackedTable(one)!;
+    expect(built.members.map((m) => m.table?.n)).toEqual([2]);
+    expect(built.table.grid).toHaveLength(7);
+    expect(exportTable(built.table, "csv").split("\n")[0]).toBe("Order,City,Units,Total");
+
+    const none = run(
+      editing,
+      { type: "tableTicked", tableId: tableId(editing, 1), ticked: false },
+      { type: "tableTicked", tableId: tableId(editing, 2), ticked: false },
+    );
+    expect(reduce(none, { type: "membersSaved" })).toBe(none);
+    // Stack N Tables does not make a second Stacked Table while editing one.
+    expect(doc(reduce(tick(editing, 3), { type: "tablesStacked" })).stacked).toHaveLength(1);
+  });
+});
+
+describe("Remove Stacked Table", () => {
+  const state = open("repeated-header");
+  const first = stack(state, 1, 2);
+  const both = stack(first, 2, 3);
+  const [one, two] = doc(both).stacked;
+
+  it("removes only it: its Members and other Stacked Tables sharing a Member stay", () => {
+    const edited = reduce(both, {
+      type: "cellEdited",
+      documentId: "d",
+      tableId: tableId(both, 2),
+      row: 1,
+      col: 1,
+      value: "Gary, IN",
+    });
+    const removed = reduce(edited, {
+      type: "stackedTableRemoved",
+      documentId: "d",
+      stackedId: two!.id,
+    });
+    expect(doc(removed).stacked).toEqual([one]);
+    expect(doc(removed).tables).toEqual(doc(edited).tables);
+    expect(tableN(removed, 2).grid[1]![1]).toBe("Gary, IN");
+    // The selection moves to its first Member.
+    expect(selectedTable(removed)?.n).toBe(2);
+  });
+
+  it("keeps the selection when another Stacked Table is removed, and ends its Edit Members", () => {
+    const editing = reduce(both, {
+      type: "membersEditStarted",
+      documentId: "d",
+      stackedId: one!.id,
+    });
+    const removed = reduce(editing, {
+      type: "stackedTableRemoved",
+      documentId: "d",
+      stackedId: one!.id,
+    });
+    expect(removed.stacking).toBeNull();
+    const other = reduce(both, {
+      type: "stackedTableRemoved",
+      documentId: "d",
+      stackedId: one!.id,
+    });
+    expect(selectedStackedTable(other)?.record.id).toBe(two!.id);
   });
 });
