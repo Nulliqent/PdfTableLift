@@ -407,6 +407,24 @@ await write("embedded-bold", {}, (d) => {
   );
 });
 
+// --- Page frames: a page with /Rotate, and a page whose CropBox does not start at 0,0 ------------
+// pdf.js reports text in the page's unrotated user space, whatever /Rotate or the CropBox say.
+// Page 1: Letter turned a quarter. Page 2: Letter cropped to [100, 200, 512, 692].
+const CROP = [100, 200, 512, 692];
+const cols3 = (x) => [{ x }, { x: x + 120 }, { x: x + 300, align: "right" }];
+const frameRows = [
+  { cells: ["Item", "Owner", "Cost"], bold: true },
+  ["Lamp", "Ines", "40.0"],
+  ["Desk", "Omar", "220.5"],
+];
+await write("page-frames", {}, (d) => {
+  d.page.dictionary.data.Rotate = 90;
+  table(d, cols3(72), frameRows, 700);
+  d.addPage();
+  d.page.dictionary.data.CropBox = CROP;
+  table(d, cols3(130), frameRows, 640);
+});
+
 // --- Rows stored as one string with runs of spaces, written by pdfkit --------------------------------
 // pdf.js splits these strings into separate items itself, so this does NOT exercise the US-14 split
 // (single-string-rows.pdf below does). It pins that pdf.js behaviour.

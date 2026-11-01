@@ -8,7 +8,7 @@ import {
   selectedTable,
   type PageText,
   type ReadError,
-  type WorkspaceAction,
+  type RegionInProgress,
 } from "../engine";
 import { ContentPane } from "./components/ContentPane";
 import { ConfirmSheet } from "./components/ConfirmSheet";
@@ -56,19 +56,37 @@ export function App() {
     dispatch({ type: "regionStarted", documentId, page, tableId });
   const savedMessage = (n: number, redrawn: boolean) =>
     redrawn ? `Table ${n} redrawn from your selection` : `Table ${n} added from your selection`;
+  // The Region being saved, until the reducer answers. The new Table's number is read from the
+  // state the save produced, so detection runs once, inside the reducer.
+  const saving = useRef<RegionInProgress | null>(null);
   const saveRegion = () => {
-    // The reducer is pure, so the new Table's number is known before dispatching.
-    const action: WorkspaceAction = { type: "regionCommitted" };
-    const created = selectedTable(reduce(state, action));
-    dispatch(action);
-    if (created && created.manual !== null && !hasEdits(region!.documentId))
-      showHud(savedMessage(created.n, region!.redraw !== null));
+    saving.current = region;
+    dispatch({ type: "regionCommitted" });
   };
-
-  const selectionRef = useRef(state.selection);
   useEffect(() => {
-    selectionRef.current = state.selection;
-  }, [state.selection]);
+    const saved = saving.current;
+    if (!saved) return;
+    // Held for the edit warning: the confirmation announces the save itself.
+    if (state.pendingChange?.type === "regionCommitted") saving.current = null;
+    if (!saving.current || state.region === saved) return;
+    saving.current = null;
+    const created = selectedTable(state);
+    if (state.region === null && created?.manual)
+      showHud(savedMessage(created.n, saved.redraw !== null));
+  }, [state, showHud]);
+
+  // Announce a read error once the reducer has recorded it: a Document removed while it was
+  // loading never records one. With a good Table selected the content pane doesn't show the
+  // error, only the sidebar does, so the HUD says it too.
+  const announced = useRef(new Set<string>());
+  const hasSelection = state.selection !== null;
+  useEffect(() => {
+    for (const d of state.documents) {
+      if (d.status !== "error" || announced.current.has(d.id)) continue;
+      announced.current.add(d.id);
+      if (hasSelection && d.error) showHud(READ_ERROR_MESSAGES[d.error], "warn");
+    }
+  }, [state.documents, hasSelection, showHud]);
 
   const read = async (id: string, bytes: Uint8Array) => {
     // pdf.js is large, so it loads with the first Document instead of with the page.
@@ -79,11 +97,8 @@ export function App() {
     } catch {
       result = "not-pdf"; // e.g. the pdf.js chunk failed to load; never leave the Document reading
     }
-    if (typeof result === "string") {
-      dispatch({ type: "documentFailed", id, error: result });
-      // With a good Table selected the content pane doesn't show the error, only the sidebar does.
-      if (selectionRef.current) showHud(READ_ERROR_MESSAGES[result], "warn");
-    } else dispatch({ type: "documentRead", id, pages: result });
+    if (typeof result === "string") dispatch({ type: "documentFailed", id, error: result });
+    else dispatch({ type: "documentRead", id, pages: result });
   };
 
   const openFiles = async (files: File[]) => {

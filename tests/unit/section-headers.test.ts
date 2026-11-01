@@ -63,6 +63,35 @@ describe("toggling a Section Header", () => {
     expect(table.sections).toEqual([]);
   });
 
+  it("gives a row the user marked its own cells back when unmarked", () => {
+    const table = selectedTable(toggle(toggle(opened(), 1), 1))!;
+    expect(table.grid[1]).toEqual(["Portland", "West", "412.8"]);
+    expect(table.grid).toEqual(selectedTable(opened())!.grid);
+  });
+
+  it("puts a detected Section Header's text back in its own column when unmarked", () => {
+    // A row whose only Cell is in the Q1 column reads as a lone label: a Section Header.
+    const lone: PageText = {
+      ...page,
+      items: [...page.items, at("903.5", 320, 668), ...row(654, ["Boise", "West", "77.0"])],
+    };
+    const s = (
+      [
+        { type: "documentAdded", id: "d1", name: "r.pdf", size: 1 },
+        { type: "documentRead", id: "d1", pages: [lone] },
+      ] as WorkspaceAction[]
+    ).reduce(reduce, initialWorkspace);
+    const detected = selectedTable(s)!;
+    expect(detected.sections).toEqual([3]);
+    expect(detected.grid[3]).toEqual(["903.5", "", ""]);
+
+    const unmarked = selectedTable(toggle(s, 3))!;
+
+    expect(unmarked.sections).toEqual([]);
+    expect(unmarked.grid[3]).toEqual(["", "", "903.5"]);
+    expect(unmarked.edited).toBe(true);
+  });
+
   it("ignores the Header Row and rows that do not exist", () => {
     const before = opened();
     expect(toggle(before, 0)).toBe(before);

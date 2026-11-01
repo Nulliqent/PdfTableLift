@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import type { Bbox, Document, FoundTable, RegionInProgress } from "../../engine";
+import type { Bbox, Document, RegionInProgress, RegionTable } from "../../engine";
 import { plural } from "../format";
 import { Button } from "./Button";
 import { Icon } from "./Icon";
@@ -14,7 +14,7 @@ type RegionSelectionProps = {
   document: Document;
   region: RegionInProgress;
   /** The Table the Region would make now, or null while nothing is drawn or it holds no text. */
-  preview: FoundTable | null;
+  preview: RegionTable | null;
   onPage: (page: number) => void;
   onDrag: (bbox: Bbox) => void;
   onWholePage: () => void;
@@ -46,10 +46,9 @@ export function RegionSelection({
   }, [onCancel]);
 
   const last = Math.max(...document.pages.map((p) => p.num));
-  // A Single-Row Region's one Row is data: its Table starts with First row is header off.
-  const header = !region.singleRow;
+  // The preview shows the Header Row as the saved Table will start: off for a single Row.
   const label = preview
-    ? `${preview.grid.length - (header ? 1 : 0)} × ${preview.grid[0]!.length}`
+    ? `${preview.grid.length - (preview.header ? 1 : 0)} × ${preview.grid[0]!.length}`
     : "No text";
   return (
     <>
@@ -117,23 +116,14 @@ export function RegionSelection({
           />
         </div>
         <div className={`${pane.card} ${styles.preview}`} aria-live="polite">
-          <Preview drawn={region.bbox !== null} table={preview} header={header} />
+          <Preview drawn={region.bbox !== null} table={preview} />
         </div>
       </div>
     </>
   );
 }
 
-function Preview({
-  drawn,
-  table,
-  header,
-}: {
-  drawn: boolean;
-  table: FoundTable | null;
-  /** The first row is shown as the Header Row. */
-  header: boolean;
-}) {
+function Preview({ drawn, table }: { drawn: boolean; table: RegionTable | null }) {
   if (!drawn)
     return (
       <div className={styles.empty}>
@@ -155,6 +145,7 @@ function Preview({
         </span>
       </div>
     );
+  const { header } = table;
   const head = header ? table.grid[0]! : null;
   const body = header ? table.grid.slice(1) : table.grid;
   const cols = table.grid[0]!.length;

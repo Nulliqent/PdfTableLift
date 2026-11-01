@@ -4,7 +4,7 @@
  * Internal to the Engine: covered through the workspace reducer and the golden snapshots.
  */
 import type { Band } from "./detection";
-import type { PageText } from "../shared/page-text";
+import { pageBox, type PageText } from "../shared/page-text";
 import type { Table } from "./workspace";
 
 const normalise = (s: string) => s.toLowerCase().replace(/[^a-z0-9%$€£]+/g, "");
@@ -63,9 +63,12 @@ function continuation(
   const before = pages.find((p) => p.num === last.page);
   const after = pages.find((p) => p.num === next.page);
   if (!before || !after) return null;
-  // Body text follows the first Part on its page, or precedes the next Part on its.
-  if (linesBetween(before, before.h * 0.06, last.bbox[1]) > 2) return null;
-  if (linesBetween(after, next.parts[0]!.bbox[3], after.h * 0.94) > 2) return null;
+  // Body text follows the first Part on its page, or precedes the next Part on its. The bottom
+  // and top 6% of each page are margins, measured in the page box.
+  const bottom = pageBox(before)[1] + before.h * 0.06;
+  const top = pageBox(after)[1] + after.h * 0.94;
+  if (linesBetween(before, bottom, last.bbox[1]) > 2) return null;
+  if (linesBetween(after, next.parts[0]!.bbox[3], top) > 2) return null;
   return { map, repeated };
 }
 
@@ -101,21 +104,23 @@ export function joinTables(
     const skip = join.repeated ? 1 : 0;
     const offset = table.grid.length - skip;
     const width = table.grid[0]!.length;
-    const rows = next.grid.slice(skip).map((row) => {
+    const onto = (row: string[]) => {
       const cells: string[] = Array(width).fill("");
       row.forEach((v, i) => {
         const c = join.map[i]!;
         cells[c] = cells[c] ? `${cells[c]} ${v}` : v;
       });
       return cells;
-    });
+    };
+    const kept = next.sections.filter((s) => s >= skip);
     out[out.length - 1] = {
       ...table,
-      grid: [...table.grid, ...rows],
-      sections: [
-        ...table.sections,
-        ...next.sections.filter((s) => s >= skip).map((s) => s + offset),
-      ],
+      grid: [...table.grid, ...next.grid.slice(skip).map(onto)],
+      sections: [...table.sections, ...kept.map((s) => s + offset)],
+      sectionCells: {
+        ...table.sectionCells,
+        ...Object.fromEntries(kept.map((s) => [s + offset, onto(next.sectionCells[s]!)])),
+      },
       parts: [...table.parts, ...next.parts],
       repeats: table.repeats + skip,
     };

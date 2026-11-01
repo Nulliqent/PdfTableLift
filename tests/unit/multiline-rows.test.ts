@@ -512,6 +512,38 @@ describe("#27 Single-Row Region switch", () => {
     expect(selectedTable(committed(statement, TWO_ENTRIES))!.header).toBe(true);
   });
 
+  it("a Hand-drawn Table that comes out as one Row starts with First row is header off", () => {
+    const drawn = draw(opened(statement), ENTRY_BOXES[0]!);
+    expect(regionPreview(drawn)).toMatchObject({ grid: [ENTRIES[0]], header: false });
+
+    const table = selectedTable(run(drawn, { type: "regionCommitted" }))!;
+    expect(table.grid).toEqual([ENTRIES[0]]);
+    expect(table.header).toBe(false);
+  });
+
+  it("a Hand-drawn Table with several Rows keeps First row is header on, preview included", () => {
+    const drawn = draw(opened(statement), TWO_ENTRIES);
+    expect(regionPreview(drawn)).toMatchObject({ grid: ENTRIES.slice(0, 2), header: true });
+    expect(regionPreview(run(drawn, singleRowChanged(true)))!.header).toBe(false);
+  });
+
+  it("a redraw decides First row is header from the Rows it now holds", () => {
+    const several = committed(statement, TWO_ENTRIES);
+    const redraw = (state: WorkspaceState, bbox: Bbox) =>
+      run(
+        state,
+        { type: "regionStarted", documentId: "d1", page: 1, tableId: selectedTable(state)!.id },
+        { type: "regionChanged", page: 1, bbox },
+        { type: "regionCommitted" },
+      );
+
+    const one = redraw(several, ENTRY_BOXES[1]!);
+    expect(selectedTable(one)).toMatchObject({ grid: [ENTRIES[1]], header: false });
+
+    const again = redraw(one, TWO_ENTRIES);
+    expect(selectedTable(again)).toMatchObject({ grid: ENTRIES.slice(0, 2), header: true });
+  });
+
   it("#27: the setting survives Column Spacing changes, the join switch and a redraw", () => {
     const saved = run(singleRow(TWO_ENTRIES), { type: "regionCommitted" });
     const respaced = run(saved, { type: "columnSpacingChanged", value: 0.5 });

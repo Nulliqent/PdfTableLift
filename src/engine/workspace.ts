@@ -5,7 +5,7 @@
  * To add an action: add a member to WorkspaceAction and a case to `reduce`. TypeScript's
  * exhaustiveness check in the default branch flags any action left unhandled.
  */
-import type { PageText } from "../shared/page-text";
+import { pageBox, type PageText } from "../shared/page-text";
 import type { ReadError } from "../shared/read-error";
 import { detectTables, regionTable, type Band, type Bbox, type FoundTable } from "./detection";
 import { joinTables } from "./join";
@@ -31,6 +31,8 @@ export type Table = {
   grid: string[][];
   /** Grid row indexes of Section Headers. */
   sections: number[];
+  /** For each Section Header row, the cells it gets back when unmarked (FoundTable.sectionCells). */
+  sectionCells: Record<number, string[]>;
   /** Column bands, one per grid column. */
   cols: Band[];
   /** Repeated Header Rows dropped by joining. */
@@ -293,32 +295,12 @@ export function reduce(state: WorkspaceState, action: WorkspaceAction): Workspac
       const columnSpacing = parseColumnSpacing(action.value);
       if (columnSpacing === null || columnSpacing === state.settings.columnSpacing) return state;
       if (needsConfirmation(state, action)) return { ...state, pendingChange: action };
-      const settings = { ...state.settings, columnSpacing };
-      const documents = state.documents.map((d) =>
-        d.status === "ready" ? { ...d, tables: detectDocument(d, d.pages, settings) } : d,
-      );
-      return {
-        ...state,
-        settings,
-        documents,
-        selection: keepSelection(state, documents),
-        pendingChange: null,
-      };
+      return withSettings(state, { ...state.settings, columnSpacing });
     }
     case "joinChanged": {
       if (typeof action.value !== "boolean" || action.value === state.settings.join) return state;
       if (needsConfirmation(state, action)) return { ...state, pendingChange: action };
-      const settings = { ...state.settings, join: action.value };
-      const documents = state.documents.map((d) =>
-        d.status === "ready" ? { ...d, tables: detectDocument(d, d.pages, settings) } : d,
-      );
-      return {
-        ...state,
-        settings,
-        documents,
-        selection: keepSelection(state, documents),
-        pendingChange: null,
-      };
+      return withSettings(state, { ...state.settings, join: action.value });
     }
     case "tableRemoved": {
       const doc = state.documents.find((d) => d.id === action.documentId);
@@ -456,7 +438,8 @@ export function reduce(state: WorkspaceState, action: WorkspaceAction): Workspac
       const p = doc && pageOf(doc, state.region!.page);
       if (!p) return state;
       const m = WHOLE_PAGE_MARGIN;
-      return { ...state, region: { ...state.region!, bbox: [m, m, p.w - m, p.h - m] } };
+      const [x0, y0, x1, y1] = pageBox(p);
+      return { ...state, region: { ...state.region!, bbox: [x0 + m, y0 + m, x1 - m, y1 - m] } };
     }
     case "regionCancelled":
       return state.region ? { ...state, region: null } : state;
@@ -502,24 +485,52 @@ export function reduce(state: WorkspaceState, action: WorkspaceAction): Workspac
 
 /**
  * Marks a row as a Section Header (its text gathered into the first cell) or turns it back into a
- * data row. Counts as a correction. The Header Row and rows outside the grid are left alone.
+ * data row with the cells it had before (for a detected one, its text in its own column). Counts
+ * as a correction. The Header Row and rows outside the grid are left alone.
  */
 function toggleSectionHeader(t: Table, row: number): Table {
   if (!t.grid[row] || (t.header && row === 0)) return t;
   if (t.sections.includes(row)) {
-    return { ...t, sections: t.sections.filter((r) => r !== row), edited: true };
+    const { [row]: cells = t.grid[row], ...sectionCells } = t.sectionCells;
+    return {
+      ...t,
+      grid: t.grid.with(row, cells),
+      sections: t.sections.filter((r) => r !== row),
+      sectionCells,
+      edited: true,
+    };
   }
   const label = t.grid[row].filter(Boolean).join(" ");
-  const grid = t.grid.map((cells, r) =>
-    r === row ? cells.map((_, c) => (c ? "" : label)) : cells,
-  );
-  return { ...t, grid, sections: [...t.sections, row].sort((a, b) => a - b), edited: true };
+  return {
+    ...t,
+    grid: t.grid.with(
+      row,
+      t.grid[row].map((_, c) => (c ? "" : label)),
+    ),
+    sections: [...t.sections, row].sort((a, b) => a - b),
+    sectionCells: { ...t.sectionCells, [row]: t.grid[row] },
+    edited: true,
+  };
 }
 
 /** The region field to keep, and no pending Region save once its Region is gone. */
 function withoutRegion(state: WorkspaceState, region: RegionInProgress | null) {
   const orphaned = !region && state.pendingChange?.type === "regionCommitted";
   return { region, pendingChange: orphaned ? null : state.pendingChange };
+}
+
+/** Applies new Settings: every read Document is re-detected, and the selection kept. */
+function withSettings(state: WorkspaceState, settings: Settings): WorkspaceState {
+  const documents = state.documents.map((d) =>
+    d.status === "ready" ? { ...d, tables: detectDocument(d, d.pages, settings) } : d,
+  );
+  return {
+    ...state,
+    settings,
+    documents,
+    selection: keepSelection(state, documents),
+    pendingChange: null,
+  };
 }
 
 /** Replaces a Document and re-detects its Tables (its Removed Tables already updated). */
@@ -590,11 +601,15 @@ function updateTable(
 
 /**
  * After re-detection, keeps the selection by page and position among that page's Tables; if
- * that Table is gone, falls back to the Document's first Table.
+ * that Table is gone, falls back to the Document's first Table. With nothing selected before, the
+ * first Table re-detection found is selected, so Tables that just appeared are shown.
  */
 function keepSelection(before: WorkspaceState, documents: Document[]): Selection | null {
   const sel = before.selection;
-  if (!sel) return null;
+  if (!sel) {
+    const first = documents.find((d) => d.tables.length);
+    return first ? { documentId: first.id, tableId: first.tables[0]!.id } : null;
+  }
   const old = before.documents.find((d) => d.id === sel.documentId);
   const now = documents.find((d) => d.id === sel.documentId);
   const oldTable = old?.tables.find((t) => t.id === sel.tableId);
@@ -634,6 +649,7 @@ function detectDocument(doc: Document, pages: PageText[], settings: Settings): T
     firstBold: t.firstBold,
     grid: t.grid,
     sections: t.sections,
+    sectionCells: t.sectionCells,
     cols: t.cols,
     repeats: 0,
     splitFrom: false,
@@ -641,27 +657,17 @@ function detectDocument(doc: Document, pages: PageText[], settings: Settings): T
     manual,
   });
   for (const p of pages) {
-    const hidden = (bbox: Bbox) =>
-      doc.removed.some((r) =>
-        r.parts.some(
-          (rp) => rp.page === p.num && overlapRatio(rp.bbox, bbox) > REMOVED_TABLE_OVERLAP,
-        ),
-      );
+    /** Whether one of the Parts lies on this page over the box: the same Table, re-detected. */
+    const overlaps = (parts: Part[], bbox: Bbox) =>
+      parts.some((q) => q.page === p.num && overlapRatio(q.bbox, bbox) > REMOVED_TABLE_OVERLAP);
+    const hidden = (bbox: Bbox) => doc.removed.some((r) => overlaps(r.parts, bbox));
     // A Hand-drawn Table takes over the Detected Tables its Region covers.
     const covering = doc.regions.filter((r) => r.page === p.num);
     // A redrawn Region keeps hiding the Table it replaced, wherever it now lies.
     const replaced = (bbox: Bbox) =>
-      doc.regions.some(
-        (r) =>
-          r.replaces?.page === p.num && overlapRatio(r.replaces.bbox, bbox) > REMOVED_TABLE_OVERLAP,
-      );
+      doc.regions.some((r) => r.replaces !== null && overlaps([r.replaces], bbox));
     // The Parts left behind by a redraw are not joined to anything.
-    const standalone = (bbox: Bbox) =>
-      doc.regions.some((r) =>
-        r.apart.some(
-          (ap) => ap.page === p.num && overlapRatio(ap.bbox, bbox) > REMOVED_TABLE_OVERLAP,
-        ),
-      );
+    const standalone = (bbox: Bbox) => doc.regions.some((r) => overlaps(r.apart, bbox));
     detectTables(p.items, settings.columnSpacing).forEach((t, i) => {
       if (hidden(t.bbox) || replaced(t.bbox)) return;
       if (covering.some((r) => overlapRatio(r.bbox, t.bbox) > HAND_DRAWN_OVERLAP)) return;
@@ -670,9 +676,8 @@ function detectDocument(doc: Document, pages: PageText[], settings: Settings): T
       detected.push(table(id, p.num, t, null));
     });
     for (const r of covering) {
-      const t = regionTable(p.items, r.bbox, settings.columnSpacing, r.singleRow);
-      // A Single-Row Region's one Row is data, so its Table starts with "First row is header" off.
-      if (t) handDrawn.push(table(`${documentId}:region:${r.id}`, p.num, t, r.id, !r.singleRow));
+      const t = handDrawnTable(p, r.bbox, settings, r.singleRow);
+      if (t) handDrawn.push(table(`${documentId}:region:${r.id}`, p.num, t, r.id, t.header));
     }
   }
   // Removed Tables and Hand-drawn Regions took their Tables out per page above, so a Joined Table
@@ -712,14 +717,33 @@ const pageOf = (doc: Document, num: number): PageText | undefined =>
 const regionDocument = (state: WorkspaceState): Document | undefined =>
   state.documents.find((d) => d.id === state.region?.documentId);
 
+/** What a Region yields: the Table found inside it, and whether it starts with a Header Row. */
+export type RegionTable = FoundTable & { header: boolean };
+
+/**
+ * The Table a Region makes. A Table that comes out as one Row, a Single-Row Region's or any other,
+ * starts with "First row is header" off: its only Row is data, not a header over nothing. The rule
+ * is applied whenever the Table is found, so a redraw to a single Row turns it off and a redraw to
+ * several Rows turns it back on.
+ */
+function handDrawnTable(
+  page: PageText,
+  bbox: Bbox,
+  settings: Settings,
+  singleRow: boolean,
+): RegionTable | null {
+  const t = regionTable(page.items, bbox, settings.columnSpacing, singleRow);
+  return t && { ...t, header: t.grid.length > 1 };
+}
+
 /**
  * The Table the Region in progress would make with the current Column Spacing, or null while
  * nothing is drawn or the Region holds no text (so it cannot be saved).
  */
-export function regionPreview(state: WorkspaceState): FoundTable | null {
+export function regionPreview(state: WorkspaceState): RegionTable | null {
   const { region } = state;
   const doc = regionDocument(state);
   const page = doc && region && pageOf(doc, region.page);
   if (!region?.bbox || !page) return null;
-  return regionTable(page.items, region.bbox, state.settings.columnSpacing, region.singleRow);
+  return handDrawnTable(page, region.bbox, state.settings, region.singleRow);
 }
