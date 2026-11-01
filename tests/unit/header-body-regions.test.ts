@@ -445,6 +445,102 @@ describe("guards on saving several Regions", () => {
   });
 });
 
+describe("Combine, Split back and Section Headers on a Table with a Header Region", () => {
+  const titled = (extra: TextItem[] = []) =>
+    page1([
+      t("Part", 72, 640, true),
+      t("Qty", 200, 640, true),
+      t("Price", 320, 640, true),
+      ...extra,
+    ]);
+  const rowsOnly = (): Drawn[] => [header([60, 630, 560, 652]), body([60, 560, 560, 612])];
+  const saveSheet = (sheet: PageText, regions: Drawn[]) => saved(sheet, 1, regions);
+  const id = (state: WorkspaceState) => selectedTable(state)!.id;
+  const combine = (state: WorkspaceState, row: number, direction: "above" | "below") =>
+    run(state, { type: "rowCombined", documentId: "d1", tableId: id(state), row, direction });
+  const splitBack = (state: WorkspaceState, row: number) =>
+    run(state, { type: "rowSplitBack", documentId: "d1", tableId: id(state), row });
+  const grid = (state: WorkspaceState) => selectedTable(state)!.grid;
+
+  it("combines the Header Row with the first Body Row, and splits it back", () => {
+    const state = saveSheet(titled(BODY.items), rowsOnly());
+    const before = grid(state);
+    expect(before[0]).toEqual(["Part", "Qty", "Price"]);
+
+    const combined = combine(state, 0, "below");
+    expect(grid(combined)[0]).toEqual(["Part Bolt", "Qty 4", "Price 1.20"]);
+    expect(grid(combined)).toHaveLength(before.length - 1);
+    expect(selectedTable(combined)!.header).toBe(true);
+
+    const restored = splitBack(combined, 0);
+    expect(grid(restored)).toEqual(before);
+    expect(selectedTable(restored)!.header).toBe(true);
+  });
+
+  it("combines Body Rows under the Header Region, and splits them back", () => {
+    const state = saveSheet(titled(BODY.items), rowsOnly());
+    const before = grid(state);
+    const combined = combine(state, 3, "above");
+
+    expect(grid(combined)[2]).toEqual(["Nut Pin", "9 7", "0.40 0.10"]);
+    expect(grid(splitBack(combined, 2))).toEqual(before);
+    expect(grid(combine(state, 0, "above"))).toEqual(before); // nothing above the Header Row
+  });
+
+  it("keeps the Header Region's Table after Combine when the Column Spacing changes", () => {
+    const combined = combine(saveSheet(titled(BODY.items), rowsOnly()), 2, "below");
+    const after = run(combined, { type: "columnSpacingChanged", value: 0.6 });
+
+    expect(selectedTable(after)!.grid[0]).toEqual(["Part", "Qty", "Price"]);
+  });
+
+  const sectioned = titled([
+    t("WEST", 72, 626, true),
+    ...line(612, ["Bolt", "4", "1.20"]),
+    ...line(598, ["Nut", "9", "0.40"]),
+    t("EAST", 72, 570, true),
+    ...line(556, ["Pin", "7", "0.10"]),
+    ...line(542, ["Cap", "2", "0.90"]),
+  ]);
+  const withSections = () =>
+    saveSheet(sectioned, [header([60, 634, 560, 652]), body([60, 530, 560, 632])]);
+
+  it("counts a Section Header that opens the Body Rows from the row after the Header Row", () => {
+    const table = selectedTable(withSections())!;
+
+    expect(table.grid.map((r) => r[0])).toEqual([
+      "Part",
+      "WEST",
+      "Bolt",
+      "Nut",
+      "EAST",
+      "Pin",
+      "Cap",
+    ]);
+    expect(table.sections).toEqual([1, 4]);
+    expect(table.sectionCells[1]).toEqual(["WEST", "", ""]);
+    expect(table.sectionCells[4]).toEqual(["EAST", "", ""]);
+  });
+
+  it("exports a leading Section Header As Column and As Rows", () => {
+    const table = selectedTable(withSections())!;
+
+    expect(exportTable(table, "tsv", "rows").split("\n")).toEqual([
+      "Part\tQty\tPrice",
+      "WEST\t\t",
+      "Bolt\t4\t1.20",
+      "Nut\t9\t0.40",
+      "EAST\t\t",
+      "Pin\t7\t0.10",
+      "Cap\t2\t0.90",
+    ]);
+    const asColumn = exportTable(table, "tsv", "column").split("\n");
+    expect(asColumn[0]).toBe("Section\tPart\tQty\tPrice");
+    expect(asColumn[1]).toBe("WEST\tBolt\t4\t1.20");
+    expect(asColumn[3]).toBe("EAST\tPin\t7\t0.10");
+  });
+});
+
 // --- #44: Single-Row Body Regions ----------------------------------------------------------------
 
 describe("a Single-Row switch on each Body Region", () => {

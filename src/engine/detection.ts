@@ -885,8 +885,10 @@ export function regionsOutcome(
   // An empty Header Region is named first, before any Body Region is looked at.
   if (header && !titles.some((it) => it.str.trim())) return { blocked: "no-header" };
   const bodies = regions.filter((r) => r.role === "body");
+  // With a Header Region the Header Row is its text, so a lone bold label opening the Body Region
+  // is a Section Header, as it is among several Body Regions; one Body Region alone is as before.
   const table =
-    bodies.length === 1
+    bodies.length === 1 && !header
       ? regionTable(pool, bodies[0]!.bbox, columnSpacing, bodies[0]!.singleRow)
       : bodiesTable(pool, bodies, columnSpacing);
   if (!table) return { blocked: "no-body" };
