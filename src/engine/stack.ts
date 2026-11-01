@@ -110,15 +110,19 @@ export const memberRef = (table: Table): MemberRef => ({
 });
 
 /**
- * The record with these Members, its saved Header Row renewed from the first of them that is a
- * Table with a Header Row now. Stacking uses it; saving Members in Edit Members should too.
+ * The record with these Members. Its saved Header Row is renewed only when the first Member is a
+ * different Table than before: then from the first of them that is a Table with a Header Row now.
+ * Stacking (from an empty record) and saving Members in Edit Members both use it.
  */
 export function withMembers(
   doc: Document,
   record: StackedTable,
   members: MemberRef[],
 ): StackedTable {
-  const first = tickedTables(doc, members).find((t) => t.header && t.grid[0]);
+  const tables = tickedTables(doc, members);
+  if (record.members.length > 0 && tables[0] === tickedTables(doc, record.members)[0])
+    return { ...record, members };
+  const first = tables.find((t) => t.header && t.grid[0]);
   return { ...record, members, header: first ? [...first.grid[0]!] : record.header };
 }
 
@@ -152,13 +156,16 @@ export const tickedTables = (doc: Document, ticked: MemberRef[]): Table[] =>
   ticked.flatMap((r) => findMember(doc, r) ?? []);
 
 /**
- * Whether a Table can be ticked in Select Tables, and why not: before the first tick only the
- * Header Row is judged; after it, the matching rule against the first ticked Table. A ticked
- * Table always can be (unticked).
+ * Whether a Table can be ticked, and why not. In Select Tables, before the first tick only the
+ * Header Row is judged; after it, the matching rule against the first ticked Table. In Edit
+ * Members, the matching rule against the Header Row the Stacked Table saved. A ticked Table always
+ * can be (unticked).
  */
-export function tickMatch(doc: Document, ticked: MemberRef[], table: Table): HeaderMatch {
-  const tables = tickedTables(doc, ticked);
+export function tickMatch(doc: Document, stacking: TablesInProgress, table: Table): HeaderMatch {
+  const tables = tickedTables(doc, stacking.ticked);
   if (tables.some((t) => t.id === table.id)) return { matches: true };
+  const record = doc.stacked.find((s) => s.id === stacking.stackedId);
+  if (record) return titlesMatch(record.header, table);
   const first = tables[0];
   if (first) return headerMatch(first, table);
   return table.header && table.grid[0]

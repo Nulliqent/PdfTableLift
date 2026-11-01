@@ -96,11 +96,13 @@ describe("the matching rule", () => {
       reason: "No Header Row",
     });
     // Before anything is ticked, only the Header Row is judged.
-    expect(tickMatch(doc(off), [], tableN(off, 5))).toEqual({
+    expect(tickMatch(doc(off), { documentId: "d", ticked: [] }, tableN(off, 5))).toEqual({
       matches: false,
       reason: "No Header Row",
     });
-    expect(tickMatch(doc(off), [], tableN(off, 1))).toEqual({ matches: true });
+    expect(tickMatch(doc(off), { documentId: "d", ticked: [] }, tableN(off, 1))).toEqual({
+      matches: true,
+    });
   });
 });
 
@@ -112,8 +114,8 @@ describe("Select Tables", () => {
     expect(started.stacking).toEqual({ documentId: "d", ticked: [] });
     const ticked = tick(started, 4);
     const s = ticked.stacking!;
-    expect(tickMatch(doc(ticked), s.ticked, tableN(ticked, 5))).toEqual({ matches: true });
-    expect(tickMatch(doc(ticked), s.ticked, tableN(ticked, 3))).toEqual({
+    expect(tickMatch(doc(ticked), s, tableN(ticked, 5))).toEqual({ matches: true });
+    expect(tickMatch(doc(ticked), s, tableN(ticked, 3))).toEqual({
       matches: false,
       reason: "'Week' instead of 'Store'",
     });
@@ -133,14 +135,14 @@ describe("Select Tables", () => {
     });
     const s = unticked.stacking!;
     expect(s.ticked).toHaveLength(1);
-    expect(tickMatch(doc(unticked), s.ticked, tableN(unticked, 4))).toEqual({ matches: true });
-    expect(tickMatch(doc(unticked), s.ticked, tableN(unticked, 1)).matches).toBe(false);
+    expect(tickMatch(doc(unticked), s, tableN(unticked, 4))).toEqual({ matches: true });
+    expect(tickMatch(doc(unticked), s, tableN(unticked, 1)).matches).toBe(false);
     // With only Table 1 ticked, Table 4 is now the one left out.
     const other = tick(
       reduce(unticked, { type: "tableTicked", tableId: tableId(unticked, 5), ticked: false }),
       1,
     );
-    expect(tickMatch(doc(other), other.stacking!.ticked, tableN(other, 4))).toEqual({
+    expect(tickMatch(doc(other), other.stacking!, tableN(other, 4))).toEqual({
       matches: false,
       reason: "5 columns, not 6",
     });
@@ -744,6 +746,64 @@ describe("live Members", () => {
       [3, null, null],
     ]);
     expect(built(saved).table.grid[0]).toEqual(["Order", "Town", "Units", "Total"]);
+  });
+});
+
+describe("no surprise on Save in Edit Members", () => {
+  const headerCell = (state: WorkspaceState, n: number, value: string) =>
+    reduce(state, {
+      type: "cellEdited",
+      documentId: "d",
+      tableId: tableId(state, n),
+      row: 0,
+      col: 1,
+      value,
+    });
+  const edit = (state: WorkspaceState) =>
+    reduce(state, {
+      type: "membersEditStarted",
+      documentId: "d",
+      stackedId: doc(state).stacked[0]!.id,
+    });
+  const leftOut = (state: WorkspaceState) =>
+    selectedStackedTable(state)!.members.map((m) => [m.table?.n, m.leftOut]);
+  // repeated-header, joining off: Tables 1, 2 and 3 share "Order, City, Units, Total".
+  const stacked = stack(open("repeated-header"), 1, 2);
+  const edited = headerCell(stacked, 1, "Town");
+
+  it("judges Tables against the saved Header Row, not the first ticked Table", () => {
+    const editing = edit(edited);
+    expect(tickMatch(doc(editing), editing.stacking!, tableN(editing, 3))).toEqual({
+      matches: true,
+    });
+    expect(tickedTables(doc(editing), tick(editing, 3).stacking!.ticked).map((t) => t.n)).toEqual([
+      1, 2, 3,
+    ]);
+    const town = headerCell(edited, 3, "Village");
+    expect(tickMatch(doc(town), edit(town).stacking!, tableN(town, 3))).toEqual({
+      matches: false,
+      reason: "'Village' instead of 'City'",
+    });
+  });
+
+  it("keeps the saved Header Row and the left-out Members on a Save with no change", () => {
+    const saved = run(edit(edited), { type: "membersSaved" });
+    expect(doc(saved).stacked[0]!.header).toEqual(["Order", "City", "Units", "Total"]);
+    expect(leftOut(saved)).toEqual(leftOut(edited));
+    expect(leftOut(saved)).toEqual([
+      [1, "no-match"],
+      [2, null],
+    ]);
+  });
+
+  it("keeps the saved Header Row when Members change after the first", () => {
+    const saved = run(tick(edit(edited), 3), { type: "membersSaved" });
+    expect(doc(saved).stacked[0]!.header).toEqual(["Order", "City", "Units", "Total"]);
+    expect(leftOut(saved)).toEqual([
+      [1, "no-match"],
+      [2, null],
+      [3, null],
+    ]);
   });
 });
 

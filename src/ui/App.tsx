@@ -181,7 +181,9 @@ export function App() {
     const count = `${plural(after.length, "Table")} ticked`;
     if (!ticked) return showHud(`Unticked Table ${table.n} · ${count}`);
     const refs = after.map(memberRef);
-    const out = stackingDoc.tables.filter((t) => !tickMatch(stackingDoc, refs, t).matches).length;
+    const out = stackingDoc.tables.filter(
+      (t) => !tickMatch(stackingDoc, { ...stacking, ticked: refs }, t).matches,
+    ).length;
     const left =
       before.length === 0 && out > 0
         ? ` · ${plural(out, "Table")} ${out === 1 ? "doesn't" : "don't"} match its Header Row`

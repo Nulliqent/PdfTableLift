@@ -321,7 +321,7 @@ function SelectTables({
     >
       {listed.map((t) => {
         const order = ticked.indexOf(t.id) + 1;
-        const match = tickMatch(doc, stacking.ticked, t);
+        const match = tickMatch(doc, stacking, t);
         const reason = match.matches ? null : match.reason;
         const reasonId = `stack-reason-${t.id}`;
         const nameId = `stack-name-${t.id}`;

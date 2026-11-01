@@ -301,7 +301,8 @@ export type WorkspaceAction =
   | { type: "stackingStarted"; documentId: string }
   /**
    * A Table was ticked or unticked in Select Tables. Ticking one that fails the matching rule
-   * against the first ticked Table (`tickMatch`) is ignored.
+   * (`tickMatch`: against the first ticked Table, or in Edit Members the saved Header Row) is
+   * ignored.
    */
   | { type: "tableTicked"; tableId: string; ticked: boolean }
   /** Escape or Cancel: leave Select Tables with no changes. */
@@ -700,7 +701,7 @@ export function reduce(state: WorkspaceState, action: WorkspaceAction): Workspac
       if (!stacking || !doc || !table) return state;
       const tables = tickedTables(doc, stacking.ticked);
       if (tables.some((t) => t.id === table.id) === action.ticked) return state;
-      if (action.ticked && !tickMatch(doc, stacking.ticked, table).matches) return state;
+      if (action.ticked && !tickMatch(doc, stacking, table).matches) return state;
       // Unticking removes only that Table's ref: every other ref stays as it was, so a missing
       // Member and a Member's split-off Parts are kept.
       const ticked = action.ticked
@@ -783,7 +784,7 @@ export function reduce(state: WorkspaceState, action: WorkspaceAction): Workspac
       const record = doc?.stacked.find((s) => s.id === stacking?.stackedId);
       if (!stacking || !doc || !record) return state;
       if (tickedTables(doc, stacking.ticked).length < 1) return state;
-      // Saving renews the saved Header Row from the new first Member.
+      // Saving renews the saved Header Row only when a different Table is the first Member.
       const saved = withMembers(doc, record, stacking.ticked);
       const edited = { ...doc, stacked: doc.stacked.map((s) => (s === record ? saved : s)) };
       return {
