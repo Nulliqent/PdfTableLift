@@ -157,7 +157,7 @@ const page = (items: TextItem[]): PageText => ({ num: 1, w: 612, h: 792, items }
 // --- #32 The Row after a Section Header keeps its first line --------------------------------------
 
 describe("#32 Section Headers beside multi-line Rows", () => {
-  it.skip("#32: in the Section Header fixture, every Row keeps its first line and every label is a Section Header", () => {
+  it("#32: in the Section Header fixture, every Row keeps its first line and every label is a Section Header", () => {
     const tables = tablesOf(opened(sections));
 
     expect(tables).toHaveLength(1);
@@ -166,7 +166,7 @@ describe("#32 Section Headers beside multi-line Rows", () => {
     expect(tables[0]!.header).toBe(true);
   });
 
-  it.skip("#32: two Section Headers in a row are both recognised", () => {
+  it("#32: two Section Headers in a row are both recognised", () => {
     const table = tablesOf(opened(sections))[0]!;
 
     expect(table.grid.slice(4, 7)).toEqual([
@@ -178,7 +178,7 @@ describe("#32 Section Headers beside multi-line Rows", () => {
     expect(table.sections).toContain(5);
   });
 
-  it.skip("#32: a Section Header right under the Header Row, before the first Row, is recognised", () => {
+  it("#32: a Section Header right under the Header Row, before the first Row, is recognised", () => {
     const table = tablesOf(opened(sections))[0]!;
 
     expect(table.grid.slice(0, 3)).toEqual([HEADER, section("OCTOBER"), OCTOBER[0]]);
@@ -187,7 +187,7 @@ describe("#32 Section Headers beside multi-line Rows", () => {
 
   // The reproduction itself (repro-30): the Rows right after OCTOBER and NOVEMBER lost their first
   // line, which became a Section Header of its own.
-  it.skip("#32: a non-bold line within a Row's line spacing of the Row below joins it, right after a Section Header", () => {
+  it("#32: a non-bold line within a Row's line spacing of the Row below joins it, right after a Section Header", () => {
     const header = [
       t("Date", 40, 100, 30, 10, true),
       t("Description", 140, 100, 60, 10, true),
@@ -218,7 +218,7 @@ describe("#32 Section Headers beside multi-line Rows", () => {
     expect(region.sections).toEqual([1, 4]);
   });
 
-  it.skip("#32: a bold line set further from the Row below than that Row's own lines is a Section Header", () => {
+  it("#32: a bold line set further from the Row below than that Row's own lines is a Section Header", () => {
     const repro = page([
       t("Date", 40, 100, 30, 10, true),
       t("Description", 140, 100, 60, 10, true),
@@ -240,7 +240,36 @@ describe("#32 Section Headers beside multi-line Rows", () => {
     expect(table.sections).toEqual([3]);
   });
 
-  it.skip("#32: a Region over everything gives the Detected Table's Rows and Section Headers", () => {
+  // The ambiguity policy: a plain label only a little further from the Row below than that Row's
+  // own lines (20 against 13) could be either, so the lines stay apart exactly as before #32.
+  it("#32: a non-bold label barely set apart from the Row below leaves the lines as they were", () => {
+    const plain = (py: number, s: string) => t(s, 40, py, s.length * 6);
+    const repro = page([
+      t("Date", 40, 100, 30, 10, true),
+      t("Description", 140, 100, 60, 10, true),
+      t("Amount", 400, 100, 40, 10, true),
+      plain(125, "OCTOBER"),
+      ...entry(145, "02 OCT", "-12.00", ["COFFEE HOUSE", "Card Payment", "SGD 12.00"]),
+      ...entry(200, "03 OCT", "-8.50", ["BOOK STORE", "Card Payment", "SGD 8.50"]),
+      plain(255, "NOVEMBER"),
+      ...entry(275, "01 NOV", "-30.00", ["GROCERY MART", "Card Payment", "SGD 30.00"]),
+    ]);
+
+    const table = tablesOf(opened([repro]))[0]!;
+    expect(table.grid).toEqual([
+      ["Date", "Description", "Amount"],
+      ["OCTOBER", "", ""],
+      ["COFFEE HOUSE", "", ""],
+      ["02 OCT", "Card Payment SGD 12.00", "-12.00"],
+      ["03 OCT", "BOOK STORE Card Payment SGD 8.50", "-8.50"],
+      ["NOVEMBER", "", ""],
+      ["GROCERY MART", "", ""],
+      ["01 NOV", "Card Payment", "-30.00"],
+    ]);
+    expect(table.sections).toEqual([1, 2, 5, 6]);
+  });
+
+  it("#32: a Region over everything gives the Detected Table's Rows and Section Headers", () => {
     const table = committed(sections, BOX.everything);
 
     expect(table.grid).toEqual(SECTIONS_GRID);
@@ -248,13 +277,13 @@ describe("#32 Section Headers beside multi-line Rows", () => {
     expect(table.header).toBe(true);
   });
 
-  it.skip("#32: the live preview of a Region over everything matches the saved Table", () => {
+  it("#32: the live preview of a Region over everything matches the saved Table", () => {
     expect(regionPreview(draw(opened(sections), BOX.everything))!.grid).toEqual(SECTIONS_GRID);
   });
 
   // A Region drawn from a label downward: its first Row is a Section Header, not a Header Row, so
   // "First row is header" starts off and the label heads the Rows below it in every export.
-  it.skip("#32: a Region over one group starts with its Section Header", () => {
+  it("#32: a Region over one group starts with its Section Header", () => {
     const table = committed(sections, BOX.oneGroup);
 
     expect(table.grid).toEqual([section("OCTOBER"), ...OCTOBER]);
@@ -265,7 +294,7 @@ describe("#32 Section Headers beside multi-line Rows", () => {
     );
   });
 
-  it.skip("#32: a Region starting at a Section Header recognises it, and the one right after it", () => {
+  it("#32: a Region starting at a Section Header recognises it, and the one right after it", () => {
     const table = committed(sections, BOX.fromSection);
 
     expect(table.grid).toEqual([
@@ -288,7 +317,7 @@ describe("#32 Section Headers beside multi-line Rows", () => {
   });
 
   // Whether its first Row is taken as a Header Row is today's rule for Regions and is not asserted.
-  it.skip("#32: a Region starting mid-group and crossing a Section Header keeps every Row whole", () => {
+  it("#32: a Region starting mid-group and crossing a Section Header keeps every Row whole", () => {
     const table = committed(sections, BOX.midGroupAcross);
 
     expect(table.grid).toEqual([NOVEMBER[1], section("DECEMBER"), ...DECEMBER]);
@@ -297,7 +326,7 @@ describe("#32 Section Headers beside multi-line Rows", () => {
 
   // As Column: each Row carries the Section Header nearest above it, so the two November Rows sit
   // under the card label (today's export rule for two Section Headers in a row).
-  it.skip("#32: As Column puts each Row under the right Section Header, in every format", () => {
+  it("#32: As Column puts each Row under the right Section Header, in every format", () => {
     const table = tablesOf(opened(sections))[0]!;
     const head = ["Section", ...HEADER];
     const body = [
@@ -324,7 +353,7 @@ describe("#32 Section Headers beside multi-line Rows", () => {
       expect(exportTable(table, format, "column"), format).toBe(expected[format]);
   });
 
-  it.skip("#32: As Rows shows each Section Header once, above its Rows, in every format", () => {
+  it("#32: As Rows shows each Section Header once, above its Rows, in every format", () => {
     const table = tablesOf(opened(sections))[0]!;
     const obj = (r: string[]) => Object.fromEntries(HEADER.map((h, i) => [h, r[i]]));
     const expected = {
