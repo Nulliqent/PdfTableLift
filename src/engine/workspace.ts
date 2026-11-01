@@ -295,32 +295,12 @@ export function reduce(state: WorkspaceState, action: WorkspaceAction): Workspac
       const columnSpacing = parseColumnSpacing(action.value);
       if (columnSpacing === null || columnSpacing === state.settings.columnSpacing) return state;
       if (needsConfirmation(state, action)) return { ...state, pendingChange: action };
-      const settings = { ...state.settings, columnSpacing };
-      const documents = state.documents.map((d) =>
-        d.status === "ready" ? { ...d, tables: detectDocument(d, d.pages, settings) } : d,
-      );
-      return {
-        ...state,
-        settings,
-        documents,
-        selection: keepSelection(state, documents),
-        pendingChange: null,
-      };
+      return withSettings(state, { ...state.settings, columnSpacing });
     }
     case "joinChanged": {
       if (typeof action.value !== "boolean" || action.value === state.settings.join) return state;
       if (needsConfirmation(state, action)) return { ...state, pendingChange: action };
-      const settings = { ...state.settings, join: action.value };
-      const documents = state.documents.map((d) =>
-        d.status === "ready" ? { ...d, tables: detectDocument(d, d.pages, settings) } : d,
-      );
-      return {
-        ...state,
-        settings,
-        documents,
-        selection: keepSelection(state, documents),
-        pendingChange: null,
-      };
+      return withSettings(state, { ...state.settings, join: action.value });
     }
     case "tableRemoved": {
       const doc = state.documents.find((d) => d.id === action.documentId);
@@ -538,6 +518,20 @@ function withoutRegion(state: WorkspaceState, region: RegionInProgress | null) {
   return { region, pendingChange: orphaned ? null : state.pendingChange };
 }
 
+/** Applies new Settings: every read Document is re-detected, and the selection kept. */
+function withSettings(state: WorkspaceState, settings: Settings): WorkspaceState {
+  const documents = state.documents.map((d) =>
+    d.status === "ready" ? { ...d, tables: detectDocument(d, d.pages, settings) } : d,
+  );
+  return {
+    ...state,
+    settings,
+    documents,
+    selection: keepSelection(state, documents),
+    pendingChange: null,
+  };
+}
+
 /** Replaces a Document and re-detects its Tables (its Removed Tables already updated). */
 function redetect(state: WorkspaceState, doc: Document): WorkspaceState {
   const tables = detectDocument(doc, doc.pages, state.settings);
@@ -662,27 +656,17 @@ function detectDocument(doc: Document, pages: PageText[], settings: Settings): T
     manual,
   });
   for (const p of pages) {
-    const hidden = (bbox: Bbox) =>
-      doc.removed.some((r) =>
-        r.parts.some(
-          (rp) => rp.page === p.num && overlapRatio(rp.bbox, bbox) > REMOVED_TABLE_OVERLAP,
-        ),
-      );
+    /** Whether one of the Parts lies on this page over the box: the same Table, re-detected. */
+    const overlaps = (parts: Part[], bbox: Bbox) =>
+      parts.some((q) => q.page === p.num && overlapRatio(q.bbox, bbox) > REMOVED_TABLE_OVERLAP);
+    const hidden = (bbox: Bbox) => doc.removed.some((r) => overlaps(r.parts, bbox));
     // A Hand-drawn Table takes over the Detected Tables its Region covers.
     const covering = doc.regions.filter((r) => r.page === p.num);
     // A redrawn Region keeps hiding the Table it replaced, wherever it now lies.
     const replaced = (bbox: Bbox) =>
-      doc.regions.some(
-        (r) =>
-          r.replaces?.page === p.num && overlapRatio(r.replaces.bbox, bbox) > REMOVED_TABLE_OVERLAP,
-      );
+      doc.regions.some((r) => r.replaces !== null && overlaps([r.replaces], bbox));
     // The Parts left behind by a redraw are not joined to anything.
-    const standalone = (bbox: Bbox) =>
-      doc.regions.some((r) =>
-        r.apart.some(
-          (ap) => ap.page === p.num && overlapRatio(ap.bbox, bbox) > REMOVED_TABLE_OVERLAP,
-        ),
-      );
+    const standalone = (bbox: Bbox) => doc.regions.some((r) => overlaps(r.apart, bbox));
     detectTables(p.items, settings.columnSpacing).forEach((t, i) => {
       if (hidden(t.bbox) || replaced(t.bbox)) return;
       if (covering.some((r) => overlapRatio(r.bbox, t.bbox) > HAND_DRAWN_OVERLAP)) return;
