@@ -185,9 +185,7 @@ test("#42: the Header Row keeps its H menu, and Copy includes the titles", async
   expect(copied).toMatch(/^ITEM,PART NUMBER,DESCRIPTION,QTY,MATERIAL SPEC\n1,BK-1001,/);
 });
 
-test.skip("#43: two Body Regions on either side of the note leave the note out", async ({
-  page,
-}) => {
+test("#43: two Body Regions on either side of the note leave the note out", async ({ page }) => {
   const { main, layer } = await enterSelectRegion(page);
   await drawTitlesAndRows(page, main, layer);
   await main.getByRole("button", { name: "Add Region" }).click();
