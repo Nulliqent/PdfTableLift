@@ -17,6 +17,9 @@ const fixtures = readdirSync(fixtureDir).filter((f) => f.endsWith(".pdf"));
 // Fixtures with no snapshot yet (none today). statement.pdf's snapshot comes from the app's engine
 // (`npm run golden:engine`), not the prototype, whose output for it is the bug of spec #22.
 const awaitingSnapshot = new Set<string>();
+// Fixtures for the PDF Reader alone, with no golden snapshot: page-frames.pdf (a page with /Rotate
+// and one with a CropBox away from 0,0) pins the page box, which pdf-reader.test.ts checks.
+const readerOnly = new Set(["page-frames.pdf"]);
 
 describe("fixture PDFs", () => {
   const out = mkdtempSync(join(tmpdir(), "table-lift-fixtures-"));
@@ -39,7 +42,7 @@ describe("golden snapshots", () => {
   it("exist for every fixture and the Example Document", () => {
     const snapshots = readdirSync(snapshotDir).filter((f) => f.endsWith(".json"));
     const expected = ["example-document.pdf", ...fixtures]
-      .filter((f) => !awaitingSnapshot.has(f))
+      .filter((f) => !awaitingSnapshot.has(f) && !readerOnly.has(f))
       .map((f) => f.replace(/\.pdf$/, ".json"));
     expect(snapshots.sort()).toEqual(expected.sort());
   });

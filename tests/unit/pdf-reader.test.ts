@@ -27,6 +27,18 @@ describe("readDocument", () => {
     ]);
   });
 
+  it("gives a page's size and origin in the frame of its text items, /Rotate and CropBox aside", async () => {
+    const [rotated, cropped] = await readPages("page-frames.pdf");
+
+    // A quarter turn changes how the page is shown, not the user space its text is in.
+    expect(rotated).toMatchObject({ num: 1, w: 612, h: 792 });
+    expect(rotated!.origin).toBeUndefined();
+    expect(rotated!.items[0]).toMatchObject({ str: "Item", x: 72, y: 700 });
+    // Cropped to [100, 200, 512, 692]: the page starts at (100, 200), where the items are.
+    expect(cropped).toMatchObject({ num: 2, w: 412, h: 492, origin: [100, 200] });
+    expect(cropped!.items[0]).toMatchObject({ str: "Item", x: 130, y: 640 });
+  });
+
   it("detects bold from an embedded font, not only from the standard 14", async () => {
     const pages = await readPages("embedded-bold.pdf");
 

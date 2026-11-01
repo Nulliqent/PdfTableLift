@@ -5,7 +5,7 @@
  * To add an action: add a member to WorkspaceAction and a case to `reduce`. TypeScript's
  * exhaustiveness check in the default branch flags any action left unhandled.
  */
-import type { PageText } from "../shared/page-text";
+import { pageBox, type PageText } from "../shared/page-text";
 import type { ReadError } from "../shared/read-error";
 import { detectTables, regionTable, type Band, type Bbox, type FoundTable } from "./detection";
 import { joinTables } from "./join";
@@ -438,7 +438,8 @@ export function reduce(state: WorkspaceState, action: WorkspaceAction): Workspac
       const p = doc && pageOf(doc, state.region!.page);
       if (!p) return state;
       const m = WHOLE_PAGE_MARGIN;
-      return { ...state, region: { ...state.region!, bbox: [m, m, p.w - m, p.h - m] } };
+      const [x0, y0, x1, y1] = pageBox(p);
+      return { ...state, region: { ...state.region!, bbox: [x0 + m, y0 + m, x1 - m, y1 - m] } };
     }
     case "regionCancelled":
       return state.region ? { ...state, region: null } : state;

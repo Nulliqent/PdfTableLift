@@ -61,7 +61,9 @@ export function createReadDocument(pdfjs: PdfJs, options: ReaderOptions = {}): R
 }
 
 async function readPage(page: PDFPageProxy, num: number): Promise<PageText> {
-  const viewport = page.getViewport({ scale: 1 });
+  // pdf.js gives text in unrotated user space, so the page box comes from `view` (the CropBox in
+  // that space), not from a viewport, which is rotated and moved to start at 0,0.
+  const [x0, y0, x1, y1] = page.view as [number, number, number, number];
   const content = await page.getTextContent();
   // Font objects land in commonObjs while the operator list is built.
   try {
@@ -93,7 +95,8 @@ async function readPage(page: PDFPageProxy, num: number): Promise<PageText> {
       }
     } else items.push({ str: item.str, x: x!, y: y!, w: item.width, h, bold });
   }
-  return { num, w: viewport.width, h: viewport.height, items };
+  const box = { num, w: x1 - x0, h: y1 - y0 };
+  return x0 || y0 ? { ...box, origin: [x0, y0], items } : { ...box, items };
 }
 
 type FontObject = { bold?: boolean; black?: boolean; name?: string };

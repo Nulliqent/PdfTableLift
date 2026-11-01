@@ -24,7 +24,8 @@ const JOINING = [true, false];
 const LARGE = new Set(["perf-200-pages"]);
 // Fixtures whose snapshot comes from the app's engine, not the prototype: the prototype gets them
 // wrong (spec #22), so they are left out of the default run and never overwritten here.
-const NOT_FROM_PROTOTYPE = new Set(["statement"]);
+// page-frames has no snapshot at all: it is a PDF Reader fixture (pdf-reader.test.ts).
+const NOT_FROM_PROTOTYPE = new Set(["statement", "page-frames"]);
 // Fixtures whose text items come from the prototype but whose Tables (`runs`) come from the app's
 // engine, a deliberate departure (spec #22, #25: F-103 in wrapped-cells). This harness writes their
 // text items and keeps the `runs` already on disk; `npm run golden:engine` writes those.
