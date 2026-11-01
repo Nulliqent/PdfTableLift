@@ -59,6 +59,9 @@ export type RowBefore = {
   combined: Combine | null;
 };
 
+/** Which neighbour a Combine takes in: the grid row above, or the one below. */
+export type CombineDirection = "above" | "below";
+
 /** One Combine: the two grid rows, upper first, that became one Row in the upper Row's place. */
 export type Combine = { upper: RowBefore; lower: RowBefore };
 
@@ -223,7 +226,7 @@ export type WorkspaceAction =
       documentId: string;
       tableId: string;
       row: number;
-      direction: "above" | "below";
+      direction: CombineDirection;
     }
   /**
    * Split back: a combined Row becomes the two Rows of its most recent Combine again, as they stood

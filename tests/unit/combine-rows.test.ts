@@ -6,6 +6,7 @@ import {
   reduce,
   selectedTable,
   tableSize,
+  type CombineDirection,
   type PageText,
   type Table,
   type TextItem,
@@ -33,7 +34,7 @@ const open = (pages: PageText[]) =>
     { type: "documentAdded", id: "d", name: "d.pdf", size: 1 },
     { type: "documentRead", id: "d", pages },
   );
-const combine = (s: WorkspaceState, r: number, direction: "above" | "below") =>
+const combine = (s: WorkspaceState, r: number, direction: CombineDirection) =>
   reduce(s, {
     type: "rowCombined",
     documentId: "d",

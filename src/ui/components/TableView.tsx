@@ -3,6 +3,7 @@ import {
   isSectionHeader,
   numericColumns,
   usesSectionColumn,
+  type CombineDirection,
   type SectionMode,
   type Table,
 } from "../../engine";
@@ -17,7 +18,7 @@ type TableViewProps = {
   /** Mark or Unmark Section Header was chosen from a row's menu; `row` is a grid row. */
   onToggleSection: (row: number) => void;
   /** Combine with Row above / below was chosen from a row's menu; `row` is a grid row. */
-  onCombine: (row: number, direction: "above" | "below") => void;
+  onCombine: (row: number, direction: CombineDirection) => void;
   /** Split back was chosen from a combined Row's menu; `row` is a grid row. */
   onSplitBack: (row: number) => void;
 };

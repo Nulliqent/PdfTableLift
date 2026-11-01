@@ -22,6 +22,7 @@ export type {
   Band,
   Bbox,
   Combine,
+  CombineDirection,
   DiscardingAction,
   Document,
   Part,

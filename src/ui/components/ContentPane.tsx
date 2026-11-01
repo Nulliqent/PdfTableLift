@@ -6,6 +6,7 @@ import {
   hasSectionHeaders,
   isSectionHeader,
   tableSize,
+  type CombineDirection,
   type Document,
   type Table,
 } from "../../engine";
@@ -50,7 +51,7 @@ type ContentPaneProps = {
     documentId: string,
     tableId: string,
     row: number,
-    direction: "above" | "below",
+    direction: CombineDirection,
   ) => void;
   /** Split back was chosen for a combined grid row. */
   onSplitBackRow: (documentId: string, tableId: string, row: number) => void;
