@@ -43,15 +43,44 @@ test("As Rows keeps the section rows, and the choice is remembered", async ({ pa
   );
 });
 
-test("clicking a row number unmarks and marks a Section Header", async ({ page }) => {
+test("the row-number menu unmarks and marks a Section Header", async ({ page }) => {
+  const main = page.getByRole("main");
+  const hud = page.getByRole("status");
+  await main.getByRole("button", { name: "As Rows" }).click();
+  const sectionRow = main.getByRole("button", { name: /^Row is a Section Header/ }).first();
+  await expect(sectionRow).toHaveAttribute("aria-haspopup", "menu");
+  await sectionRow.click();
+  const menu = page.getByRole("menu", { name: /^Section Header row / });
+  await expect(menu).toBeVisible();
+  await expect(sectionRow).toHaveAttribute("aria-expanded", "true");
+  await menu.getByRole("menuitem", { name: "Unmark Section Header" }).click();
+  await expect(menu).toBeHidden();
+  await expect(tableRow(page)).toContainText("2 sections");
+  await expect(hud).toHaveText("Unmarked Section Header");
+
+  await main.getByRole("button", { name: /^Row 1\./ }).click();
+  await page
+    .getByRole("menu", { name: "Row 1" })
+    .getByRole("menuitem", { name: "Mark as Section Header" })
+    .click();
+  await expect(tableRow(page)).toContainText("3 sections");
+  await expect(hud).toHaveText("Marked as Section Header");
+});
+
+test("a click outside the row-number menu closes it without a change", async ({ page }) => {
   const main = page.getByRole("main");
   await main.getByRole("button", { name: "As Rows" }).click();
-  await main
-    .getByRole("button", { name: "Row is a section header. Treat as a data row" })
-    .first()
-    .click();
-  await expect(tableRow(page)).toContainText("2 sections");
-
-  await main.getByRole("button", { name: "Row 1. Mark as section header" }).click();
+  await main.getByRole("button", { name: /^Row 1\./ }).click();
+  await expect(page.getByRole("menu")).toBeVisible();
+  await main.getByRole("heading", { name: /^Table 1/ }).click();
+  await expect(page.getByRole("menu")).toBeHidden();
   await expect(tableRow(page)).toContainText("3 sections");
+
+  // A second click on the same row number closes its menu instead of reopening it.
+  const rowNumber = main.getByRole("button", { name: /^Row 1\./ });
+  await rowNumber.click();
+  await expect(page.getByRole("menu")).toBeVisible();
+  await rowNumber.click();
+  await expect(page.getByRole("menu")).toBeHidden();
+  await expect(rowNumber).toHaveAttribute("aria-expanded", "false");
 });
