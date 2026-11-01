@@ -8,6 +8,7 @@ export { READ_ERROR_MESSAGES } from "../shared/read-error";
 export type { ReadError } from "../shared/read-error";
 export {
   DEFAULT_SETTINGS,
+  combineTarget,
   MAX_COLUMN_SPACING,
   MIN_COLUMN_SPACING,
   parseColumnSpacing,
@@ -23,6 +24,7 @@ export type {
   Bbox,
   Combine,
   CombineDirection,
+  CombineTarget,
   DiscardingAction,
   Document,
   Part,

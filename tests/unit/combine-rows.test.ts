@@ -1,6 +1,7 @@
 // Seam A: Combine with Row above / below, through the workspace reducer and export.
 import { describe, expect, it } from "vitest";
 import {
+  combineTarget,
   exportTable,
   initialWorkspace,
   reduce,
@@ -493,6 +494,60 @@ describe("exports after Split back", () => {
   it("csv As Rows shows the Section Header again and both Rows", () => {
     expect(exportTable(selectedTable(splitBack(back1(), 2))!, "csv", "rows")).toBe(
       'Store,Region,Q1\nWest,,\nPortland,West,412.8\nAustin,South,"1,204"\n903.5,,\nBoise,East,77.0',
+    );
+  });
+});
+
+describe("what Combine takes in, as each Section Mode shows the Table", () => {
+  // sectioned(): 0 Header Row, 1 West (Section Header), 2 Portland, 3 Austin,
+  // 4 "903.5" (Section Header), 5 Boise.
+  it("names the Section Header above when As Column hides it", () => {
+    const t = selectedTable(sectioned())!;
+    expect(combineTarget(t, 2, "above", "column")).toEqual({ row: 1, hiddenSectionHeader: "West" });
+  });
+
+  it("names the Section Header below when As Column hides it", () => {
+    const t = selectedTable(sectioned())!;
+    expect(combineTarget(t, 3, "below", "column")).toEqual({
+      row: 4,
+      hiddenSectionHeader: "903.5",
+    });
+    // The Header Row's neighbour below can be one too.
+    expect(combineTarget(t, 0, "below", "column")).toEqual({ row: 1, hiddenSectionHeader: "West" });
+  });
+
+  it("names no Section Header As Rows, where every Section Header is drawn", () => {
+    const t = selectedTable(sectioned())!;
+    expect(combineTarget(t, 2, "above", "rows")).toEqual({ row: 1, hiddenSectionHeader: null });
+    expect(combineTarget(t, 3, "below", "rows")).toEqual({ row: 4, hiddenSectionHeader: null });
+  });
+
+  it("names no Section Header for an ordinary neighbour, or a Table without Section Headers", () => {
+    expect(combineTarget(selectedTable(sectioned())!, 3, "above", "column")).toEqual({
+      row: 2,
+      hiddenSectionHeader: null,
+    });
+    expect(combineTarget(selectedTable(plain())!, 1, "above", "column")).toEqual({
+      row: 0,
+      hiddenSectionHeader: null,
+    });
+  });
+
+  it("finds nothing above the first row or below the last", () => {
+    const t = selectedTable(sectioned())!;
+    expect(combineTarget(t, 0, "above", "column")).toBeNull();
+    expect(combineTarget(t, 5, "below", "column")).toBeNull();
+    expect(combineTarget(t, 9, "above", "column")).toBeNull();
+  });
+
+  it("As Column, combining with the hidden Section Header above puts its text in the Row", () => {
+    const s = sectioned();
+    const target = combineTarget(selectedTable(s)!, 5, "above", "column")!;
+    const t = selectedTable(combine(s, 5, "above"))!;
+    expect(target.row).toBe(4);
+    expect(t.grid[target.row]).toEqual(["Boise", "East", "903.5 77.0"]);
+    expect(exportTable(t, "csv", "column")).toBe(
+      'Section,Store,Region,Q1\nWest,Portland,West,412.8\nWest,Austin,South,"1,204"\nWest,Boise,East,903.5 77.0',
     );
   });
 });

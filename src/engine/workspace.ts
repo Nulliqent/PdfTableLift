@@ -8,7 +8,7 @@
 import { pageBox, type PageText } from "../shared/page-text";
 import type { ReadError } from "../shared/read-error";
 import { detectTables, regionTable, type Band, type Bbox, type FoundTable } from "./detection";
-import { isSectionHeader } from "./export";
+import { isSectionHeader, usesSectionColumn, type SectionMode } from "./export";
 import { joinTables } from "./join";
 import { HAND_DRAWN_OVERLAP, REMOVED_TABLE_OVERLAP, overlapRatio } from "./overlap";
 
@@ -627,6 +627,30 @@ function splitBack(t: Table, r: number): Table {
     combinedFrom: restore(t.combinedFrom, (b) => b.combinedFrom),
     edited: true,
   };
+}
+
+/** The grid row a Combine would take in, and how the user sees it. */
+export type CombineTarget = {
+  row: number;
+  /** Its text when it is a Section Header this Section Mode does not draw as a row, else null. */
+  hiddenSectionHeader: string | null;
+};
+
+/**
+ * The grid row that Combine with Row above / below on grid row `row` would take in, or null when
+ * there is none. In As Column mode Section Headers are not drawn as rows, so the neighbour may be
+ * one the user cannot see; `hiddenSectionHeader` names it so the menu can say so.
+ */
+export function combineTarget(
+  table: Table,
+  row: number,
+  direction: CombineDirection,
+  mode: SectionMode,
+): CombineTarget | null {
+  const target = direction === "above" ? row - 1 : row + 1;
+  if (!table.grid[row] || !table.grid[target]) return null;
+  const hidden = usesSectionColumn(table, mode) && isSectionHeader(table, target);
+  return { row: target, hiddenSectionHeader: hidden ? (table.grid[target]![0] ?? "") : null };
 }
 
 /**

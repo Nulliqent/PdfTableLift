@@ -1,5 +1,6 @@
 import { useLayoutEffect, useRef, useState } from "react";
 import {
+  combineTarget,
   isSectionHeader,
   numericColumns,
   usesSectionColumn,
@@ -64,12 +65,29 @@ export function TableView({ table, onEdit, sectionMode, rowActions }: TableViewP
     setMenu(null);
   };
 
-  const menuItems = (row: number): RowMenuItem[] => {
-    const below: RowMenuItem = {
-      label: "Combine with Row below",
-      disabled: row === table.grid.length - 1,
-      onSelect: () => rowActions.combine(row, "below"),
+  /**
+   * Combine with Row above / below. In As Column mode the neighbour may be a Section Header that
+   * isn't drawn as a row: the item names it, so the Combine is never a surprise.
+   */
+  const combineItem = (row: number, direction: CombineDirection): RowMenuItem => {
+    const target = combineTarget(table, row, direction, sectionMode);
+    const hidden = target?.hiddenSectionHeader ?? null;
+    return {
+      label:
+        hidden === null
+          ? `Combine with Row ${direction}`
+          : `Combine with Section Header “${hidden}” ${direction}`,
+      disabled: target === null,
+      onSelect: () => {
+        // The combined Row takes the upper Row's place: its row number gets focus.
+        if (direction === "above") refocus.current = row - 1;
+        rowActions.combine(row, direction);
+      },
     };
+  };
+
+  const menuItems = (row: number): RowMenuItem[] => {
+    const below = combineItem(row, "below");
     // Only a combined Row can be split back. Focus returns to this row number, now the upper
     // restored Row's.
     const splitBack: RowMenuItem[] =
@@ -83,15 +101,7 @@ export function TableView({ table, onEdit, sectionMode, rowActions }: TableViewP
         label: isSectionHeader(table, row) ? "Unmark Section Header" : "Mark as Section Header",
         onSelect: () => rowActions.toggleSection(row),
       },
-      {
-        label: "Combine with Row above",
-        disabled: row === 0,
-        onSelect: () => {
-          // The combined Row takes the upper Row's place: its row number gets focus.
-          refocus.current = row - 1;
-          rowActions.combine(row, "above");
-        },
-      },
+      combineItem(row, "above"),
       below,
       ...splitBack,
     ];
