@@ -35,7 +35,7 @@ export type Table = {
   /** For each Section Header row, the cells it gets back when unmarked (FoundTable.sectionCells). */
   sectionCells: Record<number, string[]>;
   /** For each grid row made by Combine, the most recent Combine that made it (Split back undoes it). */
-  combined: Record<number, Combine>;
+  combinedFrom: Record<number, Combine>;
   /** Column bands, one per grid column. */
   cols: Band[];
   /** Repeated Header Rows dropped by joining. */
@@ -49,21 +49,21 @@ export type Table = {
 };
 
 /** A grid row as it stood just before a Combine took it in. */
-export type RowBefore = {
+export type RowBeforeCombine = {
   cells: string[];
   /** It was in `sections` (a Section Header, or a marked row 0 under the Header Row switch). */
   section: boolean;
   /** Its `sectionCells` entry, or null. */
   sectionCells: string[] | null;
   /** The Combine that had made it, or null: earlier Combines nest here, one at a time. */
-  combined: Combine | null;
+  combinedFrom: Combine | null;
 };
 
 /** Which neighbour a Combine takes in: the grid row above, or the one below. */
 export type CombineDirection = "above" | "below";
 
 /** One Combine: the two grid rows, upper first, that became one Row in the upper Row's place. */
-export type Combine = { upper: RowBefore; lower: RowBefore };
+export type Combine = { upper: RowBeforeCombine; lower: RowBeforeCombine };
 
 /** A Region the user drew on a page; it yields a Hand-drawn Table. */
 export type Region = {
@@ -565,7 +565,7 @@ function toggleSectionHeader(t: Table, row: number): Table {
  * Combines grid row `upper` with the row below it into one Row in `upper`'s place: each column's
  * text joined with a single space, upper first. A Section Header taken in is unmarked first, so its
  * text comes from its own column (as on Unmark). Into the Header Row is allowed. Later rows'
- * Section Header marks, `sectionCells` and `combined` move up by one; the new Row remembers both
+ * Section Header marks, `sectionCells` and `combinedFrom` move up by one; the new Row remembers both
  * rows as they stood. Counts as a correction. Without a row below, the Table is left alone.
  */
 function combineRows(t: Table, upper: number): Table {
@@ -573,11 +573,11 @@ function combineRows(t: Table, upper: number): Table {
   if (upper < 0 || !t.grid[lower]) return t;
   const cellsOf = (r: number) =>
     isSectionHeader(t, r) ? (t.sectionCells[r] ?? t.grid[r]!) : t.grid[r]!;
-  const before = (r: number): RowBefore => ({
+  const before = (r: number): RowBeforeCombine => ({
     cells: t.grid[r]!,
     section: t.sections.includes(r),
     sectionCells: t.sectionCells[r] ?? null,
-    combined: t.combined[r] ?? null,
+    combinedFrom: t.combinedFrom[r] ?? null,
   });
   const below = cellsOf(lower);
   const cells = cellsOf(upper).map((v, c) => [v, below[c]].filter(Boolean).join(" "));
@@ -588,8 +588,8 @@ function combineRows(t: Table, upper: number): Table {
     grid: t.grid.toSpliced(upper, 2, cells),
     sections: t.sections.flatMap((r) => moved(r) ?? []),
     sectionCells: reindexRows(t.sectionCells, moved),
-    combined: {
-      ...reindexRows(t.combined, moved),
+    combinedFrom: {
+      ...reindexRows(t.combinedFrom, moved),
       [upper]: { upper: before(upper), lower: before(lower) },
     },
     edited: true,
@@ -600,16 +600,16 @@ function combineRows(t: Table, upper: number): Table {
  * Undoes the most recent Combine that made grid row `r`: the row becomes the two rows it came
  * from, each as it stood (its Section Header mark, `sectionCells` and any earlier Combine), so
  * Split back steps back one Combine at a time. Edits made to the combined row are lost. Later rows'
- * Section Header marks, `sectionCells` and `combined` move down by one. Counts as a correction. A
+ * Section Header marks, `sectionCells` and `combinedFrom` move down by one. Counts as a correction. A
  * row that was not combined is left alone.
  */
 function splitBack(t: Table, r: number): Table {
-  const combine = t.combined[r];
+  const combine = t.combinedFrom[r];
   if (!combine || !t.grid[r]) return t;
   const { upper, lower } = combine;
   /** The row's index once the row is two again; null for the combined row itself. */
   const moved = (i: number) => (i < r ? i : i > r ? i + 1 : null);
-  const restore = <V>(byRow: Record<number, V>, value: (b: RowBefore) => V | null) => {
+  const restore = <V>(byRow: Record<number, V>, value: (b: RowBeforeCombine) => V | null) => {
     const back = [upper, lower].flatMap((b, k) => {
       const v = value(b);
       return v === null ? [] : [[r + k, v] as const];
@@ -624,7 +624,7 @@ function splitBack(t: Table, r: number): Table {
       ...[upper, lower].flatMap((b, k) => (b.section ? [r + k] : [])),
     ].sort((a, b) => a - b),
     sectionCells: restore(t.sectionCells, (b) => b.sectionCells),
-    combined: restore(t.combined, (b) => b.combined),
+    combinedFrom: restore(t.combinedFrom, (b) => b.combinedFrom),
     edited: true,
   };
 }
@@ -782,7 +782,7 @@ function detectDocument(doc: Document, pages: PageText[], settings: Settings): T
     grid: t.grid,
     sections: t.sections,
     sectionCells: t.sectionCells,
-    combined: {},
+    combinedFrom: {},
     cols: t.cols,
     repeats: 0,
     splitFrom: false,

@@ -32,7 +32,7 @@ export type {
   RegionTable,
   RemovedTable,
   RowAction,
-  RowBefore,
+  RowBeforeCombine,
   Selection,
   Settings,
   Table,

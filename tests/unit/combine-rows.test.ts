@@ -309,7 +309,7 @@ describe("exports after a Combine", () => {
 });
 
 describe("a combined Row remembers the Rows it came from", () => {
-  const memory = (t: Table, r: number) => t.combined[r];
+  const memory = (t: Table, r: number) => t.combinedFrom[r];
 
   it("keeps both Rows as they stood, Section Header marks included", () => {
     const s = sectioned();
@@ -320,9 +320,9 @@ describe("a combined Row remembers the Rows it came from", () => {
         cells: before.grid[4],
         section: true,
         sectionCells: before.sectionCells[4],
-        combined: null,
+        combinedFrom: null,
       },
-      lower: { cells: before.grid[5], section: false, sectionCells: null, combined: null },
+      lower: { cells: before.grid[5], section: false, sectionCells: null, combinedFrom: null },
     });
   });
 
@@ -331,8 +331,8 @@ describe("a combined Row remembers the Rows it came from", () => {
     const first = memory(selectedTable(once)!, 2)!;
     const twice = selectedTable(combine(once, 2, "above"))!;
     expect(twice.grid[1]).toEqual(["Portland Austin Boise", "West South", "412.8 1,204 77.0"]);
-    expect(memory(twice, 1)!.lower.combined).toEqual(first);
-    expect(memory(twice, 1)!.upper.combined).toBeNull();
+    expect(memory(twice, 1)!.lower.combinedFrom).toEqual(first);
+    expect(memory(twice, 1)!.upper.combinedFrom).toBeNull();
     expect(memory(twice, 2)).toBeUndefined();
   });
 
@@ -350,7 +350,7 @@ const seen = (t: Table) => ({
   grid: t.grid,
   sections: t.sections,
   sectionCells: t.sectionCells,
-  combined: t.combined,
+  combinedFrom: t.combinedFrom,
 });
 
 describe("Split back", () => {
@@ -358,7 +358,7 @@ describe("Split back", () => {
     const s0 = plain();
     const s = splitBack(combine(s0, 1, "below"), 1);
     expect(grid(s)).toEqual(grid(s0));
-    expect(selectedTable(s)!.combined).toEqual({});
+    expect(selectedTable(s)!.combinedFrom).toEqual({});
   });
 
   it("does nothing on a Row that was not combined, or does not exist", () => {
@@ -400,10 +400,10 @@ describe("Split back", () => {
   it("moves later Section Headers, their Cells and Combines down by one Row", () => {
     const s0 = combine(sectioned(), 4, "below");
     expect(selectedTable(s0)!.sections).toEqual([1]);
-    const later = selectedTable(s0)!.combined[4];
+    const later = selectedTable(s0)!.combinedFrom[4];
     const s = splitBack(combine(s0, 2, "below"), 2);
     expect(seen(selectedTable(s)!)).toEqual(seen(selectedTable(s0)!));
-    expect(selectedTable(s)!.combined[4]).toEqual(later);
+    expect(selectedTable(s)!.combinedFrom[4]).toEqual(later);
     // A Section Header further down moves too.
     const t = selectedTable(splitBack(combine(sectioned(), 2, "below"), 2))!;
     expect(t.sections).toEqual([1, 4]);

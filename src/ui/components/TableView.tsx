@@ -84,7 +84,7 @@ export function TableView({ table, onEdit, sectionMode, rowActions }: TableViewP
     },
     // Only a combined Row can be split back. Focus returns to this row number, now the upper
     // restored Row's.
-    ...(row in table.combined
+    ...(row in table.combinedFrom
       ? [{ label: "Split back", onSelect: () => rowActions.splitBack(row) }]
       : []),
   ];
