@@ -406,7 +406,7 @@ describe("a Single-Row switch on each Body Region", () => {
     ...line(566, ["Nut", "9", "0.40"]),
   ]);
 
-  it.skip("#44: gives one Row for the Single-Row Region and normal Rows for the rest", () => {
+  it("#44: gives one Row for the Single-Row Region and normal Rows for the rest", () => {
     const table = tableOf(awkward, 1, [body([60, 612, 560, 652], true), body([60, 558, 560, 592])]);
 
     expect(table.grid).toEqual([
@@ -416,7 +416,7 @@ describe("a Single-Row switch on each Body Region", () => {
     ]);
   });
 
-  it.skip("#44: has the switch only on a Body Region, and restores it when a box returns to Body", () => {
+  it("#44: has the switch only on a Body Region, and restores it when a box returns to Body", () => {
     const state = drawAll(opened(awkward), 1, [body([60, 612, 560, 652], true)]);
     const asHeader = run(state, act({ type: "regionRoleChanged", index: 0, role: "header" }));
     const back = run(asHeader, act({ type: "regionRoleChanged", index: 0, role: "body" }));
@@ -427,7 +427,7 @@ describe("a Single-Row switch on each Body Region", () => {
     expect(singleRow(back)).toBe(true);
   });
 
-  it.skip("#44: with one Body Region, is today's Single-Row Region, with 'First row is header' off for a one-Row Table", () => {
+  it("#44: with one Body Region, is today's Single-Row Region, with 'First row is header' off for a one-Row Table", () => {
     const table = tableOf(awkward, 1, [body([60, 612, 560, 652], true)]);
 
     expect(table.grid).toEqual([["Frame welded, painted and tagged", "1", "10.00"]]);

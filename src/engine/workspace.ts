@@ -81,6 +81,8 @@ export type Region = {
   role: RegionRole;
   /** A Single-Row Region (a Body Region only): everything inside it is one Row ("Treat selection as one row"). */
   singleRow: boolean;
+  /** While the Region is a Header Region: the Single-Row setting it had as a Body Region, restored when it returns to Body. */
+  keptSingleRow?: boolean;
 };
 
 /** A Hand-drawn Table as saved: one record on one page, holding its Regions and its redraw data. */
@@ -224,7 +226,7 @@ export type WorkspaceAction =
    * "Treat selection as one row" was switched for the Region in progress. Nothing is re-detected
    * until the Region is saved, so only `regionCommitted` goes through the edit warning.
    */
-  | { type: "regionSingleRowChanged"; value: boolean }
+  | { type: "regionSingleRowChanged"; index: number; value: boolean }
   /** Add Region: a new Body Region starts, and becomes the one being edited. */
   | { type: "regionAdded" }
   /** The Region at `index` was removed. Removing the last one leaves a fresh Body Region. */
@@ -523,9 +525,16 @@ export function reduce(state: WorkspaceState, action: WorkspaceAction): Workspac
     }
     case "regionCancelled":
       return state.region ? { ...state, region: null } : state;
-    case "regionSingleRowChanged":
-      if (!state.region || editedRegion(state.region).singleRow === action.value) return state;
-      return { ...state, region: withEdited(state.region, { singleRow: action.value }) };
+    case "regionSingleRowChanged": {
+      const { region } = state;
+      const target = region?.regions[action.index];
+      if (!region || !target || target.role !== "body" || target.singleRow === action.value)
+        return state;
+      const regions = region.regions.map((r, i) =>
+        i === action.index ? { ...r, singleRow: action.value } : r,
+      );
+      return { ...state, region: { ...region, regions } };
+    }
     case "regionAdded": {
       const { region } = state;
       if (!region) return state;
@@ -554,9 +563,9 @@ export function reduce(state: WorkspaceState, action: WorkspaceAction): Workspac
       if (!region || !target || target.role === action.role) return state;
       const regions = region.regions.map((r, i) =>
         i === action.index
-          ? { ...r, role: action.role }
+          ? toRole(r, action.role)
           : action.role === "header" && r.role === "header"
-            ? { ...r, role: "body" as const }
+            ? toRole(r, "body")
             : r,
       );
       return { ...state, region: { ...region, regions } };
@@ -996,6 +1005,13 @@ export function regionBlocked(state: WorkspaceState): RegionsBlocked | null {
 }
 
 /** A new Body Region, with the given bounds (null until dragged). */
+/** A Region in another role. A Header Region has no Single-Row setting; it is kept for the way back to Body. */
+const toRole = (r: DraftRegion, role: RegionRole): DraftRegion => {
+  if (role === "header") return { ...r, role, singleRow: false, keptSingleRow: r.singleRow };
+  const { keptSingleRow, ...rest } = r;
+  return { ...rest, role, singleRow: keptSingleRow ?? r.singleRow };
+};
+
 const draftRegion = (bbox: Bbox | null): DraftRegion => ({ bbox, role: "body", singleRow: false });
 
 const editedRegion = (region: RegionInProgress): DraftRegion => region.regions[region.edited]!;

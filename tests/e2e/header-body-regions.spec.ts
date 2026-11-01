@@ -200,7 +200,7 @@ test("#43: two Body Regions on either side of the note leave the note out", asyn
   await expect(main.getByText(/DEBURR/)).toHaveCount(0);
 });
 
-test.skip("#44: the Single-Row switch is on each Body Region and not on the Header Region", async ({
+test("#44: the Single-Row switch is on each Body Region and not on the Header Region", async ({
   page,
 }) => {
   const { main, layer } = await enterSelectRegion(page);

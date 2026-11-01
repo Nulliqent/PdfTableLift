@@ -105,6 +105,7 @@ const page = (items: TextItem[]): PageText => ({ num: 1, w: 612, h: 792, items }
 
 const singleRowChanged = (value: boolean): WorkspaceAction => ({
   type: "regionSingleRowChanged",
+  index: 0,
   value,
 });
 
