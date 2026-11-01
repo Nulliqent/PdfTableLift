@@ -139,7 +139,7 @@ test("Split back, by keyboard, marks the Section Header again", async ({ page })
   await expect(main.getByRole("cell", { name: "Denver", exact: true })).toBeVisible();
   // Focus goes to the upper restored Row's number: Central (grid row 4), a Section Header again.
   const central = main.locator('button[data-row="4"]');
-  await expect(central).toHaveAccessibleName("Row is a section header. Row actions");
+  await expect(central).toHaveAccessibleName("Row is a Section Header. Row actions");
   await expect(central).toBeFocused();
   expect(await lastCopy(page)).toBe(before);
 });

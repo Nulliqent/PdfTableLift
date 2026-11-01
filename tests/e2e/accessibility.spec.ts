@@ -192,7 +192,7 @@ test.describe("keyboard", () => {
     await page.keyboard.press("Enter");
     await expect(menu).toBeHidden();
     await expect(page.getByRole("status")).toHaveText("Marked as Section Header");
-    const marked = main.getByRole("button", { name: /^Row is a section header/ }).nth(1);
+    const marked = main.getByRole("button", { name: /^Row is a Section Header/ }).nth(1);
     await expect(marked).toBeFocused();
     await expect(page.getByRole("complementary", { name: "Documents" })).toContainText(
       "4 sections",
@@ -297,16 +297,22 @@ test.describe("section headers in As Column mode", () => {
     await main.getByRole("button", { name: /^Row 2\./ }).click();
     await page.getByRole("menuitem", { name: "Mark as Section Header" }).click();
     await expect(
-      page.getByRole("status").filter({ hasText: "Marked as section · switch to As Rows" }),
+      page.getByRole("status").filter({ hasText: "Marked as Section Header · switch to As Rows" }),
     ).toBeVisible();
-    await expect(main.getByText(/switch to As Rows to edit or unmark/)).toBeVisible();
+    await expect(
+      main.getByText(
+        /Section Headers are in the Section column: switch to As Rows to edit or unmark/,
+      ),
+    ).toBeVisible();
     // The marked row left the grid; focus moved to the next row number rather than being lost.
     await expect(main.getByRole("button", { name: /^Row 2\./ })).toBeFocused();
     await main.getByRole("button", { name: "As Rows" }).click();
-    await main.getByRole("button", { name: /Row is a section header/ }).click();
+    await main.getByRole("button", { name: /Row is a Section Header/ }).click();
     await page.getByRole("menuitem", { name: "Unmark Section Header" }).click();
     await expect(page.getByRole("status")).toHaveText("Unmarked Section Header");
-    await expect(main.getByText(/Click a row number for its menu/)).toBeVisible();
+    await expect(
+      main.getByText(/Click a row number for its menu, such as marking a Section Header/),
+    ).toBeVisible();
   });
 });
 

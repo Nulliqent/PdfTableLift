@@ -109,7 +109,7 @@ export function TableView({ table, onEdit, sectionMode, rowActions }: TableViewP
           data-row={r}
           title="Row actions"
           aria-label={
-            section ? "Row is a section header. Row actions" : `Row ${k + 1}. Row actions`
+            section ? "Row is a Section Header. Row actions" : `Row ${k + 1}. Row actions`
           }
           aria-haspopup="menu"
           aria-expanded={open}
@@ -196,7 +196,7 @@ export function TableView({ table, onEdit, sectionMode, rowActions }: TableViewP
 
 /** The menu's name: the row's number among data rows, or its Section Header text. */
 function menuLabel(table: Table, row: number): string {
-  if (isSectionHeader(table, row)) return `Section header row ${table.grid[row]?.[0] ?? ""}`.trim();
+  if (isSectionHeader(table, row)) return `Section Header row ${table.grid[row]?.[0] ?? ""}`.trim();
   let n = 0;
   for (let r = table.header ? 1 : 0; r <= row; r++) if (!isSectionHeader(table, r)) n++;
   return `Row ${n}`;
