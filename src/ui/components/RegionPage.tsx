@@ -99,9 +99,10 @@ export function RegionPage({
       }) as Bbox,
     );
   };
+  /** Ends the drag. Only a lifted pointer has a real last position; a cancelled one keeps the last move. */
   const end = (e: PointerEvent) => {
     if (!start.current) return;
-    drag(at(e));
+    if (e.type !== "pointercancel") drag(at(e));
     start.current = null;
     if (e.pointerType === "touch") setFingerDraws(false);
   };

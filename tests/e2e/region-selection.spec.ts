@@ -57,6 +57,37 @@ test("drag a Region with the mouse, see the preview, and save a Hand-drawn Table
   await expect(sidebar.getByRole("button", { name: /Selected by hand/ })).toBeVisible();
 });
 
+test("a cancelled pointer keeps the Region at its last real position", async ({ page }) => {
+  const { main, layer } = await enterSelectRegion(page, "separate-tables.pdf");
+  const b = (await layer.boundingBox())!;
+  const r = aroundBothTables;
+  await page.mouse.move(b.x + b.width * r.x0, b.y + b.height * r.y0);
+  await page.mouse.down();
+  await page.mouse.move(b.x + b.width * r.x1, b.y + b.height * r.y1);
+  await expect(main.getByTestId("region-box")).toBeVisible();
+
+  // The browser takes the pointer away (a system gesture, say), reporting somewhere else entirely.
+  await layer.evaluate(
+    (el, at) => {
+      el.dispatchEvent(
+        new PointerEvent("pointercancel", {
+          bubbles: true,
+          pointerId: 1,
+          pointerType: "mouse",
+          clientX: at.x,
+          clientY: at.y,
+        }),
+      );
+    },
+    { x: b.x + b.width * 0.95, y: b.y + b.height * 0.95 },
+  );
+  await page.mouse.up();
+
+  const box = (await main.getByTestId("region-box").boundingBox())!;
+  expect(box.height / b.height).toBeCloseTo(r.y1 - r.y0, 1);
+  expect(box.width / b.width).toBeCloseTo(r.x1 - r.x0, 1);
+});
+
 test("a Region with no text says so and cannot be saved", async ({ page }) => {
   const { main, layer } = await enterSelectRegion(page, "separate-tables.pdf");
 
