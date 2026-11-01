@@ -796,7 +796,8 @@ export type RegionTable = FoundTable & { header: boolean };
 
 /**
  * The Table a Region makes. A Table that comes out as one Row, a Single-Row Region's or any other,
- * starts with "First row is header" off: its only Row is data, not a header over nothing. The rule
+ * starts with "First row is header" off: its only Row is data, not a header over nothing. So does a
+ * Region drawn from a Section Header downward: its label heads the Rows below it (spec #30). The rule
  * is applied whenever the Table is found, so a redraw to a single Row turns it off and a redraw to
  * several Rows turns it back on.
  */
@@ -807,7 +808,7 @@ function handDrawnTable(
   singleRow: boolean,
 ): RegionTable | null {
   const t = regionTable(page.items, bbox, settings.columnSpacing, singleRow);
-  return t && { ...t, header: t.grid.length > 1 };
+  return t && { ...t, header: t.grid.length > 1 && !t.sections.includes(0) };
 }
 
 /**

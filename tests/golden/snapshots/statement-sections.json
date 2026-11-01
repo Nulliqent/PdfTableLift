@@ -1,0 +1,314 @@
+{
+  "fixture": "tests/fixtures/statement-sections.pdf",
+  "sha256": "db95b4897841980cfb243c3fad123fdabecc8f16c634548d17a2689819213101",
+  "pdfjs": "6.4.299",
+  "engine": "app",
+  "status": "ready",
+  "error": "",
+  "pages": [
+    {
+      "num": 1,
+      "w": 612,
+      "h": 792,
+      "items": [
+        {"str":"Date","x":72,"y":710,"w":19.503000000000004,"h":9,"bold":true},
+        {"str":"Description","x":160,"y":710,"w":49.509000000000015,"h":9,"bold":true},
+        {"str":"Amount","x":506.007,"y":710,"w":33.99300000000001,"h":9,"bold":true},
+        {"str":"OCTOBER","x":72,"y":690,"w":44.640000000000015,"h":9,"bold":true},
+        {"str":"HARBOUR COFFEE HOUSE","x":160,"y":670,"w":118.51200000000004,"h":9,"bold":false},
+        {"str":"Card Payment","x":160,"y":657,"w":56.88899999999999,"h":9,"bold":false},
+        {"str":"SGD 12.00","x":160,"y":644,"w":44.52300000000001,"h":9,"bold":false},
+        {"str":"02 OCT","x":72,"y":657,"w":31.509,"h":9,"bold":false},
+        {"str":"-12.00","x":514.485,"y":657,"w":25.515000000000004,"h":9,"bold":false},
+        {"str":"FOLIO BOOK STORE","x":160,"y":614,"w":88.668,"h":9,"bold":false},
+        {"str":"Card Payment","x":160,"y":601,"w":56.88899999999999,"h":9,"bold":false},
+        {"str":"SGD 8.50","x":160,"y":588,"w":39.51900000000001,"h":9,"bold":false},
+        {"str":"03 OCT","x":72,"y":601,"w":31.509,"h":9,"bold":false},
+        {"str":"-8.50","x":519.489,"y":601,"w":20.511000000000003,"h":9,"bold":false},
+        {"str":"NOVEMBER","x":72,"y":558,"w":51.55200000000001,"h":9,"bold":true},
+        {"str":"CARD ENDING 0412","x":72,"y":538,"w":86.01300000000003,"h":9,"bold":true},
+        {"str":"GREENLEAF GROCERY MART","x":160,"y":518,"w":129.61800000000005,"h":9,"bold":false},
+        {"str":"Card Payment","x":160,"y":505,"w":56.88899999999999,"h":9,"bold":false},
+        {"str":"SGD 30.00","x":160,"y":492,"w":44.52300000000001,"h":9,"bold":false},
+        {"str":"01 NOV","x":72,"y":505,"w":31.562999999999995,"h":9,"bold":false},
+        {"str":"-30.00","x":514.485,"y":505,"w":25.515000000000004,"h":9,"bold":false},
+        {"str":"TIDEWATER FERRY","x":160,"y":462,"w":84.02400000000004,"h":9,"bold":false},
+        {"str":"Card Payment","x":160,"y":449,"w":56.88899999999999,"h":9,"bold":false},
+        {"str":"SGD 6.20","x":160,"y":436,"w":39.51900000000001,"h":9,"bold":false},
+        {"str":"04 NOV","x":72,"y":449,"w":31.562999999999995,"h":9,"bold":false},
+        {"str":"-6.20","x":519.489,"y":449,"w":20.511000000000003,"h":9,"bold":false},
+        {"str":"DECEMBER","x":72,"y":406,"w":51.498000000000005,"h":9,"bold":true},
+        {"str":"MAPLE & MOSS FLORIST","x":160,"y":386,"w":108.53100000000003,"h":9,"bold":false},
+        {"str":"Card Payment","x":160,"y":373,"w":56.88899999999999,"h":9,"bold":false},
+        {"str":"SGD 24.90","x":160,"y":360,"w":44.52300000000001,"h":9,"bold":false},
+        {"str":"05 DEC","x":72,"y":373,"w":31.508999999999997,"h":9,"bold":false},
+        {"str":"-24.90","x":514.485,"y":373,"w":25.515000000000004,"h":9,"bold":false},
+        {"str":"COPPER KETTLE DINER","x":160,"y":330,"w":105.02100000000004,"h":9,"bold":false},
+        {"str":"Card Payment","x":160,"y":317,"w":56.88899999999999,"h":9,"bold":false},
+        {"str":"SGD 17.35","x":160,"y":304,"w":44.52300000000001,"h":9,"bold":false},
+        {"str":"09 DEC","x":72,"y":317,"w":31.508999999999997,"h":9,"bold":false},
+        {"str":"-17.35","x":514.485,"y":317,"w":25.515000000000004,"h":9,"bold":false}
+      ]
+    }
+  ],
+  "runs": [
+    {
+      "columnSpacing": 1,
+      "joining": true,
+      "tables": [
+        {
+          "n": 1,
+          "pages": [1],
+          "parts": [{"page":1,"bbox":[68,300.85,544,719.45]}],
+          "header": true,
+          "firstBold": true,
+          "grid": [
+            ["Date","Description","Amount"],
+            ["OCTOBER","",""],
+            ["02 OCT","HARBOUR COFFEE HOUSE Card Payment SGD 12.00","-12.00"],
+            ["03 OCT","FOLIO BOOK STORE Card Payment SGD 8.50","-8.50"],
+            ["NOVEMBER","",""],
+            ["CARD ENDING 0412","",""],
+            ["01 NOV","GREENLEAF GROCERY MART Card Payment SGD 30.00","-30.00"],
+            ["04 NOV","TIDEWATER FERRY Card Payment SGD 6.20","-6.20"],
+            ["DECEMBER","",""],
+            ["05 DEC","MAPLE & MOSS FLORIST Card Payment SGD 24.90","-24.90"],
+            ["09 DEC","COPPER KETTLE DINER Card Payment SGD 17.35","-17.35"]
+          ],
+          "sections": [1,4,5,8],
+          "cols": [[72,103.56299999999999],[160,289.61800000000005],[506.007,540]],
+          "repeats": 0,
+          "exports": {
+            "column": {
+              "csv": "Section,Date,Description,Amount\nOCTOBER,02 OCT,HARBOUR COFFEE HOUSE Card Payment SGD 12.00,-12.00\nOCTOBER,03 OCT,FOLIO BOOK STORE Card Payment SGD 8.50,-8.50\nCARD ENDING 0412,01 NOV,GREENLEAF GROCERY MART Card Payment SGD 30.00,-30.00\nCARD ENDING 0412,04 NOV,TIDEWATER FERRY Card Payment SGD 6.20,-6.20\nDECEMBER,05 DEC,MAPLE & MOSS FLORIST Card Payment SGD 24.90,-24.90\nDECEMBER,09 DEC,COPPER KETTLE DINER Card Payment SGD 17.35,-17.35",
+              "tsv": "Section\tDate\tDescription\tAmount\nOCTOBER\t02 OCT\tHARBOUR COFFEE HOUSE Card Payment SGD 12.00\t-12.00\nOCTOBER\t03 OCT\tFOLIO BOOK STORE Card Payment SGD 8.50\t-8.50\nCARD ENDING 0412\t01 NOV\tGREENLEAF GROCERY MART Card Payment SGD 30.00\t-30.00\nCARD ENDING 0412\t04 NOV\tTIDEWATER FERRY Card Payment SGD 6.20\t-6.20\nDECEMBER\t05 DEC\tMAPLE & MOSS FLORIST Card Payment SGD 24.90\t-24.90\nDECEMBER\t09 DEC\tCOPPER KETTLE DINER Card Payment SGD 17.35\t-17.35",
+              "md": "| Section | Date | Description | Amount |\n| --- | --- | --- | ---: |\n| OCTOBER | 02 OCT | HARBOUR COFFEE HOUSE Card Payment SGD 12.00 | -12.00 |\n| OCTOBER | 03 OCT | FOLIO BOOK STORE Card Payment SGD 8.50 | -8.50 |\n| CARD ENDING 0412 | 01 NOV | GREENLEAF GROCERY MART Card Payment SGD 30.00 | -30.00 |\n| CARD ENDING 0412 | 04 NOV | TIDEWATER FERRY Card Payment SGD 6.20 | -6.20 |\n| DECEMBER | 05 DEC | MAPLE & MOSS FLORIST Card Payment SGD 24.90 | -24.90 |\n| DECEMBER | 09 DEC | COPPER KETTLE DINER Card Payment SGD 17.35 | -17.35 |",
+              "json": "[\n  {\n    \"Section\": \"OCTOBER\",\n    \"Date\": \"02 OCT\",\n    \"Description\": \"HARBOUR COFFEE HOUSE Card Payment SGD 12.00\",\n    \"Amount\": \"-12.00\"\n  },\n  {\n    \"Section\": \"OCTOBER\",\n    \"Date\": \"03 OCT\",\n    \"Description\": \"FOLIO BOOK STORE Card Payment SGD 8.50\",\n    \"Amount\": \"-8.50\"\n  },\n  {\n    \"Section\": \"CARD ENDING 0412\",\n    \"Date\": \"01 NOV\",\n    \"Description\": \"GREENLEAF GROCERY MART Card Payment SGD 30.00\",\n    \"Amount\": \"-30.00\"\n  },\n  {\n    \"Section\": \"CARD ENDING 0412\",\n    \"Date\": \"04 NOV\",\n    \"Description\": \"TIDEWATER FERRY Card Payment SGD 6.20\",\n    \"Amount\": \"-6.20\"\n  },\n  {\n    \"Section\": \"DECEMBER\",\n    \"Date\": \"05 DEC\",\n    \"Description\": \"MAPLE & MOSS FLORIST Card Payment SGD 24.90\",\n    \"Amount\": \"-24.90\"\n  },\n  {\n    \"Section\": \"DECEMBER\",\n    \"Date\": \"09 DEC\",\n    \"Description\": \"COPPER KETTLE DINER Card Payment SGD 17.35\",\n    \"Amount\": \"-17.35\"\n  }\n]"
+            },
+            "rows": {
+              "csv": "Date,Description,Amount\nOCTOBER,,\n02 OCT,HARBOUR COFFEE HOUSE Card Payment SGD 12.00,-12.00\n03 OCT,FOLIO BOOK STORE Card Payment SGD 8.50,-8.50\nNOVEMBER,,\nCARD ENDING 0412,,\n01 NOV,GREENLEAF GROCERY MART Card Payment SGD 30.00,-30.00\n04 NOV,TIDEWATER FERRY Card Payment SGD 6.20,-6.20\nDECEMBER,,\n05 DEC,MAPLE & MOSS FLORIST Card Payment SGD 24.90,-24.90\n09 DEC,COPPER KETTLE DINER Card Payment SGD 17.35,-17.35",
+              "tsv": "Date\tDescription\tAmount\nOCTOBER\t\t\n02 OCT\tHARBOUR COFFEE HOUSE Card Payment SGD 12.00\t-12.00\n03 OCT\tFOLIO BOOK STORE Card Payment SGD 8.50\t-8.50\nNOVEMBER\t\t\nCARD ENDING 0412\t\t\n01 NOV\tGREENLEAF GROCERY MART Card Payment SGD 30.00\t-30.00\n04 NOV\tTIDEWATER FERRY Card Payment SGD 6.20\t-6.20\nDECEMBER\t\t\n05 DEC\tMAPLE & MOSS FLORIST Card Payment SGD 24.90\t-24.90\n09 DEC\tCOPPER KETTLE DINER Card Payment SGD 17.35\t-17.35",
+              "md": "| Date | Description | Amount |\n| --- | --- | ---: |\n| **OCTOBER** | | |\n| 02 OCT | HARBOUR COFFEE HOUSE Card Payment SGD 12.00 | -12.00 |\n| 03 OCT | FOLIO BOOK STORE Card Payment SGD 8.50 | -8.50 |\n| **NOVEMBER** | | |\n| **CARD ENDING 0412** | | |\n| 01 NOV | GREENLEAF GROCERY MART Card Payment SGD 30.00 | -30.00 |\n| 04 NOV | TIDEWATER FERRY Card Payment SGD 6.20 | -6.20 |\n| **DECEMBER** | | |\n| 05 DEC | MAPLE & MOSS FLORIST Card Payment SGD 24.90 | -24.90 |\n| 09 DEC | COPPER KETTLE DINER Card Payment SGD 17.35 | -17.35 |",
+              "json": "[\n  {\n    \"section\": \"OCTOBER\",\n    \"rows\": [\n      {\n        \"Date\": \"02 OCT\",\n        \"Description\": \"HARBOUR COFFEE HOUSE Card Payment SGD 12.00\",\n        \"Amount\": \"-12.00\"\n      },\n      {\n        \"Date\": \"03 OCT\",\n        \"Description\": \"FOLIO BOOK STORE Card Payment SGD 8.50\",\n        \"Amount\": \"-8.50\"\n      }\n    ]\n  },\n  {\n    \"section\": \"NOVEMBER\",\n    \"rows\": []\n  },\n  {\n    \"section\": \"CARD ENDING 0412\",\n    \"rows\": [\n      {\n        \"Date\": \"01 NOV\",\n        \"Description\": \"GREENLEAF GROCERY MART Card Payment SGD 30.00\",\n        \"Amount\": \"-30.00\"\n      },\n      {\n        \"Date\": \"04 NOV\",\n        \"Description\": \"TIDEWATER FERRY Card Payment SGD 6.20\",\n        \"Amount\": \"-6.20\"\n      }\n    ]\n  },\n  {\n    \"section\": \"DECEMBER\",\n    \"rows\": [\n      {\n        \"Date\": \"05 DEC\",\n        \"Description\": \"MAPLE & MOSS FLORIST Card Payment SGD 24.90\",\n        \"Amount\": \"-24.90\"\n      },\n      {\n        \"Date\": \"09 DEC\",\n        \"Description\": \"COPPER KETTLE DINER Card Payment SGD 17.35\",\n        \"Amount\": \"-17.35\"\n      }\n    ]\n  }\n]"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "columnSpacing": 1,
+      "joining": false,
+      "tables": [
+        {
+          "n": 1,
+          "pages": [1],
+          "parts": [{"page":1,"bbox":[68,300.85,544,719.45]}],
+          "header": true,
+          "firstBold": true,
+          "grid": [
+            ["Date","Description","Amount"],
+            ["OCTOBER","",""],
+            ["02 OCT","HARBOUR COFFEE HOUSE Card Payment SGD 12.00","-12.00"],
+            ["03 OCT","FOLIO BOOK STORE Card Payment SGD 8.50","-8.50"],
+            ["NOVEMBER","",""],
+            ["CARD ENDING 0412","",""],
+            ["01 NOV","GREENLEAF GROCERY MART Card Payment SGD 30.00","-30.00"],
+            ["04 NOV","TIDEWATER FERRY Card Payment SGD 6.20","-6.20"],
+            ["DECEMBER","",""],
+            ["05 DEC","MAPLE & MOSS FLORIST Card Payment SGD 24.90","-24.90"],
+            ["09 DEC","COPPER KETTLE DINER Card Payment SGD 17.35","-17.35"]
+          ],
+          "sections": [1,4,5,8],
+          "cols": [[72,103.56299999999999],[160,289.61800000000005],[506.007,540]],
+          "repeats": 0,
+          "exports": {
+            "column": {
+              "csv": "Section,Date,Description,Amount\nOCTOBER,02 OCT,HARBOUR COFFEE HOUSE Card Payment SGD 12.00,-12.00\nOCTOBER,03 OCT,FOLIO BOOK STORE Card Payment SGD 8.50,-8.50\nCARD ENDING 0412,01 NOV,GREENLEAF GROCERY MART Card Payment SGD 30.00,-30.00\nCARD ENDING 0412,04 NOV,TIDEWATER FERRY Card Payment SGD 6.20,-6.20\nDECEMBER,05 DEC,MAPLE & MOSS FLORIST Card Payment SGD 24.90,-24.90\nDECEMBER,09 DEC,COPPER KETTLE DINER Card Payment SGD 17.35,-17.35",
+              "tsv": "Section\tDate\tDescription\tAmount\nOCTOBER\t02 OCT\tHARBOUR COFFEE HOUSE Card Payment SGD 12.00\t-12.00\nOCTOBER\t03 OCT\tFOLIO BOOK STORE Card Payment SGD 8.50\t-8.50\nCARD ENDING 0412\t01 NOV\tGREENLEAF GROCERY MART Card Payment SGD 30.00\t-30.00\nCARD ENDING 0412\t04 NOV\tTIDEWATER FERRY Card Payment SGD 6.20\t-6.20\nDECEMBER\t05 DEC\tMAPLE & MOSS FLORIST Card Payment SGD 24.90\t-24.90\nDECEMBER\t09 DEC\tCOPPER KETTLE DINER Card Payment SGD 17.35\t-17.35",
+              "md": "| Section | Date | Description | Amount |\n| --- | --- | --- | ---: |\n| OCTOBER | 02 OCT | HARBOUR COFFEE HOUSE Card Payment SGD 12.00 | -12.00 |\n| OCTOBER | 03 OCT | FOLIO BOOK STORE Card Payment SGD 8.50 | -8.50 |\n| CARD ENDING 0412 | 01 NOV | GREENLEAF GROCERY MART Card Payment SGD 30.00 | -30.00 |\n| CARD ENDING 0412 | 04 NOV | TIDEWATER FERRY Card Payment SGD 6.20 | -6.20 |\n| DECEMBER | 05 DEC | MAPLE & MOSS FLORIST Card Payment SGD 24.90 | -24.90 |\n| DECEMBER | 09 DEC | COPPER KETTLE DINER Card Payment SGD 17.35 | -17.35 |",
+              "json": "[\n  {\n    \"Section\": \"OCTOBER\",\n    \"Date\": \"02 OCT\",\n    \"Description\": \"HARBOUR COFFEE HOUSE Card Payment SGD 12.00\",\n    \"Amount\": \"-12.00\"\n  },\n  {\n    \"Section\": \"OCTOBER\",\n    \"Date\": \"03 OCT\",\n    \"Description\": \"FOLIO BOOK STORE Card Payment SGD 8.50\",\n    \"Amount\": \"-8.50\"\n  },\n  {\n    \"Section\": \"CARD ENDING 0412\",\n    \"Date\": \"01 NOV\",\n    \"Description\": \"GREENLEAF GROCERY MART Card Payment SGD 30.00\",\n    \"Amount\": \"-30.00\"\n  },\n  {\n    \"Section\": \"CARD ENDING 0412\",\n    \"Date\": \"04 NOV\",\n    \"Description\": \"TIDEWATER FERRY Card Payment SGD 6.20\",\n    \"Amount\": \"-6.20\"\n  },\n  {\n    \"Section\": \"DECEMBER\",\n    \"Date\": \"05 DEC\",\n    \"Description\": \"MAPLE & MOSS FLORIST Card Payment SGD 24.90\",\n    \"Amount\": \"-24.90\"\n  },\n  {\n    \"Section\": \"DECEMBER\",\n    \"Date\": \"09 DEC\",\n    \"Description\": \"COPPER KETTLE DINER Card Payment SGD 17.35\",\n    \"Amount\": \"-17.35\"\n  }\n]"
+            },
+            "rows": {
+              "csv": "Date,Description,Amount\nOCTOBER,,\n02 OCT,HARBOUR COFFEE HOUSE Card Payment SGD 12.00,-12.00\n03 OCT,FOLIO BOOK STORE Card Payment SGD 8.50,-8.50\nNOVEMBER,,\nCARD ENDING 0412,,\n01 NOV,GREENLEAF GROCERY MART Card Payment SGD 30.00,-30.00\n04 NOV,TIDEWATER FERRY Card Payment SGD 6.20,-6.20\nDECEMBER,,\n05 DEC,MAPLE & MOSS FLORIST Card Payment SGD 24.90,-24.90\n09 DEC,COPPER KETTLE DINER Card Payment SGD 17.35,-17.35",
+              "tsv": "Date\tDescription\tAmount\nOCTOBER\t\t\n02 OCT\tHARBOUR COFFEE HOUSE Card Payment SGD 12.00\t-12.00\n03 OCT\tFOLIO BOOK STORE Card Payment SGD 8.50\t-8.50\nNOVEMBER\t\t\nCARD ENDING 0412\t\t\n01 NOV\tGREENLEAF GROCERY MART Card Payment SGD 30.00\t-30.00\n04 NOV\tTIDEWATER FERRY Card Payment SGD 6.20\t-6.20\nDECEMBER\t\t\n05 DEC\tMAPLE & MOSS FLORIST Card Payment SGD 24.90\t-24.90\n09 DEC\tCOPPER KETTLE DINER Card Payment SGD 17.35\t-17.35",
+              "md": "| Date | Description | Amount |\n| --- | --- | ---: |\n| **OCTOBER** | | |\n| 02 OCT | HARBOUR COFFEE HOUSE Card Payment SGD 12.00 | -12.00 |\n| 03 OCT | FOLIO BOOK STORE Card Payment SGD 8.50 | -8.50 |\n| **NOVEMBER** | | |\n| **CARD ENDING 0412** | | |\n| 01 NOV | GREENLEAF GROCERY MART Card Payment SGD 30.00 | -30.00 |\n| 04 NOV | TIDEWATER FERRY Card Payment SGD 6.20 | -6.20 |\n| **DECEMBER** | | |\n| 05 DEC | MAPLE & MOSS FLORIST Card Payment SGD 24.90 | -24.90 |\n| 09 DEC | COPPER KETTLE DINER Card Payment SGD 17.35 | -17.35 |",
+              "json": "[\n  {\n    \"section\": \"OCTOBER\",\n    \"rows\": [\n      {\n        \"Date\": \"02 OCT\",\n        \"Description\": \"HARBOUR COFFEE HOUSE Card Payment SGD 12.00\",\n        \"Amount\": \"-12.00\"\n      },\n      {\n        \"Date\": \"03 OCT\",\n        \"Description\": \"FOLIO BOOK STORE Card Payment SGD 8.50\",\n        \"Amount\": \"-8.50\"\n      }\n    ]\n  },\n  {\n    \"section\": \"NOVEMBER\",\n    \"rows\": []\n  },\n  {\n    \"section\": \"CARD ENDING 0412\",\n    \"rows\": [\n      {\n        \"Date\": \"01 NOV\",\n        \"Description\": \"GREENLEAF GROCERY MART Card Payment SGD 30.00\",\n        \"Amount\": \"-30.00\"\n      },\n      {\n        \"Date\": \"04 NOV\",\n        \"Description\": \"TIDEWATER FERRY Card Payment SGD 6.20\",\n        \"Amount\": \"-6.20\"\n      }\n    ]\n  },\n  {\n    \"section\": \"DECEMBER\",\n    \"rows\": [\n      {\n        \"Date\": \"05 DEC\",\n        \"Description\": \"MAPLE & MOSS FLORIST Card Payment SGD 24.90\",\n        \"Amount\": \"-24.90\"\n      },\n      {\n        \"Date\": \"09 DEC\",\n        \"Description\": \"COPPER KETTLE DINER Card Payment SGD 17.35\",\n        \"Amount\": \"-17.35\"\n      }\n    ]\n  }\n]"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "columnSpacing": 0.5,
+      "joining": true,
+      "tables": [
+        {
+          "n": 1,
+          "pages": [1],
+          "parts": [{"page":1,"bbox":[68,300.85,544,719.45]}],
+          "header": true,
+          "firstBold": true,
+          "grid": [
+            ["Date","Description","Amount"],
+            ["OCTOBER","",""],
+            ["02 OCT","HARBOUR COFFEE HOUSE Card Payment SGD 12.00","-12.00"],
+            ["03 OCT","FOLIO BOOK STORE Card Payment SGD 8.50","-8.50"],
+            ["NOVEMBER","",""],
+            ["CARD ENDING 0412","",""],
+            ["01 NOV","GREENLEAF GROCERY MART Card Payment SGD 30.00","-30.00"],
+            ["04 NOV","TIDEWATER FERRY Card Payment SGD 6.20","-6.20"],
+            ["DECEMBER","",""],
+            ["05 DEC","MAPLE & MOSS FLORIST Card Payment SGD 24.90","-24.90"],
+            ["09 DEC","COPPER KETTLE DINER Card Payment SGD 17.35","-17.35"]
+          ],
+          "sections": [1,4,5,8],
+          "cols": [[72,103.56299999999999],[160,289.61800000000005],[506.007,540]],
+          "repeats": 0,
+          "exports": {
+            "column": {
+              "csv": "Section,Date,Description,Amount\nOCTOBER,02 OCT,HARBOUR COFFEE HOUSE Card Payment SGD 12.00,-12.00\nOCTOBER,03 OCT,FOLIO BOOK STORE Card Payment SGD 8.50,-8.50\nCARD ENDING 0412,01 NOV,GREENLEAF GROCERY MART Card Payment SGD 30.00,-30.00\nCARD ENDING 0412,04 NOV,TIDEWATER FERRY Card Payment SGD 6.20,-6.20\nDECEMBER,05 DEC,MAPLE & MOSS FLORIST Card Payment SGD 24.90,-24.90\nDECEMBER,09 DEC,COPPER KETTLE DINER Card Payment SGD 17.35,-17.35",
+              "tsv": "Section\tDate\tDescription\tAmount\nOCTOBER\t02 OCT\tHARBOUR COFFEE HOUSE Card Payment SGD 12.00\t-12.00\nOCTOBER\t03 OCT\tFOLIO BOOK STORE Card Payment SGD 8.50\t-8.50\nCARD ENDING 0412\t01 NOV\tGREENLEAF GROCERY MART Card Payment SGD 30.00\t-30.00\nCARD ENDING 0412\t04 NOV\tTIDEWATER FERRY Card Payment SGD 6.20\t-6.20\nDECEMBER\t05 DEC\tMAPLE & MOSS FLORIST Card Payment SGD 24.90\t-24.90\nDECEMBER\t09 DEC\tCOPPER KETTLE DINER Card Payment SGD 17.35\t-17.35",
+              "md": "| Section | Date | Description | Amount |\n| --- | --- | --- | ---: |\n| OCTOBER | 02 OCT | HARBOUR COFFEE HOUSE Card Payment SGD 12.00 | -12.00 |\n| OCTOBER | 03 OCT | FOLIO BOOK STORE Card Payment SGD 8.50 | -8.50 |\n| CARD ENDING 0412 | 01 NOV | GREENLEAF GROCERY MART Card Payment SGD 30.00 | -30.00 |\n| CARD ENDING 0412 | 04 NOV | TIDEWATER FERRY Card Payment SGD 6.20 | -6.20 |\n| DECEMBER | 05 DEC | MAPLE & MOSS FLORIST Card Payment SGD 24.90 | -24.90 |\n| DECEMBER | 09 DEC | COPPER KETTLE DINER Card Payment SGD 17.35 | -17.35 |",
+              "json": "[\n  {\n    \"Section\": \"OCTOBER\",\n    \"Date\": \"02 OCT\",\n    \"Description\": \"HARBOUR COFFEE HOUSE Card Payment SGD 12.00\",\n    \"Amount\": \"-12.00\"\n  },\n  {\n    \"Section\": \"OCTOBER\",\n    \"Date\": \"03 OCT\",\n    \"Description\": \"FOLIO BOOK STORE Card Payment SGD 8.50\",\n    \"Amount\": \"-8.50\"\n  },\n  {\n    \"Section\": \"CARD ENDING 0412\",\n    \"Date\": \"01 NOV\",\n    \"Description\": \"GREENLEAF GROCERY MART Card Payment SGD 30.00\",\n    \"Amount\": \"-30.00\"\n  },\n  {\n    \"Section\": \"CARD ENDING 0412\",\n    \"Date\": \"04 NOV\",\n    \"Description\": \"TIDEWATER FERRY Card Payment SGD 6.20\",\n    \"Amount\": \"-6.20\"\n  },\n  {\n    \"Section\": \"DECEMBER\",\n    \"Date\": \"05 DEC\",\n    \"Description\": \"MAPLE & MOSS FLORIST Card Payment SGD 24.90\",\n    \"Amount\": \"-24.90\"\n  },\n  {\n    \"Section\": \"DECEMBER\",\n    \"Date\": \"09 DEC\",\n    \"Description\": \"COPPER KETTLE DINER Card Payment SGD 17.35\",\n    \"Amount\": \"-17.35\"\n  }\n]"
+            },
+            "rows": {
+              "csv": "Date,Description,Amount\nOCTOBER,,\n02 OCT,HARBOUR COFFEE HOUSE Card Payment SGD 12.00,-12.00\n03 OCT,FOLIO BOOK STORE Card Payment SGD 8.50,-8.50\nNOVEMBER,,\nCARD ENDING 0412,,\n01 NOV,GREENLEAF GROCERY MART Card Payment SGD 30.00,-30.00\n04 NOV,TIDEWATER FERRY Card Payment SGD 6.20,-6.20\nDECEMBER,,\n05 DEC,MAPLE & MOSS FLORIST Card Payment SGD 24.90,-24.90\n09 DEC,COPPER KETTLE DINER Card Payment SGD 17.35,-17.35",
+              "tsv": "Date\tDescription\tAmount\nOCTOBER\t\t\n02 OCT\tHARBOUR COFFEE HOUSE Card Payment SGD 12.00\t-12.00\n03 OCT\tFOLIO BOOK STORE Card Payment SGD 8.50\t-8.50\nNOVEMBER\t\t\nCARD ENDING 0412\t\t\n01 NOV\tGREENLEAF GROCERY MART Card Payment SGD 30.00\t-30.00\n04 NOV\tTIDEWATER FERRY Card Payment SGD 6.20\t-6.20\nDECEMBER\t\t\n05 DEC\tMAPLE & MOSS FLORIST Card Payment SGD 24.90\t-24.90\n09 DEC\tCOPPER KETTLE DINER Card Payment SGD 17.35\t-17.35",
+              "md": "| Date | Description | Amount |\n| --- | --- | ---: |\n| **OCTOBER** | | |\n| 02 OCT | HARBOUR COFFEE HOUSE Card Payment SGD 12.00 | -12.00 |\n| 03 OCT | FOLIO BOOK STORE Card Payment SGD 8.50 | -8.50 |\n| **NOVEMBER** | | |\n| **CARD ENDING 0412** | | |\n| 01 NOV | GREENLEAF GROCERY MART Card Payment SGD 30.00 | -30.00 |\n| 04 NOV | TIDEWATER FERRY Card Payment SGD 6.20 | -6.20 |\n| **DECEMBER** | | |\n| 05 DEC | MAPLE & MOSS FLORIST Card Payment SGD 24.90 | -24.90 |\n| 09 DEC | COPPER KETTLE DINER Card Payment SGD 17.35 | -17.35 |",
+              "json": "[\n  {\n    \"section\": \"OCTOBER\",\n    \"rows\": [\n      {\n        \"Date\": \"02 OCT\",\n        \"Description\": \"HARBOUR COFFEE HOUSE Card Payment SGD 12.00\",\n        \"Amount\": \"-12.00\"\n      },\n      {\n        \"Date\": \"03 OCT\",\n        \"Description\": \"FOLIO BOOK STORE Card Payment SGD 8.50\",\n        \"Amount\": \"-8.50\"\n      }\n    ]\n  },\n  {\n    \"section\": \"NOVEMBER\",\n    \"rows\": []\n  },\n  {\n    \"section\": \"CARD ENDING 0412\",\n    \"rows\": [\n      {\n        \"Date\": \"01 NOV\",\n        \"Description\": \"GREENLEAF GROCERY MART Card Payment SGD 30.00\",\n        \"Amount\": \"-30.00\"\n      },\n      {\n        \"Date\": \"04 NOV\",\n        \"Description\": \"TIDEWATER FERRY Card Payment SGD 6.20\",\n        \"Amount\": \"-6.20\"\n      }\n    ]\n  },\n  {\n    \"section\": \"DECEMBER\",\n    \"rows\": [\n      {\n        \"Date\": \"05 DEC\",\n        \"Description\": \"MAPLE & MOSS FLORIST Card Payment SGD 24.90\",\n        \"Amount\": \"-24.90\"\n      },\n      {\n        \"Date\": \"09 DEC\",\n        \"Description\": \"COPPER KETTLE DINER Card Payment SGD 17.35\",\n        \"Amount\": \"-17.35\"\n      }\n    ]\n  }\n]"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "columnSpacing": 0.5,
+      "joining": false,
+      "tables": [
+        {
+          "n": 1,
+          "pages": [1],
+          "parts": [{"page":1,"bbox":[68,300.85,544,719.45]}],
+          "header": true,
+          "firstBold": true,
+          "grid": [
+            ["Date","Description","Amount"],
+            ["OCTOBER","",""],
+            ["02 OCT","HARBOUR COFFEE HOUSE Card Payment SGD 12.00","-12.00"],
+            ["03 OCT","FOLIO BOOK STORE Card Payment SGD 8.50","-8.50"],
+            ["NOVEMBER","",""],
+            ["CARD ENDING 0412","",""],
+            ["01 NOV","GREENLEAF GROCERY MART Card Payment SGD 30.00","-30.00"],
+            ["04 NOV","TIDEWATER FERRY Card Payment SGD 6.20","-6.20"],
+            ["DECEMBER","",""],
+            ["05 DEC","MAPLE & MOSS FLORIST Card Payment SGD 24.90","-24.90"],
+            ["09 DEC","COPPER KETTLE DINER Card Payment SGD 17.35","-17.35"]
+          ],
+          "sections": [1,4,5,8],
+          "cols": [[72,103.56299999999999],[160,289.61800000000005],[506.007,540]],
+          "repeats": 0,
+          "exports": {
+            "column": {
+              "csv": "Section,Date,Description,Amount\nOCTOBER,02 OCT,HARBOUR COFFEE HOUSE Card Payment SGD 12.00,-12.00\nOCTOBER,03 OCT,FOLIO BOOK STORE Card Payment SGD 8.50,-8.50\nCARD ENDING 0412,01 NOV,GREENLEAF GROCERY MART Card Payment SGD 30.00,-30.00\nCARD ENDING 0412,04 NOV,TIDEWATER FERRY Card Payment SGD 6.20,-6.20\nDECEMBER,05 DEC,MAPLE & MOSS FLORIST Card Payment SGD 24.90,-24.90\nDECEMBER,09 DEC,COPPER KETTLE DINER Card Payment SGD 17.35,-17.35",
+              "tsv": "Section\tDate\tDescription\tAmount\nOCTOBER\t02 OCT\tHARBOUR COFFEE HOUSE Card Payment SGD 12.00\t-12.00\nOCTOBER\t03 OCT\tFOLIO BOOK STORE Card Payment SGD 8.50\t-8.50\nCARD ENDING 0412\t01 NOV\tGREENLEAF GROCERY MART Card Payment SGD 30.00\t-30.00\nCARD ENDING 0412\t04 NOV\tTIDEWATER FERRY Card Payment SGD 6.20\t-6.20\nDECEMBER\t05 DEC\tMAPLE & MOSS FLORIST Card Payment SGD 24.90\t-24.90\nDECEMBER\t09 DEC\tCOPPER KETTLE DINER Card Payment SGD 17.35\t-17.35",
+              "md": "| Section | Date | Description | Amount |\n| --- | --- | --- | ---: |\n| OCTOBER | 02 OCT | HARBOUR COFFEE HOUSE Card Payment SGD 12.00 | -12.00 |\n| OCTOBER | 03 OCT | FOLIO BOOK STORE Card Payment SGD 8.50 | -8.50 |\n| CARD ENDING 0412 | 01 NOV | GREENLEAF GROCERY MART Card Payment SGD 30.00 | -30.00 |\n| CARD ENDING 0412 | 04 NOV | TIDEWATER FERRY Card Payment SGD 6.20 | -6.20 |\n| DECEMBER | 05 DEC | MAPLE & MOSS FLORIST Card Payment SGD 24.90 | -24.90 |\n| DECEMBER | 09 DEC | COPPER KETTLE DINER Card Payment SGD 17.35 | -17.35 |",
+              "json": "[\n  {\n    \"Section\": \"OCTOBER\",\n    \"Date\": \"02 OCT\",\n    \"Description\": \"HARBOUR COFFEE HOUSE Card Payment SGD 12.00\",\n    \"Amount\": \"-12.00\"\n  },\n  {\n    \"Section\": \"OCTOBER\",\n    \"Date\": \"03 OCT\",\n    \"Description\": \"FOLIO BOOK STORE Card Payment SGD 8.50\",\n    \"Amount\": \"-8.50\"\n  },\n  {\n    \"Section\": \"CARD ENDING 0412\",\n    \"Date\": \"01 NOV\",\n    \"Description\": \"GREENLEAF GROCERY MART Card Payment SGD 30.00\",\n    \"Amount\": \"-30.00\"\n  },\n  {\n    \"Section\": \"CARD ENDING 0412\",\n    \"Date\": \"04 NOV\",\n    \"Description\": \"TIDEWATER FERRY Card Payment SGD 6.20\",\n    \"Amount\": \"-6.20\"\n  },\n  {\n    \"Section\": \"DECEMBER\",\n    \"Date\": \"05 DEC\",\n    \"Description\": \"MAPLE & MOSS FLORIST Card Payment SGD 24.90\",\n    \"Amount\": \"-24.90\"\n  },\n  {\n    \"Section\": \"DECEMBER\",\n    \"Date\": \"09 DEC\",\n    \"Description\": \"COPPER KETTLE DINER Card Payment SGD 17.35\",\n    \"Amount\": \"-17.35\"\n  }\n]"
+            },
+            "rows": {
+              "csv": "Date,Description,Amount\nOCTOBER,,\n02 OCT,HARBOUR COFFEE HOUSE Card Payment SGD 12.00,-12.00\n03 OCT,FOLIO BOOK STORE Card Payment SGD 8.50,-8.50\nNOVEMBER,,\nCARD ENDING 0412,,\n01 NOV,GREENLEAF GROCERY MART Card Payment SGD 30.00,-30.00\n04 NOV,TIDEWATER FERRY Card Payment SGD 6.20,-6.20\nDECEMBER,,\n05 DEC,MAPLE & MOSS FLORIST Card Payment SGD 24.90,-24.90\n09 DEC,COPPER KETTLE DINER Card Payment SGD 17.35,-17.35",
+              "tsv": "Date\tDescription\tAmount\nOCTOBER\t\t\n02 OCT\tHARBOUR COFFEE HOUSE Card Payment SGD 12.00\t-12.00\n03 OCT\tFOLIO BOOK STORE Card Payment SGD 8.50\t-8.50\nNOVEMBER\t\t\nCARD ENDING 0412\t\t\n01 NOV\tGREENLEAF GROCERY MART Card Payment SGD 30.00\t-30.00\n04 NOV\tTIDEWATER FERRY Card Payment SGD 6.20\t-6.20\nDECEMBER\t\t\n05 DEC\tMAPLE & MOSS FLORIST Card Payment SGD 24.90\t-24.90\n09 DEC\tCOPPER KETTLE DINER Card Payment SGD 17.35\t-17.35",
+              "md": "| Date | Description | Amount |\n| --- | --- | ---: |\n| **OCTOBER** | | |\n| 02 OCT | HARBOUR COFFEE HOUSE Card Payment SGD 12.00 | -12.00 |\n| 03 OCT | FOLIO BOOK STORE Card Payment SGD 8.50 | -8.50 |\n| **NOVEMBER** | | |\n| **CARD ENDING 0412** | | |\n| 01 NOV | GREENLEAF GROCERY MART Card Payment SGD 30.00 | -30.00 |\n| 04 NOV | TIDEWATER FERRY Card Payment SGD 6.20 | -6.20 |\n| **DECEMBER** | | |\n| 05 DEC | MAPLE & MOSS FLORIST Card Payment SGD 24.90 | -24.90 |\n| 09 DEC | COPPER KETTLE DINER Card Payment SGD 17.35 | -17.35 |",
+              "json": "[\n  {\n    \"section\": \"OCTOBER\",\n    \"rows\": [\n      {\n        \"Date\": \"02 OCT\",\n        \"Description\": \"HARBOUR COFFEE HOUSE Card Payment SGD 12.00\",\n        \"Amount\": \"-12.00\"\n      },\n      {\n        \"Date\": \"03 OCT\",\n        \"Description\": \"FOLIO BOOK STORE Card Payment SGD 8.50\",\n        \"Amount\": \"-8.50\"\n      }\n    ]\n  },\n  {\n    \"section\": \"NOVEMBER\",\n    \"rows\": []\n  },\n  {\n    \"section\": \"CARD ENDING 0412\",\n    \"rows\": [\n      {\n        \"Date\": \"01 NOV\",\n        \"Description\": \"GREENLEAF GROCERY MART Card Payment SGD 30.00\",\n        \"Amount\": \"-30.00\"\n      },\n      {\n        \"Date\": \"04 NOV\",\n        \"Description\": \"TIDEWATER FERRY Card Payment SGD 6.20\",\n        \"Amount\": \"-6.20\"\n      }\n    ]\n  },\n  {\n    \"section\": \"DECEMBER\",\n    \"rows\": [\n      {\n        \"Date\": \"05 DEC\",\n        \"Description\": \"MAPLE & MOSS FLORIST Card Payment SGD 24.90\",\n        \"Amount\": \"-24.90\"\n      },\n      {\n        \"Date\": \"09 DEC\",\n        \"Description\": \"COPPER KETTLE DINER Card Payment SGD 17.35\",\n        \"Amount\": \"-17.35\"\n      }\n    ]\n  }\n]"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "columnSpacing": 2,
+      "joining": true,
+      "tables": [
+        {
+          "n": 1,
+          "pages": [1],
+          "parts": [{"page":1,"bbox":[68,300.85,544,719.45]}],
+          "header": true,
+          "firstBold": true,
+          "grid": [
+            ["Date","Description","Amount"],
+            ["OCTOBER","",""],
+            ["02 OCT","HARBOUR COFFEE HOUSE Card Payment SGD 12.00","-12.00"],
+            ["03 OCT","FOLIO BOOK STORE Card Payment SGD 8.50","-8.50"],
+            ["NOVEMBER","",""],
+            ["CARD ENDING 0412","",""],
+            ["01 NOV","GREENLEAF GROCERY MART Card Payment SGD 30.00","-30.00"],
+            ["04 NOV","TIDEWATER FERRY Card Payment SGD 6.20","-6.20"],
+            ["DECEMBER","",""],
+            ["05 DEC","MAPLE & MOSS FLORIST Card Payment SGD 24.90","-24.90"],
+            ["09 DEC","COPPER KETTLE DINER Card Payment SGD 17.35","-17.35"]
+          ],
+          "sections": [1,4,5,8],
+          "cols": [[72,103.56299999999999],[160,289.61800000000005],[506.007,540]],
+          "repeats": 0,
+          "exports": {
+            "column": {
+              "csv": "Section,Date,Description,Amount\nOCTOBER,02 OCT,HARBOUR COFFEE HOUSE Card Payment SGD 12.00,-12.00\nOCTOBER,03 OCT,FOLIO BOOK STORE Card Payment SGD 8.50,-8.50\nCARD ENDING 0412,01 NOV,GREENLEAF GROCERY MART Card Payment SGD 30.00,-30.00\nCARD ENDING 0412,04 NOV,TIDEWATER FERRY Card Payment SGD 6.20,-6.20\nDECEMBER,05 DEC,MAPLE & MOSS FLORIST Card Payment SGD 24.90,-24.90\nDECEMBER,09 DEC,COPPER KETTLE DINER Card Payment SGD 17.35,-17.35",
+              "tsv": "Section\tDate\tDescription\tAmount\nOCTOBER\t02 OCT\tHARBOUR COFFEE HOUSE Card Payment SGD 12.00\t-12.00\nOCTOBER\t03 OCT\tFOLIO BOOK STORE Card Payment SGD 8.50\t-8.50\nCARD ENDING 0412\t01 NOV\tGREENLEAF GROCERY MART Card Payment SGD 30.00\t-30.00\nCARD ENDING 0412\t04 NOV\tTIDEWATER FERRY Card Payment SGD 6.20\t-6.20\nDECEMBER\t05 DEC\tMAPLE & MOSS FLORIST Card Payment SGD 24.90\t-24.90\nDECEMBER\t09 DEC\tCOPPER KETTLE DINER Card Payment SGD 17.35\t-17.35",
+              "md": "| Section | Date | Description | Amount |\n| --- | --- | --- | ---: |\n| OCTOBER | 02 OCT | HARBOUR COFFEE HOUSE Card Payment SGD 12.00 | -12.00 |\n| OCTOBER | 03 OCT | FOLIO BOOK STORE Card Payment SGD 8.50 | -8.50 |\n| CARD ENDING 0412 | 01 NOV | GREENLEAF GROCERY MART Card Payment SGD 30.00 | -30.00 |\n| CARD ENDING 0412 | 04 NOV | TIDEWATER FERRY Card Payment SGD 6.20 | -6.20 |\n| DECEMBER | 05 DEC | MAPLE & MOSS FLORIST Card Payment SGD 24.90 | -24.90 |\n| DECEMBER | 09 DEC | COPPER KETTLE DINER Card Payment SGD 17.35 | -17.35 |",
+              "json": "[\n  {\n    \"Section\": \"OCTOBER\",\n    \"Date\": \"02 OCT\",\n    \"Description\": \"HARBOUR COFFEE HOUSE Card Payment SGD 12.00\",\n    \"Amount\": \"-12.00\"\n  },\n  {\n    \"Section\": \"OCTOBER\",\n    \"Date\": \"03 OCT\",\n    \"Description\": \"FOLIO BOOK STORE Card Payment SGD 8.50\",\n    \"Amount\": \"-8.50\"\n  },\n  {\n    \"Section\": \"CARD ENDING 0412\",\n    \"Date\": \"01 NOV\",\n    \"Description\": \"GREENLEAF GROCERY MART Card Payment SGD 30.00\",\n    \"Amount\": \"-30.00\"\n  },\n  {\n    \"Section\": \"CARD ENDING 0412\",\n    \"Date\": \"04 NOV\",\n    \"Description\": \"TIDEWATER FERRY Card Payment SGD 6.20\",\n    \"Amount\": \"-6.20\"\n  },\n  {\n    \"Section\": \"DECEMBER\",\n    \"Date\": \"05 DEC\",\n    \"Description\": \"MAPLE & MOSS FLORIST Card Payment SGD 24.90\",\n    \"Amount\": \"-24.90\"\n  },\n  {\n    \"Section\": \"DECEMBER\",\n    \"Date\": \"09 DEC\",\n    \"Description\": \"COPPER KETTLE DINER Card Payment SGD 17.35\",\n    \"Amount\": \"-17.35\"\n  }\n]"
+            },
+            "rows": {
+              "csv": "Date,Description,Amount\nOCTOBER,,\n02 OCT,HARBOUR COFFEE HOUSE Card Payment SGD 12.00,-12.00\n03 OCT,FOLIO BOOK STORE Card Payment SGD 8.50,-8.50\nNOVEMBER,,\nCARD ENDING 0412,,\n01 NOV,GREENLEAF GROCERY MART Card Payment SGD 30.00,-30.00\n04 NOV,TIDEWATER FERRY Card Payment SGD 6.20,-6.20\nDECEMBER,,\n05 DEC,MAPLE & MOSS FLORIST Card Payment SGD 24.90,-24.90\n09 DEC,COPPER KETTLE DINER Card Payment SGD 17.35,-17.35",
+              "tsv": "Date\tDescription\tAmount\nOCTOBER\t\t\n02 OCT\tHARBOUR COFFEE HOUSE Card Payment SGD 12.00\t-12.00\n03 OCT\tFOLIO BOOK STORE Card Payment SGD 8.50\t-8.50\nNOVEMBER\t\t\nCARD ENDING 0412\t\t\n01 NOV\tGREENLEAF GROCERY MART Card Payment SGD 30.00\t-30.00\n04 NOV\tTIDEWATER FERRY Card Payment SGD 6.20\t-6.20\nDECEMBER\t\t\n05 DEC\tMAPLE & MOSS FLORIST Card Payment SGD 24.90\t-24.90\n09 DEC\tCOPPER KETTLE DINER Card Payment SGD 17.35\t-17.35",
+              "md": "| Date | Description | Amount |\n| --- | --- | ---: |\n| **OCTOBER** | | |\n| 02 OCT | HARBOUR COFFEE HOUSE Card Payment SGD 12.00 | -12.00 |\n| 03 OCT | FOLIO BOOK STORE Card Payment SGD 8.50 | -8.50 |\n| **NOVEMBER** | | |\n| **CARD ENDING 0412** | | |\n| 01 NOV | GREENLEAF GROCERY MART Card Payment SGD 30.00 | -30.00 |\n| 04 NOV | TIDEWATER FERRY Card Payment SGD 6.20 | -6.20 |\n| **DECEMBER** | | |\n| 05 DEC | MAPLE & MOSS FLORIST Card Payment SGD 24.90 | -24.90 |\n| 09 DEC | COPPER KETTLE DINER Card Payment SGD 17.35 | -17.35 |",
+              "json": "[\n  {\n    \"section\": \"OCTOBER\",\n    \"rows\": [\n      {\n        \"Date\": \"02 OCT\",\n        \"Description\": \"HARBOUR COFFEE HOUSE Card Payment SGD 12.00\",\n        \"Amount\": \"-12.00\"\n      },\n      {\n        \"Date\": \"03 OCT\",\n        \"Description\": \"FOLIO BOOK STORE Card Payment SGD 8.50\",\n        \"Amount\": \"-8.50\"\n      }\n    ]\n  },\n  {\n    \"section\": \"NOVEMBER\",\n    \"rows\": []\n  },\n  {\n    \"section\": \"CARD ENDING 0412\",\n    \"rows\": [\n      {\n        \"Date\": \"01 NOV\",\n        \"Description\": \"GREENLEAF GROCERY MART Card Payment SGD 30.00\",\n        \"Amount\": \"-30.00\"\n      },\n      {\n        \"Date\": \"04 NOV\",\n        \"Description\": \"TIDEWATER FERRY Card Payment SGD 6.20\",\n        \"Amount\": \"-6.20\"\n      }\n    ]\n  },\n  {\n    \"section\": \"DECEMBER\",\n    \"rows\": [\n      {\n        \"Date\": \"05 DEC\",\n        \"Description\": \"MAPLE & MOSS FLORIST Card Payment SGD 24.90\",\n        \"Amount\": \"-24.90\"\n      },\n      {\n        \"Date\": \"09 DEC\",\n        \"Description\": \"COPPER KETTLE DINER Card Payment SGD 17.35\",\n        \"Amount\": \"-17.35\"\n      }\n    ]\n  }\n]"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "columnSpacing": 2,
+      "joining": false,
+      "tables": [
+        {
+          "n": 1,
+          "pages": [1],
+          "parts": [{"page":1,"bbox":[68,300.85,544,719.45]}],
+          "header": true,
+          "firstBold": true,
+          "grid": [
+            ["Date","Description","Amount"],
+            ["OCTOBER","",""],
+            ["02 OCT","HARBOUR COFFEE HOUSE Card Payment SGD 12.00","-12.00"],
+            ["03 OCT","FOLIO BOOK STORE Card Payment SGD 8.50","-8.50"],
+            ["NOVEMBER","",""],
+            ["CARD ENDING 0412","",""],
+            ["01 NOV","GREENLEAF GROCERY MART Card Payment SGD 30.00","-30.00"],
+            ["04 NOV","TIDEWATER FERRY Card Payment SGD 6.20","-6.20"],
+            ["DECEMBER","",""],
+            ["05 DEC","MAPLE & MOSS FLORIST Card Payment SGD 24.90","-24.90"],
+            ["09 DEC","COPPER KETTLE DINER Card Payment SGD 17.35","-17.35"]
+          ],
+          "sections": [1,4,5,8],
+          "cols": [[72,103.56299999999999],[160,289.61800000000005],[506.007,540]],
+          "repeats": 0,
+          "exports": {
+            "column": {
+              "csv": "Section,Date,Description,Amount\nOCTOBER,02 OCT,HARBOUR COFFEE HOUSE Card Payment SGD 12.00,-12.00\nOCTOBER,03 OCT,FOLIO BOOK STORE Card Payment SGD 8.50,-8.50\nCARD ENDING 0412,01 NOV,GREENLEAF GROCERY MART Card Payment SGD 30.00,-30.00\nCARD ENDING 0412,04 NOV,TIDEWATER FERRY Card Payment SGD 6.20,-6.20\nDECEMBER,05 DEC,MAPLE & MOSS FLORIST Card Payment SGD 24.90,-24.90\nDECEMBER,09 DEC,COPPER KETTLE DINER Card Payment SGD 17.35,-17.35",
+              "tsv": "Section\tDate\tDescription\tAmount\nOCTOBER\t02 OCT\tHARBOUR COFFEE HOUSE Card Payment SGD 12.00\t-12.00\nOCTOBER\t03 OCT\tFOLIO BOOK STORE Card Payment SGD 8.50\t-8.50\nCARD ENDING 0412\t01 NOV\tGREENLEAF GROCERY MART Card Payment SGD 30.00\t-30.00\nCARD ENDING 0412\t04 NOV\tTIDEWATER FERRY Card Payment SGD 6.20\t-6.20\nDECEMBER\t05 DEC\tMAPLE & MOSS FLORIST Card Payment SGD 24.90\t-24.90\nDECEMBER\t09 DEC\tCOPPER KETTLE DINER Card Payment SGD 17.35\t-17.35",
+              "md": "| Section | Date | Description | Amount |\n| --- | --- | --- | ---: |\n| OCTOBER | 02 OCT | HARBOUR COFFEE HOUSE Card Payment SGD 12.00 | -12.00 |\n| OCTOBER | 03 OCT | FOLIO BOOK STORE Card Payment SGD 8.50 | -8.50 |\n| CARD ENDING 0412 | 01 NOV | GREENLEAF GROCERY MART Card Payment SGD 30.00 | -30.00 |\n| CARD ENDING 0412 | 04 NOV | TIDEWATER FERRY Card Payment SGD 6.20 | -6.20 |\n| DECEMBER | 05 DEC | MAPLE & MOSS FLORIST Card Payment SGD 24.90 | -24.90 |\n| DECEMBER | 09 DEC | COPPER KETTLE DINER Card Payment SGD 17.35 | -17.35 |",
+              "json": "[\n  {\n    \"Section\": \"OCTOBER\",\n    \"Date\": \"02 OCT\",\n    \"Description\": \"HARBOUR COFFEE HOUSE Card Payment SGD 12.00\",\n    \"Amount\": \"-12.00\"\n  },\n  {\n    \"Section\": \"OCTOBER\",\n    \"Date\": \"03 OCT\",\n    \"Description\": \"FOLIO BOOK STORE Card Payment SGD 8.50\",\n    \"Amount\": \"-8.50\"\n  },\n  {\n    \"Section\": \"CARD ENDING 0412\",\n    \"Date\": \"01 NOV\",\n    \"Description\": \"GREENLEAF GROCERY MART Card Payment SGD 30.00\",\n    \"Amount\": \"-30.00\"\n  },\n  {\n    \"Section\": \"CARD ENDING 0412\",\n    \"Date\": \"04 NOV\",\n    \"Description\": \"TIDEWATER FERRY Card Payment SGD 6.20\",\n    \"Amount\": \"-6.20\"\n  },\n  {\n    \"Section\": \"DECEMBER\",\n    \"Date\": \"05 DEC\",\n    \"Description\": \"MAPLE & MOSS FLORIST Card Payment SGD 24.90\",\n    \"Amount\": \"-24.90\"\n  },\n  {\n    \"Section\": \"DECEMBER\",\n    \"Date\": \"09 DEC\",\n    \"Description\": \"COPPER KETTLE DINER Card Payment SGD 17.35\",\n    \"Amount\": \"-17.35\"\n  }\n]"
+            },
+            "rows": {
+              "csv": "Date,Description,Amount\nOCTOBER,,\n02 OCT,HARBOUR COFFEE HOUSE Card Payment SGD 12.00,-12.00\n03 OCT,FOLIO BOOK STORE Card Payment SGD 8.50,-8.50\nNOVEMBER,,\nCARD ENDING 0412,,\n01 NOV,GREENLEAF GROCERY MART Card Payment SGD 30.00,-30.00\n04 NOV,TIDEWATER FERRY Card Payment SGD 6.20,-6.20\nDECEMBER,,\n05 DEC,MAPLE & MOSS FLORIST Card Payment SGD 24.90,-24.90\n09 DEC,COPPER KETTLE DINER Card Payment SGD 17.35,-17.35",
+              "tsv": "Date\tDescription\tAmount\nOCTOBER\t\t\n02 OCT\tHARBOUR COFFEE HOUSE Card Payment SGD 12.00\t-12.00\n03 OCT\tFOLIO BOOK STORE Card Payment SGD 8.50\t-8.50\nNOVEMBER\t\t\nCARD ENDING 0412\t\t\n01 NOV\tGREENLEAF GROCERY MART Card Payment SGD 30.00\t-30.00\n04 NOV\tTIDEWATER FERRY Card Payment SGD 6.20\t-6.20\nDECEMBER\t\t\n05 DEC\tMAPLE & MOSS FLORIST Card Payment SGD 24.90\t-24.90\n09 DEC\tCOPPER KETTLE DINER Card Payment SGD 17.35\t-17.35",
+              "md": "| Date | Description | Amount |\n| --- | --- | ---: |\n| **OCTOBER** | | |\n| 02 OCT | HARBOUR COFFEE HOUSE Card Payment SGD 12.00 | -12.00 |\n| 03 OCT | FOLIO BOOK STORE Card Payment SGD 8.50 | -8.50 |\n| **NOVEMBER** | | |\n| **CARD ENDING 0412** | | |\n| 01 NOV | GREENLEAF GROCERY MART Card Payment SGD 30.00 | -30.00 |\n| 04 NOV | TIDEWATER FERRY Card Payment SGD 6.20 | -6.20 |\n| **DECEMBER** | | |\n| 05 DEC | MAPLE & MOSS FLORIST Card Payment SGD 24.90 | -24.90 |\n| 09 DEC | COPPER KETTLE DINER Card Payment SGD 17.35 | -17.35 |",
+              "json": "[\n  {\n    \"section\": \"OCTOBER\",\n    \"rows\": [\n      {\n        \"Date\": \"02 OCT\",\n        \"Description\": \"HARBOUR COFFEE HOUSE Card Payment SGD 12.00\",\n        \"Amount\": \"-12.00\"\n      },\n      {\n        \"Date\": \"03 OCT\",\n        \"Description\": \"FOLIO BOOK STORE Card Payment SGD 8.50\",\n        \"Amount\": \"-8.50\"\n      }\n    ]\n  },\n  {\n    \"section\": \"NOVEMBER\",\n    \"rows\": []\n  },\n  {\n    \"section\": \"CARD ENDING 0412\",\n    \"rows\": [\n      {\n        \"Date\": \"01 NOV\",\n        \"Description\": \"GREENLEAF GROCERY MART Card Payment SGD 30.00\",\n        \"Amount\": \"-30.00\"\n      },\n      {\n        \"Date\": \"04 NOV\",\n        \"Description\": \"TIDEWATER FERRY Card Payment SGD 6.20\",\n        \"Amount\": \"-6.20\"\n      }\n    ]\n  },\n  {\n    \"section\": \"DECEMBER\",\n    \"rows\": [\n      {\n        \"Date\": \"05 DEC\",\n        \"Description\": \"MAPLE & MOSS FLORIST Card Payment SGD 24.90\",\n        \"Amount\": \"-24.90\"\n      },\n      {\n        \"Date\": \"09 DEC\",\n        \"Description\": \"COPPER KETTLE DINER Card Payment SGD 17.35\",\n        \"Amount\": \"-17.35\"\n      }\n    ]\n  }\n]"
+            }
+          }
+        }
+      ]
+    }
+  ]
+}
