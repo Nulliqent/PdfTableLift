@@ -114,6 +114,22 @@ describe("columnSpacingChanged", () => {
     expect(selectedTable(moved)).toMatchObject({ page: 1 });
   });
 
+  it("selects the first Table when Tables appear and none was selected", () => {
+    const state = run(
+      initialWorkspace,
+      { type: "columnSpacingChanged", value: 2.6 },
+      { type: "documentAdded", id: "d", name: "d.pdf", size: 1 },
+      { type: "documentRead", id: "d", pages: [page(1, twoWords(700))] },
+    );
+    expect(state.documents[0]!.tables).toEqual([]);
+    expect(state.selection).toBe(null);
+
+    const split = reduce(state, { type: "columnSpacingChanged", value: 1 });
+
+    expect(split.documents[0]!.tables).toHaveLength(1);
+    expect(selectedTable(split)).toMatchObject({ id: "d:1:0" });
+  });
+
   it("ignores values outside 0.4–2.6 and leaves the selection alone with nothing open", () => {
     const state = open([page(1, plain(700))]);
 

@@ -18,6 +18,9 @@ test("redrawing a Detected Table opens on its page and replaces it with a Hand-d
 
   await main.getByRole("button", { name: "Replace Table" }).click();
   await expect(main.getByText("Selected by hand")).toBeVisible();
+  await expect(
+    page.getByRole("status").filter({ hasText: "Table 1 redrawn from your selection" }),
+  ).toBeVisible();
   await expect(sidebar.getByRole("button", { name: /^Table \d/ })).toHaveCount(2);
   await expect(sidebar.getByRole("button", { name: /Selected by hand/ })).toHaveCount(1);
 });

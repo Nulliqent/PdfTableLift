@@ -1,18 +1,10 @@
-import { useEffect, useRef, useState } from "react";
-import type { RenderedPage } from "../../pdf-reader";
+import { useRef } from "react";
+import type { OutlineBox } from "../../pdf-reader";
 import type { Document, Table } from "../../engine";
-import { pageRendererFor } from "../documentSources";
 import { Icon } from "./Icon";
+import { frame, useDrawnPages, usePageWidth } from "../page-drawing";
+import { CanvasHost } from "./CanvasHost";
 import styles from "./SourcePage.module.css";
-
-/** The widest a page is drawn, in CSS pixels. */
-const MAX_PAGE_WIDTH = 900;
-/** The least a page is drawn at, so a very narrow pane still shows something. */
-const MIN_PAGE_WIDTH = 240;
-/** Horizontal padding of the card around the pages. */
-const GUTTER = 16;
-
-type Drawn = { num: number; page: RenderedPage };
 
 /**
  * The selected Table's source page(s), drawn to canvases with every Detected Table on them
@@ -28,47 +20,10 @@ export function SourcePage({
   onSelect: (tableId: string) => void;
 }) {
   const host = useRef<HTMLDivElement>(null);
-  const [width, setWidth] = useState(0);
-  // The last result, tagged with what it shows. While the pane is resized the old pages stay up
-  // (their outlines are fractions, so they still line up) until the redraw lands.
-  const [result, setResult] = useState<{ key: string; pages: Drawn[] | "failed" } | null>(null);
-  const pageNums = [...new Set(table.parts.map((p) => p.page))];
-  const pagesKey = pageNums.join(",");
-  const key = `${document.id}|${pagesKey}`;
-  const drawn = result?.key === key ? result.pages : null;
-
   // Fit the pages to the pane, and again whenever the pane changes size.
-  useEffect(() => {
-    const el = host.current;
-    if (!el) return;
-    const measure = () =>
-      setWidth(
-        Math.round(Math.min(Math.max(el.clientWidth - 2 * GUTTER, MIN_PAGE_WIDTH), MAX_PAGE_WIDTH)),
-      );
-    measure();
-    const observer = new ResizeObserver(measure);
-    observer.observe(el);
-    return () => observer.disconnect();
-  }, []);
-
-  useEffect(() => {
-    if (!width) return;
-    const abort = new AbortController();
-    const nums = pagesKey.split(",").map(Number);
-    void (async () => {
-      try {
-        const renderer = await pageRendererFor(document.id);
-        const pages: Drawn[] = [];
-        for (const num of nums) {
-          pages.push({ num, page: await renderer.renderPage(num, width, abort.signal) });
-        }
-        if (!abort.signal.aborted) setResult({ key, pages });
-      } catch {
-        if (!abort.signal.aborted) setResult({ key, pages: "failed" });
-      }
-    })();
-    return () => abort.abort();
-  }, [document.id, key, pagesKey, width]);
+  const width = usePageWidth(host);
+  const pageNums = [...new Set(table.parts.map((p) => p.page))];
+  const drawn = useDrawnPages(document.id, pageNums, width);
 
   return (
     <div ref={host} className={styles.source}>
@@ -127,7 +82,7 @@ function Outline({
   table: Table;
   part: number;
   selected: boolean;
-  box: { left: number; top: number; width: number; height: number };
+  box: OutlineBox;
   onSelect: () => void;
 }) {
   const label = `Table ${table.n}${table.parts.length > 1 ? ` · part ${part + 1} of ${table.parts.length}` : ""}`;
@@ -135,12 +90,7 @@ function Outline({
     <button
       type="button"
       className={selected ? styles.outline : `${styles.outline} ${styles.dim}`}
-      style={{
-        left: `${box.left * 100}%`,
-        top: `${box.top * 100}%`,
-        width: `${box.width * 100}%`,
-        height: `${box.height * 100}%`,
-      }}
+      style={frame(box)}
       aria-label={label}
       aria-current={selected ? "true" : undefined}
       title={`Show Table ${table.n}`}
@@ -149,13 +99,4 @@ function Outline({
       <span aria-hidden="true">{label}</span>
     </button>
   );
-}
-
-/** Puts a canvas made outside React into the tree. */
-export function CanvasHost({ canvas }: { canvas: HTMLCanvasElement }) {
-  const slot = useRef<HTMLDivElement>(null);
-  useEffect(() => {
-    slot.current?.replaceChildren(canvas);
-  }, [canvas]);
-  return <div ref={slot} className={styles.canvas} />;
 }

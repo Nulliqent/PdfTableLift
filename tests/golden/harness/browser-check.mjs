@@ -12,6 +12,9 @@ import { fileURLToPath } from "node:url";
 const here = dirname(fileURLToPath(import.meta.url));
 const root = join(here, "..", "..", "..");
 const snapDir = join(here, "..", "snapshots");
+// Snapshots whose Tables (`runs`) deliberately depart from the prototype (spec #22, #25: F-103 in
+// wrapped-cells is one Row). Only their text items are compared; see ../README.md.
+const RUNS_FROM_ENGINE = new Set(["wrapped-cells.json"]);
 
 // Runs inside the prototype page. `state`, `addFile`, `detectFile` and `exportText` are its globals.
 async function runInPrototype({ bytes, runs }) {
@@ -89,6 +92,10 @@ for (const file of readdirSync(snapDir)
   .filter((f) => f.endsWith(".json"))
   .sort()) {
   const snap = JSON.parse(readFileSync(join(snapDir, file), "utf8"));
+  // Snapshots written by the app's engine (engine-snapshot.ts) are not the prototype's output.
+  if (snap.engine === "app") continue;
+  // Only the text items of these are the prototype's; their Tables come from the app's engine.
+  const itemsOnly = RUNS_FROM_ENGINE.has(file);
   const page = await browser.newPage();
   await page.goto("file://" + join(here, "prototype.html"));
   // Wait for the prototype to finish loading its own Example Document first.
@@ -101,10 +108,12 @@ for (const file of readdirSync(snapDir)
   });
   await page.close();
   const withExports = !snap.runs.some((r) => r.tables.some((t) => t.exportDigests));
+  const pick = (s) => (itemsOnly ? { status: s.status, error: s.error, pages: s.pages } : s);
   const same =
-    JSON.stringify(comparable(got, withExports)) === JSON.stringify(comparable(snap, withExports));
+    JSON.stringify(pick(comparable(got, withExports))) ===
+    JSON.stringify(pick(comparable(snap, withExports)));
   if (!same) failed++;
-  console.log(`${same ? "same" : "DIFFERENT"}  ${file}`);
+  console.log(`${same ? "same" : "DIFFERENT"}  ${file}${itemsOnly ? " (text items only)" : ""}`);
 }
 await browser.close();
 process.exit(failed ? 1 : 0);

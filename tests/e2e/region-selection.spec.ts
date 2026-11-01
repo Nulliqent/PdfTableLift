@@ -48,10 +48,44 @@ test("drag a Region with the mouse, see the preview, and save a Hand-drawn Table
 
   // Back on the Table view: one Hand-drawn Table took over both Detected Tables.
   await expect(main.getByRole("heading", { name: "Table 1" })).toBeVisible();
+  await expect(
+    page.getByRole("status").filter({ hasText: "Table 1 added from your selection" }),
+  ).toBeVisible();
   await expect(main.getByText("Selected by hand")).toBeVisible();
   const sidebar = page.getByRole("complementary", { name: "Documents" });
   await expect(sidebar.getByRole("button", { name: /^Table \d/ })).toHaveCount(1);
   await expect(sidebar.getByRole("button", { name: /Selected by hand/ })).toBeVisible();
+});
+
+test("a cancelled pointer keeps the Region at its last real position", async ({ page }) => {
+  const { main, layer } = await enterSelectRegion(page, "separate-tables.pdf");
+  const b = (await layer.boundingBox())!;
+  const r = aroundBothTables;
+  await page.mouse.move(b.x + b.width * r.x0, b.y + b.height * r.y0);
+  await page.mouse.down();
+  await page.mouse.move(b.x + b.width * r.x1, b.y + b.height * r.y1);
+  await expect(main.getByTestId("region-box")).toBeVisible();
+
+  // The browser takes the pointer away (a system gesture, say), reporting somewhere else entirely.
+  await layer.evaluate(
+    (el, at) => {
+      el.dispatchEvent(
+        new PointerEvent("pointercancel", {
+          bubbles: true,
+          pointerId: 1,
+          pointerType: "mouse",
+          clientX: at.x,
+          clientY: at.y,
+        }),
+      );
+    },
+    { x: b.x + b.width * 0.95, y: b.y + b.height * 0.95 },
+  );
+  await page.mouse.up();
+
+  const box = (await main.getByTestId("region-box").boundingBox())!;
+  expect(box.height / b.height).toBeCloseTo(r.y1 - r.y0, 1);
+  expect(box.width / b.width).toBeCloseTo(r.x1 - r.x0, 1);
 });
 
 test("a Region with no text says so and cannot be saved", async ({ page }) => {
@@ -107,6 +141,65 @@ test("moving Column Spacing updates the preview while a Region is drawn", async 
   await page.getByRole("slider", { name: "Column spacing" }).fill("2.6");
 
   await expect(columns).toHaveCount(2);
+});
+
+// The statement fixture's first entry (invented data): a Description over four lines, with the
+// dates and amount centred beside it. PDF box [60, 635, 580, 692] on a Letter page.
+const aroundFirstEntry: Rect = { x0: 60 / 612, y0: 100 / 792, x1: 580 / 612, y1: 157 / 792 };
+
+test("treat a Region around one statement Row as one row, save it and copy it", async ({
+  page,
+  context,
+  browserName,
+}) => {
+  // WebKit can't grant clipboard-read, so there the test records what the page writes instead.
+  if (browserName === "chromium")
+    await context.grantPermissions(["clipboard-read", "clipboard-write"]);
+  await page.addInitScript(() => {
+    const written: string[] = [];
+    Object.assign(window, { clipboardWrites: written });
+    const write = navigator.clipboard.writeText.bind(navigator.clipboard);
+    navigator.clipboard.writeText = (text: string) => {
+      written.push(text);
+      return write(text);
+    };
+  });
+  const { main, layer } = await enterSelectRegion(page, "statement.pdf");
+  const oneRow = main.getByRole("switch", { name: "Treat selection as one row" });
+  await expect(oneRow).not.toBeChecked();
+
+  await dragWithMouse(page, layer, aroundFirstEntry);
+  // Off: the page's rhythm already makes the entry one Row, and a lone Row is data, not a header.
+  await expect(main.getByText("1 row × 4 columns")).toBeVisible();
+  await expect(main.getByRole("columnheader")).toHaveCount(0);
+  await expect(main.getByRole("cell", { name: "04 MAR" })).toBeVisible();
+
+  await oneRow.check();
+  // On: still the one Row, as data.
+  await expect(oneRow).toBeChecked();
+  await expect(main.getByText("1 row × 4 columns")).toBeVisible();
+  await expect(main.getByRole("columnheader")).toHaveCount(0);
+  await expect(main.getByRole("cell", { name: "04 MAR" })).toBeVisible();
+
+  await main.getByRole("button", { name: "Add Table" }).click();
+  await expect(main.getByText("Selected by hand")).toBeVisible();
+  await expect(main.getByRole("switch", { name: "First row is header" })).not.toBeChecked();
+
+  await main.getByRole("button", { name: "Copy" }).click();
+  await expect(page.getByRole("status").filter({ hasText: "Copied as CSV" })).toBeVisible();
+  const expected = "04 MAR,02 MAR,BRIGHTWATER LANTERNFISH NOO DLES Card Payment NZD 42.80,-24.15";
+  const written = await page.evaluate(
+    () => (window as unknown as { clipboardWrites: string[] }).clipboardWrites,
+  );
+  expect(written).toEqual([expected]);
+  if (browserName === "chromium")
+    expect(await page.evaluate(() => navigator.clipboard.readText())).toBe(expected);
+
+  // Not remembered between visits: a new visit starts with the switch off.
+  const again = await enterSelectRegion(page, "statement.pdf");
+  await expect(
+    again.main.getByRole("switch", { name: "Treat selection as one row" }),
+  ).not.toBeChecked();
 });
 
 test.describe("on a phone", () => {

@@ -22,6 +22,14 @@ const JOINING = [true, false];
 // Fixtures too big to keep in full: snapshotted at the default Column Spacing only, and with each
 // export stored as its SHA-256 digest ("exportDigests") instead of the text ("exports").
 const LARGE = new Set(["perf-200-pages"]);
+// Fixtures whose snapshot comes from the app's engine, not the prototype: the prototype gets them
+// wrong (spec #22), so they are left out of the default run and never overwritten here.
+// page-frames has no snapshot at all: it is a PDF Reader fixture (pdf-reader.test.ts).
+const NOT_FROM_PROTOTYPE = new Set(["statement", "page-frames"]);
+// Fixtures whose text items come from the prototype but whose Tables (`runs`) come from the app's
+// engine, a deliberate departure (spec #22, #25: F-103 in wrapped-cells). This harness writes their
+// text items and keeps the `runs` already on disk; `npm run golden:engine` writes those.
+const RUNS_FROM_ENGINE = new Set(["wrapped-cells"]);
 const SECTION_MODES = ["column", "rows"];
 const FORMATS = ["csv", "tsv", "md", "json"];
 
@@ -67,7 +75,7 @@ const inputs = args.length
   : [
       join(root, "public", "example-document.pdf"),
       ...readdirSync(fixtureDir)
-        .filter((f) => f.endsWith(".pdf"))
+        .filter((f) => f.endsWith(".pdf") && !NOT_FROM_PROTOTYPE.has(basename(f, ".pdf")))
         .sort()
         .map((f) => join(fixtureDir, f)),
     ];
@@ -114,6 +122,8 @@ for (const path of inputs) {
     })),
     runs,
   };
+  if (RUNS_FROM_ENGINE.has(name))
+    snapshot.runs = JSON.parse(readFileSync(join(snapDir, `${name}.json`), "utf8")).runs;
   writeFileSync(join(snapDir, `${name}.json`), format(snapshot) + "\n");
   summary.push(
     `${name}: ${f.status}${f.error ? ` (${f.error})` : ""}, ${runs.map((r) => r.tables.length).join("/")} tables`,

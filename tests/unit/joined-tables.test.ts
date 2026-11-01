@@ -113,6 +113,28 @@ describe("joining", () => {
     expect(tablesOf(state)).toHaveLength(2);
   });
 
+  it("measures the page margins from a CropBox that does not start at 0,0", () => {
+    // Cropped to y 200–792. Three footer lines sit in its bottom 6%, which is margin, not body text.
+    const cropped: PageText = {
+      num: 1,
+      w: 612,
+      h: 592,
+      origin: [0, 200],
+      items: [
+        ...row(314, HEAD, true),
+        ...row(300, ["Bolt", "4", "1.20"]),
+        ...row(286, ["Nut", "9", "0.40"]),
+        at("Account 0412", 72, 226),
+        at("Printed 1 March", 72, 218),
+        at("Page 1 of 2", 72, 210),
+      ],
+    };
+    const [t, ...rest] = tablesOf(open([cropped, continued[1]!]));
+
+    expect(rest).toEqual([]);
+    expect(t!.parts.map((p) => p.page)).toEqual([1, 2]);
+  });
+
   it("does not join pages that are not consecutive", () => {
     const state = open([continued[0]!, page(2, []), { ...continued[1]!, num: 3 }]);
     expect(tablesOf(state)).toHaveLength(2);

@@ -32,6 +32,47 @@ test("each unreadable PDF explains itself on its sidebar entry and leaves the ot
   await expect(sidebar.getByText(SCANNED)).toBeVisible();
 });
 
+test("the read error is announced for a Document still open, not for one removed while loading", async ({
+  page,
+}) => {
+  // Holds back not-a-pdf.pdf's bytes until the test releases them, and records every HUD message.
+  await page.addInitScript(() => {
+    let release!: () => void;
+    const held = new Promise<void>((resolve) => (release = resolve));
+    const read = File.prototype.arrayBuffer;
+    File.prototype.arrayBuffer = async function (this: File) {
+      if (this.name === "not-a-pdf.pdf") await held;
+      return read.call(this);
+    };
+    const said: string[] = [];
+    Object.assign(window, { releaseHeld: release, hudSaid: said });
+    new MutationObserver(() => {
+      const text = document.querySelector('[role="status"][aria-live="polite"]')?.textContent;
+      if (text && said.at(-1) !== text) said.push(text);
+    }).observe(document, { subtree: true, childList: true, characterData: true });
+  });
+  await page.goto("/");
+  const sidebar = page.getByRole("complementary", { name: "Documents" });
+  const main = page.getByRole("main");
+  const said = () => page.evaluate(() => (window as unknown as { hudSaid: string[] }).hudSaid);
+  await openFixture(page, "separate-tables.pdf");
+  await expect(main.getByRole("heading", { name: "Table 1" })).toBeVisible();
+
+  await openFixture(page, "not-a-pdf.pdf");
+  await expect(sidebar.getByText("Reading pages…")).toBeVisible();
+  await sidebar.getByRole("button", { name: "Remove not-a-pdf.pdf" }).click();
+  await expect(page.getByRole("status").getByText("Removed not-a-pdf.pdf")).toBeVisible();
+  await page.evaluate(() => (window as unknown as { releaseHeld: () => void }).releaseHeld());
+  // Give the released read time to fail, then check nothing announced its error.
+  await page.waitForTimeout(1000);
+  expect(await said()).not.toContain(NOT_PDF);
+
+  // The same failure on a Document that stays open is announced, the pane keeping its Table.
+  await openFixture(page, "not-a-pdf.pdf");
+  await expect(page.getByRole("status").getByText(NOT_PDF)).toBeVisible();
+  await expect(main.getByRole("heading", { name: "Table 1" })).toBeVisible();
+});
+
 test("the content pane shows the error when it is the only Document", async ({ page }) => {
   await page.goto("/");
   await openFixture(page, "image-only.pdf");
