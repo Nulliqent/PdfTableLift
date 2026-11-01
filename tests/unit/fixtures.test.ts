@@ -14,14 +14,13 @@ const snapshotDir = join(root, "tests", "golden", "snapshots");
 const examplePath = join(root, "public", "example-document.pdf");
 const sha256 = (path: string) => createHash("sha256").update(readFileSync(path)).digest("hex");
 const fixtures = readdirSync(fixtureDir).filter((f) => f.endsWith(".pdf"));
-// Fixtures with no snapshot yet. Spec #30's fixtures get theirs from the app's engine
+// Fixtures with no snapshot yet. A ticket that adds a fixture before its snapshot lists it here,
+// and the ticket that records the snapshot removes the entry in the same commit: the check below
+// fails if either is left out. Spec #30's fixtures got theirs from the app's engine
 // (`npm run golden:engine`), not the prototype, whose output for them is the bug of spec #30:
-// statement-sections.pdf got its snapshot in #32, statement-first-column.pdf gets one in #33.
-// Each ticket adds the snapshot and removes the entry together: the check below fails if either
-// is left out.
-// statement.pdf's snapshot also comes from the app's engine (the prototype's output is the bug of
-// spec #22).
-const awaitingSnapshot = new Set(["statement-first-column.pdf"]);
+// statement-sections.pdf in #32, statement-first-column.pdf in #33. statement.pdf's snapshot also
+// comes from the app's engine (the prototype's output is the bug of spec #22).
+const awaitingSnapshot = new Set<string>();
 // Fixtures for the PDF Reader alone, with no golden snapshot: page-frames.pdf (a page with /Rotate
 // and one with a CropBox away from 0,0) pins the page box, which pdf-reader.test.ts checks.
 const readerOnly = new Set(["page-frames.pdf"]);
