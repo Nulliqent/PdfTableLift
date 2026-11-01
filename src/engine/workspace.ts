@@ -79,7 +79,7 @@ export type RegionRole = "header" | "body";
 export type Region = {
   bbox: Bbox;
   role: RegionRole;
-  /** A Single-Row Region (a Body Region only): everything inside it is one Row ("Treat selection as one row"). */
+  /** A Single-Row Region (a Body Region only): everything inside it is one Row ("Treat Region as one row"). */
   singleRow: boolean;
   /** While the Region is a Header Region: the Single-Row setting it had as a Body Region, restored when it returns to Body. */
   keptSingleRow?: boolean;
@@ -223,7 +223,7 @@ export type WorkspaceAction =
   /** Escape or Cancel: leave Region selection with no changes. */
   | { type: "regionCancelled" }
   /**
-   * "Treat selection as one row" was switched for the Region in progress. Nothing is re-detected
+   * "Treat Region as one row" was switched for the Region in progress. Nothing is re-detected
    * until the Region is saved, so only `regionCommitted` goes through the edit warning.
    */
   | { type: "regionSingleRowChanged"; index: number; value: boolean }

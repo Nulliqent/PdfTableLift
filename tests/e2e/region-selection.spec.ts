@@ -64,7 +64,7 @@ test("a cancelled pointer keeps the Region at its last real position", async ({ 
   await page.mouse.move(b.x + b.width * r.x0, b.y + b.height * r.y0);
   await page.mouse.down();
   await page.mouse.move(b.x + b.width * r.x1, b.y + b.height * r.y1);
-  await expect(main.getByTestId("region-box")).toBeVisible();
+  await expect(main.getByTestId("region-frame")).toBeVisible();
 
   // The browser takes the pointer away (a system gesture, say), reporting somewhere else entirely.
   await layer.evaluate(
@@ -83,7 +83,7 @@ test("a cancelled pointer keeps the Region at its last real position", async ({ 
   );
   await page.mouse.up();
 
-  const box = (await main.getByTestId("region-box").boundingBox())!;
+  const box = (await main.getByTestId("region-frame").boundingBox())!;
   expect(box.height / b.height).toBeCloseTo(r.y1 - r.y0, 1);
   expect(box.width / b.width).toBeCloseTo(r.x1 - r.x0, 1);
 });
@@ -93,7 +93,7 @@ test("a Region with no text says so and cannot be saved", async ({ page }) => {
 
   await dragWithMouse(page, layer, blankArea);
 
-  await expect(main.getByText("No text in this area")).toBeVisible();
+  await expect(main.getByText("No text in this Region")).toBeVisible();
   await expect(main.getByRole("button", { name: "Add Table" })).toBeDisabled();
 });
 
@@ -165,7 +165,7 @@ test("treat a Region around one statement Row as one row, save it and copy it", 
     };
   });
   const { main, layer } = await enterSelectRegion(page, "statement.pdf");
-  const oneRow = main.getByRole("switch", { name: "Treat selection as one row" });
+  const oneRow = main.getByRole("switch", { name: "Treat Region as one row" });
   await expect(oneRow).not.toBeChecked();
 
   await dragWithMouse(page, layer, aroundFirstEntry);
@@ -198,7 +198,7 @@ test("treat a Region around one statement Row as one row, save it and copy it", 
   // Not remembered between visits: a new visit starts with the switch off.
   const again = await enterSelectRegion(page, "statement.pdf");
   await expect(
-    again.main.getByRole("switch", { name: "Treat selection as one row" }),
+    again.main.getByRole("switch", { name: "Treat Region as one row" }),
   ).not.toBeChecked();
 });
 

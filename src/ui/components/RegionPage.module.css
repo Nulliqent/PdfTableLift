@@ -1,7 +1,7 @@
 .drawing {
   cursor: crosshair;
   overflow: hidden;
-  /* The Region's label sits inside its box, so no room is needed above the page. */
+  /* The Region's label sits inside its frame, so no room is needed above the page. */
   margin-top: 0;
   margin-inline: auto;
 }
@@ -51,12 +51,12 @@
 }
 
 .existing span {
-  /* Inside the box, since the page clips what lies outside it. */
+  /* Inside the frame, since the page clips what lies outside it. */
   top: 2px;
   left: 2px;
 }
 
-.selection {
+.edited {
   position: absolute;
   z-index: 1;
   border: 2px solid var(--accent);
@@ -66,7 +66,7 @@
   pointer-events: none;
 }
 
-.selection span {
+.edited span {
   position: absolute;
   bottom: 2px;
   right: 2px;

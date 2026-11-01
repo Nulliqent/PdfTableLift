@@ -207,7 +207,7 @@ test("#44: the Single-Row switch is on each Body Region and not on the Header Re
   await drawTitlesAndRows(page, main, layer);
 
   const oneRow = (n: number) =>
-    entry(main, n).getByRole("switch", { name: "Treat selection as one row" });
+    entry(main, n).getByRole("switch", { name: "Treat Region as one row" });
   await expect(oneRow(1)).toBeVisible();
   await expect(oneRow(2)).toHaveCount(0);
 

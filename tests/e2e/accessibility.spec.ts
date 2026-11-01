@@ -142,11 +142,11 @@ test.describe("keyboard", () => {
     await expect(main.getByRole("button", { name: "Select Whole Page" })).toBeVisible();
     const stops = await tabThrough(page);
     const labels = stops.map((s) => s.label);
-    for (const expected of ["Select Whole Page", "Treat selection as one row", "Cancel"])
+    for (const expected of ["Select Whole Page", "Treat Region as one row", "Cancel"])
       expect(labels, `Tab reaches ${expected}`).toContain(expected);
     expectFocusVisibleEverywhere(stops);
     // The switch works from the keyboard: Space flips it.
-    const oneRow = main.getByRole("switch", { name: "Treat selection as one row" });
+    const oneRow = main.getByRole("switch", { name: "Treat Region as one row" });
     await oneRow.focus();
     await page.keyboard.press("Space");
     await expect(oneRow).toBeChecked();
@@ -411,7 +411,7 @@ test.describe("phone layout", () => {
     await expect(main.getByText("Preview", { exact: true })).toBeVisible();
     await expectOneColumn(page);
     // The Single-Row switch fits and can be tapped at phone width.
-    const oneRow = main.getByRole("switch", { name: "Treat selection as one row" });
+    const oneRow = main.getByRole("switch", { name: "Treat Region as one row" });
     const box = (await oneRow.boundingBox())!;
     expect(box.x).toBeGreaterThanOrEqual(0);
     expect(box.x + box.width).toBeLessThanOrEqual(390);

@@ -200,7 +200,7 @@ describe("a Header Region over the column titles", () => {
 
   it("#42: gives text inside both a Header Region and a Body Region to the Header Row only", () => {
     const pages = [page1([t("Part", 72, 640, true), t("Qty", 200, 640, true), ...BODY.items])];
-    // Both boxes take in the title line at y 640.
+    // Both Regions take in the title line at y 640.
     const table = tableOf(pages, 1, [header([60, 630, 560, 652]), body([60, 560, 560, 652])]);
 
     expect(table.grid).toEqual([
@@ -427,7 +427,7 @@ describe("a Single-Row switch on each Body Region", () => {
     ]);
   });
 
-  it("#44: has the switch only on a Body Region, and restores it when a box returns to Body", () => {
+  it("#44: has the switch only on a Body Region, and restores it when a Region returns to Body", () => {
     const state = drawAll(opened(awkward), 1, [body([60, 612, 560, 652], true)]);
     const asHeader = run(state, act({ type: "regionRoleChanged", index: 0, role: "header" }));
     const back = run(asHeader, act({ type: "regionRoleChanged", index: 0, role: "body" }));

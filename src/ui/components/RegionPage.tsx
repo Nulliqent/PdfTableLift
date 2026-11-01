@@ -22,7 +22,7 @@ export type DrawnRegion = {
 
 /**
  * One page of a Document with a layer to drag a Region on, using the mouse, a pen or a finger.
- * The Region shows as a box over the page; the Tables already there are outlined for context.
+ * The Region shows as a frame over the page; the Tables already there are outlined for context.
  */
 export function RegionPage({
   document,
@@ -128,9 +128,9 @@ export function RegionPage({
               r.bbox ? (
                 <div
                   key={r.name}
-                  className={`${r.edited ? styles.selection : styles.other} ${r.role === "header" ? styles.header : ""}`}
+                  className={`${r.edited ? styles.edited : styles.other} ${r.role === "header" ? styles.header : ""}`}
                   style={frame(page.locate(r.bbox))}
-                  data-testid={r.edited ? "region-box" : "region-box-other"}
+                  data-testid={r.edited ? "region-frame" : "region-frame-other"}
                   aria-hidden="true"
                 >
                   <span>{r.role === "header" ? "Header" : r.edited ? label : r.name}</span>

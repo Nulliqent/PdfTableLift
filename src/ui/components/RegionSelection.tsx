@@ -27,9 +27,9 @@ type RegionSelectionProps = {
   onPage: (page: number) => void;
   onDrag: (bbox: Bbox) => void;
   onWholePage: () => void;
-  /** "Treat selection as one row" was switched. */
+  /** "Treat Region as one row" was switched. */
   onSingleRow: (index: number, value: boolean) => void;
-  /** Add Region: another box on the same page. */
+  /** Add Region: another Region on the same page. */
   onAddRegion: () => void;
   onPickRegion: (index: number) => void;
   onRemoveRegion: (index: number) => void;
@@ -151,7 +151,7 @@ export function RegionSelection({
                   checked={r.singleRow}
                   onChange={(e) => onSingleRow(i, e.target.checked)}
                 />
-                Treat selection as one row
+                Treat Region as one row
               </label>
             )}
             <button
@@ -225,7 +225,7 @@ function Preview({
       blocked === "no-header"
         ? "No text in the Header Region"
         : lone
-          ? "No text in this area"
+          ? "No text in this Region"
           : "No Body Region with text";
     return (
       <div className={styles.empty}>
@@ -234,7 +234,7 @@ function Preview({
         <span>
           {blocked === "no-header"
             ? "Move the Header Region over the column titles, or mark it Body."
-            : "Select an area that contains text. Tables that are pictures, like scans, can’t be read."}
+            : "Select a Region that contains text. Tables that are pictures, like scans, can’t be read."}
         </span>
       </div>
     );
