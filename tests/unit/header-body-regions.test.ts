@@ -180,6 +180,17 @@ describe("a Header Region over the column titles", () => {
     expect(table.grid[0]).toEqual(["", "", "COST"]);
   });
 
+  it("#42: splits a title item that spans two columns into its words, each to the column it overlaps most", () => {
+    // One text item "Part Qty", 140 points wide, reaching from the first column into the second.
+    const wide: TextItem = { str: "Part Qty", x: 72, y: 640, w: 140, h: 9, bold: false };
+    const table = tableOf(page1([wide, ...BODY.items]), 1, [
+      header([60, 632, 560, 652]),
+      body(BODY_BOX),
+    ]);
+
+    expect(table.grid[0]).toEqual(["Part", "Qty", ""]);
+  });
+
   it("#42: lets two titles over one column share its Cell", () => {
     const pages = [page1([t("UNIT", 320, 640), t("PRICE", 350, 640), ...BODY.items])];
     const table = tableOf(pages, 1, [header([300, 632, 420, 652]), body(BODY_BOX)]);

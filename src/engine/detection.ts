@@ -744,24 +744,24 @@ const insideBox = (it: TextItem, [x0, y0, x1, y1]: Bbox) => {
 };
 
 /**
- * The Header Row of a Header Region (spec #39): all its text is one Row. Each piece of text goes
- * to the column it overlaps most, or the nearest column when it overlaps none; a column's pieces
- * join with single spaces, top to bottom and then left to right.
+ * The Header Row of a Header Region (spec #39): all its text is one Row. Each word goes to the
+ * column it overlaps most, or the nearest column when it overlaps none; a column's words join with
+ * single spaces, top to bottom and then left to right.
  */
 function headerRow(items: TextItem[], cols: Band[], columnSpacing: number): string[] {
   const row: string[] = Array(cols.length).fill("");
-  const columnOf = (it: TextItem) => {
+  const columnOf = (x0: number, x1: number) => {
     let best = -1;
     let bestOverlap = 0;
     cols.forEach(([a, b], i) => {
-      const o = Math.min(b, it.x + it.w) - Math.max(a, it.x);
+      const o = Math.min(b, x1) - Math.max(a, x0);
       if (o > bestOverlap) {
         bestOverlap = o;
         best = i;
       }
     });
     if (best >= 0) return best;
-    const mid = it.x + it.w / 2;
+    const mid = (x0 + x1) / 2;
     let nearest = Infinity;
     cols.forEach(([a, b], i) => {
       const d = Math.abs((a + b) / 2 - mid);
@@ -774,10 +774,14 @@ function headerRow(items: TextItem[], cols: Band[], columnSpacing: number): stri
   };
   for (const l of linesFromItems(items, columnSpacing)) {
     for (const it of l.items.slice().sort((p, q) => p.x - q.x)) {
-      const text = it.str.trim();
-      if (!text) continue;
-      const c = columnOf(it);
-      row[c] = row[c] ? `${row[c]} ${text}` : text;
+      // A multi-word item may straddle columns: each word sits where its share of the item's
+      // width does, estimated in proportion to character count.
+      const perChar = it.str.length ? it.w / it.str.length : 0;
+      for (const word of it.str.matchAll(/\S+/g)) {
+        const x0 = it.x + word.index * perChar;
+        const c = columnOf(x0, x0 + word[0].length * perChar);
+        row[c] = row[c] ? `${row[c]} ${word[0]}` : word[0];
+      }
     }
   }
   return row;
