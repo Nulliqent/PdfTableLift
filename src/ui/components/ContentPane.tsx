@@ -52,6 +52,8 @@ type ContentPaneProps = {
     row: number,
     direction: "above" | "below",
   ) => void;
+  /** Split back was chosen for a combined grid row. */
+  onSplitBackRow: (documentId: string, tableId: string, row: number) => void;
   onSplitByPage: (documentId: string, tableId: string) => void;
   onJoinAgain: (documentId: string, tableId: string) => void;
 };
@@ -72,6 +74,7 @@ export function ContentPane({
   onToggleHeader,
   onToggleSection,
   onCombineRows,
+  onSplitBackRow,
   onSplitByPage,
   onJoinAgain,
 }: ContentPaneProps) {
@@ -92,6 +95,7 @@ export function ContentPane({
             onToggleHeader={onToggleHeader}
             onToggleSection={onToggleSection}
             onCombineRows={onCombineRows}
+            onSplitBackRow={onSplitBackRow}
             onSplitByPage={onSplitByPage}
             onJoinAgain={onJoinAgain}
           />
@@ -114,6 +118,7 @@ function TableDetail({
   onToggleHeader,
   onToggleSection,
   onCombineRows,
+  onSplitBackRow,
   onSplitByPage,
   onJoinAgain,
 }: {
@@ -127,6 +132,7 @@ function TableDetail({
   onToggleHeader: ContentPaneProps["onToggleHeader"];
   onToggleSection: ContentPaneProps["onToggleSection"];
   onCombineRows: ContentPaneProps["onCombineRows"];
+  onSplitBackRow: ContentPaneProps["onSplitBackRow"];
   onSplitByPage: ContentPaneProps["onSplitByPage"];
   onJoinAgain: ContentPaneProps["onJoinAgain"];
 }) {
@@ -258,6 +264,10 @@ function TableDetail({
             onCombine={(row, direction) => {
               onCombineRows(document.id, table.id, row, direction);
               onCopied("Rows combined");
+            }}
+            onSplitBack={(row) => {
+              onSplitBackRow(document.id, table.id, row);
+              onCopied("Split back");
             }}
           />
         ) : (

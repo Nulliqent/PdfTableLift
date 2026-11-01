@@ -223,7 +223,12 @@ export type WorkspaceAction =
       tableId: string;
       row: number;
       direction: "above" | "below";
-    };
+    }
+  /**
+   * Split back: a combined Row becomes the two Rows of its most recent Combine again, as they stood
+   * before it (edits made to the combined Row are lost). A correction; never re-detects.
+   */
+  | { type: "rowSplitBack"; documentId: string; tableId: string; row: number };
 
 /** Margin left around the page by Select Whole Page, in points. */
 const WHOLE_PAGE_MARGIN = 18;
@@ -507,6 +512,8 @@ export function reduce(state: WorkspaceState, action: WorkspaceAction): Workspac
       return updateTable(state, action.documentId, action.tableId, (t) =>
         combineRows(t, action.direction === "above" ? action.row - 1 : action.row),
       );
+    case "rowSplitBack":
+      return updateTable(state, action.documentId, action.tableId, (t) => splitBack(t, action.row));
     default: {
       const unhandled: never = action;
       return unhandled;
@@ -579,6 +586,43 @@ function combineRows(t: Table, upper: number): Table {
     sections: t.sections.flatMap((r) => moved(r) ?? []),
     sectionCells: shift(t.sectionCells),
     combined: { ...shift(t.combined), [upper]: { upper: before(upper), lower: before(lower) } },
+    edited: true,
+  };
+}
+
+/**
+ * Undoes the most recent Combine that made grid row `r`: the row becomes the two rows it came
+ * from, each as it stood (its Section Header mark, `sectionCells` and any earlier Combine), so
+ * Split back steps back one Combine at a time. Edits made to the combined row are lost. Later rows'
+ * Section Header marks, `sectionCells` and `combined` move down by one. Counts as a correction. A
+ * row that was not combined is left alone.
+ */
+function splitBack(t: Table, r: number): Table {
+  const combine = t.combined[r];
+  if (!combine || !t.grid[r]) return t;
+  const { upper, lower } = combine;
+  /** The row's index once the row is two again; null for the combined row itself. */
+  const moved = (i: number) => (i < r ? i : i > r ? i + 1 : null);
+  const restore = <V>(byRow: Record<number, V>, value: (b: RowBefore) => V | null) => {
+    const kept = Object.entries(byRow).flatMap(([i, v]) => {
+      const to = moved(Number(i));
+      return to === null ? [] : [[to, v] as const];
+    });
+    const back = [upper, lower].flatMap((b, k) => {
+      const v = value(b);
+      return v === null ? [] : [[r + k, v] as const];
+    });
+    return Object.fromEntries([...kept, ...back]) as Record<number, V>;
+  };
+  return {
+    ...t,
+    grid: t.grid.toSpliced(r, 1, upper.cells, lower.cells),
+    sections: [
+      ...t.sections.flatMap((i) => moved(i) ?? []),
+      ...[upper, lower].flatMap((b, k) => (b.section ? [r + k] : [])),
+    ].sort((a, b) => a - b),
+    sectionCells: restore(t.sectionCells, (b) => b.sectionCells),
+    combined: restore(t.combined, (b) => b.combined),
     edited: true,
   };
 }

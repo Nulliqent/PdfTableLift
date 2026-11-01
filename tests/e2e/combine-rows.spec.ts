@@ -92,3 +92,96 @@ test("re-detecting asks first, then discards the Combine", async ({ page }) => {
   await expect(main.getByRole("cell", { name: "Portland Seattle" })).toHaveCount(0);
   await expect(main.getByRole("cell", { name: "Portland", exact: true })).toBeVisible();
 });
+
+test("Combine then Split back, by mouse", async ({ page }) => {
+  const main = page.getByRole("main");
+  const before = await lastCopy(page);
+  await main.getByRole("button", { name: /^Row 1\./ }).click();
+  const menu = page.getByRole("menu", { name: "Row 1" });
+  // Only a combined Row offers Split back.
+  await expect(menu.getByRole("menuitem")).toHaveCount(3);
+  await expect(menu.getByRole("menuitem", { name: "Split back" })).toHaveCount(0);
+  await menu.getByRole("menuitem", { name: "Combine with Row below" }).click();
+  await expect(main.getByRole("cell", { name: "Portland Seattle" })).toBeVisible();
+
+  await main.getByRole("button", { name: /^Row 1\./ }).click();
+  await menu.getByRole("menuitem", { name: "Split back" }).click();
+  await expect(menu).toBeHidden();
+  await expect(page.getByRole("status")).toHaveText("Split back");
+  await expect(main.getByRole("cell", { name: "Portland", exact: true })).toBeVisible();
+  await expect(main.getByRole("cell", { name: "Seattle", exact: true })).toBeVisible();
+  await expect(tableRow(page)).toContainText("6 × 4");
+  expect(await lastCopy(page)).toBe(before);
+
+  await main.getByRole("button", { name: /^Row 1\./ }).click();
+  await expect(menu.getByRole("menuitem", { name: "Split back" })).toHaveCount(0);
+});
+
+test("Split back, by keyboard, marks the Section Header again", async ({ page }) => {
+  const main = page.getByRole("main");
+  const before = await lastCopy(page);
+  await main.getByRole("button", { name: /^Row 3\./ }).focus();
+  await page.keyboard.press("Enter");
+  await page.keyboard.press("ArrowDown");
+  await page.keyboard.press("Enter");
+  await expect(main.getByRole("cell", { name: "Central Denver" })).toBeVisible();
+  await expect(tableRow(page)).toContainText("2 sections");
+
+  await expect(main.getByRole("button", { name: /^Row 3\./ })).toBeFocused();
+  await page.keyboard.press("Enter");
+  const menu = page.getByRole("menu", { name: "Row 3" });
+  await page.keyboard.press("End");
+  await expect(menu.getByRole("menuitem", { name: "Split back" })).toBeFocused();
+  await page.keyboard.press("Enter");
+  await expect(menu).toBeHidden();
+  await expect(page.getByRole("status")).toHaveText("Split back");
+  await expect(tableRow(page)).toContainText("3 sections");
+  await expect(main.getByRole("cell", { name: "Denver", exact: true })).toBeVisible();
+  // Focus goes to the upper restored Row's number: Central (grid row 4), a Section Header again.
+  const central = main.locator('button[data-row="4"]');
+  await expect(central).toHaveAccessibleName("Row is a section header. Row actions");
+  await expect(central).toBeFocused();
+  expect(await lastCopy(page)).toBe(before);
+});
+
+test("two Combines are split back in two steps", async ({ page }) => {
+  const main = page.getByRole("main");
+  const before = await lastCopy(page);
+  const choose = async (row: RegExp, item: string) => {
+    await main.getByRole("button", { name: row }).click();
+    await page.getByRole("menuitem", { name: item }).click();
+  };
+  await choose(/^Row 4\./, "Combine with Row above");
+  await expect(main.getByRole("cell", { name: "Denver Omaha" })).toBeVisible();
+  await choose(/^Row 3\./, "Combine with Row above");
+  await expect(main.getByRole("cell", { name: "Central Denver Omaha" })).toBeVisible();
+  await expect(tableRow(page)).toContainText("2 sections");
+
+  await choose(/^Row 3\./, "Split back");
+  await expect(page.getByRole("status")).toHaveText("Split back");
+  await expect(main.getByRole("cell", { name: "Denver Omaha" })).toBeVisible();
+  await expect(tableRow(page)).toContainText("3 sections");
+
+  await choose(/^Row 3\./, "Split back");
+  await expect(main.getByRole("cell", { name: "Omaha", exact: true })).toBeVisible();
+  await expect(main.getByRole("cell", { name: "Denver Omaha" })).toHaveCount(0);
+  expect(await lastCopy(page)).toBe(before);
+});
+
+test("Split back loses edits made to the combined Row", async ({ page }) => {
+  const main = page.getByRole("main");
+  const before = await lastCopy(page);
+  await main.getByRole("button", { name: /^Row 1\./ }).click();
+  await page.getByRole("menuitem", { name: "Combine with Row below" }).click();
+  await main.getByRole("cell", { name: "Portland Seattle" }).click();
+  await page.keyboard.press("ControlOrMeta+A");
+  await page.keyboard.type("Tacoma");
+  await page.keyboard.press("Enter");
+  await expect(main.getByRole("cell", { name: "Tacoma" })).toBeVisible();
+
+  await main.getByRole("button", { name: /^Row 1\./ }).click();
+  await page.getByRole("menuitem", { name: "Split back" }).click();
+  await expect(main.getByRole("cell", { name: "Tacoma" })).toHaveCount(0);
+  await expect(main.getByRole("cell", { name: "Portland", exact: true })).toBeVisible();
+  expect(await lastCopy(page)).toBe(before);
+});

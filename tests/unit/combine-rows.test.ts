@@ -41,6 +41,17 @@ const combine = (s: WorkspaceState, r: number, direction: "above" | "below") =>
     row: r,
     direction,
   });
+const splitBack = (s: WorkspaceState, r: number) =>
+  reduce(s, { type: "rowSplitBack", documentId: "d", tableId: selectedTable(s)!.id, row: r });
+const edit = (s: WorkspaceState, r: number, col: number, value: string) =>
+  reduce(s, {
+    type: "cellEdited",
+    documentId: "d",
+    tableId: selectedTable(s)!.id,
+    row: r,
+    col,
+    value,
+  });
 const toggle = (s: WorkspaceState, r: number) =>
   reduce(s, {
     type: "sectionHeaderToggled",
@@ -215,6 +226,14 @@ describe("Combine across the Parts of a Joined Table", () => {
     expect(t.sections).toEqual([]);
     expect(t.parts).toEqual(t0.parts);
   });
+
+  it("splits the mended Row back into its two Parts' Rows", () => {
+    const s0 = joined();
+    const r = selectedTable(s0)!.grid.findIndex((cells) => cells.includes("Long nut"));
+    const s = splitBack(combine(s0, r, "below"), r);
+    expect(grid(s)).toEqual(grid(s0));
+    expect(selectedTable(s)!.parts).toEqual(selectedTable(s0)!.parts);
+  });
 });
 
 describe("Combine and the edit warning", () => {
@@ -322,5 +341,157 @@ describe("a combined Row remembers the Rows it came from", () => {
     const t = selectedTable(combine(once, 2, "below"))!;
     expect(memory(t, 3)).toEqual(kept);
     expect(memory(t, 4)).toBeUndefined();
+  });
+});
+
+/** What a user could see of a Table, and what Split back would restore. */
+const seen = (t: Table) => ({
+  grid: t.grid,
+  sections: t.sections,
+  sectionCells: t.sectionCells,
+  combined: t.combined,
+});
+
+describe("Split back", () => {
+  it("restores the two Rows of the Combine, in their places", () => {
+    const s0 = plain();
+    const s = splitBack(combine(s0, 1, "below"), 1);
+    expect(grid(s)).toEqual(grid(s0));
+    expect(selectedTable(s)!.combined).toEqual({});
+  });
+
+  it("does nothing on a Row that was not combined, or does not exist", () => {
+    const s = combine(plain(), 1, "below");
+    expect(splitBack(s, 2)).toBe(s);
+    expect(splitBack(s, 9)).toBe(s);
+    const fresh = plain();
+    expect(splitBack(fresh, 1)).toBe(fresh);
+  });
+
+  it("is a correction that never re-detects", () => {
+    const s = splitBack(combine(plain(), 1, "below"), 1);
+    expect(selectedTable(s)!.edited).toBe(true);
+    expect(s.pendingChange).toBeNull();
+    expect(s.documents[0]!.tables.length).toBe(1);
+    const pending = reduce(s, { type: "columnSpacingChanged", value: 1.5 });
+    expect(pending.pendingChange).toMatchObject({ type: "columnSpacingChanged" });
+  });
+
+  it("keeps the Table selected", () => {
+    const s = combine(plain(), 1, "below");
+    expect(splitBack(s, 1).selection).toEqual(s.selection);
+  });
+
+  it("marks again a Section Header the Combine unmarked, with its own Cells", () => {
+    const s0 = sectioned();
+    const s = splitBack(combine(s0, 5, "above"), 4);
+    expect(seen(selectedTable(s)!)).toEqual(seen(selectedTable(s0)!));
+    // Unmarking it gives its own Cells back, as it did before the Combine.
+    expect(selectedTable(toggle(s, 4))!.grid[4]).toEqual(["", "", "903.5"]);
+  });
+
+  it("marks again a Section Header that took the Row below into it", () => {
+    const s0 = sectioned();
+    const s = splitBack(combine(s0, 1, "below"), 1);
+    expect(seen(selectedTable(s)!)).toEqual(seen(selectedTable(s0)!));
+  });
+
+  it("moves later Section Headers, their Cells and Combines down by one Row", () => {
+    const s0 = combine(sectioned(), 4, "below");
+    expect(selectedTable(s0)!.sections).toEqual([1]);
+    const later = selectedTable(s0)!.combined[4];
+    const s = splitBack(combine(s0, 2, "below"), 2);
+    expect(seen(selectedTable(s)!)).toEqual(seen(selectedTable(s0)!));
+    expect(selectedTable(s)!.combined[4]).toEqual(later);
+    // A Section Header further down moves too.
+    const t = selectedTable(splitBack(combine(sectioned(), 2, "below"), 2))!;
+    expect(t.sections).toEqual([1, 4]);
+    expect(t.sectionCells[4]).toEqual(selectedTable(sectioned())!.sectionCells[4]);
+  });
+
+  it("loses edits made to the combined Row (agreed trade-off)", () => {
+    const s0 = plain();
+    const edited = edit(combine(s0, 2, "below"), 2, 1, "Mountain");
+    expect(grid(edited)[2]).toEqual(["Austin Boise", "Mountain", "1,204 77.0"]);
+    expect(grid(splitBack(edited, 2))).toEqual(grid(s0));
+  });
+
+  it("keeps edits made to other Rows", () => {
+    const edited = edit(combine(plain(), 2, "below"), 1, 0, "Salem");
+    expect(grid(splitBack(edited, 2))[1]).toEqual(["Salem", "West", "412.8"]);
+  });
+
+  it("restores the marks from before the Combine when the combined Row was marked since", () => {
+    const s0 = sectioned();
+    const marked = toggle(combine(s0, 2, "below"), 2);
+    expect(selectedTable(marked)!.sections).toEqual([1, 2, 3]);
+    expect(seen(selectedTable(splitBack(marked, 2))!)).toEqual(seen(selectedTable(s0)!));
+  });
+
+  it("splits a Row back out of the Header Row", () => {
+    const s0 = open([
+      page(1, [
+        ...row(710, ["Store", "Region", "Amount"], true),
+        ...row(696, ["", "", "(SGD)"], true),
+        ...row(682, ["Portland", "West", "412.8"]),
+        ...row(668, ["Austin", "South", "1,204"]),
+      ]),
+    ]);
+    const s = splitBack(combine(s0, 1, "above"), 0);
+    expect(seen(selectedTable(s)!)).toEqual(seen(selectedTable(s0)!));
+    expect(exportTable(selectedTable(s)!, "csv")).toBe(exportTable(selectedTable(s0)!, "csv"));
+  });
+});
+
+describe("Split back, one Combine at a time", () => {
+  it("steps back through two Combines in two steps", () => {
+    const s0 = plain();
+    const once = combine(s0, 2, "below");
+    const twice = combine(once, 2, "above");
+    expect(grid(twice)).toEqual([
+      ["Store", "Region", "Q1"],
+      ["Portland Austin Boise", "West South", "412.8 1,204 77.0"],
+    ]);
+    const back1 = splitBack(twice, 1);
+    expect(seen(selectedTable(back1)!)).toEqual(seen(selectedTable(once)!));
+    // The first step left the Row above as it was: only the lower Row is still combined.
+    expect(splitBack(back1, 1)).toBe(back1);
+    const back2 = splitBack(back1, 2);
+    expect(seen(selectedTable(back2)!)).toEqual(seen(selectedTable(s0)!));
+  });
+
+  it("steps back through two Combines that took in a Section Header", () => {
+    const s0 = sectioned();
+    const once = combine(s0, 4, "below");
+    const twice = combine(once, 3, "below");
+    expect(grid(twice)[3]).toEqual(["Austin Boise", "South East", "1,204 903.5 77.0"]);
+    const back1 = splitBack(twice, 3);
+    expect(seen(selectedTable(back1)!)).toEqual(seen(selectedTable(once)!));
+    const back2 = splitBack(back1, 4);
+    expect(seen(selectedTable(back2)!)).toEqual(seen(selectedTable(s0)!));
+    expect(selectedTable(back2)!.sections).toEqual([1, 4]);
+  });
+});
+
+describe("exports after Split back", () => {
+  // Two Combines, one undone: the export shows the Combine that is left, then none.
+  const once = () => combine(sectioned(), 2, "below");
+  const back1 = () => splitBack(combine(once(), 3, "below"), 3);
+
+  it.each(["csv", "tsv", "md", "json"] as const)("%s in both Section Modes", (format) => {
+    for (const mode of ["column", "rows"] as const) {
+      expect(exportTable(selectedTable(back1())!, format, mode)).toBe(
+        exportTable(selectedTable(once())!, format, mode),
+      );
+      expect(exportTable(selectedTable(splitBack(back1(), 2))!, format, mode)).toBe(
+        exportTable(selectedTable(sectioned())!, format, mode),
+      );
+    }
+  });
+
+  it("csv As Rows shows the Section Header again and both Rows", () => {
+    expect(exportTable(selectedTable(splitBack(back1(), 2))!, "csv", "rows")).toBe(
+      'Store,Region,Q1\nWest,,\nPortland,West,412.8\nAustin,South,"1,204"\n903.5,,\nBoise,East,77.0',
+    );
   });
 });
