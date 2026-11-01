@@ -1,38 +1,36 @@
 import { useState, type ReactNode } from "react";
 import {
-  EXPORT_FORMATS,
   READ_ERROR_MESSAGES,
-  exportTable,
   hasHeaderRegion,
-  hasSectionHeaders,
   isSectionHeader,
   tableSize,
+  type BuiltStackedTable,
   type Document,
   type RowAction,
+  type StackedTableRef,
   type Table,
 } from "../../engine";
-import { copyText } from "../copy-text";
 import { pageLabel, plural } from "../format";
-import { useExportFormat } from "../useExportFormat";
 import { useSectionMode } from "../useSectionMode";
 import { Button } from "./Button";
-import { CopySheet } from "./CopySheet";
-import { FormatControl } from "./FormatControl";
-import { Icon } from "./Icon";
-import { SectionModeControl } from "./SectionModeControl";
+import { ExportBar, type DetailView } from "./ExportBar";
+import { Icon, type IconName } from "./Icon";
 import { SourcePage } from "./SourcePage";
+import { StackedTableDetail } from "./StackedTableDetail";
 import { TableView } from "./TableView";
 import styles from "./ContentPane.module.css";
 
 type ContentPaneProps = {
   document: Document | null;
   table: Table | null;
+  /** The selected Stacked Table, built from its Members, when one is selected instead of a Table. */
+  stacked: BuiltStackedTable | null;
   /** Every Document, for the screens shown when no Table is selected. */
   documents: Document[];
   onSelectRegion: (documentId: string) => void;
   onOpen: () => void;
   /** Shows a message in the HUD (copied, Section Header marked, Rows combined, and so on). */
-  onAnnounce: (message: string) => void;
+  onAnnounce: (message: string, icon?: IconName) => void;
   onSelectTable: (documentId: string, tableId: string) => void;
   /** Select Region, shown in place of the selected Table while the user is drawing a Region. */
   regionSelection?: ReactNode;
@@ -51,12 +49,19 @@ type ContentPaneProps = {
   onRowAction: (action: RowAction) => void;
   onSplitByPage: (documentId: string, tableId: string) => void;
   onJoinAgain: (documentId: string, tableId: string) => void;
+  /** The Stacked Table whose Members are being edited in the sidebar, if any. */
+  editingStackedId: string | null;
+  onEditMembers: (ref: StackedTableRef) => void;
+  onRemoveStacked: (ref: StackedTableRef) => void;
+  /** A Stacked Table's Source switch was turned on or off. */
+  onToggleSource: (ref: StackedTableRef, source: boolean) => void;
 };
 
 /** The content pane: the selected Table with Copy, or an empty state. */
 export function ContentPane({
   document,
   table,
+  stacked,
   documents,
   onSelectRegion,
   onOpen,
@@ -70,12 +75,28 @@ export function ContentPane({
   onRowAction,
   onSplitByPage,
   onJoinAgain,
+  editingStackedId,
+  onEditMembers,
+  onRemoveStacked,
+  onToggleSource,
 }: ContentPaneProps) {
   return (
     <main className={styles.content}>
       <div className={styles.inner}>
         {regionSelection ? (
           regionSelection
+        ) : document && stacked ? (
+          <StackedTableDetail
+            key={stacked.record.id}
+            document={document}
+            stacked={stacked}
+            onAnnounce={onAnnounce}
+            onSelectTable={onSelectTable}
+            editing={editingStackedId === stacked.record.id}
+            onEditMembers={onEditMembers}
+            onRemoveStacked={onRemoveStacked}
+            onToggleSource={onToggleSource}
+          />
         ) : document && table ? (
           <TableDetail
             document={document}
@@ -123,20 +144,11 @@ function TableDetail({
   onSplitByPage: ContentPaneProps["onSplitByPage"];
   onJoinAgain: ContentPaneProps["onJoinAgain"];
 }) {
-  const [view, setView] = useState<"table" | "source">("table");
+  const [view, setView] = useState<DetailView>("table");
   const { rows, cols } = tableSize(table);
-  const [format, setFormat] = useExportFormat();
   const [sectionMode, setSectionMode] = useSectionMode();
   const sections = table.sections.filter((r) => isSectionHeader(table, r)).length;
-  const [sheet, setSheet] = useState<string | null>(null);
-  const name = EXPORT_FORMATS.find((f) => f.format === format)!.name;
   const ids = { documentId: document.id, tableId: table.id };
-  const copy = async () => {
-    const text = exportTable(table, format, sectionMode);
-    if (await copyText(text)) {
-      onAnnounce(format === "tsv" ? "Copied: paste into Numbers or Excel" : `Copied as ${name}`);
-    } else setSheet(text);
-  };
   return (
     <>
       <div className={styles.head}>
@@ -205,19 +217,16 @@ function TableDetail({
           </button>
         </div>
       </div>
-      <div className={styles.bar}>
-        <div className={styles.seg} role="group" aria-label="View">
-          {(["table", "source"] as const).map((v) => (
-            <button key={v} type="button" aria-pressed={view === v} onClick={() => setView(v)}>
-              {v === "table" ? "Table" : "Source Page"}
-            </button>
-          ))}
-        </div>
-        <FormatControl value={format} onChange={setFormat} />
-        {hasSectionHeaders(table) && (
-          <SectionModeControl value={sectionMode} onChange={setSectionMode} />
-        )}
-        <span className={styles.spacer} />
+      <ExportBar
+        documentName={document.name}
+        title={`Table ${table.n}`}
+        table={table}
+        view={view}
+        onView={setView}
+        sectionMode={sectionMode}
+        onSectionMode={setSectionMode}
+        onAnnounce={onAnnounce}
+      >
         {view === "table" && !hasHeaderRegion(document, table) && (
           <label className={styles.switch}>
             <input
@@ -229,11 +238,7 @@ function TableDetail({
             First row is header
           </label>
         )}
-        <Button variant="primary" onClick={() => void copy()}>
-          <Icon name="copy" />
-          Copy
-        </Button>
-      </div>
+      </ExportBar>
       <div className={styles.card}>
         {view === "table" ? (
           <TableView
@@ -268,9 +273,6 @@ function TableDetail({
           />
         )}
       </div>
-      {sheet !== null && (
-        <CopySheet title={`Copy ${name}`} text={sheet} onDone={() => setSheet(null)} />
-      )}
       <div className={styles.foot}>
         <span>
           {plural(rows, "row")} × {plural(cols, "column")}

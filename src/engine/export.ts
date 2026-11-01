@@ -28,8 +28,9 @@ export const DEFAULT_SECTION_MODE: SectionMode = "column";
 
 export const isSectionMode = (v: unknown): v is SectionMode => v === "column" || v === "rows";
 
-type OutputRow = { cells: string[]; head?: boolean; section?: boolean };
-type Output = { table: Table; rows: OutputRow[]; asColumn: boolean };
+/** A Section Header row (As Rows) has its name in `label`; a Source Cell before it is empty. */
+type OutputRow = { cells: string[]; head?: boolean; section?: boolean; label?: string };
+type Output = { table: Table; rows: OutputRow[]; asColumn: boolean; source: boolean };
 
 /** Whether a grid row is a Section Header (the Header Row never is). */
 export const isSectionHeader = (table: Table, row: number) =>
@@ -44,18 +45,31 @@ export const usesSectionColumn = (table: Table, mode: SectionMode) =>
 
 /**
  * The rows to write, with the Header Row flagged. As Column moves each Section Header into a
- * leading Section column of the rows below it; As Rows keeps the Section Headers as rows.
+ * leading Section column of the rows below it; As Rows keeps the Section Headers as rows. With
+ * `source` (a Source Cell per grid row), a Source column comes first of all, and a Section Header
+ * row gets an empty Source Cell.
  */
-function outputRows(table: Table, asColumn: boolean): OutputRow[] {
+function outputRows(
+  table: Table,
+  asColumn: boolean,
+  source: readonly string[] | null,
+): OutputRow[] {
   const out: OutputRow[] = [];
+  const lead = (cell: string) => (source ? [cell] : []);
   let current = "";
   table.grid.forEach((row, r) => {
     if (table.header && r === 0) {
-      out.push({ cells: asColumn ? ["Section", ...row] : row.slice(), head: true });
+      out.push({
+        cells: [...lead("Source"), ...(asColumn ? ["Section"] : []), ...row],
+        head: true,
+      });
     } else if (isSectionHeader(table, r)) {
       current = row[0] ?? "";
-      if (!asColumn) out.push({ cells: row.slice(), section: true });
-    } else out.push({ cells: asColumn ? [current, ...row] : row.slice() });
+      if (!asColumn) out.push({ cells: [...lead(""), ...row], section: true, label: current });
+    } else
+      out.push({
+        cells: [...lead(source?.[r] ?? ""), ...(asColumn ? [current] : []), ...row],
+      });
   });
   return out;
 }
@@ -81,18 +95,22 @@ const WRITERS: Record<ExportFormat, (out: Output) => string> = {
   csv: ({ rows }) => rows.map((r) => r.cells.map(csvCell).join(",")).join("\n"),
   tsv: ({ rows }) =>
     rows.map((r) => r.cells.map((v) => v.replace(/\t|\n/g, " ")).join("\t")).join("\n"),
-  md: ({ table, rows, asColumn }) => {
+  md: ({ table, rows, asColumn, source }) => {
     const first = rows[0]?.cells ?? [];
     const head = table.header ? first : first.map((_, i) => `Column ${i + 1}`);
     const body = rows.slice(table.header ? 1 : 0);
     const numeric = numericColumns(table);
-    const align = asColumn ? [false, ...numeric] : numeric;
+    const align = [...(source ? [false] : []), ...(asColumn ? [false] : []), ...numeric];
+    // A Section Header's empty Source Cell comes before its name; the Cells it doesn't fill
+    // (all but the Source Cell and the name) stay empty after it.
+    const sourceCell = source ? "|  " : "";
+    const filledCells = source ? 2 : 1;
     return [
       `| ${head.map(mdCell).join(" | ")} |`,
       `| ${align.map((n) => (n ? "---:" : "---")).join(" | ")} |`,
       ...body.map((r) =>
         r.section
-          ? `| **${mdCell(r.cells[0]!)}** |${" |".repeat(r.cells.length - 1)}`
+          ? `${sourceCell}| **${mdCell(r.label!)}** |${" |".repeat(r.cells.length - filledCells)}`
           : `| ${r.cells.map(mdCell).join(" | ")} |`,
       ),
     ].join("\n");
@@ -113,7 +131,7 @@ const WRITERS: Record<ExportFormat, (out: Output) => string> = {
     let group: (typeof groups)[number] | null = null;
     for (const r of body) {
       if (r.section) {
-        group = { section: r.cells[0]!, rows: [] };
+        group = { section: r.label!, rows: [] };
         groups.push(group);
         continue;
       }
@@ -127,14 +145,24 @@ const WRITERS: Record<ExportFormat, (out: Output) => string> = {
   },
 };
 
-/** The Table as text in the given format, ready for the clipboard. */
+/**
+ * The Table as text in the given format, ready for the clipboard. `source` gives a Source Cell per
+ * grid row (a Stacked Table's `source` while its Source switch is on): the text then starts with a
+ * column titled "Source", before the Section column.
+ */
 export function exportTable(
   table: Table,
   format: ExportFormat,
   sectionMode: SectionMode = DEFAULT_SECTION_MODE,
+  source: readonly string[] | null = null,
 ): string {
   const asColumn = usesSectionColumn(table, sectionMode);
-  return WRITERS[format]({ table, rows: outputRows(table, asColumn), asColumn });
+  return WRITERS[format]({
+    table,
+    rows: outputRows(table, asColumn, source),
+    asColumn,
+    source: source !== null,
+  });
 }
 
 /**
@@ -149,4 +177,42 @@ export function numericColumns(table: Table): boolean[] {
     const v = body.map((r) => r[c]).filter(Boolean);
     return v.length > 0 && v.filter((x) => isNum(x!)).length / v.length >= 0.7;
   });
+}
+
+/** Each format's file extension and MIME type, for Download. */
+const FILE_TYPES: Record<ExportFormat, { extension: string; type: string }> = {
+  csv: { extension: "csv", type: "text/csv" },
+  tsv: { extension: "tsv", type: "text/tab-separated-values" },
+  md: { extension: "md", type: "text/markdown" },
+  json: { extension: "json", type: "application/json" },
+};
+
+/** A file to download: its name, MIME type and contents. */
+export type ExportFile = { name: string; type: string; text: string };
+
+/** The formats whose files start with a UTF-8 byte order mark, for Excel. */
+const BOM_FORMATS: ReadonlySet<ExportFormat> = new Set(["csv", "tsv"]);
+
+/**
+ * The Table as a file to download: the same text as Copy, named `<Document name> - <title>.<ext>`.
+ * The title is what the Table is called in the app, such as "Table 3" or "Stacked Table 1".
+ * A CSV or TSV file starts with a UTF-8 byte order mark, so Excel reads non-ASCII text correctly;
+ * Markdown and JSON files are the copy text exactly.
+ */
+export function exportFile(
+  documentName: string,
+  title: string,
+  table: Table,
+  format: ExportFormat,
+  sectionMode: SectionMode = DEFAULT_SECTION_MODE,
+  /** As for `exportTable`: a Source Cell per grid row, or null for no Source column. */
+  source: readonly string[] | null = null,
+): ExportFile {
+  const { extension, type } = FILE_TYPES[format];
+  return {
+    name: `${documentName} - ${title}.${extension}`,
+    type,
+    text:
+      (BOM_FORMATS.has(format) ? "\uFEFF" : "") + exportTable(table, format, sectionMode, source),
+  };
 }

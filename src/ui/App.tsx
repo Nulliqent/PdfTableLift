@@ -2,12 +2,19 @@ import { useCallback, useEffect, useReducer, useRef } from "react";
 import {
   READ_ERROR_MESSAGES,
   initialWorkspace,
+  memberMove,
+  nextStackedNumber,
   reduce,
   regionBlocked,
   regionPreview,
   selectedDocument,
+  selectedStackedTable,
   selectedTable,
+  tickOutcome,
+  tickedTables,
+  type MoveDirection,
   type PageText,
+  type StackedTableRef,
   type ReadError,
   type RegionInProgress,
   roleLabel,
@@ -24,6 +31,7 @@ import { Toolbar } from "./components/Toolbar";
 import { loadColumnSpacing, saveColumnSpacing } from "./column-spacing-storage";
 import { loadJoin, saveJoin } from "./join-storage";
 import { registerSource, releaseSource } from "./documentSources";
+import { plural } from "./format";
 import { splitPdfs } from "./pdfFiles";
 import { useFileDrop } from "./useFileDrop";
 import { useHud } from "./useHud";
@@ -164,6 +172,74 @@ export function App() {
 
   const dragging = useFileDrop((files) => void openFiles(files));
 
+  // Select Tables. Each tick says how many are ticked; the first also says how many are left out.
+  const stacking = state.stacking;
+  const stackingDoc = stacking && state.documents.find((d) => d.id === stacking.documentId);
+  const tick = (tableId: string, ticked: boolean) => {
+    const table = stackingDoc?.tables.find((t) => t.id === tableId);
+    if (!stacking || !stackingDoc || !table) return;
+    const outcome = tickOutcome(stackingDoc, stacking, table, ticked);
+    if (!outcome) return;
+    dispatch({ type: "tableTicked", tableId, ticked });
+    const count = `${plural(outcome.count, "Table")} ticked`;
+    if (!ticked) return showHud(`Unticked Table ${table.n} · ${count}`);
+    const out = outcome.unmatched;
+    const left =
+      outcome.count === 1 && out > 0
+        ? ` · ${plural(out, "Table")} ${out === 1 ? "doesn't" : "don't"} match its Header Row`
+        : "";
+    showHud(`Ticked Table ${table.n} · ${count}${left}`);
+  };
+  const stack = () => {
+    if (!stacking || !stackingDoc) return;
+    const tables = tickedTables(stackingDoc, stacking.ticked);
+    if (tables.length < 2) return;
+    const n = nextStackedNumber(stackingDoc);
+    dispatch({ type: "tablesStacked" });
+    showHud(`Stacked Tables ${tables.map((t) => t.n).join(", ")} into Stacked Table ${n}`);
+  };
+  // Edit Members. Each move says where the Table now stands; Save says what the Members now are.
+  const editedRecord =
+    stacking?.stackedId !== undefined
+      ? stackingDoc?.stacked.find((s) => s.id === stacking.stackedId)
+      : undefined;
+  const moveMember = (tableId: string, direction: MoveDirection) => {
+    const table = stackingDoc?.tables.find((t) => t.id === tableId);
+    if (!stacking || !stackingDoc || !table) return;
+    const move = memberMove(stackingDoc, stacking, tableId, direction);
+    if (!move) return;
+    dispatch({ type: "memberMoved", tableId, direction });
+    showHud(`Moved Table ${table.n} ${direction} · ${move.position} of ${move.count}`);
+  };
+  const saveMembers = () => {
+    if (!stacking || !stackingDoc || !editedRecord) return;
+    const tables = tickedTables(stackingDoc, stacking.ticked);
+    if (!tables.length) return;
+    dispatch({ type: "membersSaved" });
+    showHud(
+      `Stacked Table ${editedRecord.n} now stacks ${tables.length === 1 ? "Table" : "Tables"} ${tables.map((t) => t.n).join(", ")}`,
+    );
+  };
+  const removeStacked = (ref: StackedTableRef) => {
+    const n = state.documents
+      .find((d) => d.id === ref.documentId)
+      ?.stacked.find((s) => s.id === ref.stackedId)?.n;
+    dispatch({ type: "stackedTableRemoved", ...ref });
+    if (n !== undefined) showHud(`Removed Stacked Table ${n}. Its Members are unchanged`);
+  };
+  const stackingOpen = stacking !== null && state.pendingChange === null;
+  useEffect(() => {
+    if (!stackingOpen) return;
+    // An open sheet, menu or other popover takes Escape first and closes alone.
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key !== "Escape" || e.defaultPrevented) return;
+      if (document.querySelector("dialog[open], [popover]:popover-open")) return;
+      dispatch({ type: "stackingCancelled" });
+    };
+    document.addEventListener("keydown", onKeyDown);
+    return () => document.removeEventListener("keydown", onKeyDown);
+  }, [stackingOpen]);
+
   /** Whether re-detecting this Document would ask to discard corrections first. */
   const hasEdits = (documentId: string) =>
     state.documents.some((d) => d.id === documentId && d.tables.some((t) => t.edited));
@@ -217,10 +293,22 @@ export function App() {
             onColumnSpacing={(value) => dispatch({ type: "columnSpacingChanged", value })}
             join={join}
             onJoin={(value) => dispatch({ type: "joinChanged", value })}
+            stacking={stacking}
+            onStartStacking={(documentId) => {
+              dispatch({ type: "stackingStarted", documentId });
+              showHud("Tick the Tables to stack, in order");
+            }}
+            onTick={tick}
+            onStack={stack}
+            onMoveMember={moveMember}
+            onSaveMembers={saveMembers}
+            onCancelStacking={() => dispatch({ type: "stackingCancelled" })}
+            onSelectStacked={(ref) => dispatch({ type: "stackedTableSelected", ...ref })}
           />
           <ContentPane
             document={selectedDocument(state)}
             table={selectedTable(state)}
+            stacked={selectedStackedTable(state)}
             documents={state.documents}
             onSelectRegion={startRegion}
             onOpen={chooseFiles}
@@ -294,6 +382,15 @@ export function App() {
               dispatch({ type: "joinAgain", documentId, tableId });
               if (!hasEdits(documentId)) showHud("Joined with the previous page");
             }}
+            editingStackedId={stacking?.stackedId ?? null}
+            onEditMembers={(ref) => {
+              dispatch({ type: "membersEditStarted", ...ref });
+              showHud("Edit the Members: tick, untick or move them, then Save");
+            }}
+            onRemoveStacked={removeStacked}
+            onToggleSource={(ref, source) =>
+              dispatch({ type: "stackedSourceToggled", ...ref, source })
+            }
           />
         </div>
       </div>

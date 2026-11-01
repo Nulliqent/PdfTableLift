@@ -19,6 +19,21 @@ import {
 import { isSectionHeader, usesSectionColumn, type SectionMode } from "./export";
 import { joinTables } from "./join";
 import { HAND_DRAWN_OVERLAP, REMOVED_TABLE_OVERLAP, overlapRatio } from "./overlap";
+import {
+  buildStackedTable,
+  memberMove,
+  newStackedTable,
+  tickOutcome,
+  tickedTables,
+  withMembers,
+  withStacked,
+  withoutMember,
+  type BuiltStackedTable,
+  type MoveDirection,
+  type StackedTable,
+  type StackedTableRef,
+  type TablesInProgress,
+} from "./stack";
 
 export type { Band, Bbox } from "./detection";
 
@@ -38,6 +53,11 @@ export type Table = {
   /** Every cell of the first row is bold. */
   firstBold: boolean;
   grid: string[][];
+  /**
+   * The page of each grid row, for a Stacked Table's Source column: a Joined Table's Rows each
+   * keep their own Part's page. A combined Row takes the upper Row's page.
+   */
+  rowPages: number[];
   /** Grid row indexes of Section Headers. */
   sections: number[];
   /** For each Section Header row, the cells it gets back when unmarked (FoundTable.sectionCells). */
@@ -59,6 +79,8 @@ export type Table = {
 /** A grid row as it stood just before a Combine took it in. */
 export type RowBeforeCombine = {
   cells: string[];
+  /** Its page (`rowPages`). */
+  page: number;
   /** It was in `sections` (a Section Header, or a marked row 0 under the Header Row switch). */
   section: boolean;
   /** Its `sectionCells` entry, or null. */
@@ -157,6 +179,8 @@ export type Document = {
   handDrawn: HandDrawn[];
   /** Pages whose first Part must not join the page before: the user split a Joined Table there. */
   noJoin: number[];
+  /** Stacked Tables, in the order they were made; each is built from `tables` whenever shown. */
+  stacked: StackedTable[];
 };
 
 export type Settings = {
@@ -166,7 +190,12 @@ export type Settings = {
   join: boolean;
 };
 
-export type Selection = { documentId: string; tableId: string };
+/** What the content pane shows: a Table, or a Stacked Table. */
+export type Selection = { documentId: string; tableId: string } | StackedTableRef;
+
+/** Whether the selection is a Stacked Table (else it is a Table). */
+export const isStackedSelection = (sel: Selection | null): sel is StackedTableRef =>
+  sel !== null && "stackedId" in sel;
 
 /**
  * An action that re-detects Tables and so would discard corrections. Without `discardEdits`, the
@@ -193,6 +222,8 @@ export type WorkspaceState = {
   selection: Selection | null;
   /** The Region in progress while the user is in Select Region, else null. */
   region: RegionInProgress | null;
+  /** The Tables being ticked while the user is in Select Tables, else null. */
+  stacking: TablesInProgress | null;
   settings: Settings;
   /**
    * The change waiting for the user to confirm that edits may be discarded, or null. The UI shows
@@ -270,7 +301,30 @@ export type WorkspaceAction =
    * Split back: a combined Row becomes the two Rows of its most recent Combine again, as they stood
    * before it (edits made to the combined Row are lost). A correction; never re-detects.
    */
-  | { type: "rowSplitBack"; documentId: string; tableId: string; row: number };
+  | { type: "rowSplitBack"; documentId: string; tableId: string; row: number }
+  /** Select Tables was entered for a Document, with nothing ticked. Leaves Select Region. */
+  | { type: "stackingStarted"; documentId: string }
+  /**
+   * A Table was ticked or unticked in Select Tables. Ticking one that fails the matching rule
+   * (`tickMatch`: against the first ticked Table, or in Edit Members the saved Header Row) is
+   * ignored.
+   */
+  | { type: "tableTicked"; tableId: string; ticked: boolean }
+  /** Escape or Cancel: leave Select Tables with no changes. */
+  | { type: "stackingCancelled" }
+  /** Stack N Tables: the ticked Tables, in tick order, become a Stacked Table, which is selected. Needs two. */
+  | { type: "tablesStacked" }
+  | ({ type: "stackedTableSelected" } & StackedTableRef)
+  /** The Source switch of a Stacked Table: a leading Source column with each Row's page. */
+  | ({ type: "stackedSourceToggled"; source: boolean } & StackedTableRef)
+  /** Edit Members: the checkboxes reopen with the Stacked Table's Members ticked, in order. Leaves Select Region. */
+  | ({ type: "membersEditStarted" } & StackedTableRef)
+  /** A ticked Table moves one place up or down in the tick order (the Member order). */
+  | { type: "memberMoved"; tableId: string; direction: MoveDirection }
+  /** Save in Edit Members: the ticked Tables, in order, become the Stacked Table's Members. Needs one. */
+  | { type: "membersSaved" }
+  /** Remove Stacked Table: only the Stacked Table goes; its Members stay as they are. */
+  | ({ type: "stackedTableRemoved" } & StackedTableRef);
 
 /** The actions a row number's menu dispatches; each names its Table and grid row. */
 export type RowAction = Extract<
@@ -297,6 +351,7 @@ export const initialWorkspace: WorkspaceState = {
   documents: [],
   selection: null,
   region: null,
+  stacking: null,
   settings: DEFAULT_SETTINGS,
   pendingChange: null,
 };
@@ -316,11 +371,20 @@ export function reduce(state: WorkspaceState, action: WorkspaceAction): Workspac
         removed: [],
         handDrawn: [],
         noJoin: [],
+        stacked: [],
       };
       // The Example Document steps aside when the user's first own Document opens.
       const kept = action.example ? state.documents : state.documents.filter((d) => !d.example);
       const region = kept.some((d) => d.id === state.region?.documentId) ? state.region : null;
-      const next = { ...state, documents: [...kept, doc], ...withoutRegion(state, region) };
+      const stacking = kept.some((d) => d.id === state.stacking?.documentId)
+        ? state.stacking
+        : null;
+      const next = {
+        ...state,
+        documents: [...kept, doc],
+        ...withoutRegion(state, region),
+        stacking,
+      };
       return selectedDocument(next) ? next : { ...next, selection: null };
     }
     case "documentRemoved": {
@@ -330,8 +394,9 @@ export function reduce(state: WorkspaceState, action: WorkspaceAction): Workspac
         ...state,
         documents: state.documents.filter((d) => d.id !== action.id),
         ...withoutRegion(state, region),
+        stacking: state.stacking?.documentId === action.id ? null : state.stacking,
       };
-      if (selectedTable(next)) return next;
+      if (selectionStands(next)) return next;
       const following = next.documents.find((d) => d.tables.length);
       return {
         ...next,
@@ -349,7 +414,7 @@ export function reduce(state: WorkspaceState, action: WorkspaceAction): Workspac
       const next = { ...state, documents: state.documents.map((d) => (d === doc ? read : d)) };
       // Keep what the user is looking at; otherwise show this Document's first Table. The Example
       // Document opens on its first Table with Section Headers, which shows them off.
-      if (selectedTable(next)) return next;
+      if (selectionStands(next)) return next;
       const shown = (doc.example && tables.find((t) => t.sections.some((r) => r > 0))) || tables[0];
       return {
         ...next,
@@ -410,9 +475,17 @@ export function reduce(state: WorkspaceState, action: WorkspaceAction): Workspac
           noJoin: [...new Set([...doc.noJoin, ...alone])],
         };
       } else gone = { ...doc, handDrawn: doc.handDrawn.filter((r) => r.id !== table.manual) };
+      gone = withoutMember(gone, table);
       const next = { ...redetect(state, gone), pendingChange: null };
+      // A Stacked Table that lost its last Member is gone with it: show that Document's first Table.
+      if (isStackedSelection(state.selection)) {
+        const kept = sameTable(state, next.documents);
+        const first = next.documents.find((d) => d.id === doc.id)!.tables[0];
+        const fallback = first ? { documentId: doc.id, tableId: first.id } : null;
+        return { ...next, selection: kept ?? fallback };
+      }
       // Move to the neighbour that took the removed Table's place, else the previous one.
-      const was = state.selection?.documentId === doc.id && state.selection.tableId === table.id;
+      const was = isTableSelected(state.selection, doc.id, table.id);
       if (!was) return { ...next, selection: sameTable(state, next.documents) };
       const tables = next.documents.find((d) => d.id === doc.id)!.tables;
       const neighbour = tables[Math.min(doc.tables.indexOf(table), tables.length - 1)];
@@ -485,6 +558,7 @@ export function reduce(state: WorkspaceState, action: WorkspaceAction): Workspac
       if (action.tableId === undefined) {
         return {
           ...state,
+          stacking: null,
           region: {
             documentId: doc.id,
             page: action.page,
@@ -504,6 +578,7 @@ export function reduce(state: WorkspaceState, action: WorkspaceAction): Workspac
       const regions: DraftRegion[] = own ? own.regions : [draftRegion(part.bbox)];
       return {
         ...state,
+        stacking: null,
         region: { documentId: doc.id, page: own?.page ?? part.page, regions, edited: 0, redraw },
       };
     }
@@ -615,6 +690,109 @@ export function reduce(state: WorkspaceState, action: WorkspaceAction): Workspac
       );
     case "rowSplitBack":
       return updateTable(state, action.documentId, action.tableId, (t) => splitBack(t, action.row));
+    case "stackingStarted": {
+      const doc = state.documents.find((d) => d.id === action.documentId);
+      if (doc?.status !== "ready") return state;
+      return {
+        ...state,
+        ...withoutRegion(state, null),
+        stacking: { documentId: doc.id, ticked: [] },
+      };
+    }
+    case "tableTicked": {
+      const { stacking } = state;
+      const doc = state.documents.find((d) => d.id === stacking?.documentId);
+      const table = doc?.tables.find((t) => t.id === action.tableId);
+      if (!stacking || !doc || !table) return state;
+      const outcome = tickOutcome(doc, stacking, table, action.ticked);
+      return outcome ? { ...state, stacking: outcome.stacking } : state;
+    }
+    case "stackingCancelled":
+      return state.stacking ? { ...state, stacking: null } : state;
+    case "tablesStacked": {
+      const { stacking } = state;
+      const doc = state.documents.find((d) => d.id === stacking?.documentId);
+      // In Edit Members, Save (membersSaved) applies the ticks instead.
+      if (!stacking || !doc || stacking.stackedId) return state;
+      const tables = tickedTables(doc, stacking.ticked);
+      if (tables.length < 2) return state;
+      const record = newStackedTable(doc, tables);
+      const stacked = { ...doc, stacked: [...doc.stacked, record] };
+      return {
+        ...state,
+        stacking: null,
+        documents: state.documents.map((d) => (d === doc ? stacked : d)),
+        selection: { documentId: doc.id, stackedId: record.id },
+      };
+    }
+    case "stackedTableSelected": {
+      const doc = state.documents.find((d) => d.id === action.documentId);
+      if (!doc?.stacked.some((s) => s.id === action.stackedId)) return state;
+      return {
+        ...state,
+        ...withoutRegion(state, null),
+        selection: { documentId: doc.id, stackedId: action.stackedId },
+      };
+    }
+    case "stackedSourceToggled": {
+      const doc = state.documents.find((d) => d.id === action.documentId);
+      const record = doc?.stacked.find((s) => s.id === action.stackedId);
+      if (!doc || !record || record.source === action.source) return state;
+      const changed = withStacked(doc, record, { ...record, source: action.source });
+      return { ...state, documents: state.documents.map((d) => (d === doc ? changed : d)) };
+    }
+    case "membersEditStarted": {
+      const doc = state.documents.find((d) => d.id === action.documentId);
+      const record = doc?.stacked.find((s) => s.id === action.stackedId);
+      if (doc?.status !== "ready" || !record) return state;
+      return {
+        ...state,
+        ...withoutRegion(state, null),
+        selection: { documentId: doc.id, stackedId: record.id },
+        stacking: { documentId: doc.id, ticked: record.members, stackedId: record.id },
+      };
+    }
+    case "memberMoved": {
+      const { stacking } = state;
+      const doc = state.documents.find((d) => d.id === stacking?.documentId);
+      if (!stacking || !doc) return state;
+      const move = memberMove(doc, stacking, action.tableId, action.direction);
+      return move ? { ...state, stacking: move.stacking } : state;
+    }
+    case "membersSaved": {
+      const { stacking } = state;
+      const doc = state.documents.find((d) => d.id === stacking?.documentId);
+      const record = doc?.stacked.find((s) => s.id === stacking?.stackedId);
+      if (!stacking || !doc || !record) return state;
+      if (tickedTables(doc, stacking.ticked).length < 1) return state;
+      // Saving renews the saved Header Row only when a different Table is the first Member.
+      const edited = withStacked(doc, record, withMembers(doc, record, stacking.ticked));
+      return {
+        ...state,
+        stacking: null,
+        documents: state.documents.map((d) => (d === doc ? edited : d)),
+        selection: { documentId: doc.id, stackedId: record.id },
+      };
+    }
+    case "stackedTableRemoved": {
+      const doc = state.documents.find((d) => d.id === action.documentId);
+      const record = doc?.stacked.find((s) => s.id === action.stackedId);
+      if (!doc || !record) return state;
+      const kept = { ...doc, stacked: doc.stacked.filter((s) => s !== record) };
+      const stacking = state.stacking?.stackedId === record.id ? null : state.stacking;
+      // Removing the selected Stacked Table opens its first Member, else the Document's first Table.
+      const next =
+        tickedTables(doc, record.members)[0] ?? (doc.tables[0] as Table | undefined) ?? null;
+      const selection = isStackedSelected(state.selection, doc.id, record.id)
+        ? next && { documentId: doc.id, tableId: next.id }
+        : state.selection;
+      return {
+        ...state,
+        stacking,
+        selection,
+        documents: state.documents.map((d) => (d === doc ? kept : d)),
+      };
+    }
     default: {
       const unhandled: never = action;
       return unhandled;
@@ -666,6 +844,7 @@ function combineRows(t: Table, upper: number): Table {
     isSectionHeader(t, r) ? (t.sectionCells[r] ?? t.grid[r]!) : t.grid[r]!;
   const before = (r: number): RowBeforeCombine => ({
     cells: t.grid[r]!,
+    page: t.rowPages[r]!,
     section: t.sections.includes(r),
     sectionCells: t.sectionCells[r] ?? null,
     combinedFrom: t.combinedFrom[r] ?? null,
@@ -677,6 +856,7 @@ function combineRows(t: Table, upper: number): Table {
   return {
     ...t,
     grid: t.grid.toSpliced(upper, 2, cells),
+    rowPages: t.rowPages.toSpliced(upper, 2, t.rowPages[upper]!),
     sections: t.sections.flatMap((r) => moved(r) ?? []),
     sectionCells: reindexRows(t.sectionCells, moved),
     combinedFrom: {
@@ -710,6 +890,7 @@ function splitBack(t: Table, r: number): Table {
   return {
     ...t,
     grid: t.grid.toSpliced(r, 1, upper.cells, lower.cells),
+    rowPages: t.rowPages.toSpliced(r, 1, upper.page, lower.page),
     sections: [
       ...t.sections.flatMap((i) => moved(i) ?? []),
       ...[upper, lower].flatMap((b, k) => (b.section ? [r + k] : [])),
@@ -801,6 +982,7 @@ function changeJoins(state: WorkspaceState, doc: Document): WorkspaceState {
 /** The selection, re-pointed at the same Table (same page and box) after ids were renumbered. */
 function sameTable(before: WorkspaceState, documents: Document[]): Selection | null {
   const sel = before.selection;
+  if (isStackedSelection(sel)) return stackedStands(sel, documents);
   const old = before.documents
     .find((d) => d.id === sel?.documentId)
     ?.tables.find((t) => t.id === sel?.tableId);
@@ -857,6 +1039,8 @@ function keepSelection(before: WorkspaceState, documents: Document[]): Selection
     const first = documents.find((d) => d.tables.length);
     return first ? { documentId: first.id, tableId: first.tables[0]!.id } : null;
   }
+  // A Stacked Table outlives re-detection: its Members are found again by page and box.
+  if (isStackedSelection(sel)) return stackedStands(sel, documents);
   const old = before.documents.find((d) => d.id === sel.documentId);
   const now = documents.find((d) => d.id === sel.documentId);
   const oldTable = old?.tables.find((t) => t.id === sel.tableId);
@@ -895,6 +1079,7 @@ function detectDocument(doc: Document, pages: PageText[], settings: Settings): T
     header,
     firstBold: t.firstBold,
     grid: t.grid,
+    rowPages: t.grid.map(() => page),
     sections: t.sections,
     sectionCells: t.sectionCells,
     combinedFrom: {},
@@ -941,10 +1126,40 @@ function detectDocument(doc: Document, pages: PageText[], settings: Settings): T
     .map((t, i) => ({ ...t, n: i + 1 }));
 }
 
-/** The selected Table, or null. */
+/** The Stacked Table selection, if its Document still holds that Stacked Table, else null. */
+function stackedStands(sel: StackedTableRef, documents: Document[]): Selection | null {
+  const doc = documents.find((d) => d.id === sel.documentId);
+  return doc?.stacked.some((s) => s.id === sel.stackedId) ? sel : null;
+}
+
+/** Whether the selection is that Table of that Document. */
+export const isTableSelected = (sel: Selection | null, documentId: string, tableId: string) =>
+  sel !== null &&
+  !isStackedSelection(sel) &&
+  sel.documentId === documentId &&
+  sel.tableId === tableId;
+
+/** Whether the selection is that Stacked Table of that Document. */
+export const isStackedSelected = (sel: Selection | null, documentId: string, stackedId: string) =>
+  isStackedSelection(sel) && sel.documentId === documentId && sel.stackedId === stackedId;
+
+/** Whether what is selected still exists. */
+const selectionStands = (state: WorkspaceState) =>
+  selectedTable(state) !== null || selectedStackedTable(state) !== null;
+
+/** The selected Stacked Table, built from its Members as they stand, or null. */
+export function selectedStackedTable(state: WorkspaceState): BuiltStackedTable | null {
+  const sel = state.selection;
+  if (!isStackedSelection(sel)) return null;
+  const doc = state.documents.find((d) => d.id === sel.documentId);
+  const record = doc?.stacked.find((s) => s.id === sel.stackedId);
+  return doc && record ? buildStackedTable(doc, record) : null;
+}
+
+/** The selected Table, or null (also while a Stacked Table is selected). */
 export function selectedTable(state: WorkspaceState): Table | null {
   const sel = state.selection;
-  if (!sel) return null;
+  if (!sel || isStackedSelection(sel)) return null;
   const doc = state.documents.find((d) => d.id === sel.documentId);
   return doc?.tables.find((t) => t.id === sel.tableId) ?? null;
 }
