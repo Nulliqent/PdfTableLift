@@ -574,19 +574,15 @@ function combineRows(t: Table, upper: number): Table {
   const cells = cellsOf(upper).map((v, c) => [v, below[c]].filter(Boolean).join(" "));
   /** The row's index once the two rows are one; null for the two rows themselves. */
   const moved = (r: number) => (r < upper ? r : r > lower ? r - 1 : null);
-  const shift = <V>(byRow: Record<number, V>): Record<number, V> =>
-    Object.fromEntries(
-      Object.entries(byRow).flatMap(([r, v]) => {
-        const to = moved(Number(r));
-        return to === null ? [] : [[to, v]];
-      }),
-    );
   return {
     ...t,
     grid: t.grid.toSpliced(upper, 2, cells),
     sections: t.sections.flatMap((r) => moved(r) ?? []),
-    sectionCells: shift(t.sectionCells),
-    combined: { ...shift(t.combined), [upper]: { upper: before(upper), lower: before(lower) } },
+    sectionCells: reindexRows(t.sectionCells, moved),
+    combined: {
+      ...reindexRows(t.combined, moved),
+      [upper]: { upper: before(upper), lower: before(lower) },
+    },
     edited: true,
   };
 }
@@ -605,15 +601,11 @@ function splitBack(t: Table, r: number): Table {
   /** The row's index once the row is two again; null for the combined row itself. */
   const moved = (i: number) => (i < r ? i : i > r ? i + 1 : null);
   const restore = <V>(byRow: Record<number, V>, value: (b: RowBefore) => V | null) => {
-    const kept = Object.entries(byRow).flatMap(([i, v]) => {
-      const to = moved(Number(i));
-      return to === null ? [] : [[to, v] as const];
-    });
     const back = [upper, lower].flatMap((b, k) => {
       const v = value(b);
       return v === null ? [] : [[r + k, v] as const];
     });
-    return Object.fromEntries([...kept, ...back]) as Record<number, V>;
+    return { ...reindexRows(byRow, moved), ...Object.fromEntries(back) } as Record<number, V>;
   };
   return {
     ...t,
@@ -626,6 +618,22 @@ function splitBack(t: Table, r: number): Table {
     combined: restore(t.combined, (b) => b.combined),
     edited: true,
   };
+}
+
+/**
+ * A by-row record with its rows renumbered after rows were added or taken out of the grid: `moved`
+ * gives each row's new index, or null to drop its entry.
+ */
+function reindexRows<V>(
+  byRow: Record<number, V>,
+  moved: (row: number) => number | null,
+): Record<number, V> {
+  return Object.fromEntries(
+    Object.entries(byRow).flatMap(([r, v]) => {
+      const to = moved(Number(r));
+      return to === null ? [] : [[to, v] as const];
+    }),
+  );
 }
 
 /** The region field to keep, and no pending Region save once its Region is gone. */
