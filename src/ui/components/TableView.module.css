@@ -21,7 +21,8 @@
   border-bottom: 0;
 }
 
-.table thead th {
+.table thead th,
+.table thead td {
   font-size: 12px;
   font-weight: 600;
   color: var(--label2);
