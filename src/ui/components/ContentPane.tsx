@@ -30,7 +30,8 @@ type ContentPaneProps = {
   documents: Document[];
   onSelectRegion: (documentId: string) => void;
   onOpen: () => void;
-  onCopied: (message: string) => void;
+  /** Shows a message in the HUD (copied, Section Header marked, Rows combined, and so on). */
+  onAnnounce: (message: string) => void;
   onSelectTable: (documentId: string, tableId: string) => void;
   /** Select Region, shown in place of the selected Table while the user is drawing a Region. */
   regionSelection?: ReactNode;
@@ -66,7 +67,7 @@ export function ContentPane({
   documents,
   onSelectRegion,
   onOpen,
-  onCopied,
+  onAnnounce,
   onSelectTable,
   regionSelection,
   onRemoveTable,
@@ -88,7 +89,7 @@ export function ContentPane({
           <TableDetail
             document={document}
             table={table}
-            onCopied={onCopied}
+            onAnnounce={onAnnounce}
             onSelectTable={onSelectTable}
             onRemoveTable={onRemoveTable}
             onRedrawRegion={onRedrawRegion}
@@ -111,7 +112,7 @@ export function ContentPane({
 function TableDetail({
   document,
   table,
-  onCopied,
+  onAnnounce,
   onSelectTable,
   onRemoveTable,
   onRedrawRegion,
@@ -125,7 +126,7 @@ function TableDetail({
 }: {
   document: Document;
   table: Table;
-  onCopied: (message: string) => void;
+  onAnnounce: (message: string) => void;
   onSelectTable: (documentId: string, tableId: string) => void;
   onRemoveTable: (documentId: string, tableId: string) => void;
   onRedrawRegion: ContentPaneProps["onRedrawRegion"];
@@ -147,7 +148,7 @@ function TableDetail({
   const copy = async () => {
     const text = exportTable(table, format, sectionMode);
     if (await copyText(text)) {
-      onCopied(format === "tsv" ? "Copied: paste into Numbers or Excel" : `Copied as ${name}`);
+      onAnnounce(format === "tsv" ? "Copied: paste into Numbers or Excel" : `Copied as ${name}`);
     } else setSheet(text);
   };
   return (
@@ -257,18 +258,18 @@ function TableDetail({
               const marking = !isSectionHeader(table, row);
               onToggleSection(document.id, table.id, row);
               // In As Column mode the new Section Header leaves the grid, so say where it went.
-              if (!marking) onCopied("Unmarked Section Header");
+              if (!marking) onAnnounce("Unmarked Section Header");
               else if (sectionMode === "column")
-                onCopied("Marked as section · switch to As Rows to edit its name");
-              else onCopied("Marked as Section Header");
+                onAnnounce("Marked as section · switch to As Rows to edit its name");
+              else onAnnounce("Marked as Section Header");
             }}
             onCombine={(row, direction) => {
               onCombineRows(document.id, table.id, row, direction);
-              onCopied("Rows combined");
+              onAnnounce("Rows combined");
             }}
             onSplitBack={(row) => {
               onSplitBackRow(document.id, table.id, row);
-              onCopied("Split back");
+              onAnnounce("Split back");
             }}
           />
         ) : (

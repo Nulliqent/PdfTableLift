@@ -221,7 +221,7 @@ export function App() {
             documents={state.documents}
             onSelectRegion={startRegion}
             onOpen={chooseFiles}
-            onCopied={showHud}
+            onAnnounce={showHud}
             onSelectTable={(documentId, tableId) =>
               dispatch({ type: "tableSelected", documentId, tableId })
             }
