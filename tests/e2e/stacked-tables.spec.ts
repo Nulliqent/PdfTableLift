@@ -170,6 +170,116 @@ test("unticking the first Table judges the rest against the next one ticked", as
   );
 });
 
+/** Stacks Tables 4 and 5 of the Example Document (joining off) into Stacked Table 1. */
+async function stackedFourFive(page: Page) {
+  const { sidebar, main } = await exampleUnjoined(page);
+  await sidebar.getByRole("button", { name: /^Select Tables/ }).click();
+  await sidebar.getByRole("checkbox", { name: /^Table 4(?!\d)/ }).check();
+  await sidebar.getByRole("checkbox", { name: /^Table 5(?!\d)/ }).check();
+  await sidebar.getByRole("button", { name: "Stack 2 Tables" }).click();
+  await expect(main.getByRole("heading", { name: "Stacked Table 1" })).toBeVisible();
+  return { sidebar, main };
+}
+
+test("Edit Members reorders by keyboard, removes and adds Members, and Save applies it (#53)", async ({
+  page,
+}) => {
+  const { sidebar, main } = await stackedFourFive(page);
+  // As Column: Table 4's first Row is "Portland Pearl"; Table 5's, "Madison Willy St", follows its 17.
+  const rows = main.getByRole("row");
+  await expect(rows).toHaveCount(28);
+  await expect(rows.nth(1)).toContainText("Portland Pearl");
+  await expect(rows.nth(18)).toContainText("Madison Willy St");
+  const edit = main.getByRole("button", { name: "Edit Members" });
+  await edit.focus();
+  await page.keyboard.press("Enter");
+
+  const box = (n: number) =>
+    sidebar.getByRole("checkbox", { name: new RegExp(`^Table ${n}(?!\\d)`) });
+  await expect(
+    sidebar.getByRole("group", { name: "Edit Members of Stacked Table 1" }),
+  ).toBeVisible();
+  await expect(box(4)).toBeChecked();
+  await expect(box(5)).toBeChecked();
+  // The Members come first, in order.
+  await expect(sidebar.getByRole("checkbox").first()).toBeFocused();
+  await expect(sidebar.getByRole("checkbox").first()).toHaveAccessibleName(/^Table 4/);
+
+  // Keyboard: Tab to Move Table 5 up and press Enter. The move is announced and focus stays on it.
+  const up5 = sidebar.getByRole("button", { name: "Move Table 5 up" });
+  await up5.focus();
+  await page.keyboard.press("Enter");
+  await expect(status(page)).toHaveText("Moved Table 5 up · 1 of 2");
+  await expect(up5).toBeFocused();
+  await expect(up5).toHaveAttribute("aria-disabled", "true");
+  await expect(sidebar.getByRole("checkbox").first()).toHaveAccessibleName(/^Table 5/);
+  await page.keyboard.press("Enter"); // already first: nothing moves
+  await expect(sidebar.getByRole("checkbox").first()).toHaveAccessibleName(/^Table 5/);
+  // The preview only follows on Save.
+  await expect(rows.nth(18)).toContainText("Madison Willy St");
+
+  await sidebar.getByRole("button", { name: "Save" }).click();
+  await expect(status(page)).toHaveText("Stacked Table 1 now stacks Tables 5, 4");
+  await expect(sidebar.getByRole("checkbox")).toHaveCount(0);
+  await expect(
+    sidebar.getByRole("button", { name: /^Stacked Table 1\s?Tables 5, 4/ }),
+  ).toBeFocused();
+  await expect(rows.nth(1)).toContainText("Madison Willy St");
+  await expect(rows).toHaveCount(28);
+
+  // Untick Table 4: one Member still stands. Untick both: Save is disabled with a reason.
+  await edit.click();
+  await box(4).uncheck();
+  await box(5).uncheck();
+  const save = sidebar.getByRole("button", { name: "Save" });
+  await expect(save).toBeDisabled();
+  await expect(save).toHaveAccessibleDescription("Tick at least one Table");
+  await box(5).check();
+  await save.click();
+  await expect(sidebar.getByRole("button", { name: /^Stacked Table 1\s?Table 5 ·/ })).toBeVisible();
+  await expect(main.getByRole("heading", { name: "Stacked Table 1" })).toBeVisible();
+  await expect(main.getByText("Portland Pearl")).toHaveCount(0);
+  await expect(rows.nth(1)).toContainText("Madison Willy St");
+
+  // Add Table 4 back, after Table 5.
+  await edit.click();
+  await box(4).check();
+  await save.click();
+  await expect(
+    sidebar.getByRole("button", { name: /^Stacked Table 1\s?Tables 5, 4/ }),
+  ).toBeVisible();
+});
+
+test("Escape and Cancel in Edit Members leave the Members as they were (#53)", async ({ page }) => {
+  const { sidebar, main } = await stackedFourFive(page);
+  const edit = main.getByRole("button", { name: "Edit Members" });
+  await edit.click();
+  await sidebar.getByRole("button", { name: "Move Table 5 up" }).click();
+  await page.keyboard.press("Escape");
+  await expect(sidebar.getByRole("checkbox")).toHaveCount(0);
+  const entry = sidebar.getByRole("button", { name: /^Stacked Table 1\s?Tables 4, 5/ });
+  await expect(entry).toBeVisible();
+
+  await edit.click();
+  await sidebar.getByRole("checkbox", { name: /^Table 4(?!\d)/ }).uncheck();
+  await sidebar.getByRole("button", { name: "Cancel" }).click();
+  await expect(entry).toBeVisible();
+});
+
+test("Remove Stacked Table removes only it and leaves its Members (#53)", async ({ page }) => {
+  const { sidebar, main } = await stackedFourFive(page);
+  await main.getByRole("button", { name: "Remove Stacked Table" }).click();
+  await expect(status(page)).toHaveText("Removed Stacked Table 1. Its Members are unchanged");
+  await expect(sidebar.getByRole("button", { name: /^Stacked Table/ })).toHaveCount(0);
+  // Its first Member opens, editable and listed as before.
+  await expect(main.getByRole("heading", { name: "Table 4" })).toBeVisible();
+  await expect(sidebar.getByRole("button", { name: /^Table 4/ })).toHaveAttribute(
+    "aria-current",
+    "true",
+  );
+  await expect(sidebar.getByRole("button", { name: /^Table 5/ })).toBeVisible();
+});
+
 test("a Table without a Header Row can't be ticked", async ({ page }) => {
   const { sidebar, main } = await exampleUnjoined(page);
   await sidebar.getByRole("button", { name: /^Table 3/ }).click();

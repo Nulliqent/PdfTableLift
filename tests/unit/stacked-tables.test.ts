@@ -11,7 +11,7 @@ import {
   selectedStackedTable,
   selectedTable,
   tickMatch,
-  withMembers,
+  tickedTables,
   type Document,
   type PageText,
   type TextItem,
@@ -305,6 +305,138 @@ describe("a Stacked Table", () => {
   });
 });
 
+describe("Edit Members", () => {
+  const stacked = stack(open("repeated-header"), 1, 2);
+  const id = doc(stacked).stacked[0]!.id;
+  const editing = reduce(stacked, { type: "membersEditStarted", documentId: "d", stackedId: id });
+
+  it("opens the checkboxes with the current Members ticked, in order", () => {
+    expect(editing.stacking?.stackedId).toBe(id);
+    expect(tickedTables(doc(editing), editing.stacking!.ticked).map((t) => t.n)).toEqual([1, 2]);
+  });
+
+  it("adds, removes and reorders Members on Save, and the grid follows the new order", () => {
+    const saved = run(
+      tick(editing, 3),
+      { type: "tableTicked", tableId: tableId(editing, 1), ticked: false },
+      { type: "memberMoved", tableId: tableId(editing, 3), direction: "up" },
+      { type: "membersSaved" },
+    );
+    expect(saved.stacking).toBeNull();
+    expect(doc(saved).stacked).toHaveLength(1);
+    const built = selectedStackedTable(saved)!;
+    expect(built.record.id).toBe(id);
+    expect(built.members.map((m) => m.table?.n)).toEqual([3, 2]);
+    expect(built.table.grid.map((r) => r[0])).toEqual([
+      "Order",
+      "A-1013",
+      "A-1014",
+      "A-1015",
+      "A-1016",
+      "A-1017",
+      "A-1018",
+      "A-1007",
+      "A-1008",
+      "A-1009",
+      "A-1010",
+      "A-1011",
+      "A-1012",
+    ]);
+    // The Members themselves are untouched.
+    expect(doc(saved).tables).toEqual(doc(stacked).tables);
+  });
+
+  it("moves a Member up or down, and not past either end", () => {
+    const three = tick(editing, 3);
+    const order = (s: WorkspaceState) => tickedTables(doc(s), s.stacking!.ticked).map((t) => t.n);
+    const move = (s: WorkspaceState, n: number, direction: "up" | "down") =>
+      reduce(s, { type: "memberMoved", tableId: tableId(s, n), direction });
+    expect(order(move(three, 1, "down"))).toEqual([2, 1, 3]);
+    expect(order(move(three, 3, "up"))).toEqual([1, 3, 2]);
+    expect(move(three, 1, "up")).toBe(three);
+    expect(move(three, 3, "down")).toBe(three);
+  });
+
+  it("leaves the Members as they were on Cancel", () => {
+    const cancelled = run(
+      tick(editing, 3),
+      { type: "memberMoved", tableId: tableId(editing, 3), direction: "up" },
+      { type: "stackingCancelled" },
+    );
+    expect(cancelled.stacking).toBeNull();
+    expect(doc(cancelled).stacked).toEqual(doc(stacked).stacked);
+  });
+
+  it("keeps a Stacked Table saved with one Member, and refuses to save with none", () => {
+    const one = run(
+      editing,
+      { type: "tableTicked", tableId: tableId(editing, 1), ticked: false },
+      { type: "membersSaved" },
+    );
+    const built = selectedStackedTable(one)!;
+    expect(built.members.map((m) => m.table?.n)).toEqual([2]);
+    expect(built.table.grid).toHaveLength(7);
+    expect(exportTable(built.table, "csv").split("\n")[0]).toBe("Order,City,Units,Total");
+
+    const none = run(
+      editing,
+      { type: "tableTicked", tableId: tableId(editing, 1), ticked: false },
+      { type: "tableTicked", tableId: tableId(editing, 2), ticked: false },
+    );
+    expect(reduce(none, { type: "membersSaved" })).toBe(none);
+    // Stack N Tables does not make a second Stacked Table while editing one.
+    expect(doc(reduce(tick(editing, 3), { type: "tablesStacked" })).stacked).toHaveLength(1);
+  });
+});
+
+describe("Remove Stacked Table", () => {
+  const state = open("repeated-header");
+  const first = stack(state, 1, 2);
+  const both = stack(first, 2, 3);
+  const [one, two] = doc(both).stacked;
+
+  it("removes only it: its Members and other Stacked Tables sharing a Member stay", () => {
+    const edited = reduce(both, {
+      type: "cellEdited",
+      documentId: "d",
+      tableId: tableId(both, 2),
+      row: 1,
+      col: 1,
+      value: "Gary, IN",
+    });
+    const removed = reduce(edited, {
+      type: "stackedTableRemoved",
+      documentId: "d",
+      stackedId: two!.id,
+    });
+    expect(doc(removed).stacked).toEqual([one]);
+    expect(doc(removed).tables).toEqual(doc(edited).tables);
+    expect(tableN(removed, 2).grid[1]![1]).toBe("Gary, IN");
+    // The selection moves to its first Member.
+    expect(selectedTable(removed)?.n).toBe(2);
+  });
+
+  it("keeps the selection when another Stacked Table is removed, and ends its Edit Members", () => {
+    const editing = reduce(both, {
+      type: "membersEditStarted",
+      documentId: "d",
+      stackedId: one!.id,
+    });
+    const removed = reduce(editing, {
+      type: "stackedTableRemoved",
+      documentId: "d",
+      stackedId: one!.id,
+    });
+    expect(removed.stacking).toBeNull();
+    const other = reduce(both, {
+      type: "stackedTableRemoved",
+      documentId: "d",
+      stackedId: one!.id,
+    });
+    expect(selectedStackedTable(other)?.record.id).toBe(two!.id);
+  });
+});
+
 /** Turns the Source switch of the selected Stacked Table on or off. */
 const source = (state: WorkspaceState, on: boolean) =>
   reduce(state, {
@@ -595,17 +727,22 @@ describe("live Members", () => {
     expect(selectedTable(empty)?.n).toBe(1);
   });
 
-  it("renews its saved Header Row from a new first Member", () => {
+  it("renews its saved Header Row from the new first Member on Save in Edit Members", () => {
     const stacked = stack(open("repeated-header"), 1, 2, 3);
     const edited = headerCell(headerCell(stacked, 2, 1, "Town"), 3, 1, "Town");
     expect(standing(edited).map(([, leftOut]) => leftOut)).toEqual([null, "no-match", "no-match"]);
-    const record = doc(edited).stacked[0]!;
-    const renewed = withMembers(doc(edited), record, record.members.slice(1));
-    expect(renewed.header).toEqual(["Order", "Town", "Units", "Total"]);
-    expect(buildStackedTable(doc(edited), renewed).members.map((m) => m.leftOut)).toEqual([
-      null,
-      null,
+    const saved = run(
+      edited,
+      { type: "membersEditStarted", documentId: "d", stackedId: doc(edited).stacked[0]!.id },
+      { type: "tableTicked", tableId: tableId(edited, 1), ticked: false },
+      { type: "membersSaved" },
+    );
+    expect(doc(saved).stacked[0]!.header).toEqual(["Order", "Town", "Units", "Total"]);
+    expect(standing(saved)).toEqual([
+      [2, null, null],
+      [3, null, null],
     ]);
+    expect(built(saved).table.grid[0]).toEqual(["Order", "Town", "Units", "Total"]);
   });
 });
 

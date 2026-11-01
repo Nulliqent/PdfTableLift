@@ -30,8 +30,11 @@ export type StackedTable = {
   source: boolean;
 };
 
-/** The Tables being ticked in Select Tables, in tick order. */
-export type TablesInProgress = { documentId: string; ticked: MemberRef[] };
+/**
+ * The Tables being ticked in Select Tables, in tick order. In Edit Members, `stackedId` names the
+ * Stacked Table whose Members they are; it is absent while making a new one.
+ */
+export type TablesInProgress = { documentId: string; ticked: MemberRef[]; stackedId?: string };
 
 /** The matching rule's answer, with a short reason when it is no. */
 export type HeaderMatch = { matches: true } | { matches: false; reason: string };
