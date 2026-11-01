@@ -7,7 +7,7 @@
  */
 import { pageBox, type PageText } from "../shared/page-text";
 import type { ReadError } from "../shared/read-error";
-import { detectTables, regionTable, type Band, type Bbox, type FoundTable } from "./detection";
+import { detectTables, regionsTable, type Band, type Bbox, type FoundTable } from "./detection";
 import { isSectionHeader, usesSectionColumn, type SectionMode } from "./export";
 import { joinTables } from "./join";
 import { HAND_DRAWN_OVERLAP, REMOVED_TABLE_OVERLAP, overlapRatio } from "./overlap";
@@ -44,7 +44,7 @@ export type Table = {
   splitFrom: boolean;
   /** The user corrected a cell or the Header Row; re-detection would discard it. */
   edited: boolean;
-  /** The id of the Region a Hand-drawn Table is built from ("Selected by hand"); null if Detected. */
+  /** The id of the Hand-drawn record a Table is built from ("Selected by hand"); null if Detected. */
   manual: string | null;
 };
 
@@ -65,38 +65,52 @@ export type CombineDirection = "above" | "below";
 /** One Combine: the two grid rows, upper first, that became one Row in the upper Row's place. */
 export type Combine = { upper: RowBeforeCombine; lower: RowBeforeCombine };
 
-/** A Region the user drew on a page; it yields a Hand-drawn Table. */
+/** What a Region is for: the Header Region holds the column titles, a Body Region holds the Rows. */
+export type RegionRole = "header" | "body";
+
+/** A Region the user drew on a page: its bounds, its role and its Single-Row setting. */
 export type Region = {
-  id: string;
-  page: number;
   bbox: Bbox;
-  /** The Part of the Detected Table this Region was redrawn from; it stays hidden, wherever the Region moves. */
-  replaces: Part | null;
-  /** The other Parts of the Joined Table that Part belonged to; they stand on their own, never joined. */
-  apart: Part[];
-  /** A Single-Row Region: everything inside it is one Row ("Treat selection as one row"). */
+  role: RegionRole;
+  /** A Single-Row Region (a Body Region only): everything inside it is one Row ("Treat selection as one row"). */
   singleRow: boolean;
 };
 
-/** What a redraw carries over from the Table whose Region is being redrawn. */
+/** A Hand-drawn Table as saved: one record on one page, holding its Regions and its redraw data. */
+export type HandDrawn = {
+  id: string;
+  page: number;
+  regions: Region[];
+  /** The Part of the Detected Table this record was redrawn from; it stays hidden, wherever the Regions move. */
+  replaces: Part | null;
+  /** The other Parts of the Joined Table that Part belonged to; they stand on their own, never joined. */
+  apart: Part[];
+};
+
+/** What a redraw carries over from the Table whose Regions are being redrawn. */
 export type Redraw = {
-  /** The Region being redrawn if the Table was Hand-drawn, else null (a new Region is made). */
-  regionId: string | null;
+  /** The record being redrawn if the Table was Hand-drawn, else null (a new record is made). */
+  handDrawnId: string | null;
   replaces: Part | null;
   apart: Part[];
 };
 
+/** A Region in progress: as a Region, but its bounds are null until the user drags them. */
+export type DraftRegion = Omit<Region, "bbox"> & { bbox: Bbox | null };
+
 /**
- * The Region being selected: the page shown and the box dragged so far (null before any drag).
- * `redraw` is set when it was opened from a Table, else null. `singleRow` is the Single-Row
- * switch: off for a new Region, the Region's own setting when a Hand-drawn Table is redrawn.
+ * The Regions being selected: the page shown, the list of Regions drawn so far and the index of the
+ * one being edited. `redraw` is set when it was opened from a Table, else null. A new selection
+ * starts with one Body Region whose Single-Row switch is off; a redrawn Hand-drawn Table opens on its
+ * own Regions.
  */
 export type RegionInProgress = {
   documentId: string;
   page: number;
-  bbox: Bbox | null;
+  regions: DraftRegion[];
+  /** Index into `regions` of the Region the drag, Select Whole Page and the Single-Row switch act on. */
+  edited: number;
   redraw: Redraw | null;
-  singleRow: boolean;
 };
 
 /** A Detected Table the user dismissed, recorded by page and bounding box so it survives re-detection. */
@@ -123,8 +137,8 @@ export type Document = {
   tables: Table[];
   /** Removed Tables, hidden from `tables` until restored. */
   removed: RemovedTable[];
-  /** Regions drawn by hand; each stands as a Hand-drawn Table. */
-  regions: Region[];
+  /** Hand-drawn records; each stands as a Hand-drawn Table. */
+  handDrawn: HandDrawn[];
   /** Pages whose first Part must not join the page before: the user split a Joined Table there. */
   noJoin: number[];
 };
@@ -276,7 +290,7 @@ export function reduce(state: WorkspaceState, action: WorkspaceAction): Workspac
         pages: [],
         tables: [],
         removed: [],
-        regions: [],
+        handDrawn: [],
         noJoin: [],
       };
       // The Example Document steps aside when the user's first own Document opens.
@@ -350,8 +364,8 @@ export function reduce(state: WorkspaceState, action: WorkspaceAction): Workspac
       if (!doc || !table) return state;
       if (needsConfirmation(state, action)) return { ...state, pendingChange: action };
       const n = Math.max(0, ...doc.removed.map((r) => r.seq)) + 1;
-      // A Hand-drawn Table is deleted with its Region. A Detected Table is recorded as removed.
-      const region = table.manual ? doc.regions.find((r) => r.id === table.manual) : undefined;
+      // A Hand-drawn Table is deleted with its record. A Detected Table is recorded as removed.
+      const own = table.manual ? doc.handDrawn.find((r) => r.id === table.manual) : undefined;
       const record = (parts: Part[]) => ({
         id: `${doc.id}:removed:${n}`,
         seq: n,
@@ -360,18 +374,18 @@ export function reduce(state: WorkspaceState, action: WorkspaceAction): Workspac
       });
       let gone: Document;
       if (!table.manual) gone = { ...doc, removed: [...doc.removed, record(table.parts)] };
-      else if (region?.replaces) {
-        // A redrawn Region carried the suppression of the Detected Table it replaced. Deleting the
-        // Region must not undo the user's Remove, so the replaced Part becomes a Removed Table
+      else if (own?.replaces) {
+        // A redrawn record carried the suppression of the Detected Table it replaced. Deleting the
+        // record must not undo the user's Remove, so the replaced Part becomes a Removed Table
         // (restorable), and the Parts the redraw left standing alone stay unjoined.
-        const alone = [region.replaces, ...region.apart].map((p) => p.page);
+        const alone = [own.replaces, ...own.apart].map((p) => p.page);
         gone = {
           ...doc,
-          regions: doc.regions.filter((r) => r.id !== region.id),
-          removed: [...doc.removed, record([region.replaces])],
+          handDrawn: doc.handDrawn.filter((r) => r.id !== own.id),
+          removed: [...doc.removed, record([own.replaces])],
           noJoin: [...new Set([...doc.noJoin, ...alone])],
         };
-      } else gone = { ...doc, regions: doc.regions.filter((r) => r.id !== table.manual) };
+      } else gone = { ...doc, handDrawn: doc.handDrawn.filter((r) => r.id !== table.manual) };
       const next = { ...redetect(state, gone), pendingChange: null };
       // Move to the neighbour that took the removed Table's place, else the previous one.
       const was = state.selection?.documentId === doc.id && state.selection.tableId === table.id;
@@ -415,30 +429,27 @@ export function reduce(state: WorkspaceState, action: WorkspaceAction): Workspac
     case "regionCommitted": {
       const doc = state.documents.find((d) => d.id === state.region?.documentId);
       const region = state.region;
-      if (!doc || !region?.bbox || !regionPreview(state)) return state;
+      if (!doc || !region || !regionPreview(state)) return state;
       if (needsConfirmation(state, action)) return { ...state, pendingChange: action };
-      const id = `r${Math.max(0, ...doc.regions.map((r) => Number(r.id.slice(1)))) + 1}`;
+      const id = `r${Math.max(0, ...doc.handDrawn.map((r) => Number(r.id.slice(1)))) + 1}`;
       const { redraw } = region;
-      // Redrawing a Hand-drawn Table moves its own Region; anything else adds one.
-      const own = redraw?.regionId ?? null;
-      const regions = own
-        ? doc.regions.map((r) =>
-            r.id === own
-              ? { ...r, page: region.page, bbox: region.bbox!, singleRow: region.singleRow }
-              : r,
-          )
+      // Only Regions with bounds are saved; the preview has already refused a list with none.
+      const regions = drawn(region.regions);
+      // Redrawing a Hand-drawn Table changes its own record; anything else adds one.
+      const own = redraw?.handDrawnId ?? null;
+      const handDrawn = own
+        ? doc.handDrawn.map((r) => (r.id === own ? { ...r, page: region.page, regions } : r))
         : [
-            ...doc.regions,
+            ...doc.handDrawn,
             {
               id,
               page: region.page,
-              bbox: region.bbox,
+              regions,
               replaces: redraw?.replaces ?? null,
               apart: redraw?.apart ?? [],
-              singleRow: region.singleRow,
             },
           ];
-      const next = redetect({ ...state, region: null, pendingChange: null }, { ...doc, regions });
+      const next = redetect({ ...state, region: null, pendingChange: null }, { ...doc, handDrawn });
       const created = next.documents
         .find((d) => d.id === doc.id)!
         .tables.find((t) => t.manual === (own ?? id));
@@ -453,27 +464,36 @@ export function reduce(state: WorkspaceState, action: WorkspaceAction): Workspac
           region: {
             documentId: doc.id,
             page: action.page,
-            bbox: null,
+            regions: [draftRegion(null)],
+            edited: 0,
             redraw: null,
-            singleRow: false,
           },
         };
       }
       const table = doc.tables.find((t) => t.id === action.tableId);
       if (!table) return state;
       const part = table.parts.find((p) => p.page === action.page) ?? table.parts[0]!;
-      const own = table.manual ? doc.regions.find((r) => r.id === table.manual) : undefined;
+      const own = table.manual ? doc.handDrawn.find((r) => r.id === table.manual) : undefined;
       const redraw: Redraw = own
-        ? { regionId: own.id, replaces: own.replaces, apart: own.apart }
-        : { regionId: null, replaces: part, apart: table.parts.filter((p) => p !== part) };
-      const bbox = own?.bbox ?? part.bbox;
-      const singleRow = own?.singleRow ?? false;
-      return { ...state, region: { documentId: doc.id, page: part.page, bbox, redraw, singleRow } };
+        ? { handDrawnId: own.id, replaces: own.replaces, apart: own.apart }
+        : { handDrawnId: null, replaces: part, apart: table.parts.filter((p) => p !== part) };
+      const regions: DraftRegion[] = own ? own.regions : [draftRegion(part.bbox)];
+      return {
+        ...state,
+        region: { documentId: doc.id, page: own?.page ?? part.page, regions, edited: 0, redraw },
+      };
     }
     case "regionChanged": {
       const doc = regionDocument(state);
       if (!state.region || !doc || !pageOf(doc, action.page)) return state;
-      return { ...state, region: { ...state.region, page: action.page, bbox: action.bbox } };
+      const { region } = state;
+      // Stepping to another page starts that page's selection over; the Single-Row switch carries on.
+      if (action.page !== region.page) {
+        const carried = editedRegion(region).singleRow;
+        const fresh = { ...draftRegion(action.bbox), singleRow: carried };
+        return { ...state, region: { ...region, page: action.page, regions: [fresh], edited: 0 } };
+      }
+      return { ...state, region: withEdited(region, { bbox: action.bbox }) };
     }
     case "wholePageSelected": {
       const doc = regionDocument(state);
@@ -481,13 +501,16 @@ export function reduce(state: WorkspaceState, action: WorkspaceAction): Workspac
       if (!p) return state;
       const m = WHOLE_PAGE_MARGIN;
       const [x0, y0, x1, y1] = pageBox(p);
-      return { ...state, region: { ...state.region!, bbox: [x0 + m, y0 + m, x1 - m, y1 - m] } };
+      return {
+        ...state,
+        region: withEdited(state.region!, { bbox: [x0 + m, y0 + m, x1 - m, y1 - m] }),
+      };
     }
     case "regionCancelled":
       return state.region ? { ...state, region: null } : state;
     case "regionSingleRowChanged":
-      if (!state.region || state.region.singleRow === action.value) return state;
-      return { ...state, region: { ...state.region, singleRow: action.value } };
+      if (!state.region || editedRegion(state.region).singleRow === action.value) return state;
+      return { ...state, region: withEdited(state.region, { singleRow: action.value }) };
     case "changeConfirmed": {
       if (!state.pendingChange) return state;
       return reduce(
@@ -819,21 +842,26 @@ function detectDocument(doc: Document, pages: PageText[], settings: Settings): T
       parts.some((q) => q.page === p.num && overlapRatio(q.bbox, bbox) > REMOVED_TABLE_OVERLAP);
     const hidden = (bbox: Bbox) => doc.removed.some((r) => overlaps(r.parts, bbox));
     // A Hand-drawn Table takes over the Detected Tables its Region covers.
-    const covering = doc.regions.filter((r) => r.page === p.num);
+    const covering = doc.handDrawn.filter((r) => r.page === p.num);
     // A redrawn Region keeps hiding the Table it replaced, wherever it now lies.
     const replaced = (bbox: Bbox) =>
-      doc.regions.some((r) => r.replaces !== null && overlaps([r.replaces], bbox));
+      doc.handDrawn.some((r) => r.replaces !== null && overlaps([r.replaces], bbox));
     // The Parts left behind by a redraw are not joined to anything.
-    const standalone = (bbox: Bbox) => doc.regions.some((r) => overlaps(r.apart, bbox));
+    const standalone = (bbox: Bbox) => doc.handDrawn.some((r) => overlaps(r.apart, bbox));
     detectTables(p.items, settings.columnSpacing).forEach((t, i) => {
       if (hidden(t.bbox) || replaced(t.bbox)) return;
-      if (covering.some((r) => overlapRatio(r.bbox, t.bbox) > HAND_DRAWN_OVERLAP)) return;
+      if (
+        covering.some((r) =>
+          r.regions.some((g) => overlapRatio(g.bbox, t.bbox) > HAND_DRAWN_OVERLAP),
+        )
+      )
+        return;
       const id = `${documentId}:${p.num}:${i}`;
       if (standalone(t.bbox)) apart.add(id);
       detected.push(table(id, p.num, t, null));
     });
     for (const r of covering) {
-      const t = handDrawnTable(p, r.bbox, settings, r.singleRow);
+      const t = handDrawnTable(p, r.regions, settings);
       if (t) handDrawn.push(table(`${documentId}:region:${r.id}`, p.num, t, r.id, t.header));
     }
   }
@@ -884,24 +912,34 @@ export type RegionTable = FoundTable & { header: boolean };
  * is applied whenever the Table is found, so a redraw to a single Row turns it off and a redraw to
  * several Rows turns it back on.
  */
-function handDrawnTable(
-  page: PageText,
-  bbox: Bbox,
-  settings: Settings,
-  singleRow: boolean,
-): RegionTable | null {
-  const t = regionTable(page.items, bbox, settings.columnSpacing, singleRow);
+function handDrawnTable(page: PageText, regions: Region[], settings: Settings): RegionTable | null {
+  const t = regionsTable(page.items, regions, settings.columnSpacing);
   return t && { ...t, header: t.grid.length > 1 && !t.sections.includes(0) };
 }
 
+/** A new Body Region, with the given bounds (null until dragged). */
+const draftRegion = (bbox: Bbox | null): DraftRegion => ({ bbox, role: "body", singleRow: false });
+
+const editedRegion = (region: RegionInProgress): DraftRegion => region.regions[region.edited]!;
+
+/** The Regions that have bounds. */
+const drawn = (regions: DraftRegion[]): Region[] =>
+  regions.flatMap((r) => (r.bbox ? [{ ...r, bbox: r.bbox }] : []));
+
+/** The Region in progress with the edited Region changed. */
+const withEdited = (region: RegionInProgress, change: Partial<DraftRegion>): RegionInProgress => ({
+  ...region,
+  regions: region.regions.map((r, i) => (i === region.edited ? { ...r, ...change } : r)),
+});
+
 /**
- * The Table the Region in progress would make with the current Column Spacing, or null while
- * nothing is drawn or the Region holds no text (so it cannot be saved).
+ * The Table the Regions in progress would make with the current Column Spacing, or null while
+ * nothing is drawn or the Regions hold no text (so they cannot be saved).
  */
 export function regionPreview(state: WorkspaceState): RegionTable | null {
   const { region } = state;
   const doc = regionDocument(state);
   const page = doc && region && pageOf(doc, region.page);
-  if (!region?.bbox || !page) return null;
-  return handDrawnTable(page, region.bbox, state.settings, region.singleRow);
+  if (!region || !page) return null;
+  return handDrawnTable(page, drawn(region.regions), state.settings);
 }

@@ -720,3 +720,20 @@ export function regionTable(
   const table = rows.length ? buildTable(rows, true, singleRow) : null;
   return table && { ...table, bbox: region };
 }
+
+/** A Region as the engine takes it: its bounds, its role and its Single-Row setting. */
+export type RegionSpec = { bbox: Bbox; role: "header" | "body"; singleRow: boolean };
+
+/**
+ * Builds a Hand-drawn Table from a page's text, a list of Regions with roles and the Column
+ * Spacing. Returns null when the Regions hold no Rows to save. With one Body Region the result is
+ * exactly that of `regionTable`.
+ */
+export function regionsTable(
+  items: TextItem[],
+  regions: RegionSpec[],
+  columnSpacing: number,
+): FoundTable | null {
+  const body = regions.find((r) => r.role === "body");
+  return body ? regionTable(items, body.bbox, columnSpacing, body.singleRow) : null;
+}

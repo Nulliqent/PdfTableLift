@@ -45,6 +45,7 @@ export function RegionSelection({
     return () => window.removeEventListener("keydown", onKey);
   }, [onCancel]);
 
+  const edited = region.regions[region.edited]!;
   const last = Math.max(...document.pages.map((p) => p.num));
   // The preview shows the Header Row as the saved Table will start: off for a single Row.
   const label = preview
@@ -93,7 +94,7 @@ export function RegionSelection({
           <input
             type="checkbox"
             role="switch"
-            checked={region.singleRow}
+            checked={edited.singleRow}
             onChange={(e) => onSingleRow(e.target.checked)}
           />
           Treat selection as one row
@@ -110,13 +111,13 @@ export function RegionSelection({
           <RegionPage
             document={document}
             pageNum={region.page}
-            bbox={region.bbox}
+            bbox={edited.bbox}
             label={label}
             onDrag={onDrag}
           />
         </div>
         <div className={`${pane.card} ${styles.preview}`} aria-live="polite">
-          <Preview drawn={region.bbox !== null} table={preview} />
+          <Preview drawn={edited.bbox !== null} table={preview} />
         </div>
       </div>
     </>
