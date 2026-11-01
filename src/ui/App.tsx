@@ -221,7 +221,7 @@ export function App() {
             documents={state.documents}
             onSelectRegion={startRegion}
             onOpen={chooseFiles}
-            onCopied={showHud}
+            onAnnounce={showHud}
             onSelectTable={(documentId, tableId) =>
               dispatch({ type: "tableSelected", documentId, tableId })
             }
@@ -255,15 +255,7 @@ export function App() {
             onToggleHeader={(documentId, tableId, header) =>
               dispatch({ type: "headerToggled", documentId, tableId, header })
             }
-            onToggleSection={(documentId, tableId, row) =>
-              dispatch({ type: "sectionHeaderToggled", documentId, tableId, row })
-            }
-            onCombineRows={(documentId, tableId, row, direction) =>
-              dispatch({ type: "rowCombined", documentId, tableId, row, direction })
-            }
-            onSplitBackRow={(documentId, tableId, row) =>
-              dispatch({ type: "rowSplitBack", documentId, tableId, row })
-            }
+            onRowAction={dispatch}
             onSplitByPage={(documentId, tableId) => {
               dispatch({ type: "splitByPage", documentId, tableId });
               if (!hasEdits(documentId)) showHud(splitMessage(documentId, tableId));

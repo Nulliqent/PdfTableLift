@@ -1,25 +1,33 @@
 import { useLayoutEffect, useRef, useState } from "react";
 import {
+  combineTarget,
   isSectionHeader,
   numericColumns,
   usesSectionColumn,
+  type CombineDirection,
   type SectionMode,
   type Table,
 } from "../../engine";
 import { RowMenu, type RowMenuItem } from "./RowMenu";
 import styles from "./TableView.module.css";
 
+/** What a row number's menu does to this Table; `row` is a grid row (the Header Row is row 0). */
+export type RowActions = {
+  /** Mark or Unmark Section Header. */
+  toggleSection: (row: number) => void;
+  /** Combine with Row above / below. */
+  combine: (row: number, direction: CombineDirection) => void;
+  /** Split back a combined Row. */
+  splitBack: (row: number) => void;
+};
+
 type TableViewProps = {
   table: Table;
   /** A cell was corrected; `row` and `col` are grid coordinates (the Header Row is row 0). */
   onEdit: (row: number, col: number, value: string) => void;
   sectionMode: SectionMode;
-  /** Mark or Unmark Section Header was chosen from a row's menu; `row` is a grid row. */
-  onToggleSection: (row: number) => void;
-  /** Combine with Row above / below was chosen from a row's menu; `row` is a grid row. */
-  onCombine: (row: number, direction: "above" | "below") => void;
-  /** Split back was chosen from a combined Row's menu; `row` is a grid row. */
-  onSplitBack: (row: number) => void;
+  /** What the row numbers' menus do. */
+  rowActions: RowActions;
 };
 
 /**
@@ -27,16 +35,10 @@ type TableViewProps = {
  * editable in place; Enter or leaving the cell commits it. Numeric columns are right-aligned.
  * Section Header rows are shaded; in As Column mode they appear as a Section column instead. The
  * row number opens the row's menu: Mark or Unmark Section Header, and Combine with the grid row
- * above (the Header Row included) or below, and Split back on a combined Row.
+ * above (the Header Row included) or below, and Split back on a combined Row. The Header Row has a
+ * row number too, whose menu offers only Combine with Row below and Split back.
  */
-export function TableView({
-  table,
-  onEdit,
-  sectionMode,
-  onToggleSection,
-  onCombine,
-  onSplitBack,
-}: TableViewProps) {
+export function TableView({ table, onEdit, sectionMode, rowActions }: TableViewProps) {
   const [menu, setMenu] = useState<{ row: number; anchor: HTMLButtonElement } | null>(null);
   /** The press began on the row number of the open menu: that click only closes the menu. */
   const pressedOpen = useRef(false);
@@ -63,52 +65,59 @@ export function TableView({
     setMenu(null);
   };
 
-  const menuItems = (row: number): RowMenuItem[] => [
-    {
-      label: isSectionHeader(table, row) ? "Unmark Section Header" : "Mark as Section Header",
-      onSelect: () => onToggleSection(row),
-    },
-    {
-      label: "Combine with Row above",
-      disabled: row === 0,
+  /**
+   * Combine with Row above / below. In As Column mode the neighbour may be a Section Header that
+   * isn't drawn as a row: the item names it, so the Combine is never a surprise.
+   */
+  const combineItem = (row: number, direction: CombineDirection): RowMenuItem => {
+    const target = combineTarget(table, row, direction, sectionMode);
+    const hidden = target?.hiddenSectionHeader ?? null;
+    return {
+      label:
+        hidden === null
+          ? `Combine with Row ${direction}`
+          : `Combine with Section Header “${hidden}” ${direction}`,
+      disabled: target === null,
       onSelect: () => {
         // The combined Row takes the upper Row's place: its row number gets focus.
-        refocus.current = row - 1;
-        onCombine(row, "above");
+        if (direction === "above") refocus.current = row - 1;
+        rowActions.combine(row, direction);
       },
-    },
-    {
-      label: "Combine with Row below",
-      disabled: row === table.grid.length - 1,
-      onSelect: () => onCombine(row, "below"),
-    },
+    };
+  };
+
+  const menuItems = (row: number): RowMenuItem[] => {
+    const below = combineItem(row, "below");
     // Only a combined Row can be split back. Focus returns to this row number, now the upper
     // restored Row's.
-    ...(row in table.combined ? [{ label: "Split back", onSelect: () => onSplitBack(row) }] : []),
-  ];
+    const splitBack: RowMenuItem[] =
+      row in table.combinedFrom
+        ? [{ label: "Split back", onSelect: () => rowActions.splitBack(row) }]
+        : [];
+    // The Header Row is never a Section Header and has no Row above.
+    if (isHeaderRow(table, row)) return [below, ...splitBack];
+    return [
+      {
+        label: isSectionHeader(table, row) ? "Unmark Section Header" : "Mark as Section Header",
+        onSelect: () => rowActions.toggleSection(row),
+      },
+      combineItem(row, "above"),
+      below,
+      ...splitBack,
+    ];
+  };
 
-  const numeric = numericColumns(table);
-  const first = table.header ? 1 : 0;
-  const head = table.header ? table.grid[0]! : null;
-  const asColumn = usesSectionColumn(table, sectionMode);
-  const width = table.grid[0]?.length ?? 0;
-  let current = "";
-  let k = 0;
-  const rows: React.ReactNode[] = [];
-  table.grid.forEach((row, r) => {
-    if (r < first) return;
-    const section = isSectionHeader(table, r);
+  /** The row number of grid row `r`: a button that opens its menu. */
+  const rowNumber = (r: number, name: string, glyph: React.ReactNode) => {
     const open = menu?.row === r;
-    const idx = (
+    return (
       <td className={styles.idx}>
         <button
           type="button"
           className={styles.idxBtn}
           data-row={r}
           title="Row actions"
-          aria-label={
-            section ? "Row is a section header. Row actions" : `Row ${k + 1}. Row actions`
-          }
+          aria-label={`${name}. Row actions`}
           aria-haspopup="menu"
           aria-expanded={open}
           onPointerDown={() => {
@@ -128,10 +137,26 @@ export function TableView({
             setMenu({ row: r, anchor: e.currentTarget });
           }}
         >
-          {section ? "§" : k + 1}
+          {glyph}
         </button>
       </td>
     );
+  };
+
+  const numeric = numericColumns(table);
+  const first = table.header ? 1 : 0;
+  const head = table.header ? table.grid[0]! : null;
+  const asColumn = usesSectionColumn(table, sectionMode);
+  const width = table.grid[0]?.length ?? 0;
+  let current = "";
+  let k = 0;
+  const rows: React.ReactNode[] = [];
+  table.grid.forEach((row, r) => {
+    if (r < first) return;
+    const section = isSectionHeader(table, r);
+    const idx = section
+      ? rowNumber(r, "Row is a Section Header", "§")
+      : rowNumber(r, `Row ${k + 1}`, k + 1);
     if (section) {
       current = row[0] ?? "";
       if (asColumn) return; // Shown in the Section column instead.
@@ -163,8 +188,13 @@ export function TableView({
         {head && (
           <thead>
             <tr>
-              <th className={styles.idx} aria-hidden="true" />
-              {asColumn && <th className={styles.secColHead}>Section</th>}
+              {/* A cell, not a column header: it heads no column of the Table. */}
+              {rowNumber(0, "Header Row", "H")}
+              {asColumn && (
+                <th className={styles.secColHead} scope="col">
+                  Section
+                </th>
+              )}
               {head.map((v, c) => (
                 <Cell
                   key={c}
@@ -192,13 +222,17 @@ export function TableView({
   );
 }
 
-/** The menu's name: the row's number among data rows, or its Section Header text. */
+/** The menu's name: the Header Row, the row's number among data rows, or its Section Header text. */
 function menuLabel(table: Table, row: number): string {
-  if (isSectionHeader(table, row)) return `Section header row ${table.grid[row]?.[0] ?? ""}`.trim();
+  if (isHeaderRow(table, row)) return "Header Row";
+  if (isSectionHeader(table, row)) return `Section Header row ${table.grid[row]?.[0] ?? ""}`.trim();
   let n = 0;
   for (let r = table.header ? 1 : 0; r <= row; r++) if (!isSectionHeader(table, r)) n++;
   return `Row ${n}`;
 }
+
+/** Whether grid row `row` is shown as the Header Row ("First row is header" is on). */
+const isHeaderRow = (table: Table, row: number) => table.header && row === 0;
 
 type CellProps = {
   value: string;

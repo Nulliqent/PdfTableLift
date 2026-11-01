@@ -8,6 +8,7 @@ export { READ_ERROR_MESSAGES } from "../shared/read-error";
 export type { ReadError } from "../shared/read-error";
 export {
   DEFAULT_SETTINGS,
+  combineTarget,
   MAX_COLUMN_SPACING,
   MIN_COLUMN_SPACING,
   parseColumnSpacing,
@@ -22,6 +23,8 @@ export type {
   Band,
   Bbox,
   Combine,
+  CombineDirection,
+  CombineTarget,
   DiscardingAction,
   Document,
   Part,
@@ -30,7 +33,8 @@ export type {
   RegionInProgress,
   RegionTable,
   RemovedTable,
-  RowBefore,
+  RowAction,
+  RowBeforeCombine,
   Selection,
   Settings,
   Table,

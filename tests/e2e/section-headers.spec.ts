@@ -47,10 +47,10 @@ test("the row-number menu unmarks and marks a Section Header", async ({ page }) 
   const main = page.getByRole("main");
   const hud = page.getByRole("status");
   await main.getByRole("button", { name: "As Rows" }).click();
-  const sectionRow = main.getByRole("button", { name: /^Row is a section header/ }).first();
+  const sectionRow = main.getByRole("button", { name: /^Row is a Section Header/ }).first();
   await expect(sectionRow).toHaveAttribute("aria-haspopup", "menu");
   await sectionRow.click();
-  const menu = page.getByRole("menu", { name: /Section header row/ });
+  const menu = page.getByRole("menu", { name: /^Section Header row / });
   await expect(menu).toBeVisible();
   await expect(sectionRow).toHaveAttribute("aria-expanded", "true");
   await menu.getByRole("menuitem", { name: "Unmark Section Header" }).click();

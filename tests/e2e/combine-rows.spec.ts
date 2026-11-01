@@ -139,7 +139,7 @@ test("Split back, by keyboard, marks the Section Header again", async ({ page })
   await expect(main.getByRole("cell", { name: "Denver", exact: true })).toBeVisible();
   // Focus goes to the upper restored Row's number: Central (grid row 4), a Section Header again.
   const central = main.locator('button[data-row="4"]');
-  await expect(central).toHaveAccessibleName("Row is a section header. Row actions");
+  await expect(central).toHaveAccessibleName("Row is a Section Header. Row actions");
   await expect(central).toBeFocused();
   expect(await lastCopy(page)).toBe(before);
 });
@@ -184,4 +184,103 @@ test("Split back loses edits made to the combined Row", async ({ page }) => {
   await expect(main.getByRole("cell", { name: "Tacoma" })).toHaveCount(0);
   await expect(main.getByRole("cell", { name: "Portland", exact: true })).toBeVisible();
   expect(await lastCopy(page)).toBe(before);
+});
+
+test("the Header Row's menu offers only Combine with Row below until it is combined", async ({
+  page,
+}) => {
+  const main = page.getByRole("main");
+  await expect(main.getByRole("switch", { name: "First row is header" })).toBeChecked();
+  const header = main.getByRole("button", { name: "Header Row. Row actions" });
+  await header.click();
+  const menu = page.getByRole("menu", { name: "Header Row" });
+  // Marking and Combine with Row above don't apply to the Header Row.
+  await expect(menu.getByRole("menuitem")).toHaveText(["Combine with Row below"]);
+  await page.keyboard.press("Escape");
+  await expect(menu).toBeHidden();
+  await expect(header).toBeFocused();
+});
+
+test("a Row combined into the Header Row is split back from the Header Row's menu", async ({
+  page,
+}) => {
+  const main = page.getByRole("main");
+  const before = await lastCopy(page);
+  // West, the first Row under the Header Row, is a Section Header.
+  await main
+    .getByRole("button", { name: /^Row is a Section Header/ })
+    .first()
+    .click();
+  await page.getByRole("menuitem", { name: "Combine with Row above" }).click();
+  await expect(main.getByRole("columnheader", { name: "Store West" })).toBeVisible();
+  await expect(tableRow(page)).toContainText("2 sections");
+  // Focus lands on the combined Row's number: the Header Row's.
+  const header = main.getByRole("button", { name: "Header Row. Row actions" });
+  await expect(header).toBeFocused();
+
+  // By keyboard, as on any other row number.
+  await page.keyboard.press("Enter");
+  const menu = page.getByRole("menu", { name: "Header Row" });
+  await expect(menu.getByRole("menuitem")).toHaveText(["Combine with Row below", "Split back"]);
+  await page.keyboard.press("End");
+  await expect(menu.getByRole("menuitem", { name: "Split back" })).toBeFocused();
+  await page.keyboard.press("Enter");
+  await expect(menu).toBeHidden();
+  await expect(page.getByRole("status")).toHaveText("Split back");
+  await expect(main.getByRole("columnheader", { name: "Store", exact: true })).toBeVisible();
+  await expect(tableRow(page)).toContainText("3 sections");
+  await expect(header).toBeFocused();
+  expect(await lastCopy(page)).toBe(before);
+});
+
+test.describe("As Column, where Section Headers are not drawn as rows", () => {
+  test.beforeEach(async ({ page }) => {
+    await page.getByRole("main").getByRole("button", { name: "As Column" }).click();
+  });
+
+  test("the menu names a hidden Section Header that Combine would take in", async ({ page }) => {
+    const main = page.getByRole("main");
+    // Portland, under West.
+    await main.getByRole("button", { name: /^Row 1\./ }).click();
+    await expect(page.getByRole("menu", { name: "Row 1" }).getByRole("menuitem")).toHaveText([
+      "Mark as Section Header",
+      "Combine with Section Header “West” above",
+      "Combine with Row below",
+    ]);
+    await page.keyboard.press("Escape");
+    // The Header Row's neighbour below is West too.
+    await main.getByRole("button", { name: "Header Row. Row actions" }).click();
+    await expect(page.getByRole("menu", { name: "Header Row" }).getByRole("menuitem")).toHaveText([
+      "Combine with Section Header “West” below",
+    ]);
+    await page.keyboard.press("Escape");
+
+    // As Rows draws the Section Header, so the plain wording comes back.
+    await main.getByRole("button", { name: "As Rows" }).click();
+    await main.getByRole("button", { name: /^Row 1\./ }).click();
+    await expect(
+      page
+        .getByRole("menu", { name: "Row 1" })
+        .getByRole("menuitem", { name: "Combine with Row above" }),
+    ).toBeVisible();
+  });
+
+  test("Combine with the hidden Section Header below, by keyboard", async ({ page }) => {
+    const main = page.getByRole("main");
+    // Seattle, the last Row under West, above Central.
+    await main.getByRole("button", { name: /^Row 2\./ }).focus();
+    await page.keyboard.press("Enter");
+    const menu = page.getByRole("menu", { name: "Row 2" });
+    await page.keyboard.press("End");
+    const item = menu.getByRole("menuitem", {
+      name: "Combine with Section Header “Central” below",
+    });
+    await expect(item).toBeFocused();
+    await page.keyboard.press("Enter");
+    await expect(menu).toBeHidden();
+    await expect(page.getByRole("status")).toHaveText("Rows combined");
+    await expect(tableRow(page)).toContainText("2 sections");
+    await expect(main.getByRole("cell", { name: "Seattle Central" })).toBeVisible();
+    await expect(main.getByRole("button", { name: /^Row 2\./ })).toBeFocused();
+  });
 });

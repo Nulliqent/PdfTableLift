@@ -1,11 +1,13 @@
 // Seam A: Combine with Row above / below, through the workspace reducer and export.
 import { describe, expect, it } from "vitest";
 import {
+  combineTarget,
   exportTable,
   initialWorkspace,
   reduce,
   selectedTable,
   tableSize,
+  type CombineDirection,
   type PageText,
   type Table,
   type TextItem,
@@ -33,7 +35,7 @@ const open = (pages: PageText[]) =>
     { type: "documentAdded", id: "d", name: "d.pdf", size: 1 },
     { type: "documentRead", id: "d", pages },
   );
-const combine = (s: WorkspaceState, r: number, direction: "above" | "below") =>
+const combine = (s: WorkspaceState, r: number, direction: CombineDirection) =>
   reduce(s, {
     type: "rowCombined",
     documentId: "d",
@@ -308,7 +310,7 @@ describe("exports after a Combine", () => {
 });
 
 describe("a combined Row remembers the Rows it came from", () => {
-  const memory = (t: Table, r: number) => t.combined[r];
+  const memory = (t: Table, r: number) => t.combinedFrom[r];
 
   it("keeps both Rows as they stood, Section Header marks included", () => {
     const s = sectioned();
@@ -319,9 +321,9 @@ describe("a combined Row remembers the Rows it came from", () => {
         cells: before.grid[4],
         section: true,
         sectionCells: before.sectionCells[4],
-        combined: null,
+        combinedFrom: null,
       },
-      lower: { cells: before.grid[5], section: false, sectionCells: null, combined: null },
+      lower: { cells: before.grid[5], section: false, sectionCells: null, combinedFrom: null },
     });
   });
 
@@ -330,8 +332,8 @@ describe("a combined Row remembers the Rows it came from", () => {
     const first = memory(selectedTable(once)!, 2)!;
     const twice = selectedTable(combine(once, 2, "above"))!;
     expect(twice.grid[1]).toEqual(["Portland Austin Boise", "West South", "412.8 1,204 77.0"]);
-    expect(memory(twice, 1)!.lower.combined).toEqual(first);
-    expect(memory(twice, 1)!.upper.combined).toBeNull();
+    expect(memory(twice, 1)!.lower.combinedFrom).toEqual(first);
+    expect(memory(twice, 1)!.upper.combinedFrom).toBeNull();
     expect(memory(twice, 2)).toBeUndefined();
   });
 
@@ -349,7 +351,7 @@ const seen = (t: Table) => ({
   grid: t.grid,
   sections: t.sections,
   sectionCells: t.sectionCells,
-  combined: t.combined,
+  combinedFrom: t.combinedFrom,
 });
 
 describe("Split back", () => {
@@ -357,7 +359,7 @@ describe("Split back", () => {
     const s0 = plain();
     const s = splitBack(combine(s0, 1, "below"), 1);
     expect(grid(s)).toEqual(grid(s0));
-    expect(selectedTable(s)!.combined).toEqual({});
+    expect(selectedTable(s)!.combinedFrom).toEqual({});
   });
 
   it("does nothing on a Row that was not combined, or does not exist", () => {
@@ -399,10 +401,10 @@ describe("Split back", () => {
   it("moves later Section Headers, their Cells and Combines down by one Row", () => {
     const s0 = combine(sectioned(), 4, "below");
     expect(selectedTable(s0)!.sections).toEqual([1]);
-    const later = selectedTable(s0)!.combined[4];
+    const later = selectedTable(s0)!.combinedFrom[4];
     const s = splitBack(combine(s0, 2, "below"), 2);
     expect(seen(selectedTable(s)!)).toEqual(seen(selectedTable(s0)!));
-    expect(selectedTable(s)!.combined[4]).toEqual(later);
+    expect(selectedTable(s)!.combinedFrom[4]).toEqual(later);
     // A Section Header further down moves too.
     const t = selectedTable(splitBack(combine(sectioned(), 2, "below"), 2))!;
     expect(t.sections).toEqual([1, 4]);
@@ -492,6 +494,60 @@ describe("exports after Split back", () => {
   it("csv As Rows shows the Section Header again and both Rows", () => {
     expect(exportTable(selectedTable(splitBack(back1(), 2))!, "csv", "rows")).toBe(
       'Store,Region,Q1\nWest,,\nPortland,West,412.8\nAustin,South,"1,204"\n903.5,,\nBoise,East,77.0',
+    );
+  });
+});
+
+describe("what Combine takes in, as each Section Mode shows the Table", () => {
+  // sectioned(): 0 Header Row, 1 West (Section Header), 2 Portland, 3 Austin,
+  // 4 "903.5" (Section Header), 5 Boise.
+  it("names the Section Header above when As Column hides it", () => {
+    const t = selectedTable(sectioned())!;
+    expect(combineTarget(t, 2, "above", "column")).toEqual({ row: 1, hiddenSectionHeader: "West" });
+  });
+
+  it("names the Section Header below when As Column hides it", () => {
+    const t = selectedTable(sectioned())!;
+    expect(combineTarget(t, 3, "below", "column")).toEqual({
+      row: 4,
+      hiddenSectionHeader: "903.5",
+    });
+    // The Header Row's neighbour below can be one too.
+    expect(combineTarget(t, 0, "below", "column")).toEqual({ row: 1, hiddenSectionHeader: "West" });
+  });
+
+  it("names no Section Header As Rows, where every Section Header is drawn", () => {
+    const t = selectedTable(sectioned())!;
+    expect(combineTarget(t, 2, "above", "rows")).toEqual({ row: 1, hiddenSectionHeader: null });
+    expect(combineTarget(t, 3, "below", "rows")).toEqual({ row: 4, hiddenSectionHeader: null });
+  });
+
+  it("names no Section Header for an ordinary neighbour, or a Table without Section Headers", () => {
+    expect(combineTarget(selectedTable(sectioned())!, 3, "above", "column")).toEqual({
+      row: 2,
+      hiddenSectionHeader: null,
+    });
+    expect(combineTarget(selectedTable(plain())!, 1, "above", "column")).toEqual({
+      row: 0,
+      hiddenSectionHeader: null,
+    });
+  });
+
+  it("finds nothing above the first row or below the last", () => {
+    const t = selectedTable(sectioned())!;
+    expect(combineTarget(t, 0, "above", "column")).toBeNull();
+    expect(combineTarget(t, 5, "below", "column")).toBeNull();
+    expect(combineTarget(t, 9, "above", "column")).toBeNull();
+  });
+
+  it("As Column, combining with the hidden Section Header above puts its text in the Row", () => {
+    const s = sectioned();
+    const target = combineTarget(selectedTable(s)!, 5, "above", "column")!;
+    const t = selectedTable(combine(s, 5, "above"))!;
+    expect(target.row).toBe(4);
+    expect(t.grid[target.row]).toEqual(["Boise", "East", "903.5 77.0"]);
+    expect(exportTable(t, "csv", "column")).toBe(
+      'Section,Store,Region,Q1\nWest,Portland,West,412.8\nWest,Austin,South,"1,204"\nWest,Boise,East,903.5 77.0',
     );
   });
 });
