@@ -8,7 +8,7 @@ import {
   selectedTable,
   type PageText,
   type ReadError,
-  type WorkspaceAction,
+  type RegionInProgress,
 } from "../engine";
 import { ContentPane } from "./components/ContentPane";
 import { ConfirmSheet } from "./components/ConfirmSheet";
@@ -56,14 +56,24 @@ export function App() {
     dispatch({ type: "regionStarted", documentId, page, tableId });
   const savedMessage = (n: number, redrawn: boolean) =>
     redrawn ? `Table ${n} redrawn from your selection` : `Table ${n} added from your selection`;
+  // The Region being saved, until the reducer answers. The new Table's number is read from the
+  // state the save produced, so detection runs once, inside the reducer.
+  const saving = useRef<RegionInProgress | null>(null);
   const saveRegion = () => {
-    // The reducer is pure, so the new Table's number is known before dispatching.
-    const action: WorkspaceAction = { type: "regionCommitted" };
-    const created = selectedTable(reduce(state, action));
-    dispatch(action);
-    if (created && created.manual !== null && !hasEdits(region!.documentId))
-      showHud(savedMessage(created.n, region!.redraw !== null));
+    saving.current = region;
+    dispatch({ type: "regionCommitted" });
   };
+  useEffect(() => {
+    const saved = saving.current;
+    if (!saved) return;
+    // Held for the edit warning: the confirmation announces the save itself.
+    if (state.pendingChange?.type === "regionCommitted") saving.current = null;
+    if (!saving.current || state.region === saved) return;
+    saving.current = null;
+    const created = selectedTable(state);
+    if (state.region === null && created?.manual)
+      showHud(savedMessage(created.n, saved.redraw !== null));
+  }, [state, showHud]);
 
   // Announce a read error once the reducer has recorded it: a Document removed while it was
   // loading never records one. With a good Table selected the content pane doesn't show the

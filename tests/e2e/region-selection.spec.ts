@@ -48,6 +48,9 @@ test("drag a Region with the mouse, see the preview, and save a Hand-drawn Table
 
   // Back on the Table view: one Hand-drawn Table took over both Detected Tables.
   await expect(main.getByRole("heading", { name: "Table 1" })).toBeVisible();
+  await expect(
+    page.getByRole("status").filter({ hasText: "Table 1 added from your selection" }),
+  ).toBeVisible();
   await expect(main.getByText("Selected by hand")).toBeVisible();
   const sidebar = page.getByRole("complementary", { name: "Documents" });
   await expect(sidebar.getByRole("button", { name: /^Table \d/ })).toHaveCount(1);
