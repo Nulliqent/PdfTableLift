@@ -8,6 +8,7 @@
 import { pageBox, type PageText } from "../shared/page-text";
 import type { ReadError } from "../shared/read-error";
 import { detectTables, regionTable, type Band, type Bbox, type FoundTable } from "./detection";
+import { isSectionHeader } from "./export";
 import { joinTables } from "./join";
 import { HAND_DRAWN_OVERLAP, REMOVED_TABLE_OVERLAP, overlapRatio } from "./overlap";
 
@@ -562,7 +563,7 @@ function combineRows(t: Table, upper: number): Table {
   const lower = upper + 1;
   if (upper < 0 || !t.grid[lower]) return t;
   const cellsOf = (r: number) =>
-    isSectionRow(t, r) ? (t.sectionCells[r] ?? t.grid[r]!) : t.grid[r]!;
+    isSectionHeader(t, r) ? (t.sectionCells[r] ?? t.grid[r]!) : t.grid[r]!;
   const before = (r: number): RowBefore => ({
     cells: t.grid[r]!,
     section: t.sections.includes(r),
@@ -626,9 +627,6 @@ function splitBack(t: Table, r: number): Table {
     edited: true,
   };
 }
-
-/** Whether grid row `r` is a Section Header (the Header Row never is). */
-const isSectionRow = (t: Table, r: number) => t.sections.includes(r) && !(t.header && r === 0);
 
 /** The region field to keep, and no pending Region save once its Region is gone. */
 function withoutRegion(state: WorkspaceState, region: RegionInProgress | null) {
