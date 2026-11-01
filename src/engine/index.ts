@@ -31,6 +31,7 @@ export type {
   RegionInProgress,
   RegionTable,
   RemovedTable,
+  RowAction,
   RowBefore,
   Selection,
   Settings,

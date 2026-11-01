@@ -10,17 +10,23 @@ import {
 import { RowMenu, type RowMenuItem } from "./RowMenu";
 import styles from "./TableView.module.css";
 
+/** What a row number's menu does to this Table; `row` is a grid row (the Header Row is row 0). */
+export type RowActions = {
+  /** Mark or Unmark Section Header. */
+  toggleSection: (row: number) => void;
+  /** Combine with Row above / below. */
+  combine: (row: number, direction: CombineDirection) => void;
+  /** Split back a combined Row. */
+  splitBack: (row: number) => void;
+};
+
 type TableViewProps = {
   table: Table;
   /** A cell was corrected; `row` and `col` are grid coordinates (the Header Row is row 0). */
   onEdit: (row: number, col: number, value: string) => void;
   sectionMode: SectionMode;
-  /** Mark or Unmark Section Header was chosen from a row's menu; `row` is a grid row. */
-  onToggleSection: (row: number) => void;
-  /** Combine with Row above / below was chosen from a row's menu; `row` is a grid row. */
-  onCombine: (row: number, direction: CombineDirection) => void;
-  /** Split back was chosen from a combined Row's menu; `row` is a grid row. */
-  onSplitBack: (row: number) => void;
+  /** What the row numbers' menus do. */
+  rowActions: RowActions;
 };
 
 /**
@@ -30,14 +36,7 @@ type TableViewProps = {
  * row number opens the row's menu: Mark or Unmark Section Header, and Combine with the grid row
  * above (the Header Row included) or below, and Split back on a combined Row.
  */
-export function TableView({
-  table,
-  onEdit,
-  sectionMode,
-  onToggleSection,
-  onCombine,
-  onSplitBack,
-}: TableViewProps) {
+export function TableView({ table, onEdit, sectionMode, rowActions }: TableViewProps) {
   const [menu, setMenu] = useState<{ row: number; anchor: HTMLButtonElement } | null>(null);
   /** The press began on the row number of the open menu: that click only closes the menu. */
   const pressedOpen = useRef(false);
@@ -67,7 +66,7 @@ export function TableView({
   const menuItems = (row: number): RowMenuItem[] => [
     {
       label: isSectionHeader(table, row) ? "Unmark Section Header" : "Mark as Section Header",
-      onSelect: () => onToggleSection(row),
+      onSelect: () => rowActions.toggleSection(row),
     },
     {
       label: "Combine with Row above",
@@ -75,17 +74,19 @@ export function TableView({
       onSelect: () => {
         // The combined Row takes the upper Row's place: its row number gets focus.
         refocus.current = row - 1;
-        onCombine(row, "above");
+        rowActions.combine(row, "above");
       },
     },
     {
       label: "Combine with Row below",
       disabled: row === table.grid.length - 1,
-      onSelect: () => onCombine(row, "below"),
+      onSelect: () => rowActions.combine(row, "below"),
     },
     // Only a combined Row can be split back. Focus returns to this row number, now the upper
     // restored Row's.
-    ...(row in table.combined ? [{ label: "Split back", onSelect: () => onSplitBack(row) }] : []),
+    ...(row in table.combined
+      ? [{ label: "Split back", onSelect: () => rowActions.splitBack(row) }]
+      : []),
   ];
 
   const numeric = numericColumns(table);

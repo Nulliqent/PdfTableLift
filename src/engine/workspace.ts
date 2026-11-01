@@ -234,6 +234,12 @@ export type WorkspaceAction =
    */
   | { type: "rowSplitBack"; documentId: string; tableId: string; row: number };
 
+/** The actions a row number's menu dispatches; each names its Table and grid row. */
+export type RowAction = Extract<
+  WorkspaceAction,
+  { type: "sectionHeaderToggled" | "rowCombined" | "rowSplitBack" }
+>;
+
 /** Margin left around the page by Select Whole Page, in points. */
 const WHOLE_PAGE_MARGIN = 18;
 

@@ -6,8 +6,8 @@ import {
   hasSectionHeaders,
   isSectionHeader,
   tableSize,
-  type CombineDirection,
   type Document,
+  type RowAction,
   type Table,
 } from "../../engine";
 import { copyText } from "../copy-text";
@@ -46,16 +46,8 @@ type ContentPaneProps = {
     value: string,
   ) => void;
   onToggleHeader: (documentId: string, tableId: string, header: boolean) => void;
-  onToggleSection: (documentId: string, tableId: string, row: number) => void;
-  /** Combine with Row above / below was chosen for a grid row. */
-  onCombineRows: (
-    documentId: string,
-    tableId: string,
-    row: number,
-    direction: CombineDirection,
-  ) => void;
-  /** Split back was chosen for a combined grid row. */
-  onSplitBackRow: (documentId: string, tableId: string, row: number) => void;
+  /** An item was chosen from a row number's menu (Section Header, Combine, Split back). */
+  onRowAction: (action: RowAction) => void;
   onSplitByPage: (documentId: string, tableId: string) => void;
   onJoinAgain: (documentId: string, tableId: string) => void;
 };
@@ -74,9 +66,7 @@ export function ContentPane({
   onRedrawRegion,
   onEditCell,
   onToggleHeader,
-  onToggleSection,
-  onCombineRows,
-  onSplitBackRow,
+  onRowAction,
   onSplitByPage,
   onJoinAgain,
 }: ContentPaneProps) {
@@ -95,9 +85,7 @@ export function ContentPane({
             onRedrawRegion={onRedrawRegion}
             onEditCell={onEditCell}
             onToggleHeader={onToggleHeader}
-            onToggleSection={onToggleSection}
-            onCombineRows={onCombineRows}
-            onSplitBackRow={onSplitBackRow}
+            onRowAction={onRowAction}
             onSplitByPage={onSplitByPage}
             onJoinAgain={onJoinAgain}
           />
@@ -118,9 +106,7 @@ function TableDetail({
   onRedrawRegion,
   onEditCell,
   onToggleHeader,
-  onToggleSection,
-  onCombineRows,
-  onSplitBackRow,
+  onRowAction,
   onSplitByPage,
   onJoinAgain,
 }: {
@@ -132,9 +118,7 @@ function TableDetail({
   onRedrawRegion: ContentPaneProps["onRedrawRegion"];
   onEditCell: ContentPaneProps["onEditCell"];
   onToggleHeader: ContentPaneProps["onToggleHeader"];
-  onToggleSection: ContentPaneProps["onToggleSection"];
-  onCombineRows: ContentPaneProps["onCombineRows"];
-  onSplitBackRow: ContentPaneProps["onSplitBackRow"];
+  onRowAction: ContentPaneProps["onRowAction"];
   onSplitByPage: ContentPaneProps["onSplitByPage"];
   onJoinAgain: ContentPaneProps["onJoinAgain"];
 }) {
@@ -145,6 +129,7 @@ function TableDetail({
   const sections = table.sections.filter((r) => isSectionHeader(table, r)).length;
   const [sheet, setSheet] = useState<string | null>(null);
   const name = EXPORT_FORMATS.find((f) => f.format === format)!.name;
+  const ids = { documentId: document.id, tableId: table.id };
   const copy = async () => {
     const text = exportTable(table, format, sectionMode);
     if (await copyText(text)) {
@@ -254,22 +239,24 @@ function TableDetail({
             table={table}
             sectionMode={sectionMode}
             onEdit={(row, col, value) => onEditCell(document.id, table.id, row, col, value)}
-            onToggleSection={(row) => {
-              const marking = !isSectionHeader(table, row);
-              onToggleSection(document.id, table.id, row);
-              // In As Column mode the new Section Header leaves the grid, so say where it went.
-              if (!marking) onAnnounce("Unmarked Section Header");
-              else if (sectionMode === "column")
-                onAnnounce("Marked as section · switch to As Rows to edit its name");
-              else onAnnounce("Marked as Section Header");
-            }}
-            onCombine={(row, direction) => {
-              onCombineRows(document.id, table.id, row, direction);
-              onAnnounce("Rows combined");
-            }}
-            onSplitBack={(row) => {
-              onSplitBackRow(document.id, table.id, row);
-              onAnnounce("Split back");
+            rowActions={{
+              toggleSection: (row) => {
+                const marking = !isSectionHeader(table, row);
+                onRowAction({ type: "sectionHeaderToggled", ...ids, row });
+                // In As Column mode the new Section Header leaves the grid, so say where it went.
+                if (!marking) onAnnounce("Unmarked Section Header");
+                else if (sectionMode === "column")
+                  onAnnounce("Marked as section · switch to As Rows to edit its name");
+                else onAnnounce("Marked as Section Header");
+              },
+              combine: (row, direction) => {
+                onRowAction({ type: "rowCombined", ...ids, row, direction });
+                onAnnounce("Rows combined");
+              },
+              splitBack: (row) => {
+                onRowAction({ type: "rowSplitBack", ...ids, row });
+                onAnnounce("Split back");
+              },
             }}
           />
         ) : (
