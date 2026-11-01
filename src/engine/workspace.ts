@@ -47,6 +47,11 @@ export type Table = {
   /** Every cell of the first row is bold. */
   firstBold: boolean;
   grid: string[][];
+  /**
+   * The page of each grid row, for a Stacked Table's Source column: a Joined Table's Rows each
+   * keep their own Part's page. A combined Row takes the upper Row's page.
+   */
+  rowPages: number[];
   /** Grid row indexes of Section Headers. */
   sections: number[];
   /** For each Section Header row, the cells it gets back when unmarked (FoundTable.sectionCells). */
@@ -68,6 +73,8 @@ export type Table = {
 /** A grid row as it stood just before a Combine took it in. */
 export type RowBeforeCombine = {
   cells: string[];
+  /** Its page (`rowPages`). */
+  page: number;
   /** It was in `sections` (a Section Header, or a marked row 0 under the Header Row switch). */
   section: boolean;
   /** Its `sectionCells` entry, or null. */
@@ -297,7 +304,9 @@ export type WorkspaceAction =
   | { type: "stackingCancelled" }
   /** Stack N Tables: the ticked Tables, in tick order, become a Stacked Table, which is selected. Needs two. */
   | { type: "tablesStacked" }
-  | { type: "stackedTableSelected"; documentId: string; stackedId: string };
+  | { type: "stackedTableSelected"; documentId: string; stackedId: string }
+  /** The Source switch of a Stacked Table: a leading Source column with each Row's page. */
+  | { type: "stackedSourceToggled"; documentId: string; stackedId: string; source: boolean };
 
 /** The actions a row number's menu dispatches; each names its Table and grid row. */
 export type RowAction = Extract<
@@ -710,6 +719,16 @@ export function reduce(state: WorkspaceState, action: WorkspaceAction): Workspac
         selection: { documentId: doc.id, stackedId: action.stackedId },
       };
     }
+    case "stackedSourceToggled": {
+      const doc = state.documents.find((d) => d.id === action.documentId);
+      const record = doc?.stacked.find((s) => s.id === action.stackedId);
+      if (!doc || !record || record.source === action.source) return state;
+      const changed = {
+        ...doc,
+        stacked: doc.stacked.map((s) => (s === record ? { ...s, source: action.source } : s)),
+      };
+      return { ...state, documents: state.documents.map((d) => (d === doc ? changed : d)) };
+    }
     default: {
       const unhandled: never = action;
       return unhandled;
@@ -761,6 +780,7 @@ function combineRows(t: Table, upper: number): Table {
     isSectionHeader(t, r) ? (t.sectionCells[r] ?? t.grid[r]!) : t.grid[r]!;
   const before = (r: number): RowBeforeCombine => ({
     cells: t.grid[r]!,
+    page: t.rowPages[r]!,
     section: t.sections.includes(r),
     sectionCells: t.sectionCells[r] ?? null,
     combinedFrom: t.combinedFrom[r] ?? null,
@@ -772,6 +792,7 @@ function combineRows(t: Table, upper: number): Table {
   return {
     ...t,
     grid: t.grid.toSpliced(upper, 2, cells),
+    rowPages: t.rowPages.toSpliced(upper, 2, t.rowPages[upper]!),
     sections: t.sections.flatMap((r) => moved(r) ?? []),
     sectionCells: reindexRows(t.sectionCells, moved),
     combinedFrom: {
@@ -805,6 +826,7 @@ function splitBack(t: Table, r: number): Table {
   return {
     ...t,
     grid: t.grid.toSpliced(r, 1, upper.cells, lower.cells),
+    rowPages: t.rowPages.toSpliced(r, 1, upper.page, lower.page),
     sections: [
       ...t.sections.flatMap((i) => moved(i) ?? []),
       ...[upper, lower].flatMap((b, k) => (b.section ? [r + k] : [])),
@@ -993,6 +1015,7 @@ function detectDocument(doc: Document, pages: PageText[], settings: Settings): T
     header,
     firstBold: t.firstBold,
     grid: t.grid,
+    rowPages: t.grid.map(() => page),
     sections: t.sections,
     sectionCells: t.sectionCells,
     combinedFrom: {},

@@ -55,6 +55,11 @@ export type BuiltStackedTable = {
   members: StackedMember[];
   /** For each grid row of `table`: the index into `members` and that Member's grid row it came from. */
   origin: { member: number; row: number }[];
+  /**
+   * While the Source switch is on, each grid row's Source Cell ("p2", the Row's own page), for
+   * `exportTable` and the preview; null while it is off.
+   */
+  source: string[] | null;
 };
 
 const normalise = (s: string) => s.trim().replace(/\s+/g, " ").toLowerCase();
@@ -163,6 +168,7 @@ export function buildStackedTable(doc: Document, record: StackedTable): BuiltSta
       origin.push({ member: i, row: r + 1 });
     });
   });
+  const rowPages = origin.map((o) => members[o.member]!.table!.rowPages[o.row]!);
   const table: Table = {
     id: record.id,
     n: record.n,
@@ -171,6 +177,7 @@ export function buildStackedTable(doc: Document, record: StackedTable): BuiltSta
     header: head !== null,
     firstBold: false,
     grid,
+    rowPages,
     sections,
     sectionCells,
     combinedFrom: {},
@@ -180,5 +187,6 @@ export function buildStackedTable(doc: Document, record: StackedTable): BuiltSta
     edited: false,
     manual: null,
   };
-  return { record, table, members, origin };
+  const source = record.source ? rowPages.map((p) => `p${p}`) : null;
+  return { record, table, members, origin, source };
 }

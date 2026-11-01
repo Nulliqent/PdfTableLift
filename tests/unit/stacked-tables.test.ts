@@ -1,6 +1,8 @@
 // Seam A: Stacked Tables through the workspace reducer and export.
 import { describe, expect, it } from "vitest";
 import {
+  EXPORT_FORMATS,
+  exportFile,
   exportTable,
   headerMatch,
   initialWorkspace,
@@ -297,5 +299,179 @@ describe("a Stacked Table", () => {
     const stacked = stack(open("repeated-header"), 1, 2);
     const removed = reduce(stacked, { type: "documentRemoved", id: "d" });
     expect(removed.selection).toBeNull();
+  });
+});
+
+/** Turns the Source switch of the selected Stacked Table on or off. */
+const source = (state: WorkspaceState, on: boolean) =>
+  reduce(state, {
+    type: "stackedSourceToggled",
+    documentId: "d",
+    stackedId: selectedStackedTable(state)!.record.id,
+    source: on,
+  });
+/** The selected Stacked Table as text, as Copy and Download give it. */
+const text = (
+  state: WorkspaceState,
+  format: (typeof EXPORT_FORMATS)[number]["format"],
+  mode: "column" | "rows",
+) => {
+  const built = selectedStackedTable(state)!;
+  return exportTable(built.table, format, mode, built.source);
+};
+
+describe("the Source switch", () => {
+  const stacked = stack(open("example-document"), 4, 5);
+
+  it("is off by default, and nothing changes while it is", () => {
+    const built = selectedStackedTable(stacked)!;
+    expect(built.record.source).toBe(false);
+    expect(built.source).toBeNull();
+    for (const { format } of EXPORT_FORMATS)
+      for (const mode of ["column", "rows"] as const)
+        expect(text(stacked, format, mode)).toBe(exportTable(built.table, format, mode));
+    const off = source(source(stacked, true), false);
+    expect(text(off, "csv", "rows")).toBe(exportTable(built.table, "csv", "rows"));
+  });
+
+  it("puts a leading Source column with each Row's page in CSV and TSV, As Column", () => {
+    const on = source(stacked, true);
+    expect(selectedStackedTable(on)!.record.source).toBe(true);
+    const csv = text(on, "csv", "column").split("\n");
+    expect(csv[0]).toBe("Source,Section,Store,Lead,FTE,Open roles,Notes");
+    expect(csv[18]).toBe("p3,Midwest & Northeast,Madison Willy St,N. Kowalski,6,1,");
+    expect(csv.at(-1)).toBe("p3,Online & Fleet,Warehouse Reno,R. Ibarra,15,3,");
+    expect(csv.slice(1, 18).every((r) => r.startsWith("p2,"))).toBe(true);
+    const tsv = text(on, "tsv", "column").split("\n");
+    expect(tsv[0]).toBe("Source\tSection\tStore\tLead\tFTE\tOpen roles\tNotes");
+    expect(tsv[18]!.startsWith("p3\tMidwest & Northeast\tMadison Willy St")).toBe(true);
+  });
+
+  it("gives Section Headers an empty Source Cell As Rows", () => {
+    const on = source(stacked, true);
+    const csv = text(on, "csv", "rows").split("\n");
+    expect(csv[0]).toBe("Source,Store,Lead,FTE,Open roles,Notes");
+    expect(csv[21]).toBe("p3,Madison Willy St,N. Kowalski,6,1,");
+    expect(csv[28]).toBe(",Online & Fleet,,,,");
+    expect(text(on, "tsv", "rows").split("\n")[28]).toBe("\tOnline & Fleet\t\t\t\t");
+  });
+
+  it("puts the Source column first in Markdown", () => {
+    const on = source(stacked, true);
+    const plain = selectedStackedTable(on)!.table;
+    const column = text(on, "md", "column").split("\n");
+    expect(column[0]).toBe("| Source | Section | Store | Lead | FTE | Open roles | Notes |");
+    // The Source and Section columns are never right-aligned; the rest align as without Source.
+    expect(column[1]).toBe(
+      `| --- | ${exportTable(plain, "md", "column").split("\n")[1]!.slice(2)}`,
+    );
+    expect(column.at(-1)).toBe("| p3 | Online & Fleet | Warehouse Reno | R. Ibarra | 15 | 3 |  |");
+    const rows = text(on, "md", "rows").split("\n");
+    expect(rows[0]).toBe("| Source | Store | Lead | FTE | Open roles | Notes |");
+    // The Header Row is a line of its own and the separator another, so grid row r is line r + 1.
+    expect(rows[29]).toBe("|  | **Online & Fleet** | | | | |");
+    expect(rows.at(-1)).toBe("| p3 | Warehouse Reno | R. Ibarra | 15 | 3 |  |");
+  });
+
+  it("puts Source first in JSON, in both Section Modes", () => {
+    const on = source(stacked, true);
+    const column = JSON.parse(text(on, "json", "column")) as Record<string, string>[];
+    expect(Object.keys(column[0]!)).toEqual([
+      "Source",
+      "Section",
+      "Store",
+      "Lead",
+      "FTE",
+      "Open roles",
+      "Notes",
+    ]);
+    expect(column.at(-1)!.Source).toBe("p3");
+    const rows = JSON.parse(text(on, "json", "rows")) as {
+      section: string | null;
+      rows: Record<string, string>[];
+    }[];
+    expect(rows.at(-1)!.section).toBe("Online & Fleet");
+    expect(rows.at(-1)!.rows.at(-1)).toEqual({
+      Source: "p3",
+      Store: "Warehouse Reno",
+      Lead: "R. Ibarra",
+      FTE: "15",
+      "Open roles": "3",
+      Notes: "",
+    });
+  });
+
+  it("gives a Row of a Joined Member its own page, not the Joined Table's range", () => {
+    // Joining on: Split by Page, then Join Again at page 2, leaves Table 1 joined over pages 1
+    // and 2, and Table 2 on page 3.
+    const joined = run(
+      initialWorkspace,
+      { type: "documentAdded", id: "d", name: "repeated-header.pdf", size: 1 },
+      { type: "documentRead", id: "d", pages: pagesOf("repeated-header") },
+    );
+    const parted = reduce(joined, {
+      type: "splitByPage",
+      documentId: "d",
+      tableId: tableId(joined, 1),
+    });
+    const split = reduce(parted, {
+      type: "joinAgain",
+      documentId: "d",
+      tableId: tableId(parted, 2),
+    });
+    expect(doc(split).tables.map((t) => t.parts.map((p) => p.page))).toEqual([[1, 2], [3]]);
+    const on = source(stack(split, 2, 1), true);
+    const stackedId = doc(on).stacked[0]!.id;
+    const pages = (s: WorkspaceState) =>
+      text(reduce(s, { type: "stackedTableSelected", documentId: "d", stackedId }), "csv", "column")
+        .split("\n")
+        .slice(1)
+        .map((r) => r.split(",")[0]);
+    expect(pages(on)).toEqual([
+      ...Array<string>(6).fill("p3"),
+      ...Array<string>(6).fill("p1"),
+      ...Array<string>(6).fill("p2"),
+    ]);
+    // A Row combined across the page break takes the upper Row's page; Split back restores both.
+    const combined = reduce(on, {
+      type: "rowCombined",
+      documentId: "d",
+      tableId: tableId(on, 1),
+      row: 6,
+      direction: "below",
+    });
+    expect(pages(combined).slice(6)).toEqual([
+      ...Array<string>(6).fill("p1"),
+      ...Array<string>(5).fill("p2"),
+    ]);
+    const back = reduce(combined, {
+      type: "rowSplitBack",
+      documentId: "d",
+      tableId: tableId(on, 1),
+      row: 6,
+    });
+    expect(pages(back)).toEqual(pages(on));
+  });
+});
+
+describe("Download of a Stacked Table", () => {
+  it("gives the same text as Copy, named after the Document and the Stacked Table", () => {
+    for (const on of [false, true]) {
+      const state = source(stack(open("example-document"), 4, 5), on);
+      const built = selectedStackedTable(state)!;
+      for (const { format } of EXPORT_FORMATS)
+        for (const mode of ["column", "rows"] as const) {
+          const file = exportFile(
+            doc(state).name,
+            `Stacked Table ${built.record.n}`,
+            built.table,
+            format,
+            mode,
+            built.source,
+          );
+          expect(file.text).toBe(text(state, format, mode));
+          expect(file.name).toBe(`example-document.pdf - Stacked Table 1.${format}`);
+        }
+    }
   });
 });
