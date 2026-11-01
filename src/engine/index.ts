@@ -12,7 +12,10 @@ export {
   MAX_COLUMN_SPACING,
   MIN_COLUMN_SPACING,
   parseColumnSpacing,
+  hasHeaderRegion,
+  regionBlocked,
   regionPreview,
+  tableRegions,
   initialWorkspace,
   reduce,
   selectedDocument,
@@ -58,4 +61,4 @@ export {
   numericColumns,
 } from "./export";
 export type { ExportFormat, SectionMode } from "./export";
-export type { FoundTable } from "./detection";
+export type { FoundTable, RegionsBlocked } from "./detection";

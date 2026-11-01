@@ -20,9 +20,8 @@ const fixtures = readdirSync(fixtureDir).filter((f) => f.endsWith(".pdf"));
 // (`npm run golden:engine`), not the prototype, whose output for them is the bug of spec #30:
 // statement-sections.pdf in #32, statement-first-column.pdf in #33. statement.pdf's snapshot also
 // comes from the app's engine (the prototype's output is the bug of spec #22).
-// parts-list-drawing.pdf (spec #39, ticket #41) waits for a snapshot from the app's engine, which
-// #42 records (npm run golden:engine, FROM_ENGINE in engine-snapshot.ts) when Header Regions exist.
-const awaitingSnapshot = new Set(["parts-list-drawing.pdf"]);
+// parts-list-drawing.pdf (spec #39) got its snapshot from the app's engine in #42.
+const awaitingSnapshot = new Set<string>();
 // Fixtures for the PDF Reader alone, with no golden snapshot: page-frames.pdf (a page with /Rotate
 // and one with a CropBox away from 0,0) pins the page box, which pdf-reader.test.ts checks.
 const readerOnly = new Set(["page-frames.pdf"]);

@@ -78,3 +78,30 @@
   white-space: nowrap;
   font-variant-numeric: tabular-nums;
 }
+
+/* The Regions not being edited: outlined, not filled. */
+.other {
+  position: absolute;
+  z-index: 1;
+  border: 2px solid var(--accent);
+  border-radius: 3px;
+  background: color-mix(in srgb, var(--accent) 6%, transparent);
+  pointer-events: none;
+}
+
+.other span {
+  position: absolute;
+  bottom: 2px;
+  right: 2px;
+  font: 600 11px/1 var(--font);
+  background: var(--accent);
+  color: var(--on-accent);
+  padding: 5px 7px;
+  border-radius: 5px;
+  white-space: nowrap;
+}
+
+/* The Header Region is dashed, so its role does not rest on colour alone. */
+.header {
+  border-style: dashed;
+}

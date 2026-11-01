@@ -149,30 +149,30 @@ const BODY_BOX: Bbox = [60, 560, 560, 612];
 // --- #42: a Header Region ------------------------------------------------------------------------
 
 describe("a Header Region over the column titles", () => {
-  it.skip("#42: gives one Table with every title in its column, two-line titles in one Cell", () => {
+  it("#42: gives one Table with every title in its column, two-line titles in one Cell", () => {
     const table = tableOf(drawing, 1, [header(BOX.titles1), body(BOX.rowsAboveNote1)]);
 
     expect(table.manual).not.toBeNull();
     expect(table.grid).toEqual([TITLES, ...ROWS_1_3]);
     expect(table.header).toBe(true);
-    expect(tablesOf(saved(drawing, 1, [header(BOX.titles1), body(BOX.rowsAboveNote1)]))).toContain(
-      table,
-    );
+    expect(
+      tablesOf(saved(drawing, 1, [header(BOX.titles1), body(BOX.rowsAboveNote1)])),
+    ).toContainEqual(table);
   });
 
-  it.skip("#42: works with the titles below the Rows, next to the title block (page 2)", () => {
+  it("#42: works with the titles below the Rows, next to the title block (page 2)", () => {
     const table = tableOf(drawing, 2, [body(BOX.rowsAboveNote2), header(BOX.titles2)]);
 
     expect(table.grid).toEqual([TITLES, ...PAGE2_ABOVE_NOTE]);
   });
 
-  it.skip("#42: keeps the Rows in page order, top to bottom, even though the items are numbered upward", () => {
+  it("#42: keeps the Rows in page order, top to bottom, even though the items are numbered upward", () => {
     const table = tableOf(drawing, 2, [header(BOX.titles2), body(BOX.rowsAboveNote2)]);
 
     expect(table.grid.slice(1).map((r) => r[0])).toEqual(["5", "4", "3"]);
   });
 
-  it.skip("#42: puts a title that overlaps no column into the nearest column", () => {
+  it("#42: puts a title that overlaps no column into the nearest column", () => {
     const stray = t("COST", 520, 640); // clear of every body column, nearest to the third
     const pages = [page1([stray, ...BODY.items])];
     const table = tableOf(pages, 1, [header([500, 632, 560, 652]), body(BODY_BOX)]);
@@ -180,14 +180,14 @@ describe("a Header Region over the column titles", () => {
     expect(table.grid[0]).toEqual(["", "", "COST"]);
   });
 
-  it.skip("#42: lets two titles over one column share its Cell", () => {
+  it("#42: lets two titles over one column share its Cell", () => {
     const pages = [page1([t("UNIT", 320, 640), t("PRICE", 350, 640), ...BODY.items])];
     const table = tableOf(pages, 1, [header([300, 632, 420, 652]), body(BODY_BOX)]);
 
     expect(table.grid[0]).toEqual(["", "", "UNIT PRICE"]);
   });
 
-  it.skip("#42: gives text inside both a Header Region and a Body Region to the Header Row only", () => {
+  it("#42: gives text inside both a Header Region and a Body Region to the Header Row only", () => {
     const pages = [page1([t("Part", 72, 640, true), t("Qty", 200, 640, true), ...BODY.items])];
     // Both boxes take in the title line at y 640.
     const table = tableOf(pages, 1, [header([60, 630, 560, 652]), body([60, 560, 560, 652])]);
@@ -200,7 +200,7 @@ describe("a Header Region over the column titles", () => {
     ]);
   });
 
-  it.skip("#42: has only one Header Region: marking a second turns the first back to Body", () => {
+  it("#42: has only one Header Region: marking a second turns the first back to Body", () => {
     const state = drawAll(opened(drawing), 1, [
       header(BOX.titles1),
       body(BOX.rowsAboveNote1),
@@ -214,7 +214,7 @@ describe("a Header Region over the column titles", () => {
     expect(roles).toEqual(["body", "body", "header"]);
   });
 
-  it.skip("#42: cannot be saved while the Header Region holds no text", () => {
+  it("#42: cannot be saved while the Header Region holds no text", () => {
     const state = drawAll(opened(drawing), 1, [
       header([60, 440, 400, 470]), // blank part of the page
       body(BOX.rowsAboveNote1),
@@ -225,7 +225,7 @@ describe("a Header Region over the column titles", () => {
     expect(after.region).not.toBeNull(); // still in Select Region
   });
 
-  it.skip("#42: cannot be saved while no Body Region holds text, or with a Header Region alone", () => {
+  it("#42: cannot be saved while no Body Region holds text, or with a Header Region alone", () => {
     for (const regions of [
       [header(BOX.titles1), body([60, 440, 400, 470])],
       [header(BOX.titles1)],
@@ -236,7 +236,7 @@ describe("a Header Region over the column titles", () => {
     }
   });
 
-  it.skip("#42: hides 'First row is header' on a Table with a Header Region, and leaves it as today without one", () => {
+  it("#42: hides 'First row is header' on a Table with a Header Region, and leaves it as today without one", () => {
     const withHeader = tableOf(drawing, 1, [header(BOX.titles1), body(BOX.rowsAboveNote1)]);
     const alone = tableOf(drawing, 1, [body(BOX.rowsAboveNote1)]);
 
@@ -249,7 +249,7 @@ describe("a Header Region over the column titles", () => {
     expect(alone.manual).not.toBeNull();
   });
 
-  it.skip("#42: Select Whole Page sets the edited Region to the page, and Cancel discards every Region", () => {
+  it("#42: Select Whole Page sets the edited Region to the page, and Cancel discards every Region", () => {
     const state = drawAll(opened(drawing), 1, [header(BOX.titles1), body(BOX.rowsAboveNote1)]);
     const whole = run(state, { type: "wholePageSelected" });
     const regions = (whole.region as unknown as { regions: { bbox: Bbox }[] }).regions;
@@ -262,7 +262,7 @@ describe("a Header Region over the column titles", () => {
     );
   });
 
-  it.skip("#42: rebuilds the Table from every Region when Column Spacing changes", () => {
+  it("#42: rebuilds the Table from every Region when Column Spacing changes", () => {
     const state = saved(drawing, 1, [header(BOX.titles1), body(BOX.rowsAboveNote1)]);
     const wider = reduce(state, { type: "columnSpacingChanged", value: 2.6 });
     const table = selectedTable(wider)!;
@@ -272,7 +272,7 @@ describe("a Header Region over the column titles", () => {
     expect(table.grid.length).toBe(4);
   });
 
-  it.skip("#42: asks before saving over corrected Cells, as a single Region does", () => {
+  it("#42: asks before saving over corrected Cells, as a single Region does", () => {
     const first = saved(drawing, 1, [body(BOX.rowsAboveNote1)]);
     const edited = reduce(first, {
       type: "cellEdited",
@@ -291,7 +291,7 @@ describe("a Header Region over the column titles", () => {
     expect(selectedTable(done)!.grid[0]).toEqual(TITLES);
   });
 
-  it.skip("#42: copies the Header Row from the Header Region in CSV, TSV and Markdown", () => {
+  it("#42: copies the Header Row from the Header Region in CSV, TSV and Markdown", () => {
     const table = tableOf(drawing, 1, [header(BOX.titles1), body(BOX.rowsAboveNote1)]);
 
     expect(exportTable(table, "csv").split("\n")[0]).toBe(

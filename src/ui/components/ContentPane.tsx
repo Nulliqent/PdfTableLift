@@ -3,6 +3,7 @@ import {
   EXPORT_FORMATS,
   READ_ERROR_MESSAGES,
   exportTable,
+  hasHeaderRegion,
   hasSectionHeaders,
   isSectionHeader,
   tableSize,
@@ -217,7 +218,7 @@ function TableDetail({
           <SectionModeControl value={sectionMode} onChange={setSectionMode} />
         )}
         <span className={styles.spacer} />
-        {view === "table" && (
+        {view === "table" && !hasHeaderRegion(document, table) && (
           <label className={styles.switch}>
             <input
               type="checkbox"

@@ -65,7 +65,7 @@ async function drawTitlesAndRows(page: Page, main: Locator, layer: Locator) {
   await setRole(main, 2, "Header");
 }
 
-test.skip("#42: Add Region, Header toggle, preview and one Save make one Table with the titles in place", async ({
+test("#42: Add Region, Header toggle, preview and one Save make one Table with the titles in place", async ({
   page,
 }) => {
   const { main, layer } = await enterSelectRegion(page);
@@ -91,7 +91,7 @@ test.skip("#42: Add Region, Header toggle, preview and one Save make one Table w
   await expect(sidebar.getByRole("button", { name: /Selected by hand/ })).toHaveCount(1);
 });
 
-test.skip("#42: marking a second Region Header turns the first back to Body, and removing a Region is announced", async ({
+test("#42: marking a second Region Header turns the first back to Body, and removing a Region is announced", async ({
   page,
 }) => {
   const { main, layer } = await enterSelectRegion(page);
@@ -108,7 +108,7 @@ test.skip("#42: marking a second Region Header turns the first back to Body, and
   await expect(page.getByRole("status").filter({ hasText: /Region 2 removed/ })).toBeVisible();
 });
 
-test.skip("#42: Save is disabled with a short reason while the Header Region or every Body Region has no text", async ({
+test("#42: Save is disabled with a short reason while the Header Region or every Body Region has no text", async ({
   page,
 }) => {
   const { main, layer } = await enterSelectRegion(page);
@@ -128,7 +128,7 @@ test.skip("#42: Save is disabled with a short reason while the Header Region or 
   await expect(main.getByText("No Body Region with text")).toBeVisible();
 });
 
-test.skip("#42: the panel list works by keyboard alone, and Escape discards every Region", async ({
+test("#42: the panel list works by keyboard alone, and Escape discards every Region", async ({
   page,
 }) => {
   const { main, layer } = await enterSelectRegion(page);
@@ -145,12 +145,13 @@ test.skip("#42: the panel list works by keyboard alone, and Escape discards ever
   await expect(main.getByRole("heading", { name: /^Table 1/ })).toBeVisible();
 });
 
-test.skip("#42: the source page outlines every Region of the selected Table, the Header Region with a tag and a different style", async ({
+test("#42: the source page outlines every Region of the selected Table, the Header Region with a tag and a different style", async ({
   page,
 }) => {
   const { main, layer } = await enterSelectRegion(page);
   await drawTitlesAndRows(page, main, layer);
   await main.getByRole("button", { name: "Add Table" }).click();
+  await main.getByRole("button", { name: "Source Page" }).click();
 
   const outlines = main.getByTestId("region-outline");
   await expect(outlines).toHaveCount(2);
@@ -163,9 +164,7 @@ test.skip("#42: the source page outlines every Region of the selected Table, the
   expect(new Set(styles).size).toBe(2); // dashed for the Header Region, so colour is not the only cue
 });
 
-test.skip("#42: the Header Row keeps its H menu, and Copy includes the titles", async ({
-  page,
-}) => {
+test("#42: the Header Row keeps its H menu, and Copy includes the titles", async ({ page }) => {
   await page.addInitScript(() => {
     const written: string[] = [];
     Object.assign(window, { clipboardWrites: written });
@@ -178,7 +177,7 @@ test.skip("#42: the Header Row keeps its H menu, and Copy includes the titles", 
   await drawTitlesAndRows(page, main, layer);
   await main.getByRole("button", { name: "Add Table" }).click();
 
-  await expect(main.getByRole("button", { name: /^Row is the Header Row/ })).toBeVisible();
+  await expect(main.getByRole("button", { name: "Header Row. Row actions" })).toBeVisible();
   await main.getByRole("button", { name: "Copy" }).click();
   const copied = await page.evaluate(() =>
     (window as unknown as { clipboardWrites: string[] }).clipboardWrites.at(-1),

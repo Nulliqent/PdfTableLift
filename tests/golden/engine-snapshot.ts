@@ -1,5 +1,5 @@
 // Writes golden snapshots from the app's own engine, for fixtures the prototype gets wrong
-// (spec #22: `statement`; spec #30: `statement-sections`, `statement-first-column`). Same format
+// (spec #22: `statement`; spec #30: `statement-sections`, `statement-first-column`; spec #39: `parts-list-drawing`). Same format
 // and settings matrix as harness/golden.mjs, but the text items come from the app's PDF Reader and the Tables from the
 // workspace reducer and export.
 // These snapshots are NOT from the prototype; see README.md. Run with `npm run golden:engine`,
@@ -25,7 +25,12 @@ import { readDocument } from "../unit/support/node-reader";
 const root = join(import.meta.dirname, "..", "..");
 const snapDir = join(import.meta.dirname, "snapshots");
 /** Fixtures snapshotted from the app's engine (harness/golden.mjs leaves these out). */
-const FROM_ENGINE = ["statement", "statement-sections", "statement-first-column"];
+const FROM_ENGINE = [
+  "statement",
+  "statement-sections",
+  "statement-first-column",
+  "parts-list-drawing",
+];
 /** Prototype snapshots whose Tables (`runs`) come from the app's engine; harness/golden.mjs keeps them. */
 const RUNS_FROM_ENGINE = ["wrapped-cells"];
 const COLUMN_SPACINGS = [1, 0.5, 2];

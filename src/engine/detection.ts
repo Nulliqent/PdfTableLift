@@ -724,16 +724,109 @@ export function regionTable(
 /** A Region as the engine takes it: its bounds, its role and its Single-Row setting. */
 export type RegionSpec = { bbox: Bbox; role: "header" | "body"; singleRow: boolean };
 
+/** Why Regions cannot be saved: nothing is drawn, no Body Region has text, or the Header Region has none. */
+export type RegionsBlocked = "nothing" | "no-body" | "no-header";
+
+const insideBox = (it: TextItem, [x0, y0, x1, y1]: Bbox) => {
+  const cx = it.x + it.w / 2;
+  const cy = it.y + it.h * 0.35;
+  return cx >= x0 && cx <= x1 && cy >= y0 && cy <= y1;
+};
+
+/**
+ * The Header Row of a Header Region (spec #39): all its text is one Row. Each piece of text goes
+ * to the column it overlaps most, or the nearest column when it overlaps none; a column's pieces
+ * join with single spaces, top to bottom and then left to right.
+ */
+function headerRow(items: TextItem[], cols: Band[], columnSpacing: number): string[] {
+  const row: string[] = Array(cols.length).fill("");
+  const columnOf = (it: TextItem) => {
+    let best = -1;
+    let bestOverlap = 0;
+    cols.forEach(([a, b], i) => {
+      const o = Math.min(b, it.x + it.w) - Math.max(a, it.x);
+      if (o > bestOverlap) {
+        bestOverlap = o;
+        best = i;
+      }
+    });
+    if (best >= 0) return best;
+    const mid = it.x + it.w / 2;
+    let nearest = Infinity;
+    cols.forEach(([a, b], i) => {
+      const d = Math.abs((a + b) / 2 - mid);
+      if (d < nearest) {
+        nearest = d;
+        best = i;
+      }
+    });
+    return best;
+  };
+  for (const l of linesFromItems(items, columnSpacing)) {
+    for (const it of l.items.slice().sort((p, q) => p.x - q.x)) {
+      const text = it.str.trim();
+      if (!text) continue;
+      const c = columnOf(it);
+      row[c] = row[c] ? `${row[c]} ${text}` : text;
+    }
+  }
+  return row;
+}
+
 /**
  * Builds a Hand-drawn Table from a page's text, a list of Regions with roles and the Column
- * Spacing. Returns null when the Regions hold no Rows to save. With one Body Region the result is
- * exactly that of `regionTable`.
+ * Spacing, or says why the Regions cannot be saved. The Body Region decides the columns and Rows;
+ * a Header Region's text becomes the first Row. Text inside both goes to the Header Region. With
+ * one Body Region and no Header Region the result is exactly that of `regionTable`.
  */
+export function regionsOutcome(
+  items: TextItem[],
+  regions: RegionSpec[],
+  columnSpacing: number,
+): { table: FoundTable } | { blocked: RegionsBlocked } {
+  if (!regions.length) return { blocked: "nothing" };
+  const header = regions.find((r) => r.role === "header");
+  const titles = header ? items.filter((it) => insideBox(it, header.bbox)) : [];
+  const claimed = new Set(titles);
+  const pool = header ? items.filter((it) => !claimed.has(it)) : items;
+  let table: FoundTable | null = null;
+  for (const r of regions) {
+    if (r.role !== "body") continue;
+    table = regionTable(pool, r.bbox, columnSpacing, r.singleRow);
+    if (table) break;
+  }
+  if (!table) return { blocked: "no-body" };
+  if (!header) return { table };
+  if (!titles.some((it) => it.str.trim())) return { blocked: "no-header" };
+  const sectionCells: Record<number, string[]> = {};
+  for (const [row, cells] of Object.entries(table.sectionCells))
+    sectionCells[Number(row) + 1] = cells;
+  return {
+    table: {
+      grid: [headerRow(titles, table.cols, columnSpacing), ...table.grid],
+      sections: table.sections.map((r) => r + 1),
+      sectionCells,
+      cols: table.cols,
+      firstBold: titles.every((it) => it.bold),
+      bbox: regions.reduce<Bbox>(
+        (u, r) => [
+          Math.min(u[0], r.bbox[0]),
+          Math.min(u[1], r.bbox[1]),
+          Math.max(u[2], r.bbox[2]),
+          Math.max(u[3], r.bbox[3]),
+        ],
+        [Infinity, Infinity, -Infinity, -Infinity],
+      ),
+    },
+  };
+}
+
+/** The Table `regionsOutcome` builds, or null when the Regions cannot be saved. */
 export function regionsTable(
   items: TextItem[],
   regions: RegionSpec[],
   columnSpacing: number,
 ): FoundTable | null {
-  const body = regions.find((r) => r.role === "body");
-  return body ? regionTable(items, body.bbox, columnSpacing, body.singleRow) : null;
+  const out = regionsOutcome(items, regions, columnSpacing);
+  return "table" in out ? out.table : null;
 }

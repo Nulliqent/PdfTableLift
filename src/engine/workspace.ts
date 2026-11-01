@@ -7,7 +7,14 @@
  */
 import { pageBox, type PageText } from "../shared/page-text";
 import type { ReadError } from "../shared/read-error";
-import { detectTables, regionsTable, type Band, type Bbox, type FoundTable } from "./detection";
+import {
+  detectTables,
+  regionsOutcome,
+  type Band,
+  type Bbox,
+  type FoundTable,
+  type RegionsBlocked,
+} from "./detection";
 import { isSectionHeader, usesSectionColumn, type SectionMode } from "./export";
 import { joinTables } from "./join";
 import { HAND_DRAWN_OVERLAP, REMOVED_TABLE_OVERLAP, overlapRatio } from "./overlap";
@@ -218,6 +225,14 @@ export type WorkspaceAction =
    * until the Region is saved, so only `regionCommitted` goes through the edit warning.
    */
   | { type: "regionSingleRowChanged"; value: boolean }
+  /** Add Region: a new Body Region starts, and becomes the one being edited. */
+  | { type: "regionAdded" }
+  /** The Region at `index` was removed. Removing the last one leaves a fresh Body Region. */
+  | { type: "regionRemoved"; index: number }
+  /** The Region at `index` became the one being edited. */
+  | { type: "regionPicked"; index: number }
+  /** The Region at `index` was made the Header Region or a Body Region. Only one is the Header Region. */
+  | { type: "regionRoleChanged"; index: number; role: RegionRole }
   /** A cell was corrected (grid coordinates, Header Row included). */
   | {
       type: "cellEdited";
@@ -511,6 +526,41 @@ export function reduce(state: WorkspaceState, action: WorkspaceAction): Workspac
     case "regionSingleRowChanged":
       if (!state.region || editedRegion(state.region).singleRow === action.value) return state;
       return { ...state, region: withEdited(state.region, { singleRow: action.value }) };
+    case "regionAdded": {
+      const { region } = state;
+      if (!region) return state;
+      const regions = [...region.regions, draftRegion(null)];
+      return { ...state, region: { ...region, regions, edited: regions.length - 1 } };
+    }
+    case "regionRemoved": {
+      const { region } = state;
+      if (!region || !region.regions[action.index]) return state;
+      const left = region.regions.filter((_, i) => i !== action.index);
+      const regions = left.length ? left : [draftRegion(null)];
+      const edited = Math.min(
+        action.index < region.edited ? region.edited - 1 : region.edited,
+        regions.length - 1,
+      );
+      return { ...state, region: { ...region, regions, edited } };
+    }
+    case "regionPicked": {
+      const { region } = state;
+      if (!region || !region.regions[action.index] || region.edited === action.index) return state;
+      return { ...state, region: { ...region, edited: action.index } };
+    }
+    case "regionRoleChanged": {
+      const { region } = state;
+      const target = region?.regions[action.index];
+      if (!region || !target || target.role === action.role) return state;
+      const regions = region.regions.map((r, i) =>
+        i === action.index
+          ? { ...r, role: action.role }
+          : action.role === "header" && r.role === "header"
+            ? { ...r, role: "body" as const }
+            : r,
+      );
+      return { ...state, region: { ...region, regions } };
+    }
     case "changeConfirmed": {
       if (!state.pendingChange) return state;
       return reduce(
@@ -913,8 +963,36 @@ export type RegionTable = FoundTable & { header: boolean };
  * several Rows turns it back on.
  */
 function handDrawnTable(page: PageText, regions: Region[], settings: Settings): RegionTable | null {
-  const t = regionsTable(page.items, regions, settings.columnSpacing);
-  return t && { ...t, header: t.grid.length > 1 && !t.sections.includes(0) };
+  const out = regionsOutcome(page.items, regions, settings.columnSpacing);
+  if (!("table" in out)) return null;
+  const t = out.table;
+  // With a Header Region the Header Row is always its text; without one, today's rule applies.
+  const header = regions.some((r) => r.role === "header")
+    ? true
+    : t.grid.length > 1 && !t.sections.includes(0);
+  return { ...t, header };
+}
+
+/** The Regions a Hand-drawn Table was built from, or null for a Detected Table. */
+export function tableRegions(doc: Document, table: Table): Region[] | null {
+  return (table.manual && doc.handDrawn.find((r) => r.id === table.manual)?.regions) || null;
+}
+
+/** Whether a Table was built with a Header Region ("First row is header" is then not offered). */
+export const hasHeaderRegion = (doc: Document, table: Table): boolean =>
+  tableRegions(doc, table)?.some((r) => r.role === "header") ?? false;
+
+/**
+ * Why the Regions in progress cannot be saved, or null when they can. "nothing" is nothing drawn
+ * yet, "no-body" is no Body Region with text, "no-header" is a Header Region without text.
+ */
+export function regionBlocked(state: WorkspaceState): RegionsBlocked | null {
+  const { region } = state;
+  const doc = regionDocument(state);
+  const page = doc && region && pageOf(doc, region.page);
+  if (!region || !page) return "nothing";
+  const out = regionsOutcome(page.items, drawn(region.regions), state.settings.columnSpacing);
+  return "blocked" in out ? out.blocked : null;
 }
 
 /** A new Body Region, with the given bounds (null until dragged). */

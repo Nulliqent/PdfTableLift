@@ -1,5 +1,12 @@
 import { useEffect } from "react";
-import type { Bbox, Document, RegionInProgress, RegionTable } from "../../engine";
+import type {
+  Bbox,
+  Document,
+  RegionInProgress,
+  RegionRole,
+  RegionsBlocked,
+  RegionTable,
+} from "../../engine";
 import { plural } from "../format";
 import { Button } from "./Button";
 import { Icon } from "./Icon";
@@ -15,11 +22,18 @@ type RegionSelectionProps = {
   region: RegionInProgress;
   /** The Table the Region would make now, or null while nothing is drawn or it holds no text. */
   preview: RegionTable | null;
+  /** Why the Regions cannot be saved, or null when they can. */
+  blocked: RegionsBlocked | null;
   onPage: (page: number) => void;
   onDrag: (bbox: Bbox) => void;
   onWholePage: () => void;
   /** "Treat selection as one row" was switched. */
   onSingleRow: (value: boolean) => void;
+  /** Add Region: another box on the same page. */
+  onAddRegion: () => void;
+  onPickRegion: (index: number) => void;
+  onRemoveRegion: (index: number) => void;
+  onRole: (index: number, role: RegionRole) => void;
   onCancel: () => void;
   onSave: () => void;
 };
@@ -32,10 +46,15 @@ export function RegionSelection({
   document,
   region,
   preview,
+  blocked,
   onPage,
   onDrag,
   onWholePage,
   onSingleRow,
+  onAddRegion,
+  onPickRegion,
+  onRemoveRegion,
+  onRole,
   onCancel,
   onSave,
 }: RegionSelectionProps) {
@@ -62,7 +81,8 @@ export function RegionSelection({
         <h2>Select Table Region</h2>
         <p className={styles.lede}>
           Drag a box around the table, including its header row. Only the text inside the box is
-          used, and the columns are worked out from it.
+          used, and the columns are worked out from it. If the column titles sit apart from the
+          rows, add a Region for them and mark it Header.
         </p>
       </div>
       <div className={pane.bar}>
@@ -90,15 +110,20 @@ export function RegionSelection({
         <button type="button" className={styles.link} onClick={onWholePage}>
           Select Whole Page
         </button>
-        <label className={pane.switch}>
-          <input
-            type="checkbox"
-            role="switch"
-            checked={edited.singleRow}
-            onChange={(e) => onSingleRow(e.target.checked)}
-          />
-          Treat selection as one row
-        </label>
+        <button type="button" className={styles.link} onClick={onAddRegion}>
+          Add Region
+        </button>
+        {edited.role === "body" && (
+          <label className={pane.switch}>
+            <input
+              type="checkbox"
+              role="switch"
+              checked={edited.singleRow}
+              onChange={(e) => onSingleRow(e.target.checked)}
+            />
+            Treat selection as one row
+          </label>
+        )}
         <span className={pane.spacer} />
         <Button onClick={onCancel}>Cancel</Button>
         <Button variant="primary" disabled={!preview} onClick={onSave}>
@@ -106,25 +131,83 @@ export function RegionSelection({
           {region.redraw ? "Replace Table" : "Add Table"}
         </Button>
       </div>
+      <ul className={styles.regions} aria-label="Regions">
+        {region.regions.map((r, i) => (
+          <li key={i} className={i === region.edited ? styles.current : undefined}>
+            <button
+              type="button"
+              className={styles.pick}
+              aria-current={i === region.edited ? "true" : undefined}
+              onClick={() => onPickRegion(i)}
+            >
+              {regionName(i, r.role)}
+            </button>
+            <div className={styles.roles} role="group" aria-label={`Region ${i + 1} role`}>
+              {(["header", "body"] as const).map((role) => (
+                <button
+                  key={role}
+                  type="button"
+                  aria-pressed={r.role === role}
+                  onClick={() => onRole(i, role)}
+                >
+                  {role === "header" ? "Header" : "Body"}
+                </button>
+              ))}
+            </div>
+            <button
+              type="button"
+              className={styles.remove}
+              aria-label={`Remove Region ${i + 1}`}
+              onClick={() => onRemoveRegion(i)}
+            >
+              <Icon name="trash" />
+            </button>
+          </li>
+        ))}
+      </ul>
       <div className={styles.layout}>
         <div className={pane.card}>
           <RegionPage
             document={document}
             pageNum={region.page}
-            bbox={edited.bbox}
+            regions={region.regions.map((r, i) => ({
+              bbox: r.bbox,
+              role: r.role,
+              name: regionName(i, r.role),
+              edited: i === region.edited,
+            }))}
             label={label}
             onDrag={onDrag}
           />
         </div>
         <div className={`${pane.card} ${styles.preview}`} aria-live="polite">
-          <Preview drawn={edited.bbox !== null} table={preview} />
+          <Preview
+            drawn={region.regions.some((r) => r.bbox !== null)}
+            table={preview}
+            blocked={blocked}
+            lone={region.regions.length === 1 && edited.role === "body"}
+          />
         </div>
       </div>
     </>
   );
 }
 
-function Preview({ drawn, table }: { drawn: boolean; table: RegionTable | null }) {
+/** "Region 2 · Header": the name of a Region in the list, on the page and in announcements. */
+const regionName = (index: number, role: RegionRole) =>
+  `Region ${index + 1} · ${role === "header" ? "Header" : "Body"}`;
+
+function Preview({
+  drawn,
+  table,
+  blocked,
+  lone,
+}: {
+  drawn: boolean;
+  table: RegionTable | null;
+  blocked: RegionsBlocked | null;
+  lone: boolean;
+}) {
   if (!drawn)
     return (
       <div className={styles.empty}>
@@ -136,16 +219,26 @@ function Preview({ drawn, table }: { drawn: boolean; table: RegionTable | null }
         </span>
       </div>
     );
-  if (!table)
+  if (!table) {
+    // A lone Body Region keeps today's wording; with other Regions the reason names the one at fault.
+    const reason =
+      blocked === "no-header"
+        ? "No text in the Header Region"
+        : lone
+          ? "No text in this area"
+          : "No Body Region with text";
     return (
       <div className={styles.empty}>
         <Icon name="warn" />
-        <b>No text in this area</b>
+        <b>{reason}</b>
         <span>
-          Select an area that contains text. Tables that are pictures, like scans, can’t be read.
+          {blocked === "no-header"
+            ? "Move the Header Region over the column titles, or mark it Body."
+            : "Select an area that contains text. Tables that are pictures, like scans, can’t be read."}
         </span>
       </div>
     );
+  }
   const { header } = table;
   const head = header ? table.grid[0]! : null;
   const body = header ? table.grid.slice(1) : table.grid;

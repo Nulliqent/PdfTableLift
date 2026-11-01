@@ -1,6 +1,6 @@
 import { useRef } from "react";
 import type { OutlineBox } from "../../pdf-reader";
-import type { Document, Table } from "../../engine";
+import { tableRegions, type Document, type Table } from "../../engine";
 import { Icon } from "./Icon";
 import { frame, useDrawnPages, usePageWidth } from "../page-drawing";
 import { CanvasHost } from "./CanvasHost";
@@ -47,8 +47,19 @@ export function SourcePage({
                 data-testid={`source-page-${num}`}
               >
                 <CanvasHost canvas={page.canvas} />
-                {document.tables.flatMap((t) =>
-                  t.parts.flatMap((part, k) =>
+                {document.tables.flatMap((t) => {
+                  // A Hand-drawn Table of several Regions is outlined Region by Region.
+                  const regions = t.id === table.id ? tableRegions(document, t) : null;
+                  if (regions && regions.length > 1)
+                    return regions.map((r, k) => (
+                      <RegionOutline
+                        key={`${t.id}:region:${k}`}
+                        name={`Region ${k + 1} · ${r.role === "header" ? "Header" : "Body"}`}
+                        header={r.role === "header"}
+                        box={page.locate(r.bbox)}
+                      />
+                    ));
+                  return t.parts.flatMap((part, k) =>
                     part.page === num ? (
                       <Outline
                         key={`${t.id}:${k}`}
@@ -61,13 +72,28 @@ export function SourcePage({
                     ) : (
                       []
                     ),
-                  ),
-                )}
+                  );
+                })}
               </div>
             </figure>
           ))}
         </div>
       )}
+    </div>
+  );
+}
+
+/** One Region of the selected Hand-drawn Table: the Header Region is dashed and tagged "Header". */
+function RegionOutline({ name, header, box }: { name: string; header: boolean; box: OutlineBox }) {
+  return (
+    <div
+      role="img"
+      aria-label={name}
+      className={`${styles.regionOutline} ${header ? styles.headerRegion : ""}`}
+      style={frame(box)}
+      data-testid="region-outline"
+    >
+      <span aria-hidden="true">{header ? "Header" : "Body"}</span>
     </div>
   );
 }
