@@ -31,6 +31,8 @@ export type Table = {
   grid: string[][];
   /** Grid row indexes of Section Headers. */
   sections: number[];
+  /** For each Section Header row, the cells it gets back when unmarked (FoundTable.sectionCells). */
+  sectionCells: Record<number, string[]>;
   /** Column bands, one per grid column. */
   cols: Band[];
   /** Repeated Header Rows dropped by joining. */
@@ -502,18 +504,32 @@ export function reduce(state: WorkspaceState, action: WorkspaceAction): Workspac
 
 /**
  * Marks a row as a Section Header (its text gathered into the first cell) or turns it back into a
- * data row. Counts as a correction. The Header Row and rows outside the grid are left alone.
+ * data row with the cells it had before (for a detected one, its text in its own column). Counts
+ * as a correction. The Header Row and rows outside the grid are left alone.
  */
 function toggleSectionHeader(t: Table, row: number): Table {
   if (!t.grid[row] || (t.header && row === 0)) return t;
   if (t.sections.includes(row)) {
-    return { ...t, sections: t.sections.filter((r) => r !== row), edited: true };
+    const { [row]: cells = t.grid[row], ...sectionCells } = t.sectionCells;
+    return {
+      ...t,
+      grid: t.grid.with(row, cells),
+      sections: t.sections.filter((r) => r !== row),
+      sectionCells,
+      edited: true,
+    };
   }
   const label = t.grid[row].filter(Boolean).join(" ");
-  const grid = t.grid.map((cells, r) =>
-    r === row ? cells.map((_, c) => (c ? "" : label)) : cells,
-  );
-  return { ...t, grid, sections: [...t.sections, row].sort((a, b) => a - b), edited: true };
+  return {
+    ...t,
+    grid: t.grid.with(
+      row,
+      t.grid[row].map((_, c) => (c ? "" : label)),
+    ),
+    sections: [...t.sections, row].sort((a, b) => a - b),
+    sectionCells: { ...t.sectionCells, [row]: t.grid[row] },
+    edited: true,
+  };
 }
 
 /** The region field to keep, and no pending Region save once its Region is gone. */
@@ -638,6 +654,7 @@ function detectDocument(doc: Document, pages: PageText[], settings: Settings): T
     firstBold: t.firstBold,
     grid: t.grid,
     sections: t.sections,
+    sectionCells: t.sectionCells,
     cols: t.cols,
     repeats: 0,
     splitFrom: false,

@@ -101,21 +101,23 @@ export function joinTables(
     const skip = join.repeated ? 1 : 0;
     const offset = table.grid.length - skip;
     const width = table.grid[0]!.length;
-    const rows = next.grid.slice(skip).map((row) => {
+    const onto = (row: string[]) => {
       const cells: string[] = Array(width).fill("");
       row.forEach((v, i) => {
         const c = join.map[i]!;
         cells[c] = cells[c] ? `${cells[c]} ${v}` : v;
       });
       return cells;
-    });
+    };
+    const kept = next.sections.filter((s) => s >= skip);
     out[out.length - 1] = {
       ...table,
-      grid: [...table.grid, ...rows],
-      sections: [
-        ...table.sections,
-        ...next.sections.filter((s) => s >= skip).map((s) => s + offset),
-      ],
+      grid: [...table.grid, ...next.grid.slice(skip).map(onto)],
+      sections: [...table.sections, ...kept.map((s) => s + offset)],
+      sectionCells: {
+        ...table.sectionCells,
+        ...Object.fromEntries(kept.map((s) => [s + offset, onto(next.sectionCells[s]!)])),
+      },
       parts: [...table.parts, ...next.parts],
       repeats: table.repeats + skip,
     };

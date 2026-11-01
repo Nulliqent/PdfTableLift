@@ -17,6 +17,11 @@ export type FoundTable = {
   grid: string[][];
   /** Grid row indexes of Section Headers. */
   sections: number[];
+  /**
+   * For each Section Header row, the cells it would have as a data row: its text in the column it
+   * sits in. Unmarking the Section Header puts them back.
+   */
+  sectionCells: Record<number, string[]>;
   cols: Band[];
   /** Every cell of the first row is bold. */
   firstBold: boolean;
@@ -358,6 +363,8 @@ export function buildTable(rows: Line[], manual = false, oneRow = false): FoundT
   const ends: number[][] = [];
   const bolds: boolean[][] = [];
   const sections = new Set<number>();
+  /** By grid row: the Cell of a Section Header line, in the column it sits in. */
+  const asData = new Map<number, string[]>();
   /** The gap from the line above rows[i] down to it; Infinity at either end of the run. */
   const gapAbove = (i: number) =>
     i > 0 && i < rows.length ? bottomOf(rows[i - 1]!) - rows[i]!.y : Infinity;
@@ -409,6 +416,9 @@ export function buildTable(rows: Line[], manual = false, oneRow = false): FoundT
       // A lone label inside the table body is a Section Header.
       const g: string[] = Array(bands.length).fill("");
       g[0] = r.cells[0]!.text;
+      const data: string[] = Array(bands.length).fill("");
+      data[pick(r.cells[0]!)] = r.cells[0]!.text;
+      asData.set(grid.length, data);
       sections.add(grid.length);
       grid.push(g);
       ends.push(Array(bands.length).fill(0));
@@ -433,11 +443,18 @@ export function buildTable(rows: Line[], manual = false, oneRow = false): FoundT
   // Drop columns that only ever hold Section Header text.
   const keep = bands.map((_, i) => i === 0 || grid.some((g, ri) => !sections.has(ri) && g[i]));
   const clean = grid.map((g) => g.filter((_, i) => keep[i]));
+  const sectionCells: Record<number, string[]> = {};
+  for (const [ri, data] of asData) {
+    const kept = data.filter((_, i) => keep[i]);
+    // A label whose column held nothing else has no column to go back to: it stays in the first.
+    sectionCells[ri] = kept.some(Boolean) ? kept : clean[ri]!;
+  }
   const first = rows[0]!;
   const lastR = rows[rows.length - 1]!;
   return {
     grid: clean,
     sections: [...sections],
+    sectionCells,
     cols: bands.filter((_, i) => keep[i]),
     firstBold: first.cells.every((c) => c.bold),
     bbox: [
@@ -464,6 +481,7 @@ function singleRowTable(lines: Line[], bands: Band[], pick: (c: Cell) => number)
   return {
     grid: [row],
     sections: [],
+    sectionCells: {},
     cols: bands,
     firstBold: lines.every((l) => l.cells.every((c) => c.bold)),
     bbox: [
