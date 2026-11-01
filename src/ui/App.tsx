@@ -258,6 +258,9 @@ export function App() {
             onToggleSection={(documentId, tableId, row) =>
               dispatch({ type: "sectionHeaderToggled", documentId, tableId, row })
             }
+            onCombineRows={(documentId, tableId, row, direction) =>
+              dispatch({ type: "rowCombined", documentId, tableId, row, direction })
+            }
             onSplitByPage={(documentId, tableId) => {
               dispatch({ type: "splitByPage", documentId, tableId });
               if (!hasEdits(documentId)) showHud(splitMessage(documentId, tableId));
