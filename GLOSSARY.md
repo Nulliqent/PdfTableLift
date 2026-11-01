@@ -52,6 +52,13 @@ _Avoid_: Merged table, continued table
 The piece of a Joined Table that lies on a single page.
 _Avoid_: Fragment, segment
 
+**Stacked Table**:
+A Table the user makes from several Tables of one Document that share the same Header Row, by putting their Rows one after another; it always shows its Members as they stand.
+_Avoid_: Combined table (Combine is for Rows), joined table (reserved for Joined Tables), merged table
+
+**Member**:
+One of the Tables a Stacked Table is made from.
+
 ## Structure
 
 **Cell**:
