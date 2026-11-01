@@ -590,11 +590,15 @@ function updateTable(
 
 /**
  * After re-detection, keeps the selection by page and position among that page's Tables; if
- * that Table is gone, falls back to the Document's first Table.
+ * that Table is gone, falls back to the Document's first Table. With nothing selected before, the
+ * first Table re-detection found is selected, so Tables that just appeared are shown.
  */
 function keepSelection(before: WorkspaceState, documents: Document[]): Selection | null {
   const sel = before.selection;
-  if (!sel) return null;
+  if (!sel) {
+    const first = documents.find((d) => d.tables.length);
+    return first ? { documentId: first.id, tableId: first.tables[0]!.id } : null;
+  }
   const old = before.documents.find((d) => d.id === sel.documentId);
   const now = documents.find((d) => d.id === sel.documentId);
   const oldTable = old?.tables.find((t) => t.id === sel.tableId);
