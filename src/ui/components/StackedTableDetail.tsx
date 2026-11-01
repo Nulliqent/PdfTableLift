@@ -1,6 +1,7 @@
 import { useState } from "react";
 import {
   EXPORT_FORMATS,
+  exportFile,
   exportTable,
   hasSectionHeaders,
   isSectionHeader,
@@ -9,6 +10,7 @@ import {
   type Document,
 } from "../../engine";
 import { copyText } from "../copy-text";
+import { downloadFile } from "../download-file";
 import { plural } from "../format";
 import { useExportFormat } from "../useExportFormat";
 import { useSectionMode } from "../useSectionMode";
@@ -30,11 +32,14 @@ type StackedTableDetailProps = {
   editing: boolean;
   onEditMembers: (documentId: string, stackedId: string) => void;
   onRemoveStacked: (documentId: string, stackedId: string) => void;
+  /** The Source switch: a leading Source column with each Row's page. */
+  onToggleSource: (documentId: string, stackedId: string, source: boolean) => void;
 };
 
 /**
  * The preview of a Stacked Table: read-only, with a note that sends the user to its Members, any
- * Members left out, and the format, Section Mode and Copy as for any Table.
+ * Members left out, the Source switch, and the format, Section Mode, Download and Copy as for any
+ * Table.
  */
 export function StackedTableDetail({
   document,
@@ -44,8 +49,9 @@ export function StackedTableDetail({
   editing,
   onEditMembers,
   onRemoveStacked,
+  onToggleSource,
 }: StackedTableDetailProps) {
-  const { table, members, record } = stacked;
+  const { table, members, record, source } = stacked;
   const [view, setView] = useState<"table" | "source">("table");
   const { rows, cols } = tableSize(table);
   const [format, setFormat] = useExportFormat();
@@ -55,10 +61,15 @@ export function StackedTableDetail({
   const name = EXPORT_FORMATS.find((f) => f.format === format)!.name;
   const found = members.flatMap((m) => (m.table ? [m.table] : []));
   const copy = async () => {
-    const text = exportTable(table, format, sectionMode);
+    const text = exportTable(table, format, sectionMode, source);
     if (await copyText(text)) {
       onAnnounce(format === "tsv" ? "Copied: paste into Numbers or Excel" : `Copied as ${name}`);
     } else setSheet(text);
+  };
+  const download = () => {
+    const title = `Stacked Table ${record.n}`;
+    downloadFile(exportFile(document.name, title, table, format, sectionMode, source));
+    onAnnounce("Downloaded");
   };
   return (
     <>
@@ -130,6 +141,22 @@ export function StackedTableDetail({
           <SectionModeControl value={sectionMode} onChange={setSectionMode} />
         )}
         <span className={styles.spacer} />
+        <label className={styles.switch}>
+          <input
+            type="checkbox"
+            role="switch"
+            checked={record.source}
+            onChange={(e) => {
+              onToggleSource(document.id, record.id, e.target.checked);
+              onAnnounce(e.target.checked ? "Source column on" : "Source column off");
+            }}
+          />
+          Source
+        </label>
+        <Button onClick={download}>
+          <Icon name="tray" />
+          Download
+        </Button>
         <Button variant="primary" onClick={() => void copy()}>
           <Icon name="copy" />
           Copy
@@ -137,7 +164,7 @@ export function StackedTableDetail({
       </div>
       <div className={styles.card}>
         {view === "table" ? (
-          <TableView table={table} sectionMode={sectionMode} readOnly />
+          <TableView table={table} sectionMode={sectionMode} readOnly source={source} />
         ) : (
           <SourcePage
             document={document}

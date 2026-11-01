@@ -386,6 +386,9 @@ export function App() {
               showHud("Edit the Members: tick, untick or move them, then Save");
             }}
             onRemoveStacked={removeStacked}
+            onToggleSource={(documentId, stackedId, source) =>
+              dispatch({ type: "stackedSourceToggled", documentId, stackedId, source })
+            }
           />
         </div>
       </div>

@@ -61,6 +61,8 @@ type ContentPaneProps = {
   editingStackedId: string | null;
   onEditMembers: (documentId: string, stackedId: string) => void;
   onRemoveStacked: (documentId: string, stackedId: string) => void;
+  /** A Stacked Table's Source switch was turned on or off. */
+  onToggleSource: (documentId: string, stackedId: string, source: boolean) => void;
 };
 
 /** The content pane: the selected Table with Copy, or an empty state. */
@@ -84,6 +86,7 @@ export function ContentPane({
   editingStackedId,
   onEditMembers,
   onRemoveStacked,
+  onToggleSource,
 }: ContentPaneProps) {
   return (
     <main className={styles.content}>
@@ -100,6 +103,7 @@ export function ContentPane({
             editing={editingStackedId === stacked.record.id}
             onEditMembers={onEditMembers}
             onRemoveStacked={onRemoveStacked}
+            onToggleSource={onToggleSource}
           />
         ) : document && table ? (
           <TableDetail

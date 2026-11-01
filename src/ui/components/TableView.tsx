@@ -32,8 +32,16 @@ type TableViewProps = {
       rowActions: RowActions;
       readOnly?: false;
     }
-  /** Read-only (a Stacked Table): no Cell editing and no row-number menus. */
-  | { readOnly: true; onEdit?: undefined; rowActions?: undefined }
+  /**
+   * Read-only (a Stacked Table): no Cell editing and no row-number menus. `source` gives each grid
+   * row's Source Cell while the Source switch is on: a leading Source column.
+   */
+  | {
+      readOnly: true;
+      onEdit?: undefined;
+      rowActions?: undefined;
+      source?: readonly string[] | null;
+    }
 );
 
 /**
@@ -44,7 +52,9 @@ type TableViewProps = {
  * above (the Header Row included) or below, and Split back on a combined Row. The Header Row has a
  * row number too, whose menu offers only Combine with Row below and Split back.
  */
-export function TableView({ table, onEdit, sectionMode, rowActions, readOnly }: TableViewProps) {
+export function TableView(props: TableViewProps) {
+  const { table, onEdit, sectionMode, rowActions, readOnly } = props;
+  const source = (props.readOnly && props.source) || null;
   const [menu, setMenu] = useState<{ row: number; anchor: HTMLButtonElement } | null>(null);
   /** The press began on the row number of the open menu: that click only closes the menu. */
   const pressedOpen = useRef(false);
@@ -170,6 +180,7 @@ export function TableView({ table, onEdit, sectionMode, rowActions, readOnly }: 
       rows.push(
         <tr key={r} className={styles.section}>
           {idx}
+          {source && <td className={styles.secCol} />}
           <Cell value={row[0] ?? ""} onEdit={onEdit && ((value) => onEdit(r, 0, value))} />
           {width > 1 && <td colSpan={width - 1} className={styles.secFill} />}
         </tr>,
@@ -180,6 +191,7 @@ export function TableView({ table, onEdit, sectionMode, rowActions, readOnly }: 
     rows.push(
       <tr key={r}>
         {idx}
+        {source && <td className={styles.secCol}>{source[r]}</td>}
         {asColumn && (
           <td className={styles.secCol}>{current || <span className={styles.none}>—</span>}</td>
         )}
@@ -202,6 +214,11 @@ export function TableView({ table, onEdit, sectionMode, rowActions, readOnly }: 
             <tr>
               {/* A cell, not a column header: it heads no column of the Table. */}
               {rowNumber(0, "Header Row", "H")}
+              {source && (
+                <th className={styles.secColHead} scope="col">
+                  Source
+                </th>
+              )}
               {asColumn && (
                 <th className={styles.secColHead} scope="col">
                   Section

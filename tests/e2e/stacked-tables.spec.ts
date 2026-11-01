@@ -1,3 +1,4 @@
+import { readFile } from "node:fs/promises";
 import { expect, test, type Page } from "@playwright/test";
 
 // #50: Select Tables, the matching rule's reasons, Stack N Tables and the read-only Stacked Table.
@@ -92,6 +93,48 @@ test("ticking matching Tables and stacking them makes a read-only Stacked Table"
   );
   await entry.click();
   await expect(main.getByRole("heading", { name: "Stacked Table 1" })).toBeVisible();
+});
+
+test("the Source switch adds each Row's page, and Download saves the same text as Copy", async ({
+  page,
+}) => {
+  const { sidebar, main } = await exampleUnjoined(page);
+  await sidebar.getByRole("button", { name: /^Select Tables/ }).click();
+  await sidebar.getByRole("checkbox", { name: /^Table 4(?!\d)/ }).check();
+  await sidebar.getByRole("checkbox", { name: /^Table 5(?!\d)/ }).check();
+  await sidebar.getByRole("button", { name: "Stack 2 Tables" }).click();
+  await expect(main.getByRole("heading", { name: "Stacked Table 1" })).toBeVisible();
+
+  // Off by default; turned on by keyboard, with its state announced.
+  const source = main.getByRole("switch", { name: "Source" });
+  await expect(source).not.toBeChecked();
+  await expect(main.getByRole("columnheader", { name: "Source" })).toHaveCount(0);
+  await source.focus();
+  await page.keyboard.press("Space");
+  await expect(source).toBeChecked();
+  await expect(status(page)).toHaveText("Source column on");
+  await expect(main.getByRole("columnheader", { name: "Source" })).toBeVisible();
+  await expect(main.getByRole("row", { name: /^\d+ p3 .*Madison Willy St/ })).toBeVisible();
+
+  await main.getByRole("button", { name: "Copy" }).click();
+  const copied = await page.evaluate(() =>
+    (window as unknown as { clipboardWrites: string[] }).clipboardWrites.at(-1)!,
+  );
+  expect(copied.split("\n")[0]).toBe("Source,Section,Store,Lead,FTE,Open roles,Notes");
+  expect(copied).toContain("p3,Midwest & Northeast,Madison Willy St,N. Kowalski,6,1,");
+
+  const download = page.waitForEvent("download");
+  await main.getByRole("button", { name: "Download" }).focus();
+  await page.keyboard.press("Enter");
+  const file = await download;
+  expect(file.suggestedFilename()).toBe("Northwind Q3 Summary.pdf - Stacked Table 1.csv");
+  expect(await readFile((await file.path())!, "utf8")).toBe(copied);
+  await expect(status(page)).toHaveText("Downloaded");
+
+  await source.focus();
+  await page.keyboard.press("Space");
+  await expect(status(page)).toHaveText("Source column off");
+  await expect(main.getByRole("columnheader", { name: "Source" })).toHaveCount(0);
 });
 
 test("Escape and Cancel leave Select Tables without a Stacked Table", async ({ page }) => {
