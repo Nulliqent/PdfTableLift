@@ -305,8 +305,9 @@ function TableName({ table: t, id }: { table: Table; id?: string }) {
  * the first ticked Table stays listed, greyed out and marked unavailable, with the reason beneath it
  * in words. Ticked Tables show their tick order. The bar holds Stack N Tables and Cancel.
  *
- * In Edit Members the ticked Tables come first, in Member order, each with Move Up and Move Down;
- * the bar holds Save, which needs one ticked Table, and Cancel.
+ * In Edit Members Tables are judged against the Stacked Table's saved Header Row instead. The
+ * ticked Tables come first, in Member order, each with Move Up and Move Down; the bar holds Save,
+ * which needs one ticked Table, and Cancel.
  */
 function SelectTables({
   doc,
