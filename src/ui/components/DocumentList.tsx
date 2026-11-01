@@ -9,7 +9,9 @@ import {
   tickMatch,
   tickedTables,
   type Document,
+  type MoveDirection,
   type Selection,
+  type StackedTableRef,
   type Table,
   type TablesInProgress,
 } from "../../engine";
@@ -33,11 +35,11 @@ type DocumentListProps = {
   onTick: (tableId: string, ticked: boolean) => void;
   onStack: () => void;
   /** Edit Members: move a ticked Table one place up or down in the Member order. */
-  onMoveMember: (tableId: string, direction: "up" | "down") => void;
+  onMoveMember: (tableId: string, direction: MoveDirection) => void;
   /** Edit Members: Save. */
   onSaveMembers: () => void;
   onCancelStacking: () => void;
-  onSelectStacked: (documentId: string, stackedId: string) => void;
+  onSelectStacked: (ref: StackedTableRef) => void;
 };
 
 /** The sidebar's Documents section: each Document and its Tables with page and size. */
@@ -205,7 +207,7 @@ function DocumentBody({
         className={styles.row}
         aria-current={current}
         data-stacked
-        onClick={() => onSelectStacked(doc.id, s.id)}
+        onClick={() => onSelectStacked({ documentId: doc.id, stackedId: s.id })}
       >
         <Icon name="stack" />
         <span className={styles.t}>
@@ -319,7 +321,7 @@ function SelectTables({
   stacking: TablesInProgress;
   onTick: (tableId: string, ticked: boolean) => void;
   onStack: () => void;
-  onMove: (tableId: string, direction: "up" | "down") => void;
+  onMove: (tableId: string, direction: MoveDirection) => void;
   onSave: () => void;
   onCancel: () => void;
 }) {

@@ -11,6 +11,7 @@ import {
   type BuiltStackedTable,
   type Document,
   type RowAction,
+  type StackedTableRef,
   type Table,
 } from "../../engine";
 import { copyText } from "../copy-text";
@@ -59,10 +60,10 @@ type ContentPaneProps = {
   onJoinAgain: (documentId: string, tableId: string) => void;
   /** The Stacked Table whose Members are being edited in the sidebar, if any. */
   editingStackedId: string | null;
-  onEditMembers: (documentId: string, stackedId: string) => void;
-  onRemoveStacked: (documentId: string, stackedId: string) => void;
+  onEditMembers: (ref: StackedTableRef) => void;
+  onRemoveStacked: (ref: StackedTableRef) => void;
   /** A Stacked Table's Source switch was turned on or off. */
-  onToggleSource: (documentId: string, stackedId: string, source: boolean) => void;
+  onToggleSource: (ref: StackedTableRef, source: boolean) => void;
 };
 
 /** The content pane: the selected Table with Copy, or an empty state. */

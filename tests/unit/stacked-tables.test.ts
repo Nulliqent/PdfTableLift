@@ -7,6 +7,8 @@ import {
   exportTable,
   headerMatch,
   initialWorkspace,
+  memberMove,
+  nextStackedNumber,
   reduce,
   selectedStackedTable,
   selectedTable,
@@ -918,6 +920,37 @@ describe("live Members through Column Spacing and Split by Page", () => {
     const off = reduce(saved, { type: "joinChanged", value: false });
     expect(items(off)).toEqual(items(three));
     expect(items(off)).toContain("Screw");
+  });
+
+  it("tells where a moved Member now stands, counting only the Members it can step past", () => {
+    const apart = run(
+      { ...initialWorkspace, settings: { ...initialWorkspace.settings, join: false } },
+      { type: "documentAdded", id: "d", name: "parts.pdf", size: 1 },
+      { type: "documentRead", id: "d", pages },
+    );
+    const joined = reduce(stack(apart, 1, 2, 3), { type: "joinChanged", value: true });
+    const editing = reduce(joined, {
+      type: "membersEditStarted",
+      documentId: "d",
+      stackedId: doc(joined).stacked[0]!.id,
+    });
+    // Members: Table 1 (p1 and p2), the missing p2 Member, Table 2 (p3).
+    const move = memberMove(doc(editing), editing.stacking!, tableId(editing, 2), "up")!;
+    expect([move.position, move.count]).toEqual([1, 2]);
+    const moved = reduce(editing, {
+      type: "memberMoved",
+      tableId: tableId(editing, 2),
+      direction: "up",
+    });
+    expect(moved.stacking).toEqual(move.stacking);
+    expect(tickedTables(doc(moved), moved.stacking!.ticked).map((t) => t.n)).toEqual([2, 1]);
+    expect(memberMove(doc(moved), moved.stacking!, tableId(moved, 2), "up")).toBeNull();
+  });
+
+  it("numbers a new Stacked Table as the reducer does", () => {
+    const one = stack(opened, 1, 2);
+    expect(nextStackedNumber(doc(one))).toBe(2);
+    expect(doc(stack(one, 2, 1)).stacked.map((s) => s.n)).toEqual([1, 2]);
   });
 
   it("keeps a split Joined Member's dropped Parts through an untick of another Member", () => {

@@ -9,6 +9,7 @@ import {
   type BuiltStackedTable,
   type Document,
   type StackedMember,
+  type StackedTableRef,
 } from "../../engine";
 import { copyText } from "../copy-text";
 import { downloadFile } from "../download-file";
@@ -31,10 +32,10 @@ type StackedTableDetailProps = {
   onSelectTable: (documentId: string, tableId: string) => void;
   /** Its Members are being edited in the sidebar. */
   editing: boolean;
-  onEditMembers: (documentId: string, stackedId: string) => void;
-  onRemoveStacked: (documentId: string, stackedId: string) => void;
+  onEditMembers: (ref: StackedTableRef) => void;
+  onRemoveStacked: (ref: StackedTableRef) => void;
   /** The Source switch: a leading Source column with each Row's page. */
-  onToggleSource: (documentId: string, stackedId: string, source: boolean) => void;
+  onToggleSource: (ref: StackedTableRef, source: boolean) => void;
 };
 
 const pageList = (pages: number[]) => {
@@ -76,6 +77,7 @@ export function StackedTableDetail({
   onToggleSource,
 }: StackedTableDetailProps) {
   const { table, members, record, source } = stacked;
+  const ref = { documentId: document.id, stackedId: record.id };
   const [view, setView] = useState<"table" | "source">("table");
   const { rows, cols } = tableSize(table);
   const [format, setFormat] = useExportFormat();
@@ -142,7 +144,7 @@ export function StackedTableDetail({
             className={styles.linkBtn}
             aria-disabled={editing ? true : undefined}
             onClick={() => {
-              if (!editing) onEditMembers(document.id, record.id);
+              if (!editing) onEditMembers(ref);
             }}
           >
             <Icon name="stack" />
@@ -151,7 +153,7 @@ export function StackedTableDetail({
           <button
             type="button"
             className={`${styles.linkBtn} ${styles.danger}`}
-            onClick={() => onRemoveStacked(document.id, record.id)}
+            onClick={() => onRemoveStacked(ref)}
           >
             <Icon name="trash" />
             Remove Stacked Table
@@ -177,7 +179,7 @@ export function StackedTableDetail({
             role="switch"
             checked={record.source}
             onChange={(e) => {
-              onToggleSource(document.id, record.id, e.target.checked);
+              onToggleSource(ref, e.target.checked);
               onAnnounce(e.target.checked ? "Source column on" : "Source column off");
             }}
           />

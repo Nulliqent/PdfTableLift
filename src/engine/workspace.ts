@@ -21,15 +21,17 @@ import { joinTables } from "./join";
 import { HAND_DRAWN_OVERLAP, REMOVED_TABLE_OVERLAP, overlapRatio } from "./overlap";
 import {
   buildStackedTable,
-  coversPart,
-  findMember,
-  memberRef,
-  tickMatch,
+  memberMove,
+  newStackedTable,
+  tickOutcome,
   tickedTables,
   withMembers,
+  withStacked,
+  withoutMember,
   type BuiltStackedTable,
-  type MemberRef,
+  type MoveDirection,
   type StackedTable,
+  type StackedTableRef,
   type TablesInProgress,
 } from "./stack";
 
@@ -189,8 +191,11 @@ export type Settings = {
 };
 
 /** What the content pane shows: a Table, or a Stacked Table. */
-export type Selection =
-  { documentId: string; tableId: string } | { documentId: string; stackedId: string };
+export type Selection = { documentId: string; tableId: string } | StackedTableRef;
+
+/** Whether the selection is a Stacked Table (else it is a Table). */
+export const isStackedSelection = (sel: Selection | null): sel is StackedTableRef =>
+  sel !== null && "stackedId" in sel;
 
 /**
  * An action that re-detects Tables and so would discard corrections. Without `discardEdits`, the
@@ -309,17 +314,17 @@ export type WorkspaceAction =
   | { type: "stackingCancelled" }
   /** Stack N Tables: the ticked Tables, in tick order, become a Stacked Table, which is selected. Needs two. */
   | { type: "tablesStacked" }
-  | { type: "stackedTableSelected"; documentId: string; stackedId: string }
+  | ({ type: "stackedTableSelected" } & StackedTableRef)
   /** The Source switch of a Stacked Table: a leading Source column with each Row's page. */
-  | { type: "stackedSourceToggled"; documentId: string; stackedId: string; source: boolean }
+  | ({ type: "stackedSourceToggled"; source: boolean } & StackedTableRef)
   /** Edit Members: the checkboxes reopen with the Stacked Table's Members ticked, in order. Leaves Select Region. */
-  | { type: "membersEditStarted"; documentId: string; stackedId: string }
+  | ({ type: "membersEditStarted" } & StackedTableRef)
   /** A ticked Table moves one place up or down in the tick order (the Member order). */
-  | { type: "memberMoved"; tableId: string; direction: "up" | "down" }
+  | { type: "memberMoved"; tableId: string; direction: MoveDirection }
   /** Save in Edit Members: the ticked Tables, in order, become the Stacked Table's Members. Needs one. */
   | { type: "membersSaved" }
   /** Remove Stacked Table: only the Stacked Table goes; its Members stay as they are. */
-  | { type: "stackedTableRemoved"; documentId: string; stackedId: string };
+  | ({ type: "stackedTableRemoved" } & StackedTableRef);
 
 /** The actions a row number's menu dispatches; each names its Table and grid row. */
 export type RowAction = Extract<
@@ -473,7 +478,7 @@ export function reduce(state: WorkspaceState, action: WorkspaceAction): Workspac
       gone = withoutMember(gone, table);
       const next = { ...redetect(state, gone), pendingChange: null };
       // A Stacked Table that lost its last Member is gone with it: show that Document's first Table.
-      if (state.selection && "stackedId" in state.selection) {
+      if (isStackedSelection(state.selection)) {
         const kept = sameTable(state, next.documents);
         const first = next.documents.find((d) => d.id === doc.id)!.tables[0];
         const fallback = first ? { documentId: doc.id, tableId: first.id } : null;
@@ -699,15 +704,8 @@ export function reduce(state: WorkspaceState, action: WorkspaceAction): Workspac
       const doc = state.documents.find((d) => d.id === stacking?.documentId);
       const table = doc?.tables.find((t) => t.id === action.tableId);
       if (!stacking || !doc || !table) return state;
-      const tables = tickedTables(doc, stacking.ticked);
-      if (tables.some((t) => t.id === table.id) === action.ticked) return state;
-      if (action.ticked && !tickMatch(doc, stacking, table).matches) return state;
-      // Unticking removes only that Table's ref: every other ref stays as it was, so a missing
-      // Member and a Member's split-off Parts are kept.
-      const ticked = action.ticked
-        ? [...stacking.ticked, memberRef(table)]
-        : stacking.ticked.filter((r) => findMember(doc, r) !== table);
-      return { ...state, stacking: { ...stacking, ticked } };
+      const outcome = tickOutcome(doc, stacking, table, action.ticked);
+      return outcome ? { ...state, stacking: outcome.stacking } : state;
     }
     case "stackingCancelled":
       return state.stacking ? { ...state, stacking: null } : state;
@@ -718,12 +716,7 @@ export function reduce(state: WorkspaceState, action: WorkspaceAction): Workspac
       if (!stacking || !doc || stacking.stackedId) return state;
       const tables = tickedTables(doc, stacking.ticked);
       if (tables.length < 2) return state;
-      const n = Math.max(0, ...doc.stacked.map((s) => s.n)) + 1;
-      const record = withMembers(
-        doc,
-        { id: `${doc.id}:stacked:${n}`, n, members: [], header: [], source: false },
-        tables.map(memberRef),
-      );
+      const record = newStackedTable(doc, tables);
       const stacked = { ...doc, stacked: [...doc.stacked, record] };
       return {
         ...state,
@@ -745,10 +738,7 @@ export function reduce(state: WorkspaceState, action: WorkspaceAction): Workspac
       const doc = state.documents.find((d) => d.id === action.documentId);
       const record = doc?.stacked.find((s) => s.id === action.stackedId);
       if (!doc || !record || record.source === action.source) return state;
-      const changed = {
-        ...doc,
-        stacked: doc.stacked.map((s) => (s === record ? { ...s, source: action.source } : s)),
-      };
+      const changed = withStacked(doc, record, { ...record, source: action.source });
       return { ...state, documents: state.documents.map((d) => (d === doc ? changed : d)) };
     }
     case "membersEditStarted": {
@@ -766,17 +756,8 @@ export function reduce(state: WorkspaceState, action: WorkspaceAction): Workspac
       const { stacking } = state;
       const doc = state.documents.find((d) => d.id === stacking?.documentId);
       if (!stacking || !doc) return state;
-      // A Member no current Table is has no checkbox, so a move steps over it.
-      const found = stacking.ticked.map((r) => findMember(doc, r));
-      const i = found.findIndex((t) => t?.id === action.tableId);
-      if (i < 0) return state;
-      const step = action.direction === "up" ? -1 : 1;
-      let j = i + step;
-      while (j >= 0 && j < found.length && !found[j]) j += step;
-      if (j < 0 || j >= found.length) return state;
-      const ticked = [...stacking.ticked];
-      [ticked[i], ticked[j]] = [ticked[j]!, ticked[i]!];
-      return { ...state, stacking: { ...stacking, ticked } };
+      const move = memberMove(doc, stacking, action.tableId, action.direction);
+      return move ? { ...state, stacking: move.stacking } : state;
     }
     case "membersSaved": {
       const { stacking } = state;
@@ -785,8 +766,7 @@ export function reduce(state: WorkspaceState, action: WorkspaceAction): Workspac
       if (!stacking || !doc || !record) return state;
       if (tickedTables(doc, stacking.ticked).length < 1) return state;
       // Saving renews the saved Header Row only when a different Table is the first Member.
-      const saved = withMembers(doc, record, stacking.ticked);
-      const edited = { ...doc, stacked: doc.stacked.map((s) => (s === record ? saved : s)) };
+      const edited = withStacked(doc, record, withMembers(doc, record, stacking.ticked));
       return {
         ...state,
         stacking: null,
@@ -981,22 +961,6 @@ function withSettings(state: WorkspaceState, settings: Settings): WorkspaceState
   };
 }
 
-/**
- * Drops a Table the user removed from every Stacked Table it is a Member of, for good: restoring
- * it does not bring it back. That includes a Member that had become a later Part of it. A Stacked
- * Table left with one Member still stands; one left with none is gone.
- */
-function withoutMember(doc: Document, table: Table): Document {
-  const isTable = (ref: MemberRef) =>
-    findMember(doc, ref) === table ||
-    (ref.manual === null && table.manual === null && coversPart(table, ref));
-  if (!doc.stacked.some((s) => s.members.some(isTable))) return doc;
-  const stacked = doc.stacked
-    .map((s) => ({ ...s, members: s.members.filter((ref) => !isTable(ref)) }))
-    .filter((s) => s.members.length > 0);
-  return { ...doc, stacked };
-}
-
 /** Replaces a Document and re-detects its Tables (its Removed Tables already updated). */
 function redetect(state: WorkspaceState, doc: Document): WorkspaceState {
   const tables = detectDocument(doc, doc.pages, state.settings);
@@ -1018,7 +982,7 @@ function changeJoins(state: WorkspaceState, doc: Document): WorkspaceState {
 /** The selection, re-pointed at the same Table (same page and box) after ids were renumbered. */
 function sameTable(before: WorkspaceState, documents: Document[]): Selection | null {
   const sel = before.selection;
-  if (sel && "stackedId" in sel) return stackedStands(sel, documents);
+  if (isStackedSelection(sel)) return stackedStands(sel, documents);
   const old = before.documents
     .find((d) => d.id === sel?.documentId)
     ?.tables.find((t) => t.id === sel?.tableId);
@@ -1076,7 +1040,7 @@ function keepSelection(before: WorkspaceState, documents: Document[]): Selection
     return first ? { documentId: first.id, tableId: first.tables[0]!.id } : null;
   }
   // A Stacked Table outlives re-detection: its Members are found again by page and box.
-  if ("stackedId" in sel) return stackedStands(sel, documents);
+  if (isStackedSelection(sel)) return stackedStands(sel, documents);
   const old = before.documents.find((d) => d.id === sel.documentId);
   const now = documents.find((d) => d.id === sel.documentId);
   const oldTable = old?.tables.find((t) => t.id === sel.tableId);
@@ -1163,24 +1127,21 @@ function detectDocument(doc: Document, pages: PageText[], settings: Settings): T
 }
 
 /** The Stacked Table selection, if its Document still holds that Stacked Table, else null. */
-function stackedStands(
-  sel: Extract<Selection, { stackedId: string }>,
-  documents: Document[],
-): Selection | null {
+function stackedStands(sel: StackedTableRef, documents: Document[]): Selection | null {
   const doc = documents.find((d) => d.id === sel.documentId);
   return doc?.stacked.some((s) => s.id === sel.stackedId) ? sel : null;
 }
 
 /** Whether the selection is that Table of that Document. */
 export const isTableSelected = (sel: Selection | null, documentId: string, tableId: string) =>
-  sel !== null && "tableId" in sel && sel.documentId === documentId && sel.tableId === tableId;
+  sel !== null &&
+  !isStackedSelection(sel) &&
+  sel.documentId === documentId &&
+  sel.tableId === tableId;
 
 /** Whether the selection is that Stacked Table of that Document. */
 export const isStackedSelected = (sel: Selection | null, documentId: string, stackedId: string) =>
-  sel !== null &&
-  "stackedId" in sel &&
-  sel.documentId === documentId &&
-  sel.stackedId === stackedId;
+  isStackedSelection(sel) && sel.documentId === documentId && sel.stackedId === stackedId;
 
 /** Whether what is selected still exists. */
 const selectionStands = (state: WorkspaceState) =>
@@ -1189,7 +1150,7 @@ const selectionStands = (state: WorkspaceState) =>
 /** The selected Stacked Table, built from its Members as they stand, or null. */
 export function selectedStackedTable(state: WorkspaceState): BuiltStackedTable | null {
   const sel = state.selection;
-  if (!sel || !("stackedId" in sel)) return null;
+  if (!isStackedSelection(sel)) return null;
   const doc = state.documents.find((d) => d.id === sel.documentId);
   const record = doc?.stacked.find((s) => s.id === sel.stackedId);
   return doc && record ? buildStackedTable(doc, record) : null;
@@ -1198,7 +1159,7 @@ export function selectedStackedTable(state: WorkspaceState): BuiltStackedTable |
 /** The selected Table, or null (also while a Stacked Table is selected). */
 export function selectedTable(state: WorkspaceState): Table | null {
   const sel = state.selection;
-  if (!sel || !("tableId" in sel)) return null;
+  if (!sel || isStackedSelection(sel)) return null;
   const doc = state.documents.find((d) => d.id === sel.documentId);
   return doc?.tables.find((t) => t.id === sel.tableId) ?? null;
 }

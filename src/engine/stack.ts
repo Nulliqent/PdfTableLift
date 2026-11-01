@@ -14,6 +14,12 @@ import type { Document, Part, Table } from "./workspace";
  */
 export type MemberRef = { page: number; bbox: Bbox; manual: string | null; parts: Part[] };
 
+/** Which way a Member moves in the Member order. */
+export type MoveDirection = "up" | "down";
+
+/** A Stacked Table of a Document, as actions, the selection and the UI name it. */
+export type StackedTableRef = { documentId: string; stackedId: string };
+
 /** A Stacked Table as saved on its Document: its ordered Members, never their grids. */
 export type StackedTable = {
   /** Unique across the workspace. */
@@ -236,3 +242,92 @@ export function buildStackedTable(doc: Document, record: StackedTable): BuiltSta
   const source = record.source ? rowPages.map((p) => `p${p}`) : null;
   return { record, table, members, origin, source };
 }
+
+/** The number the next Stacked Table of the Document gets: one past the highest standing. */
+export const nextStackedNumber = (doc: Document): number =>
+  Math.max(0, ...doc.stacked.map((s) => s.n)) + 1;
+
+/** A new Stacked Table of the Document with these Tables as its Members, in order. */
+export function newStackedTable(doc: Document, tables: Table[]): StackedTable {
+  const n = nextStackedNumber(doc);
+  return withMembers(
+    doc,
+    { id: `${doc.id}:stacked:${n}`, n, members: [], header: [], source: false },
+    tables.map(memberRef),
+  );
+}
+
+/**
+ * Ticking or unticking a Table: the Tables in progress after it, how many Tables are ticked then,
+ * and how many of the Document's Tables can't be ticked then. Null when nothing changes: the Table
+ * is already as asked, or it fails the matching rule. Unticking removes only that Table's ref:
+ * every other ref stays as it was, so a missing Member and a Member's split-off Parts are kept.
+ */
+export function tickOutcome(
+  doc: Document,
+  stacking: TablesInProgress,
+  table: Table,
+  ticked: boolean,
+): { stacking: TablesInProgress; count: number; unmatched: number } | null {
+  const isTicked = tickedTables(doc, stacking.ticked).some((t) => t.id === table.id);
+  if (isTicked === ticked) return null;
+  if (ticked && !tickMatch(doc, stacking, table).matches) return null;
+  const next = {
+    ...stacking,
+    ticked: ticked
+      ? [...stacking.ticked, memberRef(table)]
+      : stacking.ticked.filter((r) => findMember(doc, r) !== table),
+  };
+  return {
+    stacking: next,
+    count: tickedTables(doc, next.ticked).length,
+    unmatched: doc.tables.filter((t) => !tickMatch(doc, next, t).matches).length,
+  };
+}
+
+/**
+ * Moving a ticked Table one place up or down: the Tables in progress after it, and where it then
+ * stands (from 1) among the ticked Tables that are found, of how many. A Member no current Table
+ * is has no checkbox, so a move steps over it and it is not counted. Null at either end.
+ */
+export function memberMove(
+  doc: Document,
+  stacking: TablesInProgress,
+  tableId: string,
+  direction: MoveDirection,
+): { stacking: TablesInProgress; position: number; count: number } | null {
+  const found = stacking.ticked.map((r) => findMember(doc, r));
+  const i = found.findIndex((t) => t?.id === tableId);
+  if (i < 0) return null;
+  const step = direction === "up" ? -1 : 1;
+  let j = i + step;
+  while (j >= 0 && j < found.length && !found[j]) j += step;
+  if (j < 0 || j >= found.length) return null;
+  const ticked = [...stacking.ticked];
+  [ticked[i], ticked[j]] = [ticked[j]!, ticked[i]!];
+  const position = found.slice(0, j + 1).filter(Boolean).length;
+  return { stacking: { ...stacking, ticked }, position, count: found.filter(Boolean).length };
+}
+
+/**
+ * Drops a Table the user removed from every Stacked Table it is a Member of, for good: restoring
+ * it does not bring it back. That includes a Member that had become a later Part of it. A Stacked
+ * Table left with one Member still stands; one left with none is gone.
+ */
+export function withoutMember(doc: Document, table: Table): Document {
+  const isTable = (ref: MemberRef) =>
+    findMember(doc, ref) === table ||
+    (ref.manual === null && table.manual === null && coversPart(table, ref));
+  if (!doc.stacked.some((s) => s.members.some(isTable))) return doc;
+  const stacked = doc.stacked
+    .map((s) => ({ ...s, members: s.members.filter((ref) => !isTable(ref)) }))
+    .filter((s) => s.members.length > 0);
+  return { ...doc, stacked };
+}
+
+/** The Document with that Stacked Table replaced by the changed one. */
+export const withStacked = (
+  doc: Document,
+  record: StackedTable,
+  changed: StackedTable,
+): Document => ({ ...doc, stacked: doc.stacked.map((s) => (s === record ? changed : s)) });

@@ -2,16 +2,19 @@ import { useCallback, useEffect, useReducer, useRef } from "react";
 import {
   READ_ERROR_MESSAGES,
   initialWorkspace,
-  memberRef,
+  memberMove,
+  nextStackedNumber,
   reduce,
   regionBlocked,
   regionPreview,
   selectedDocument,
   selectedStackedTable,
   selectedTable,
-  tickMatch,
+  tickOutcome,
   tickedTables,
+  type MoveDirection,
   type PageText,
+  type StackedTableRef,
   type ReadError,
   type RegionInProgress,
   roleLabel,
@@ -175,17 +178,14 @@ export function App() {
   const tick = (tableId: string, ticked: boolean) => {
     const table = stackingDoc?.tables.find((t) => t.id === tableId);
     if (!stacking || !stackingDoc || !table) return;
+    const outcome = tickOutcome(stackingDoc, stacking, table, ticked);
+    if (!outcome) return;
     dispatch({ type: "tableTicked", tableId, ticked });
-    const before = tickedTables(stackingDoc, stacking.ticked);
-    const after = ticked ? [...before, table] : before.filter((t) => t.id !== tableId);
-    const count = `${plural(after.length, "Table")} ticked`;
+    const count = `${plural(outcome.count, "Table")} ticked`;
     if (!ticked) return showHud(`Unticked Table ${table.n} · ${count}`);
-    const refs = after.map(memberRef);
-    const out = stackingDoc.tables.filter(
-      (t) => !tickMatch(stackingDoc, { ...stacking, ticked: refs }, t).matches,
-    ).length;
+    const out = outcome.unmatched;
     const left =
-      before.length === 0 && out > 0
+      outcome.count === 1 && out > 0
         ? ` · ${plural(out, "Table")} ${out === 1 ? "doesn't" : "don't"} match its Header Row`
         : "";
     showHud(`Ticked Table ${table.n} · ${count}${left}`);
@@ -194,7 +194,7 @@ export function App() {
     if (!stacking || !stackingDoc) return;
     const tables = tickedTables(stackingDoc, stacking.ticked);
     if (tables.length < 2) return;
-    const n = Math.max(0, ...stackingDoc.stacked.map((s) => s.n)) + 1;
+    const n = nextStackedNumber(stackingDoc);
     dispatch({ type: "tablesStacked" });
     showHud(`Stacked Tables ${tables.map((t) => t.n).join(", ")} into Stacked Table ${n}`);
   };
@@ -203,14 +203,13 @@ export function App() {
     stacking?.stackedId !== undefined
       ? stackingDoc?.stacked.find((s) => s.id === stacking.stackedId)
       : undefined;
-  const moveMember = (tableId: string, direction: "up" | "down") => {
-    if (!stacking || !stackingDoc) return;
-    const before = tickedTables(stackingDoc, stacking.ticked);
-    const i = before.findIndex((t) => t.id === tableId);
-    const j = i + (direction === "up" ? -1 : 1);
-    if (i < 0 || j < 0 || j >= before.length) return;
+  const moveMember = (tableId: string, direction: MoveDirection) => {
+    const table = stackingDoc?.tables.find((t) => t.id === tableId);
+    if (!stacking || !stackingDoc || !table) return;
+    const move = memberMove(stackingDoc, stacking, tableId, direction);
+    if (!move) return;
     dispatch({ type: "memberMoved", tableId, direction });
-    showHud(`Moved Table ${before[i]!.n} ${direction} · ${j + 1} of ${before.length}`);
+    showHud(`Moved Table ${table.n} ${direction} · ${move.position} of ${move.count}`);
   };
   const saveMembers = () => {
     if (!stacking || !stackingDoc || !editedRecord) return;
@@ -221,11 +220,11 @@ export function App() {
       `Stacked Table ${editedRecord.n} now stacks ${tables.length === 1 ? "Table" : "Tables"} ${tables.map((t) => t.n).join(", ")}`,
     );
   };
-  const removeStacked = (documentId: string, stackedId: string) => {
+  const removeStacked = (ref: StackedTableRef) => {
     const n = state.documents
-      .find((d) => d.id === documentId)
-      ?.stacked.find((s) => s.id === stackedId)?.n;
-    dispatch({ type: "stackedTableRemoved", documentId, stackedId });
+      .find((d) => d.id === ref.documentId)
+      ?.stacked.find((s) => s.id === ref.stackedId)?.n;
+    dispatch({ type: "stackedTableRemoved", ...ref });
     if (n !== undefined) showHud(`Removed Stacked Table ${n}. Its Members are unchanged`);
   };
   const stackingOpen = stacking !== null && state.pendingChange === null;
@@ -304,9 +303,7 @@ export function App() {
             onMoveMember={moveMember}
             onSaveMembers={saveMembers}
             onCancelStacking={() => dispatch({ type: "stackingCancelled" })}
-            onSelectStacked={(documentId, stackedId) =>
-              dispatch({ type: "stackedTableSelected", documentId, stackedId })
-            }
+            onSelectStacked={(ref) => dispatch({ type: "stackedTableSelected", ...ref })}
           />
           <ContentPane
             document={selectedDocument(state)}
@@ -386,13 +383,13 @@ export function App() {
               if (!hasEdits(documentId)) showHud("Joined with the previous page");
             }}
             editingStackedId={stacking?.stackedId ?? null}
-            onEditMembers={(documentId, stackedId) => {
-              dispatch({ type: "membersEditStarted", documentId, stackedId });
+            onEditMembers={(ref) => {
+              dispatch({ type: "membersEditStarted", ...ref });
               showHud("Edit the Members: tick, untick or move them, then Save");
             }}
             onRemoveStacked={removeStacked}
-            onToggleSource={(documentId, stackedId, source) =>
-              dispatch({ type: "stackedSourceToggled", documentId, stackedId, source })
+            onToggleSource={(ref, source) =>
+              dispatch({ type: "stackedSourceToggled", ...ref, source })
             }
           />
         </div>

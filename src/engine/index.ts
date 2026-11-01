@@ -22,6 +22,7 @@ export {
   isStackedSelected,
   isTableSelected,
   reduce,
+  isStackedSelection,
   selectedDocument,
   selectedStackedTable,
   selectedTable,
@@ -31,8 +32,11 @@ export {
   buildStackedTable,
   findMember,
   headerMatch,
+  memberMove,
   memberRef,
+  nextStackedNumber,
   tickMatch,
+  tickOutcome,
   tickedTables,
   withMembers,
 } from "./stack";
@@ -41,8 +45,10 @@ export type {
   HeaderMatch,
   LeftOut,
   MemberRef,
+  MoveDirection,
   StackedMember,
   StackedTable,
+  StackedTableRef,
   TablesInProgress,
 } from "./stack";
 export type {
