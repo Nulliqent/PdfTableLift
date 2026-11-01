@@ -21,6 +21,7 @@ export {
 export type {
   Band,
   Bbox,
+  Combine,
   DiscardingAction,
   Document,
   Part,
@@ -29,6 +30,7 @@ export type {
   RegionInProgress,
   RegionTable,
   RemovedTable,
+  RowBefore,
   Selection,
   Settings,
   Table,
