@@ -246,6 +246,107 @@ await write("statement", {}, (d) => {
   );
 });
 
+// --- Section Headers beside multi-line Rows (spec #30) ---------------------------------------------
+// Two statement layouts grouped by bold labels alone in the first column. Every Row is three lines
+// (merchant, "Card Payment", the foreign amount), with the date and amount beside the 2nd line, so
+// the merchant line is alone on its line, like a label. Inside a Row lines are 13pt apart; a
+// Section Header sits 20pt above its first Row (and 20pt below the Header Row or another Section
+// Header); between Rows, and from a Row to the next Section Header, the gap is 30pt.
+// Every merchant, date and amount is invented. Never copy values from a real statement.
+const SECTION_LINE = 13;
+const SECTION_TO_ROW = 20;
+const BETWEEN_ROWS = 30;
+
+/**
+ * Draw a statement grouped by Section Headers, starting with its bold Header Row at y. cols: the
+ * x of each column, with the Description column named "desc"; amount is right-aligned to its x.
+ * items: { section } for a bold first-column label, or { date, lines, amount } for a Row whose
+ * date and amount sit beside its 2nd line.
+ */
+function sectionStatement(d, cols, header, items, y) {
+  const order = Object.keys(cols);
+  order.forEach((k, i) =>
+    at(d, header[i], cols[k], y, { bold: true, align: k === "amount" ? "right" : "left" }),
+  );
+  let prev = "header";
+  for (const item of items) {
+    y -= prev === "row" ? BETWEEN_ROWS : SECTION_TO_ROW;
+    if (item.section) {
+      at(d, item.section, cols[order[0]], y, { bold: true });
+      prev = "section";
+      continue;
+    }
+    item.lines.forEach((l, i) => at(d, l, cols.desc, y - i * SECTION_LINE));
+    const side = y - Math.min(1, item.lines.length - 1) * SECTION_LINE;
+    at(d, item.date, cols.date, side);
+    at(d, item.amount, cols.amount, side, { align: "right" });
+    y -= (item.lines.length - 1) * SECTION_LINE;
+    prev = "row";
+  }
+}
+const card = (date, merchant, amount, foreign) => ({
+  date,
+  lines: [merchant, "Card Payment", foreign],
+  amount,
+});
+
+// Date, Description, Amount. Bold month labels between the Rows: one at the very top, right under
+// the Header Row, and a month followed by a card label (two Section Headers in a row).
+await write("statement-sections", {}, (d) => {
+  sectionStatement(
+    d,
+    { date: 72, desc: 160, amount: 540 },
+    ["Date", "Description", "Amount"],
+    [
+      { section: "OCTOBER" },
+      card("02 OCT", "HARBOUR COFFEE HOUSE", "-12.00", "SGD 12.00"),
+      card("03 OCT", "FOLIO BOOK STORE", "-8.50", "SGD 8.50"),
+      { section: "NOVEMBER" },
+      { section: "CARD ENDING 0412" },
+      card("01 NOV", "GREENLEAF GROCERY MART", "-30.00", "SGD 30.00"),
+      card("04 NOV", "TIDEWATER FERRY", "-6.20", "SGD 6.20"),
+      { section: "DECEMBER" },
+      card("05 DEC", "MAPLE & MOSS FLORIST", "-24.90", "SGD 24.90"),
+      card("09 DEC", "COPPER KETTLE DINER", "-17.35", "SGD 17.35"),
+    ],
+    710,
+  );
+});
+
+// Description, Date, Amount: the multi-line text is in the first column. Page 1 has Section
+// Headers (bold, in the first column too); page 2 has none. Page 2's Header Row is different, so
+// the two pages are separate Tables and never joined.
+await write("statement-first-column", {}, (d) => {
+  const cols = { desc: 72, date: 300, amount: 540 };
+  sectionStatement(
+    d,
+    cols,
+    ["Description", "Date", "Amount"],
+    [
+      { section: "OCTOBER" },
+      card("02 OCT", "HARBOUR COFFEE HOUSE", "-12.00", "SGD 12.00"),
+      card("03 OCT", "FOLIO BOOK STORE", "-8.50", "SGD 8.50"),
+      { section: "NOVEMBER" },
+      card("01 NOV", "GREENLEAF GROCERY MART", "-30.00", "SGD 30.00"),
+      card("04 NOV", "TIDEWATER FERRY", "-6.20", "SGD 6.20"),
+    ],
+    710,
+  );
+  d.addPage();
+  sectionStatement(
+    d,
+    cols,
+    ["Merchant", "Posted", "Value"],
+    [
+      card("11 NOV", "QUARRY HILL HARDWARE", "-41.80", "SGD 41.80"),
+      card("14 NOV", "SILVERFIN SUSHI BAR", "-27.60", "SGD 27.60"),
+      card("18 NOV", "LANTERN STREET LAUNDRY", "-9.00", "SGD 9.00"),
+      card("21 NOV", "BLUE HERON BIKE HIRE", "-15.50", "SGD 15.50"),
+    ],
+    740,
+  );
+});
+
 // --- Section Headers ------------------------------------------------------------------------------
 await write("section-headers", {}, (d) => {
   heading(d, "Sales by store", 740);
