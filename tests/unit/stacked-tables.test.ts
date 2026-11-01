@@ -832,4 +832,40 @@ describe("live Members through Column Spacing and Split by Page", () => {
     expect(built(rejoined).members.map((m) => m.dropped)).toEqual([[], []]);
     expect(items(rejoined)).toEqual(items(stacked));
   });
+
+  /** Edit Members of the selected Stacked Table, untick and re-tick Table n, and Save. */
+  const retick = (state: WorkspaceState, n: number) =>
+    run(
+      state,
+      { type: "membersEditStarted", documentId: "d", stackedId: doc(state).stacked[0]!.id },
+      { type: "tableTicked", tableId: tableId(state, n), ticked: false },
+      { type: "tableTicked", tableId: tableId(state, n), ticked: true },
+      { type: "membersSaved" },
+    );
+
+  it("keeps a missing Member through Edit Members, so its Rows come back", () => {
+    const apart = run(
+      { ...initialWorkspace, settings: { ...initialWorkspace.settings, join: false } },
+      { type: "documentAdded", id: "d", name: "parts.pdf", size: 1 },
+      { type: "documentRead", id: "d", pages },
+    );
+    const three = stack(apart, 1, 2, 3);
+    const joined = reduce(three, { type: "joinChanged", value: true });
+    expect(built(joined).members.map((m) => m.leftOut)).toEqual([null, "missing", null]);
+    const saved = retick(joined, 2);
+    expect(doc(saved).stacked[0]!.members.map((r) => r.page)).toEqual([1, 2, 3]);
+    const off = reduce(saved, { type: "joinChanged", value: false });
+    expect(items(off)).toEqual(items(three));
+    expect(items(off)).toContain("Screw");
+  });
+
+  it("keeps a split Joined Member's dropped Parts through an untick of another Member", () => {
+    const split = reduce(stacked, {
+      type: "splitByPage",
+      documentId: "d",
+      tableId: tableId(stacked, 1),
+    });
+    const saved = retick(split, 3);
+    expect(built(saved).members.map((m) => m.dropped.map((p) => p.page))).toEqual([[2], []]);
+  });
 });

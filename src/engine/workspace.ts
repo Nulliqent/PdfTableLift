@@ -701,10 +701,11 @@ export function reduce(state: WorkspaceState, action: WorkspaceAction): Workspac
       const tables = tickedTables(doc, stacking.ticked);
       if (tables.some((t) => t.id === table.id) === action.ticked) return state;
       if (action.ticked && !tickMatch(doc, stacking.ticked, table).matches) return state;
-      // Unticking keeps the order of the rest, re-read as they stand now.
+      // Unticking removes only that Table's ref: every other ref stays as it was, so a missing
+      // Member and a Member's split-off Parts are kept.
       const ticked = action.ticked
         ? [...stacking.ticked, memberRef(table)]
-        : tables.filter((t) => t.id !== table.id).map(memberRef);
+        : stacking.ticked.filter((r) => findMember(doc, r) !== table);
       return { ...state, stacking: { ...stacking, ticked } };
     }
     case "stackingCancelled":
