@@ -18,6 +18,8 @@ type TableViewProps = {
   onToggleSection: (row: number) => void;
   /** Combine with Row above / below was chosen from a row's menu; `row` is a grid row. */
   onCombine: (row: number, direction: "above" | "below") => void;
+  /** Split back was chosen from a combined Row's menu; `row` is a grid row. */
+  onSplitBack: (row: number) => void;
 };
 
 /**
@@ -25,7 +27,7 @@ type TableViewProps = {
  * editable in place; Enter or leaving the cell commits it. Numeric columns are right-aligned.
  * Section Header rows are shaded; in As Column mode they appear as a Section column instead. The
  * row number opens the row's menu: Mark or Unmark Section Header, and Combine with the grid row
- * above (the Header Row included) or below.
+ * above (the Header Row included) or below, and Split back on a combined Row.
  */
 export function TableView({
   table,
@@ -33,6 +35,7 @@ export function TableView({
   sectionMode,
   onToggleSection,
   onCombine,
+  onSplitBack,
 }: TableViewProps) {
   const [menu, setMenu] = useState<{ row: number; anchor: HTMLButtonElement } | null>(null);
   /** The press began on the row number of the open menu: that click only closes the menu. */
@@ -79,6 +82,9 @@ export function TableView({
       disabled: row === table.grid.length - 1,
       onSelect: () => onCombine(row, "below"),
     },
+    // Only a combined Row can be split back. Focus returns to this row number, now the upper
+    // restored Row's.
+    ...(row in table.combined ? [{ label: "Split back", onSelect: () => onSplitBack(row) }] : []),
   ];
 
   const numeric = numericColumns(table);
