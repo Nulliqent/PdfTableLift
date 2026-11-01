@@ -135,12 +135,14 @@ test("treat a Region around one statement Row as one row, save it and copy it", 
   await expect(oneRow).not.toBeChecked();
 
   await dragWithMouse(page, layer, aroundFirstEntry);
-  // Off: the Row is shown as the Header Row, with no data rows under it.
-  await expect(main.getByText("0 rows × 4 columns")).toBeVisible();
-  await expect(main.getByRole("columnheader", { name: "04 MAR" })).toBeVisible();
+  // Off: the page's rhythm already makes the entry one Row, and a lone Row is data, not a header.
+  await expect(main.getByText("1 row × 4 columns")).toBeVisible();
+  await expect(main.getByRole("columnheader")).toHaveCount(0);
+  await expect(main.getByRole("cell", { name: "04 MAR" })).toBeVisible();
 
   await oneRow.check();
-  // On: the same Row is data, and the preview says so at once.
+  // On: still the one Row, as data.
+  await expect(oneRow).toBeChecked();
   await expect(main.getByText("1 row × 4 columns")).toBeVisible();
   await expect(main.getByRole("columnheader")).toHaveCount(0);
   await expect(main.getByRole("cell", { name: "04 MAR" })).toBeVisible();

@@ -691,9 +691,8 @@ function detectDocument(doc: Document, pages: PageText[], settings: Settings): T
       detected.push(table(id, p.num, t, null));
     });
     for (const r of covering) {
-      const t = regionTable(p.items, r.bbox, settings.columnSpacing, r.singleRow);
-      // A Single-Row Region's one Row is data, so its Table starts with "First row is header" off.
-      if (t) handDrawn.push(table(`${documentId}:region:${r.id}`, p.num, t, r.id, !r.singleRow));
+      const t = handDrawnTable(p, r.bbox, settings, r.singleRow);
+      if (t) handDrawn.push(table(`${documentId}:region:${r.id}`, p.num, t, r.id, t.header));
     }
   }
   // Removed Tables and Hand-drawn Regions took their Tables out per page above, so a Joined Table
@@ -733,14 +732,33 @@ const pageOf = (doc: Document, num: number): PageText | undefined =>
 const regionDocument = (state: WorkspaceState): Document | undefined =>
   state.documents.find((d) => d.id === state.region?.documentId);
 
+/** What a Region yields: the Table found inside it, and whether it starts with a Header Row. */
+export type RegionTable = FoundTable & { header: boolean };
+
+/**
+ * The Table a Region makes. A Table that comes out as one Row, a Single-Row Region's or any other,
+ * starts with "First row is header" off: its only Row is data, not a header over nothing. The rule
+ * is applied whenever the Table is found, so a redraw to a single Row turns it off and a redraw to
+ * several Rows turns it back on.
+ */
+function handDrawnTable(
+  page: PageText,
+  bbox: Bbox,
+  settings: Settings,
+  singleRow: boolean,
+): RegionTable | null {
+  const t = regionTable(page.items, bbox, settings.columnSpacing, singleRow);
+  return t && { ...t, header: t.grid.length > 1 };
+}
+
 /**
  * The Table the Region in progress would make with the current Column Spacing, or null while
  * nothing is drawn or the Region holds no text (so it cannot be saved).
  */
-export function regionPreview(state: WorkspaceState): FoundTable | null {
+export function regionPreview(state: WorkspaceState): RegionTable | null {
   const { region } = state;
   const doc = regionDocument(state);
   const page = doc && region && pageOf(doc, region.page);
   if (!region?.bbox || !page) return null;
-  return regionTable(page.items, region.bbox, state.settings.columnSpacing, region.singleRow);
+  return handDrawnTable(page, region.bbox, state.settings, region.singleRow);
 }
