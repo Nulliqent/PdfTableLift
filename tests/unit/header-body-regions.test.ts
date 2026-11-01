@@ -318,7 +318,7 @@ describe("several Body Regions down the page", () => {
     ],
   ] as const;
 
-  it.skip("#43: leaves the note out, with every Row complete under one set of columns", () => {
+  it("#43: leaves the note out, with every Row complete under one set of columns", () => {
     const table = tableOf(drawing, 1, [
       header(BOX.titles1),
       body(BOX.rowsAboveNote1),
@@ -330,14 +330,14 @@ describe("several Body Regions down the page", () => {
     expect(table.grid.flat().some((c) => NOTE.some((n) => c.includes(n.slice(0, 8))))).toBe(false);
   });
 
-  it.skip("#43: gives the same Table whichever Region was drawn first, in page order", () => {
+  it("#43: gives the same Table whichever Region was drawn first, in page order", () => {
     const [above, below] = either.map(([, regions]) => tableOf(drawing, 1, [...regions]).grid);
 
     expect(below).toEqual(above);
     expect(above!.slice(1).map((r) => r[0])).toEqual(["1", "2", "3", "4", "5", "6"]);
   });
 
-  it.skip("#43: keeps top to bottom on page 2 too, where the items are numbered upward", () => {
+  it("#43: keeps top to bottom on page 2 too, where the items are numbered upward", () => {
     const table = tableOf(drawing, 2, [
       body(BOX.rowsBelowNote2),
       header(BOX.titles2),
@@ -347,19 +347,19 @@ describe("several Body Regions down the page", () => {
     expect(table.grid).toEqual([TITLES, ...PAGE2_ABOVE_NOTE, ...PAGE2_BELOW_NOTE]);
   });
 
-  it.skip("#43: never lets a Row span two Body Regions, even when the gap between them is small", () => {
+  it("#43: never lets a Row span two Body Regions, even when the gap between them is small", () => {
     // A two-line Row, cut between its lines by the boundary of two Regions: two Rows, as today.
     const wrapped = page1([
       ...line(600, ["Bracket", "2", "1.50"]),
       t("heavy duty", 72, 590),
       ...line(560, ["Washer", "9", "0.40"]),
     ]);
-    const table = tableOf(wrapped, 1, [body([60, 595, 560, 612]), body([60, 550, 560, 593])]);
+    const table = tableOf(wrapped, 1, [body([60, 595, 560, 612]), body([60, 550, 560, 594])]);
 
     expect(table.grid.map((r) => r[0])).toEqual(["Bracket", "heavy duty", "Washer"]);
   });
 
-  it.skip("#43: counts text where two Body Regions overlap once", () => {
+  it("#43: counts text where two Body Regions overlap once", () => {
     const table = tableOf([BODY], 1, [body([60, 580, 560, 612]), body([60, 560, 560, 595])]);
 
     expect(table.grid).toEqual([
@@ -369,7 +369,7 @@ describe("several Body Regions down the page", () => {
     ]);
   });
 
-  it.skip("#43: ignores an empty Body Region next to one with text, and still saves", () => {
+  it("#43: ignores an empty Body Region next to one with text, and still saves", () => {
     const table = tableOf(drawing, 1, [
       header(BOX.titles1),
       body(BOX.rowsAboveNote1),
@@ -379,7 +379,7 @@ describe("several Body Regions down the page", () => {
     expect(table.grid).toEqual([TITLES, ...ROWS_1_3]);
   });
 
-  it.skip("#43: finds Section Headers inside Body Regions as today", () => {
+  it("#43: finds Section Headers inside Body Regions as today", () => {
     const grouped = page1([
       t("WEST", 72, 640, true),
       ...line(626, ["Bolt", "4", "1.20"]),
@@ -406,8 +406,7 @@ describe("a Single-Row switch on each Body Region", () => {
     ...line(566, ["Nut", "9", "0.40"]),
   ]);
 
-  // Needs several Body Regions in one Table (#43); turn on once #43 is merged.
-  it.skip("#44: gives one Row for the Single-Row Region and normal Rows for the rest", () => {
+  it("#44: gives one Row for the Single-Row Region and normal Rows for the rest", () => {
     const table = tableOf(awkward, 1, [body([60, 612, 560, 652], true), body([60, 558, 560, 592])]);
 
     expect(table.grid).toEqual([
