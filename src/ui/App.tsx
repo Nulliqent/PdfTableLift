@@ -231,8 +231,11 @@ export function App() {
   const stackingOpen = stacking !== null && state.pendingChange === null;
   useEffect(() => {
     if (!stackingOpen) return;
+    // An open sheet, menu or other popover takes Escape first and closes alone.
     const onKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Escape") dispatch({ type: "stackingCancelled" });
+      if (e.key !== "Escape" || e.defaultPrevented) return;
+      if (document.querySelector("dialog[open], [popover]:popover-open")) return;
+      dispatch({ type: "stackingCancelled" });
     };
     document.addEventListener("keydown", onKeyDown);
     return () => document.removeEventListener("keydown", onKeyDown);

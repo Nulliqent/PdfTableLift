@@ -415,3 +415,60 @@ test("Select Tables is shown for a Document with one Table, unavailable with the
   await start.click({ force: true });
   await expect(sidebar.getByRole("checkbox")).toHaveCount(0);
 });
+
+test("Escape closes an open sheet or menu alone, and only then leaves Select Tables or Edit Members", async ({
+  page,
+}) => {
+  await page.addInitScript(() => {
+    navigator.clipboard.writeText = () =>
+      Promise.reject(new DOMException("blocked", "NotAllowedError"));
+    document.execCommand = () => false;
+  });
+  await page.goto("/");
+  const sidebar = page.getByRole("complementary");
+  const main = page.getByRole("main");
+  await expect(sidebar.getByRole("button", { name: /^Table 4/ })).toBeVisible();
+  await page
+    .getByRole("switch", { name: "Join tables that continue onto the next page" })
+    .uncheck();
+  await sidebar.getByRole("button", { name: /^Table 4(?!\d)/ }).click();
+  await sidebar.getByRole("button", { name: /^Select Tables/ }).click();
+  const checkboxes = sidebar.getByRole("checkbox");
+  await expect(checkboxes.first()).toBeVisible();
+
+  // The CopySheet takes Escape first.
+  await main.getByRole("button", { name: "Copy" }).click();
+  const sheet = page.getByRole("dialog", { name: /^Copy/ });
+  await expect(sheet).toBeVisible();
+  await page.keyboard.press("Escape");
+  await expect(sheet).toBeHidden();
+  await expect(checkboxes.first()).toBeVisible();
+
+  // So does the row-number menu.
+  await main.getByRole("button", { name: /^Row 1\./ }).focus();
+  await page.keyboard.press("Enter");
+  const menu = page.getByRole("menu", { name: "Row 1" });
+  await expect(menu).toBeVisible();
+  await page.keyboard.press("Escape");
+  await expect(menu).toBeHidden();
+  await expect(checkboxes.first()).toBeVisible();
+
+  // With nothing open, Escape leaves Select Tables.
+  await page.keyboard.press("Escape");
+  await expect(checkboxes).toHaveCount(0);
+
+  // Edit Members, the same.
+  await sidebar.getByRole("button", { name: /^Select Tables/ }).click();
+  await sidebar.getByRole("checkbox", { name: /^Table 4(?!\d)/ }).check();
+  await sidebar.getByRole("checkbox", { name: /^Table 5(?!\d)/ }).check();
+  await sidebar.getByRole("button", { name: "Stack 2 Tables" }).click();
+  await main.getByRole("button", { name: "Edit Members" }).click();
+  await expect(checkboxes.first()).toBeVisible();
+  await main.getByRole("button", { name: "Copy" }).click();
+  await expect(sheet).toBeVisible();
+  await page.keyboard.press("Escape");
+  await expect(sheet).toBeHidden();
+  await expect(checkboxes.first()).toBeVisible();
+  await page.keyboard.press("Escape");
+  await expect(checkboxes).toHaveCount(0);
+});
