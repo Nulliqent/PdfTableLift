@@ -42,6 +42,11 @@ type Line = {
   bottomH?: number;
   /** The Row rhythm this line belongs to: lines of one rhythm share the object. */
   rhythm?: Rhythm;
+  /**
+   * A label alone in the first column that `groupRows` set apart between multi-line Rows (spec
+   * #30): a Section Header, even at the top of a Region.
+   */
+  section?: boolean;
 };
 /** The vertical rhythm of a stretch of Rows: `gap` is the smallest gap between two Rows. */
 type Rhythm = { gap: number };
@@ -142,13 +147,45 @@ function groupRows(input: Line[]): Line[] {
     );
   };
 
-  type Chain = { anchors: number[]; joins: Map<number, number>; inside: number; between: number };
+  /**
+   * Is line i a label alone in the first column of these anchors' Rows: one Cell that starts in
+   * or left of their first Cell and touches none of their other Cells? `fits` never lets such a
+   * line into a Row, so it can only be a Section Header (spec #30).
+   */
+  const isLabel = (i: number, by: number[]) => {
+    const l = lines[i]!;
+    if (l.cells.length !== 1) return false;
+    const c = l.cells[0]!;
+    return by.every((a) => {
+      const [first, ...rest] = lines[a]!.cells;
+      return c.x0 < first!.x1 && !rest.some((ac) => overlap(ac, c));
+    });
+  };
+  /**
+   * Is a label block set apart from the lines around it? A Section Header sits further from its
+   * neighbours than a Row's lines sit from each other (`spacing`): by WRAP_GAP_RATIO when every
+   * label is bold, the extra evidence the user's statements give, and by the full ROW_GAP_RATIO
+   * when not. With no line spacing to compare against, there is no evidence.
+   */
+  const apart = (labels: number[], gaps: number[], spacing: number) => {
+    const ratio = labels.every((i) => lines[i]!.cells[0]!.bold) ? WRAP_GAP_RATIO : ROW_GAP_RATIO;
+    return spacing > 0 && gaps.every((g) => g >= ratio * spacing);
+  };
+
+  type Chain = {
+    anchors: number[];
+    joins: Map<number, number>;
+    inside: number;
+    between: number;
+    labels: number[];
+  };
   const chains: Chain[] = [];
   const start = (a: number): Chain => ({
     anchors: [a],
     joins: new Map(),
     inside: 0,
     between: Infinity,
+    labels: [],
   });
   let chain = start(anchors[0]!);
   for (let k = 0; k + 1 < anchors.length; k++) {
@@ -158,6 +195,37 @@ function groupRows(input: Line[]): Line[] {
       chain.between = Math.min(chain.between, pitch(a));
       chain.anchors.push(b);
       continue;
+    }
+    // Section Headers between two Rows (spec #30): the labels are left out of the spacing, the
+    // lines above them belong to the upper Row and those below to the lower one, provided the
+    // labels sit apart from both. The gaps around a label measure nothing about the Rows, so they
+    // count neither as a gap inside a Row nor as one between Rows.
+    const labels: number[] = [];
+    for (let i = a + 1; i < b; i++) if (isLabel(i, [a, b])) labels.push(i);
+    if (labels.length) {
+      const f = labels[0]!;
+      const l = labels[labels.length - 1]!;
+      const upper: number[] = [];
+      const lower: number[] = [];
+      for (let i = a + 1; i < f; i++) upper.push(i);
+      for (let i = l + 1; i < b; i++) lower.push(i);
+      const insides: number[] = [];
+      for (let i = a; i < f - 1; i++) insides.push(pitch(i));
+      for (let i = l + 1; i < b; i++) insides.push(pitch(i));
+      const inside = Math.max(chain.inside, ...insides);
+      if (
+        l - f + 1 === labels.length &&
+        apart(labels, [pitch(f - 1), pitch(l)], inside) &&
+        fits(upper, a) &&
+        fits(lower, b)
+      ) {
+        upper.forEach((i) => chain.joins.set(i, a));
+        lower.forEach((i) => chain.joins.set(i, b));
+        chain.inside = inside;
+        chain.labels.push(...labels);
+        chain.anchors.push(b);
+        continue;
+      }
     }
     const ps: number[] = [];
     for (let i = a; i < b; i++) ps.push(pitch(i));
@@ -181,7 +249,8 @@ function groupRows(input: Line[]): Line[] {
 
   const joined = new Map<number, number>();
   for (const c of chains) {
-    if (!c.joins.size || c.between < ROW_GAP_RATIO * c.inside) continue;
+    // A chain held together only by Section Headers has no gap between Rows to go by.
+    if (!c.joins.size || c.between === Infinity || c.between < ROW_GAP_RATIO * c.inside) continue;
     // One-Cell lines above the first anchor and below the last one join them when they keep the
     // chain's rhythm and a clear gap (or the end of the page) follows.
     const edge = (anchor: number, step: 1 | -1) => {
@@ -198,14 +267,23 @@ function groupRows(input: Line[]): Line[] {
         taken.push(i);
         i += step;
       }
-      const beyond = i >= 0 && i < lines.length ? gap(i) : Infinity;
-      if (taken.length && beyond >= ROW_GAP_RATIO * c.inside && fits(taken, anchor))
+      const inPage = i >= 0 && i < lines.length;
+      const beyond = inPage ? gap(i) : Infinity;
+      // Section Headers beyond them (one, or several in a row) may sit closer than a gap between
+      // Rows (spec #30).
+      const labels: number[] = [];
+      for (let j = i; j >= 0 && j < lines.length && isLabel(j, [anchor]); j += step) labels.push(j);
+      const label = labels.length > 0 && apart(labels, [beyond], c.inside);
+      if (taken.length && (beyond >= ROW_GAP_RATIO * c.inside || label) && fits(taken, anchor)) {
         taken.forEach((j) => c.joins.set(j, anchor));
+        if (label) c.labels.push(...labels);
+      }
     };
     edge(c.anchors[0]!, -1);
     edge(c.anchors[c.anchors.length - 1]!, 1);
     const rhythm: Rhythm = { gap: c.between };
     for (const a of c.anchors) lines[a] = { ...lines[a]!, rhythm };
+    for (const i of c.labels) lines[i] = { ...lines[i]!, section: true };
     c.joins.forEach((a, i) => joined.set(i, a));
   }
   if (!joined.size) return input;
@@ -375,7 +453,7 @@ export function buildTable(rows: Line[], manual = false, oneRow = false): FoundT
     const r = rows[i]!;
     const li = grid.length - 1;
     const lastRow = grid[li];
-    if (prev && lastRow && !sections.has(li)) {
+    if (prev && lastRow && !sections.has(li) && !r.section) {
       const p = bottomOf(prev) - r.y;
       const tight = p < r.h * 1.5;
       const parts = r.cells.map((c) => ({ c, b: pick(c) }));
@@ -412,8 +490,9 @@ export function buildTable(rows: Line[], manual = false, oneRow = false): FoundT
       }
     }
     top = i;
-    if (r.cells.length === 1 && grid.length && bands.length > 1) {
-      // A lone label inside the table body is a Section Header.
+    if (r.cells.length === 1 && (grid.length || r.section) && bands.length > 1) {
+      // A lone label inside the table body is a Section Header, and so is one `groupRows` set
+      // apart between multi-line Rows, even at the top of a Region (spec #30).
       const g: string[] = Array(bands.length).fill("");
       g[0] = r.cells[0]!.text;
       const data: string[] = Array(bands.length).fill("");
