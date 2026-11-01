@@ -238,7 +238,12 @@ export function App() {
                   onPage={(page) => dispatch({ type: "regionChanged", page, bbox: null })}
                   onDrag={(bbox) => dispatch({ type: "regionChanged", page: region.page, bbox })}
                   onWholePage={() => dispatch({ type: "wholePageSelected" })}
-                  onSingleRow={(value) => dispatch({ type: "regionSingleRowChanged", value })}
+                  onSingleRow={(index, value) => {
+                    dispatch({ type: "regionSingleRowChanged", index, value });
+                    showHud(
+                      `Region ${index + 1} ${value ? "is now treated as one row" : "is grouped into rows again"}`,
+                    );
+                  }}
                   onAddRegion={() => {
                     dispatch({ type: "regionAdded" });
                     showHud(`Region ${region.regions.length + 1} added`);

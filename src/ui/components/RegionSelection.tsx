@@ -28,7 +28,7 @@ type RegionSelectionProps = {
   onDrag: (bbox: Bbox) => void;
   onWholePage: () => void;
   /** "Treat selection as one row" was switched. */
-  onSingleRow: (value: boolean) => void;
+  onSingleRow: (index: number, value: boolean) => void;
   /** Add Region: another box on the same page. */
   onAddRegion: () => void;
   onPickRegion: (index: number) => void;
@@ -113,17 +113,6 @@ export function RegionSelection({
         <button type="button" className={styles.link} onClick={onAddRegion}>
           Add Region
         </button>
-        {edited.role === "body" && (
-          <label className={pane.switch}>
-            <input
-              type="checkbox"
-              role="switch"
-              checked={edited.singleRow}
-              onChange={(e) => onSingleRow(e.target.checked)}
-            />
-            Treat selection as one row
-          </label>
-        )}
         <span className={pane.spacer} />
         <Button onClick={onCancel}>Cancel</Button>
         <Button variant="primary" disabled={!preview} onClick={onSave}>
@@ -154,6 +143,17 @@ export function RegionSelection({
                 </button>
               ))}
             </div>
+            {r.role === "body" && (
+              <label className={pane.switch}>
+                <input
+                  type="checkbox"
+                  role="switch"
+                  checked={r.singleRow}
+                  onChange={(e) => onSingleRow(i, e.target.checked)}
+                />
+                Treat selection as one row
+              </label>
+            )}
             <button
               type="button"
               className={styles.remove}
