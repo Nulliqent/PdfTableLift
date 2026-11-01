@@ -189,9 +189,14 @@ const FILE_TYPES: Record<ExportFormat, { extension: string; type: string }> = {
 /** A file to download: its name, MIME type and contents. */
 export type ExportFile = { name: string; type: string; text: string };
 
+/** The formats whose files start with a UTF-8 byte order mark, for Excel. */
+const BOM_FORMATS: ReadonlySet<ExportFormat> = new Set(["csv", "tsv"]);
+
 /**
  * The Table as a file to download: the same text as Copy, named `<Document name> - <title>.<ext>`.
  * The title is what the Table is called in the app, such as "Table 3" or "Stacked Table 1".
+ * A CSV or TSV file starts with a UTF-8 byte order mark, so Excel reads non-ASCII text correctly;
+ * Markdown and JSON files are the copy text exactly.
  */
 export function exportFile(
   documentName: string,
@@ -206,6 +211,7 @@ export function exportFile(
   return {
     name: `${documentName} - ${title}.${extension}`,
     type,
-    text: exportTable(table, format, sectionMode, source),
+    text:
+      (BOM_FORMATS.has(format) ? "\uFEFF" : "") + exportTable(table, format, sectionMode, source),
   };
 }

@@ -590,7 +590,7 @@ describe("the Source switch", () => {
 });
 
 describe("Download of a Stacked Table", () => {
-  it("gives the same text as Copy, named after the Document and the Stacked Table", () => {
+  it("gives the same text as Copy (CSV and TSV after a BOM), named after the Document and the Stacked Table", () => {
     for (const on of [false, true]) {
       const state = source(stack(open("example-document"), 4, 5), on);
       const built = selectedStackedTable(state)!;
@@ -604,7 +604,8 @@ describe("Download of a Stacked Table", () => {
             mode,
             built.source,
           );
-          expect(file.text).toBe(text(state, format, mode));
+          const bom = format === "csv" || format === "tsv" ? "\uFEFF" : "";
+          expect(file.text).toBe(bom + text(state, format, mode));
           expect(file.name).toBe(`example-document.pdf - Stacked Table 1.${format}`);
         }
     }

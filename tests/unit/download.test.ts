@@ -59,14 +59,14 @@ describe("Download", () => {
     ]);
   });
 
-  it("saves the CSV a user would copy", () => {
+  it("saves the CSV a user would copy, after a UTF-8 BOM so Excel reads non-ASCII text", () => {
     const doc = open().documents[0]!;
     expect(exportFile(doc.name, "Table 1", doc.tables[0]!, "csv").text).toBe(
-      "Item,Qty,Price\nBolt,4,1.20\nNut,9,0.40\nScrew,7,0.10",
+      "\uFEFFItem,Qty,Price\nBolt,4,1.20\nNut,9,0.40\nScrew,7,0.10",
     );
   });
 
-  it("saves the copy text for every format and both Section Modes", () => {
+  it("saves the copy text for every format and both Section Modes, CSV and TSV after a BOM", () => {
     const state = run(open(), {
       type: "sectionHeaderToggled",
       documentId: "d",
@@ -78,10 +78,10 @@ describe("Download", () => {
     for (const { format } of EXPORT_FORMATS)
       for (const mode of ["column", "rows"] as const)
         expect(exportFile(doc.name, "Table 1", table, format, mode).text).toBe(
-          exportTable(table, format, mode),
+          (format === "csv" || format === "tsv" ? "\uFEFF" : "") + exportTable(table, format, mode),
         );
     expect(exportFile(doc.name, "Table 1", table, "csv", "column").text).toBe(
-      "Section,Item,Qty,Price\n,Bolt,4,1.20\nNut 9 0.40,Screw,7,0.10",
+      "\uFEFFSection,Item,Qty,Price\n,Bolt,4,1.20\nNut 9 0.40,Screw,7,0.10",
     );
   });
 });

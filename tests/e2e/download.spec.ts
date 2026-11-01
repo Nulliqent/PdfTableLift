@@ -36,7 +36,7 @@ test("Download saves the Table in the chosen format, on the device, by keyboard"
 
   expect(file.suggestedFilename()).toBe("separate-tables.pdf - Table 2.tsv");
   expect(await readFile((await file.path())!, "utf8")).toBe(
-    "Team\tStaff\tOpen roles\nEngineering\t42\t6\nSupport\t18\t2\nSales\t25\t4",
+    "\uFEFFTeam\tStaff\tOpen roles\nEngineering\t42\t6\nSupport\t18\t2\nSales\t25\t4",
   );
   await expect(page.getByRole("status").filter({ hasText: "Downloaded" })).toBeVisible();
   expect(offOrigin).toEqual([]);

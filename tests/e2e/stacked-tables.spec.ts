@@ -128,7 +128,9 @@ test("the Source switch adds each Row's page, and Download saves the same text a
   await page.keyboard.press("Enter");
   const file = await download;
   expect(file.suggestedFilename()).toBe("Northwind Q3 Summary.pdf - Stacked Table 1.csv");
-  expect(await readFile((await file.path())!, "utf8")).toBe(copied);
+  // The file starts with a UTF-8 BOM, so Excel reads non-ASCII text; the copy text has none.
+  expect(copied.startsWith("\uFEFF")).toBe(false);
+  expect(await readFile((await file.path())!, "utf8")).toBe(`\uFEFF${copied}`);
   await expect(status(page)).toHaveText("Downloaded");
 
   await source.focus();
