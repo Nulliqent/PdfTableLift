@@ -248,11 +248,11 @@ function DocumentBody({
 }
 
 /** A Table's name and its page, size, sections and kind, as the sidebar lists it. */
-function TableName({ table: t }: { table: Table }) {
+function TableName({ table: t, id }: { table: Table; id?: string }) {
   const { rows, cols } = tableSize(t);
   const sections = t.sections.filter((r) => isSectionHeader(t, r)).length;
   return (
-    <span className={styles.t}>
+    <span className={styles.t} id={id}>
       <b>Table {t.n}</b>
       <span className={styles.sub}>
         {pageLabel(t)} · {rows} × {cols}
@@ -300,6 +300,7 @@ function SelectTables({
         const match = tickMatch(doc, stacking.ticked, t);
         const reason = match.matches ? null : match.reason;
         const reasonId = `stack-reason-${t.id}`;
+        const nameId = `stack-name-${t.id}`;
         return (
           <label key={t.id} className={`${styles.row} ${styles.pick}`} data-unavailable={!!reason}>
             <input
@@ -307,13 +308,14 @@ function SelectTables({
               className={styles.check}
               checked={order > 0}
               aria-disabled={reason ? true : undefined}
+              aria-labelledby={nameId}
               aria-describedby={reason ? reasonId : undefined}
               onChange={(e) => {
                 if (!reason) onTick(t.id, e.target.checked);
               }}
             />
             <span className={styles.t}>
-              <TableName table={t} />
+              <TableName table={t} id={nameId} />
               {reason && (
                 <span id={reasonId} className={styles.reason}>
                   {reason}
