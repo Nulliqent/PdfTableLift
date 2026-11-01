@@ -2,11 +2,15 @@ import { useCallback, useEffect, useReducer, useRef } from "react";
 import {
   READ_ERROR_MESSAGES,
   initialWorkspace,
+  memberRef,
   reduce,
   regionBlocked,
   regionPreview,
   selectedDocument,
+  selectedStackedTable,
   selectedTable,
+  tickMatch,
+  tickedTables,
   type PageText,
   type ReadError,
   type RegionInProgress,
@@ -24,6 +28,7 @@ import { Toolbar } from "./components/Toolbar";
 import { loadColumnSpacing, saveColumnSpacing } from "./column-spacing-storage";
 import { loadJoin, saveJoin } from "./join-storage";
 import { registerSource, releaseSource } from "./documentSources";
+import { plural } from "./format";
 import { splitPdfs } from "./pdfFiles";
 import { useFileDrop } from "./useFileDrop";
 import { useHud } from "./useHud";
@@ -164,6 +169,43 @@ export function App() {
 
   const dragging = useFileDrop((files) => void openFiles(files));
 
+  // Select Tables. Each tick says how many are ticked; the first also says how many are left out.
+  const stacking = state.stacking;
+  const stackingDoc = stacking && state.documents.find((d) => d.id === stacking.documentId);
+  const tick = (tableId: string, ticked: boolean) => {
+    const table = stackingDoc?.tables.find((t) => t.id === tableId);
+    if (!stacking || !stackingDoc || !table) return;
+    dispatch({ type: "tableTicked", tableId, ticked });
+    const before = tickedTables(stackingDoc, stacking.ticked);
+    const after = ticked ? [...before, table] : before.filter((t) => t.id !== tableId);
+    const count = `${plural(after.length, "Table")} ticked`;
+    if (!ticked) return showHud(`Unticked Table ${table.n} · ${count}`);
+    const refs = after.map(memberRef);
+    const out = stackingDoc.tables.filter((t) => !tickMatch(stackingDoc, refs, t).matches).length;
+    const left =
+      before.length === 0 && out > 0
+        ? ` · ${plural(out, "Table")} ${out === 1 ? "doesn't" : "don't"} match its Header Row`
+        : "";
+    showHud(`Ticked Table ${table.n} · ${count}${left}`);
+  };
+  const stack = () => {
+    if (!stacking || !stackingDoc) return;
+    const tables = tickedTables(stackingDoc, stacking.ticked);
+    if (tables.length < 2) return;
+    const n = Math.max(0, ...stackingDoc.stacked.map((s) => s.n)) + 1;
+    dispatch({ type: "tablesStacked" });
+    showHud(`Stacked Tables ${tables.map((t) => t.n).join(", ")} into Stacked Table ${n}`);
+  };
+  const stackingOpen = stacking !== null && state.pendingChange === null;
+  useEffect(() => {
+    if (!stackingOpen) return;
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") dispatch({ type: "stackingCancelled" });
+    };
+    document.addEventListener("keydown", onKeyDown);
+    return () => document.removeEventListener("keydown", onKeyDown);
+  }, [stackingOpen]);
+
   /** Whether re-detecting this Document would ask to discard corrections first. */
   const hasEdits = (documentId: string) =>
     state.documents.some((d) => d.id === documentId && d.tables.some((t) => t.edited));
@@ -217,10 +259,22 @@ export function App() {
             onColumnSpacing={(value) => dispatch({ type: "columnSpacingChanged", value })}
             join={join}
             onJoin={(value) => dispatch({ type: "joinChanged", value })}
+            stacking={stacking}
+            onStartStacking={(documentId) => {
+              dispatch({ type: "stackingStarted", documentId });
+              showHud("Tick the Tables to stack, in order");
+            }}
+            onTick={tick}
+            onStack={stack}
+            onCancelStacking={() => dispatch({ type: "stackingCancelled" })}
+            onSelectStacked={(documentId, stackedId) =>
+              dispatch({ type: "stackedTableSelected", documentId, stackedId })
+            }
           />
           <ContentPane
             document={selectedDocument(state)}
             table={selectedTable(state)}
+            stacked={selectedStackedTable(state)}
             documents={state.documents}
             onSelectRegion={startRegion}
             onOpen={chooseFiles}

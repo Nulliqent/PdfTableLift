@@ -23,12 +23,18 @@ export type RowActions = {
 
 type TableViewProps = {
   table: Table;
-  /** A cell was corrected; `row` and `col` are grid coordinates (the Header Row is row 0). */
-  onEdit: (row: number, col: number, value: string) => void;
   sectionMode: SectionMode;
-  /** What the row numbers' menus do. */
-  rowActions: RowActions;
-};
+} & (
+  | {
+      /** A cell was corrected; `row` and `col` are grid coordinates (the Header Row is row 0). */
+      onEdit: (row: number, col: number, value: string) => void;
+      /** What the row numbers' menus do. */
+      rowActions: RowActions;
+      readOnly?: false;
+    }
+  /** Read-only (a Stacked Table): no Cell editing and no row-number menus. */
+  | { readOnly: true; onEdit?: undefined; rowActions?: undefined }
+);
 
 /**
  * The Table's grid, with the Header Row as column headers and numbered body rows. Every cell is
@@ -38,7 +44,7 @@ type TableViewProps = {
  * above (the Header Row included) or below, and Split back on a combined Row. The Header Row has a
  * row number too, whose menu offers only Combine with Row below and Split back.
  */
-export function TableView({ table, onEdit, sectionMode, rowActions }: TableViewProps) {
+export function TableView({ table, onEdit, sectionMode, rowActions, readOnly }: TableViewProps) {
   const [menu, setMenu] = useState<{ row: number; anchor: HTMLButtonElement } | null>(null);
   /** The press began on the row number of the open menu: that click only closes the menu. */
   const pressedOpen = useRef(false);
@@ -81,7 +87,7 @@ export function TableView({ table, onEdit, sectionMode, rowActions }: TableViewP
       onSelect: () => {
         // The combined Row takes the upper Row's place: its row number gets focus.
         if (direction === "above") refocus.current = row - 1;
-        rowActions.combine(row, direction);
+        rowActions?.combine(row, direction);
       },
     };
   };
@@ -92,14 +98,14 @@ export function TableView({ table, onEdit, sectionMode, rowActions }: TableViewP
     // restored Row's.
     const splitBack: RowMenuItem[] =
       row in table.combinedFrom
-        ? [{ label: "Split back", onSelect: () => rowActions.splitBack(row) }]
+        ? [{ label: "Split back", onSelect: () => rowActions?.splitBack(row) }]
         : [];
     // The Header Row is never a Section Header and has no Row above.
     if (isHeaderRow(table, row)) return [below, ...splitBack];
     return [
       {
         label: isSectionHeader(table, row) ? "Unmark Section Header" : "Mark as Section Header",
-        onSelect: () => rowActions.toggleSection(row),
+        onSelect: () => rowActions?.toggleSection(row),
       },
       combineItem(row, "above"),
       below,
@@ -109,6 +115,7 @@ export function TableView({ table, onEdit, sectionMode, rowActions }: TableViewP
 
   /** The row number of grid row `r`: a button that opens its menu. */
   const rowNumber = (r: number, name: string, glyph: React.ReactNode) => {
+    if (readOnly) return <td className={styles.idx}>{glyph}</td>;
     const open = menu?.row === r;
     return (
       <td className={styles.idx}>
@@ -163,7 +170,7 @@ export function TableView({ table, onEdit, sectionMode, rowActions }: TableViewP
       rows.push(
         <tr key={r} className={styles.section}>
           {idx}
-          <Cell value={row[0] ?? ""} onEdit={(value) => onEdit(r, 0, value)} />
+          <Cell value={row[0] ?? ""} onEdit={onEdit && ((value) => onEdit(r, 0, value))} />
           {width > 1 && <td colSpan={width - 1} className={styles.secFill} />}
         </tr>,
       );
@@ -177,7 +184,12 @@ export function TableView({ table, onEdit, sectionMode, rowActions }: TableViewP
           <td className={styles.secCol}>{current || <span className={styles.none}>—</span>}</td>
         )}
         {row.map((v, c) => (
-          <Cell key={c} value={v} numeric={numeric[c]} onEdit={(value) => onEdit(r, c, value)} />
+          <Cell
+            key={c}
+            value={v}
+            numeric={numeric[c]}
+            onEdit={onEdit && ((value) => onEdit(r, c, value))}
+          />
         ))}
       </tr>,
     );
@@ -201,7 +213,7 @@ export function TableView({ table, onEdit, sectionMode, rowActions }: TableViewP
                   header
                   value={v}
                   numeric={numeric[c]}
-                  onEdit={(value) => onEdit(0, c, value)}
+                  onEdit={onEdit && ((value) => onEdit(0, c, value))}
                 />
               ))}
             </tr>
@@ -238,15 +250,22 @@ type CellProps = {
   value: string;
   numeric?: boolean;
   header?: boolean;
-  onEdit: (value: string) => void;
+  /** Without it the Cell is read-only. */
+  onEdit?: (value: string) => void;
 };
 
 /** One editable cell. Keyed by its text so a committed edit remounts it from the new value. */
 function Cell({ value, numeric, header, onEdit }: CellProps) {
   const Tag = header ? "th" : "td";
-  const classes = [styles.cell, value ? null : styles.empty, numeric ? styles.num : null]
+  const classes = [onEdit && styles.cell, value ? null : styles.empty, numeric ? styles.num : null]
     .filter(Boolean)
     .join(" ");
+  if (!onEdit)
+    return (
+      <Tag className={classes} scope={header ? "col" : undefined}>
+        {value}
+      </Tag>
+    );
   return (
     <Tag
       key={value}

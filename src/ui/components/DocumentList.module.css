@@ -206,3 +206,81 @@
   width: 14px;
   height: 14px;
 }
+
+/* Select Tables: a checkbox per Table, the reason beneath an unavailable one. */
+.group {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.pick {
+  padding-left: 8px;
+  align-items: flex-start;
+  cursor: pointer;
+}
+
+.pick[data-unavailable="true"] {
+  cursor: default;
+}
+
+.pick[data-unavailable="true"]:hover {
+  background: none;
+}
+
+.pick[data-unavailable="true"] .t > .t {
+  opacity: 0.5;
+}
+
+.check {
+  flex: none;
+  width: 16px;
+  height: 16px;
+  margin: 1px 4px 0 0;
+  accent-color: var(--accent);
+}
+
+.check:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: 2px;
+}
+
+.check[aria-disabled="true"] {
+  opacity: 0.4;
+  cursor: default;
+}
+
+.reason {
+  font-size: 11.5px;
+  color: var(--label2);
+}
+
+.order {
+  margin-left: auto;
+  flex: none;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 5px;
+  border-radius: 999px;
+  background: var(--accent);
+  color: var(--on-accent);
+  font-size: 11px;
+  font-weight: 600;
+  display: grid;
+  place-items: center;
+  font-variant-numeric: tabular-nums;
+}
+
+.stackBar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 8px 6px 30px;
+}
+
+.hint {
+  flex-basis: 100%;
+  font-size: 11.5px;
+  color: var(--label2);
+}

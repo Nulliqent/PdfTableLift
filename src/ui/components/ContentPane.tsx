@@ -7,6 +7,7 @@ import {
   hasSectionHeaders,
   isSectionHeader,
   tableSize,
+  type BuiltStackedTable,
   type Document,
   type RowAction,
   type Table,
@@ -21,12 +22,15 @@ import { FormatControl } from "./FormatControl";
 import { Icon } from "./Icon";
 import { SectionModeControl } from "./SectionModeControl";
 import { SourcePage } from "./SourcePage";
+import { StackedTableDetail } from "./StackedTableDetail";
 import { TableView } from "./TableView";
 import styles from "./ContentPane.module.css";
 
 type ContentPaneProps = {
   document: Document | null;
   table: Table | null;
+  /** The selected Stacked Table, built from its Members, when one is selected instead of a Table. */
+  stacked: BuiltStackedTable | null;
   /** Every Document, for the screens shown when no Table is selected. */
   documents: Document[];
   onSelectRegion: (documentId: string) => void;
@@ -57,6 +61,7 @@ type ContentPaneProps = {
 export function ContentPane({
   document,
   table,
+  stacked,
   documents,
   onSelectRegion,
   onOpen,
@@ -76,6 +81,14 @@ export function ContentPane({
       <div className={styles.inner}>
         {regionSelection ? (
           regionSelection
+        ) : document && stacked ? (
+          <StackedTableDetail
+            key={stacked.record.id}
+            document={document}
+            stacked={stacked}
+            onAnnounce={onAnnounce}
+            onSelectTable={onSelectTable}
+          />
         ) : document && table ? (
           <TableDetail
             document={document}
