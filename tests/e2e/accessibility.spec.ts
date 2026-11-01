@@ -142,14 +142,73 @@ test.describe("keyboard", () => {
     await expect(main.getByRole("button", { name: "Select Whole Page" })).toBeVisible();
     const stops = await tabThrough(page);
     const labels = stops.map((s) => s.label);
-    for (const expected of ["Select Whole Page", "Treat selection as one row", "Cancel"])
+    for (const expected of ["Select Whole Page", "Treat Region as one row", "Cancel"])
       expect(labels, `Tab reaches ${expected}`).toContain(expected);
     expectFocusVisibleEverywhere(stops);
     // The switch works from the keyboard: Space flips it.
-    const oneRow = main.getByRole("switch", { name: "Treat selection as one row" });
+    const oneRow = main.getByRole("switch", { name: "Treat Region as one row" });
     await oneRow.focus();
     await page.keyboard.press("Space");
     await expect(oneRow).toBeChecked();
+  });
+
+  test("Select Region with several Regions: a labelled list, every control named and reachable, role changes announced (#42)", async ({
+    page,
+  }) => {
+    await page.goto("/");
+    await openFixture(page, "parts-list-drawing.pdf");
+    const main = page.getByRole("main");
+    await page
+      .getByRole("button", { name: /Select Table Region/ })
+      .first()
+      .click();
+    await main.getByRole("button", { name: "Add Region" }).click();
+    await main.getByRole("button", { name: "Add Region" }).click();
+
+    // A list of three Regions, each with a named role group, two toggle buttons and a Remove button.
+    const list = main.getByRole("list", { name: "Regions" });
+    await expect(list.getByRole("listitem")).toHaveCount(3);
+    for (const n of [1, 2, 3]) {
+      const group = list.getByRole("group", { name: `Region ${n} role` });
+      await expect(group.getByRole("button")).toHaveCount(2);
+      await expect(list.getByRole("button", { name: `Remove Region ${n}` })).toBeVisible();
+    }
+    // The role is not colour alone: the pressed state is exposed to assistive technology.
+    const second = list.getByRole("group", { name: "Region 2 role" });
+    await expect(second.getByRole("button", { name: "Body", exact: true })).toHaveAttribute(
+      "aria-pressed",
+      "true",
+    );
+
+    // Tab reaches every control of the list with a visible focus indicator.
+    const stops = await tabThrough(page);
+    const labels = stops.map((s) => s.label);
+    for (const expected of [
+      "Add Region",
+      "Remove Region 1",
+      "Remove Region 2",
+      "Remove Region 3",
+      "Header",
+      "Body",
+    ])
+      expect(labels, `Tab reaches ${expected}`).toContain(expected);
+    expectFocusVisibleEverywhere(stops);
+
+    // From the keyboard alone: focus the Header button of Region 2 and press Enter.
+    await second.getByRole("button", { name: "Header", exact: true }).focus();
+    await page.keyboard.press("Enter");
+    await expect(second.getByRole("button", { name: "Header", exact: true })).toHaveAttribute(
+      "aria-pressed",
+      "true",
+    );
+    await expect(
+      page.getByRole("status").filter({ hasText: /Region 2 is now Header/ }),
+    ).toBeVisible();
+
+    await list.getByRole("button", { name: "Remove Region 3" }).focus();
+    await page.keyboard.press("Enter");
+    await expect(list.getByRole("listitem")).toHaveCount(2);
+    await expect(page.getByRole("status").filter({ hasText: /Region 3 removed/ })).toBeVisible();
   });
 
   test("the row-number menu works from the keyboard alone", async ({ page }) => {
@@ -352,7 +411,7 @@ test.describe("phone layout", () => {
     await expect(main.getByText("Preview", { exact: true })).toBeVisible();
     await expectOneColumn(page);
     // The Single-Row switch fits and can be tapped at phone width.
-    const oneRow = main.getByRole("switch", { name: "Treat selection as one row" });
+    const oneRow = main.getByRole("switch", { name: "Treat Region as one row" });
     const box = (await oneRow.boundingBox())!;
     expect(box.x).toBeGreaterThanOrEqual(0);
     expect(box.x + box.width).toBeLessThanOrEqual(390);

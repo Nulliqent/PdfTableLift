@@ -30,6 +30,7 @@ const NOT_FROM_PROTOTYPE = new Set([
   "statement",
   "statement-sections",
   "statement-first-column",
+  "parts-list-drawing",
   "page-frames",
 ]);
 // Fixtures whose text items come from the prototype but whose Tables (`runs`) come from the app's

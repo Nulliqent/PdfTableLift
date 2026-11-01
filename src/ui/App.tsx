@@ -3,12 +3,15 @@ import {
   READ_ERROR_MESSAGES,
   initialWorkspace,
   reduce,
+  regionBlocked,
   regionPreview,
   selectedDocument,
   selectedTable,
   type PageText,
   type ReadError,
   type RegionInProgress,
+  roleLabel,
+  type RegionRole,
 } from "../engine";
 import { ContentPane } from "./components/ContentPane";
 import { ConfirmSheet } from "./components/ConfirmSheet";
@@ -232,10 +235,37 @@ export function App() {
                   document={regionDoc}
                   region={region}
                   preview={regionPreview(state)}
+                  blocked={regionBlocked(state)}
                   onPage={(page) => dispatch({ type: "regionChanged", page, bbox: null })}
                   onDrag={(bbox) => dispatch({ type: "regionChanged", page: region.page, bbox })}
                   onWholePage={() => dispatch({ type: "wholePageSelected" })}
-                  onSingleRow={(value) => dispatch({ type: "regionSingleRowChanged", value })}
+                  onSingleRow={(index, value) => {
+                    dispatch({ type: "regionSingleRowChanged", index, value });
+                    showHud(
+                      `Region ${index + 1} ${value ? "is now treated as one row" : "is grouped into rows again"}`,
+                    );
+                  }}
+                  onAddRegion={() => {
+                    dispatch({ type: "regionAdded" });
+                    showHud(`Region ${region.regions.length + 1} added`);
+                  }}
+                  onPickRegion={(index) => dispatch({ type: "regionPicked", index })}
+                  onRemoveRegion={(index) => {
+                    dispatch({ type: "regionRemoved", index });
+                    showHud(`Region ${index + 1} removed`);
+                  }}
+                  onRole={(index, role) => {
+                    const was = region.regions[index]?.role;
+                    if (was === role) return;
+                    dispatch({ type: "regionRoleChanged", index, role });
+                    const demoted =
+                      role === "header"
+                        ? region.regions.findIndex((r, i) => i !== index && r.role === "header")
+                        : -1;
+                    const now = (i: number, r: RegionRole) =>
+                      `Region ${i + 1} is now ${roleLabel(r)}`;
+                    showHud(now(index, role) + (demoted >= 0 ? `. ${now(demoted, "body")}` : ""));
+                  }}
                   onCancel={() => dispatch({ type: "regionCancelled" })}
                   onSave={saveRegion}
                 />

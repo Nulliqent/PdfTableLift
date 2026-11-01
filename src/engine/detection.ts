@@ -459,29 +459,42 @@ export function detectTables(items: TextItem[], columnSpacing: number): FoundTab
   return tables;
 }
 
+/** What `buildTable` takes besides the lines. */
+export type BuildOptions = {
+  /** The lines come from a Region the user drew, which allows one column. */
+  manual?: boolean;
+  /** A Single-Row Region: every line goes in one Row. */
+  oneRow?: boolean;
+  /** Use these columns instead of finding them in the lines. */
+  fixedBands?: Band[];
+};
+
 /**
- * Builds a grid from a run of lines. `manual` (a Region the user drew) allows one column.
- * `oneRow` (a Single-Row Region) puts every line in one Row. Returns null when there are too few
+ * Builds a grid from a run of lines (see `BuildOptions`). Returns null when there are too few
  * columns.
  */
-export function buildTable(rows: Line[], manual = false, oneRow = false): FoundTable | null {
+export function buildTable(
+  rows: Line[],
+  { manual = false, oneRow = false, fixedBands }: BuildOptions = {},
+): FoundTable | null {
   const multi = rows.filter((r) => r.cells.length >= 2);
   const maxC = multi.length ? Math.max(...multi.map((r) => r.cells.length)) : 1;
   const basis = multi.filter((r) => r.cells.length >= Math.max(2, Math.ceil(maxC * 0.6)));
   const iv = basis
     .flatMap((r) => r.cells.map((c): Band => [c.x0, c.x1]))
     .sort((a, b) => a[0] - b[0]);
-  const bands: Band[] = [];
-  for (const [a, b] of iv) {
-    const cur = bands[bands.length - 1];
-    if (cur && a < cur[1] - 0.5) cur[1] = Math.max(cur[1], b);
-    else bands.push([a, b]);
-  }
-  if (manual) addEveryLine(bands, rows, basis);
-  if (!bands.length && manual) {
-    const all = rows.flatMap((r) => r.cells);
-    bands.push([Math.min(...all.map((c) => c.x0)), Math.max(...all.map((c) => c.x1))]);
-  }
+  const merged = iv.reduce<Band[]>((acc, [a, b]) => {
+    const cur = acc[acc.length - 1];
+    return cur && a < cur[1] - 0.5
+      ? [...acc.slice(0, -1), [cur[0], Math.max(cur[1], b)]]
+      : [...acc, [a, b]];
+  }, []);
+  const found = fixedBands
+    ? fixedBands.map((b): Band => [b[0], b[1]])
+    : manual
+      ? addEveryLine(merged, rows, basis)
+      : merged;
+  const bands: Band[] = found.length || !manual ? found : [spanOf(rows)];
   if (bands.length < (manual ? 1 : 2)) return null;
   const pick = (c: Cell) => {
     let best = -1;
@@ -590,7 +603,9 @@ export function buildTable(rows: Line[], manual = false, oneRow = false): FoundT
     prev = r;
   }
   // Drop columns that only ever hold Section Header text.
-  const keep = bands.map((_, i) => i === 0 || grid.some((g, ri) => !sections.has(ri) && g[i]));
+  const keep = bands.map(
+    (_, i) => fixedBands || i === 0 || grid.some((g, ri) => !sections.has(ri) && g[i]),
+  );
   const clean = grid.map((g) => g.filter((_, i) => keep[i]));
   const sectionCells: Record<number, string[]> = {};
   for (const [ri, data] of asData) {
@@ -648,7 +663,8 @@ function singleRowTable(lines: Line[], bands: Band[], pick: (c: Cell) => number)
  * are added narrowest first; a Cell that would join two columns (a title or caption spanning
  * them) is left out, and so are Cells inside a column already found.
  */
-function addEveryLine(bands: Band[], rows: Line[], basis: Line[]): void {
+function addEveryLine(found: Band[], rows: Line[], basis: Line[]): Band[] {
+  const bands = found.map((b): Band => [b[0], b[1]]);
   const rest = rows
     .filter((r) => !basis.includes(r))
     .flatMap((r) => r.cells)
@@ -662,8 +678,14 @@ function addEveryLine(bands: Band[], rows: Line[], basis: Line[]): void {
       band[1] = Math.max(band[1], c.x1);
     } else bands.push([c.x0, c.x1]);
   }
-  bands.sort((p, q) => p[0] - q[0]);
+  return bands.sort((p, q) => p[0] - q[0]);
 }
+
+/** One column across all the lines' Cells. */
+const spanOf = (rows: Line[]): Band => {
+  const all = rows.flatMap((r) => r.cells);
+  return [Math.min(...all.map((c) => c.x0)), Math.max(...all.map((c) => c.x1))];
+};
 
 /**
  * The Rows inside a Region. A Region says where the table is, not where its Rows are, so the
@@ -675,7 +697,7 @@ function addEveryLine(bands: Band[], rows: Line[], basis: Line[]): void {
  * did before.
  */
 function regionRows(items: TextItem[], inside: TextItem[], region: Bbox, cs: number): Line[] {
-  const own = groupRows(linesFromItems(inside, cs));
+  const groupedAlone = groupRows(linesFromItems(inside, cs));
   const [x0, , x1] = region;
   const isIn = new Set(inside);
   const column = items.filter((it) => it.x + it.w / 2 >= x0 && it.x + it.w / 2 <= x1);
@@ -692,7 +714,7 @@ function regionRows(items: TextItem[], inside: TextItem[], region: Bbox, cs: num
       );
   }
   rows.sort((p, q) => q.y - p.y);
-  return rows.length < own.length ? rows : own;
+  return rows.length < groupedAlone.length ? rows : groupedAlone;
 }
 
 /**
@@ -717,6 +739,191 @@ export function regionTable(
   const rows = singleRow
     ? linesFromItems(inside, columnSpacing)
     : regionRows(items, inside, region, columnSpacing);
-  const table = rows.length ? buildTable(rows, true, singleRow) : null;
+  const table = rows.length ? buildTable(rows, { manual: true, oneRow: singleRow }) : null;
   return table && { ...table, bbox: region };
+}
+
+/** What a Region is for: the Header Region holds the column titles, a Body Region holds the Rows. */
+export type RegionRole = "header" | "body";
+
+/** A Region as the engine takes it: its bounds, its role and its Single-Row setting. */
+export type RegionSpec = { bbox: Bbox; role: RegionRole; singleRow: boolean };
+
+/** The index of the column `x` lies in, or else the one whose edge is nearest to it. */
+function nearestColumn(cols: Band[], x: number): number {
+  let best = 0;
+  let nearest = Infinity;
+  cols.forEach(([a, b], i) => {
+    const d = x >= a && x <= b ? 0 : Math.min(Math.abs(x - a), Math.abs(x - b));
+    if (d < nearest) {
+      nearest = d;
+      best = i;
+    }
+  });
+  return best;
+}
+
+/** The smallest box holding all of `boxes`. */
+const unionBbox = (boxes: Bbox[]): Bbox =>
+  boxes.reduce<Bbox>(
+    (u, b) => [
+      Math.min(u[0], b[0]),
+      Math.min(u[1], b[1]),
+      Math.max(u[2], b[2]),
+      Math.max(u[3], b[3]),
+    ],
+    [Infinity, Infinity, -Infinity, -Infinity],
+  );
+
+/** Why Regions cannot be saved: nothing is drawn, no Body Region has text, or the Header Region has none. */
+export type RegionsBlocked = "nothing" | "no-body" | "no-header";
+
+const insideBox = (it: TextItem, [x0, y0, x1, y1]: Bbox) => {
+  const cx = it.x + it.w / 2;
+  const cy = it.y + it.h * 0.35;
+  return cx >= x0 && cx <= x1 && cy >= y0 && cy <= y1;
+};
+
+/**
+ * The Header Row of a Header Region (spec #39): all its text is one Row. Each word goes to the
+ * column it overlaps most, or the nearest column when it overlaps none; a column's words join with
+ * single spaces, top to bottom and then left to right.
+ */
+function headerRow(items: TextItem[], cols: Band[], columnSpacing: number): string[] {
+  const row: string[] = Array(cols.length).fill("");
+  const columnOf = (x0: number, x1: number) => {
+    let best = -1;
+    let bestOverlap = 0;
+    cols.forEach(([a, b], i) => {
+      const o = Math.min(b, x1) - Math.max(a, x0);
+      if (o > bestOverlap) {
+        bestOverlap = o;
+        best = i;
+      }
+    });
+    return best >= 0 ? best : nearestColumn(cols, (x0 + x1) / 2);
+  };
+  for (const l of linesFromItems(items, columnSpacing)) {
+    for (const it of l.items.slice().sort((p, q) => p.x - q.x)) {
+      // A multi-word item may straddle columns: each word sits where its share of the item's
+      // width does, estimated in proportion to character count.
+      const perChar = it.str.length ? it.w / it.str.length : 0;
+      for (const word of it.str.matchAll(/\S+/g)) {
+        const x0 = it.x + word.index * perChar;
+        const c = columnOf(x0, x0 + word[0].length * perChar);
+        row[c] = row[c] ? `${row[c]} ${word[0]}` : word[0];
+      }
+    }
+  }
+  return row;
+}
+
+/**
+ * The Table of several Body Regions stacked down the page (spec #39). Columns come from the lines
+ * of all the Regions together; Rows are found inside each Region on its own, so a Row never spans
+ * two Regions, and they run top to bottom down the page whatever order the Regions were drawn in.
+ * Text in two Regions belongs to the upper one; a Region with no text is ignored.
+ */
+function bodiesTable(items: TextItem[], bodies: RegionSpec[], cs: number): FoundTable | null {
+  const taken = new Set<TextItem>();
+  const parts: { spec: RegionSpec; rows: Line[] }[] = [];
+  for (const spec of [...bodies].sort((p, q) => q.bbox[3] - p.bbox[3] || q.bbox[1] - p.bbox[1])) {
+    const inside = items.filter((it) => !taken.has(it) && insideBox(it, spec.bbox));
+    if (!inside.length) continue;
+    inside.forEach((it) => taken.add(it));
+    const rows = spec.singleRow
+      ? linesFromItems(inside, cs)
+      : regionRows(items, inside, spec.bbox, cs);
+    if (rows.length) parts.push({ spec, rows });
+  }
+  if (!parts.length) return null;
+  // Rows run down the page by where their text sits, not by the Regions' top edges.
+  const topOf = (p: { rows: Line[] }) => Math.max(...p.rows.map((r) => r.y));
+  parts.sort((p, q) => topOf(q) - topOf(p));
+  const shared = buildTable(
+    parts.flatMap((p) => p.rows),
+    { manual: true },
+  );
+  if (!shared) return null;
+  const tables = parts.map((p) =>
+    buildTable(p.rows, {
+      manual: true,
+      oneRow: p.spec.singleRow,
+      fixedBands: shared.cols,
+    }),
+  );
+  // A Region that opens with a lone bold label and has Rows after it opens with a Section Header:
+  // the Region boundary stands where the group above would have ended.
+  parts.forEach((p, i) => {
+    const t = tables[i];
+    const lead = p.rows[0]!.cells;
+    if (!t || p.spec.singleRow || t.grid.length < 2 || t.sections.includes(0)) return;
+    if (lead.length !== 1 || !lead[0]!.bold) return;
+    const at = nearestColumn(shared.cols, (lead[0]!.x0 + lead[0]!.x1) / 2);
+    const data: string[] = Array(shared.cols.length).fill("");
+    data[at] = lead[0]!.text;
+    t.sections = [0, ...t.sections];
+    t.sectionCells = { ...t.sectionCells, 0: data };
+  });
+  const grid: string[][] = [];
+  const sections: number[] = [];
+  const sectionCells: Record<number, string[]> = {};
+  for (const t of tables) {
+    if (!t) continue;
+    const at = grid.length;
+    grid.push(...t.grid);
+    sections.push(...t.sections.map((r) => r + at));
+    for (const [r, cells] of Object.entries(t.sectionCells)) sectionCells[Number(r) + at] = cells;
+  }
+  const first = tables.find((t) => t);
+  return {
+    grid,
+    sections,
+    sectionCells,
+    cols: shared.cols,
+    firstBold: first!.firstBold,
+    bbox: unionBbox(parts.map((p) => p.spec.bbox)),
+  };
+}
+
+/**
+ * Builds a Hand-drawn Table from a page's text, a list of Regions with roles and the Column
+ * Spacing, or says why the Regions cannot be saved. The Body Region decides the columns and Rows;
+ * a Header Region's text becomes the first Row. Text inside both goes to the Header Region. With
+ * one Body Region and no Header Region the result is exactly that of `regionTable`.
+ */
+export function regionsOutcome(
+  items: TextItem[],
+  regions: RegionSpec[],
+  columnSpacing: number,
+): { table: FoundTable } | { blocked: RegionsBlocked } {
+  if (!regions.length) return { blocked: "nothing" };
+  const header = regions.find((r) => r.role === "header");
+  const titles = header ? items.filter((it) => insideBox(it, header.bbox)) : [];
+  const titleItems = new Set(titles);
+  const pool = header ? items.filter((it) => !titleItems.has(it)) : items;
+  // An empty Header Region is named first, before any Body Region is looked at.
+  if (header && !titles.some((it) => it.str.trim())) return { blocked: "no-header" };
+  const bodies = regions.filter((r) => r.role === "body");
+  // With a Header Region the Header Row is its text, so a lone bold label opening the Body Region
+  // is a Section Header, as it is among several Body Regions; one Body Region alone is as before.
+  const table =
+    bodies.length === 1 && !header
+      ? regionTable(pool, bodies[0]!.bbox, columnSpacing, bodies[0]!.singleRow)
+      : bodiesTable(pool, bodies, columnSpacing);
+  if (!table) return { blocked: "no-body" };
+  if (!header) return { table };
+  const sectionCells: Record<number, string[]> = {};
+  for (const [row, cells] of Object.entries(table.sectionCells))
+    sectionCells[Number(row) + 1] = cells;
+  return {
+    table: {
+      grid: [headerRow(titles, table.cols, columnSpacing), ...table.grid],
+      sections: table.sections.map((r) => r + 1),
+      sectionCells,
+      cols: table.cols,
+      firstBold: titles.every((it) => it.bold),
+      bbox: unionBbox(regions.map((r) => r.bbox)),
+    },
+  };
 }

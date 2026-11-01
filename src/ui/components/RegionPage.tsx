@@ -1,5 +1,5 @@
 import { useRef, useState, type PointerEvent } from "react";
-import type { Bbox, Document } from "../../engine";
+import type { Bbox, Document, RegionRole } from "../../engine";
 import { Icon } from "./Icon";
 import { frame, useDrawnPages, usePageWidth } from "../page-drawing";
 import { CanvasHost } from "./CanvasHost";
@@ -11,22 +11,31 @@ const MIN_DRAG = 8;
 
 type Fractions = { x: number; y: number };
 
+/** A Region as drawn on the page: the one being edited is filled, the Header Region dashed and tagged. */
+export type DrawnRegion = {
+  bbox: Bbox | null;
+  role: RegionRole;
+  /** "Region 2 · Header". */
+  name: string;
+  edited: boolean;
+};
+
 /**
  * One page of a Document with a layer to drag a Region on, using the mouse, a pen or a finger.
- * The Region shows as a box over the page; the Tables already there are outlined for context.
+ * The Region shows as a frame over the page; the Tables already there are outlined for context.
  */
 export function RegionPage({
   document,
   pageNum,
-  bbox,
+  regions,
   label,
   onDrag,
 }: {
   document: Document;
   pageNum: number;
-  /** The Region so far, in PDF points. */
-  bbox: Bbox | null;
-  /** What the Region holds, such as "3 × 4", shown on its corner. */
+  /** The Regions so far, in PDF points. */
+  regions: DrawnRegion[];
+  /** What the Region being edited holds, such as "3 × 4", shown on its corner. */
   label: string;
   onDrag: (bbox: Bbox) => void;
 }) {
@@ -112,15 +121,22 @@ export function RegionPage({
                 : [],
             ),
           )}
-          {bbox && (
-            <div
-              className={styles.selection}
-              style={frame(page.locate(bbox))}
-              data-testid="region-box"
-            >
-              <span>{label}</span>
-            </div>
-          )}
+          {/* The Region being edited first, so the others are not dimmed by its shadow. */}
+          {[...regions]
+            .sort((p, q) => Number(q.edited) - Number(p.edited))
+            .map((r) =>
+              r.bbox ? (
+                <div
+                  key={r.name}
+                  className={`${r.edited ? styles.edited : styles.other} ${r.role === "header" ? styles.header : ""}`}
+                  style={frame(page.locate(r.bbox))}
+                  data-testid={r.edited ? "region-frame" : "region-frame-other"}
+                  aria-hidden="true"
+                >
+                  <span>{r.role === "header" ? "Header" : r.edited ? label : r.name}</span>
+                </div>
+              ) : null,
+            )}
           <div
             ref={layer}
             className={`${styles.layer} ${fingerDraws ? styles.fingerDraws : ""}`}
