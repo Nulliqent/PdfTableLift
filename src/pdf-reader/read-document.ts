@@ -45,8 +45,17 @@ export function createReadDocument(pdfjs: PdfJs, options: ReaderOptions = {}): R
     });
     try {
       const doc = (await task.promise) as PdfDocument;
+      // Font objects live in the Document's shared commonObjs, so each font is looked up once per
+      // Document: a font that never resolves costs one timeout, not one per page.
+      const boldByFont = new Map<string, Promise<boolean>>();
+      const isBold = (page: PDFPageProxy, fontName: string) => {
+        let v = boldByFont.get(fontName);
+        if (!v) boldByFont.set(fontName, (v = fontIsBold(page, fontName)));
+        return v;
+      };
       const pages: PageText[] = [];
-      for (let n = 1; n <= doc.numPages; n++) pages.push(await readPage(await doc.getPage(n), n));
+      for (let n = 1; n <= doc.numPages; n++)
+        pages.push(await readPage(await doc.getPage(n), n, isBold));
       return pages.some((p) => p.items.length) ? pages : "no-text-layer";
     } catch (err) {
       // A page pdf.js cannot parse means the file is damaged: the same answer as a file that
@@ -60,7 +69,11 @@ export function createReadDocument(pdfjs: PdfJs, options: ReaderOptions = {}): R
   };
 }
 
-async function readPage(page: PDFPageProxy, num: number): Promise<PageText> {
+async function readPage(
+  page: PDFPageProxy,
+  num: number,
+  isBold: (page: PDFPageProxy, fontName: string) => Promise<boolean>,
+): Promise<PageText> {
   // pdf.js gives text in unrotated user space, so the page box comes from `view` (the CropBox in
   // that space), not from a viewport, which is rotated and moved to start at 0,0.
   const [x0, y0, x1, y1] = page.view as [number, number, number, number];
@@ -71,22 +84,21 @@ async function readPage(page: PDFPageProxy, num: number): Promise<PageText> {
   } catch {
     // A page whose drawing fails can still have readable text.
   }
-  const boldByFont = new Map<string, Promise<boolean>>();
-  const isBold = (fontName: string) => {
-    let v = boldByFont.get(fontName);
-    if (!v) boldByFont.set(fontName, (v = fontIsBold(page, fontName)));
-    return v;
-  };
+  const texts = content.items.filter((it): it is PdfTextItem => {
+    if (!("str" in it) || !it.str.trim()) return false;
+    const [, b, c] = it.transform as number[];
+    return Math.abs(b!) <= 0.01 && Math.abs(c!) <= 0.01; // rotated text is left out
+  });
+  // Every font on the page is looked up at once, so slow fonts wait side by side.
+  const fonts = [...new Set(texts.map((t) => t.fontName))];
+  const bolds = await Promise.all(fonts.map((f) => isBold(page, f)));
+  const boldOf = new Map(fonts.map((f, i) => [f, bolds[i]!]));
 
   const items: TextItem[] = [];
-  for (const it of content.items) {
-    if (!("str" in it)) continue;
-    const item = it as PdfTextItem;
-    if (!item.str || !item.str.trim()) continue;
-    const [, b, c, d, x, y] = item.transform as number[];
-    if (Math.abs(b!) > 0.01 || Math.abs(c!) > 0.01) continue; // rotated text
+  for (const item of texts) {
+    const [, , , d, x, y] = item.transform as number[];
     const h = Math.abs(d!) || item.height || 10;
-    const bold = await isBold(item.fontName);
+    const bold = boldOf.get(item.fontName)!;
     if (/\S\s{3,}\S/.test(item.str)) {
       // US-14: some PDFs set a whole row as one string with runs of spaces between columns.
       const cw = item.width / item.str.length;

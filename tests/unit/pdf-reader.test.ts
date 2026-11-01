@@ -85,6 +85,58 @@ describe("readDocument", () => {
       expect(destroy).toHaveBeenCalled();
     });
 
+    it("waits for a font that never resolves once per Document, not once per page and font", async () => {
+      vi.useFakeTimers();
+      try {
+        // Two pages, each using two fonts that pdf.js never delivers, and one bold font it has.
+        const text = (str: string, y: number, fontName: string) => ({
+          str,
+          transform: [9, 0, 0, 9, 72, y],
+          width: 20,
+          height: 9,
+          fontName,
+        });
+        const commonObjs = {
+          has: (name: string) => name === "bold",
+          // Called with a callback for a font still loading; this fake never calls it back.
+          get: (name: string) => (name === "bold" ? { name: "ABCDEF+Lato-Bold" } : undefined),
+        };
+        const page = {
+          view: [0, 0, 612, 792],
+          commonObjs,
+          getTextContent: () =>
+            Promise.resolve({
+              items: [
+                text("Head", 720, "bold"),
+                text("one", 700, "lost1"),
+                text("two", 680, "lost2"),
+              ],
+            }),
+          getOperatorList: () => Promise.resolve({}),
+        };
+        const read = createReadDocument({
+          getDocument: () =>
+            ({
+              promise: Promise.resolve({ numPages: 2, getPage: () => Promise.resolve(page) }),
+              destroy: () => Promise.resolve(),
+            }) as never,
+        });
+
+        let result: Awaited<ReturnType<typeof read>> | undefined;
+        void read(new Uint8Array([1])).then((r) => (result = r));
+        await vi.advanceTimersByTimeAsync(2000);
+
+        expect(result).toHaveLength(2);
+        const pages = result as Exclude<typeof result, string | undefined>;
+        expect(pages.map((p) => p.items.map((i) => i.bold))).toEqual([
+          [true, false, false],
+          [true, false, false],
+        ]);
+      } finally {
+        vi.useRealTimers();
+      }
+    });
+
     it("destroys the loading task when opening the PDF is rejected", async () => {
       const { result, destroy } = await readWith(() => Promise.reject(new Error("bad")));
       expect(result).toBe("not-pdf");
