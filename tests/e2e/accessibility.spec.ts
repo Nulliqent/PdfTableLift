@@ -169,9 +169,17 @@ test.describe("keyboard", () => {
     const mark = menu.getByRole("menuitem", { name: "Mark as Section Header" });
     await expect(mark).toBeFocused();
     await expect(rowNumber).toHaveAttribute("aria-expanded", "true");
+    const above = menu.getByRole("menuitem", { name: "Combine with Row above" });
+    const below = menu.getByRole("menuitem", { name: "Combine with Row below" });
+    await page.keyboard.press("ArrowDown");
+    await expect(above).toBeFocused();
+    await page.keyboard.press("End");
+    await expect(below).toBeFocused();
     await page.keyboard.press("ArrowDown");
     await expect(mark).toBeFocused();
     await page.keyboard.press("ArrowUp");
+    await expect(below).toBeFocused();
+    await page.keyboard.press("Home");
     await expect(mark).toBeFocused();
     await page.keyboard.press("Escape");
     await expect(menu).toBeHidden();

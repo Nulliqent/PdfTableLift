@@ -45,6 +45,13 @@ type ContentPaneProps = {
   ) => void;
   onToggleHeader: (documentId: string, tableId: string, header: boolean) => void;
   onToggleSection: (documentId: string, tableId: string, row: number) => void;
+  /** Combine with Row above / below was chosen for a grid row. */
+  onCombineRows: (
+    documentId: string,
+    tableId: string,
+    row: number,
+    direction: "above" | "below",
+  ) => void;
   onSplitByPage: (documentId: string, tableId: string) => void;
   onJoinAgain: (documentId: string, tableId: string) => void;
 };
@@ -64,6 +71,7 @@ export function ContentPane({
   onEditCell,
   onToggleHeader,
   onToggleSection,
+  onCombineRows,
   onSplitByPage,
   onJoinAgain,
 }: ContentPaneProps) {
@@ -83,6 +91,7 @@ export function ContentPane({
             onEditCell={onEditCell}
             onToggleHeader={onToggleHeader}
             onToggleSection={onToggleSection}
+            onCombineRows={onCombineRows}
             onSplitByPage={onSplitByPage}
             onJoinAgain={onJoinAgain}
           />
@@ -104,6 +113,7 @@ function TableDetail({
   onEditCell,
   onToggleHeader,
   onToggleSection,
+  onCombineRows,
   onSplitByPage,
   onJoinAgain,
 }: {
@@ -116,6 +126,7 @@ function TableDetail({
   onEditCell: ContentPaneProps["onEditCell"];
   onToggleHeader: ContentPaneProps["onToggleHeader"];
   onToggleSection: ContentPaneProps["onToggleSection"];
+  onCombineRows: ContentPaneProps["onCombineRows"];
   onSplitByPage: ContentPaneProps["onSplitByPage"];
   onJoinAgain: ContentPaneProps["onJoinAgain"];
 }) {
@@ -243,6 +254,10 @@ function TableDetail({
               else if (sectionMode === "column")
                 onCopied("Marked as section · switch to As Rows to edit its name");
               else onCopied("Marked as Section Header");
+            }}
+            onCombine={(row, direction) => {
+              onCombineRows(document.id, table.id, row, direction);
+              onCopied("Rows combined");
             }}
           />
         ) : (
