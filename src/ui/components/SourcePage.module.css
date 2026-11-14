@@ -1,0 +1,102 @@
+.source {
+  padding: 16px;
+  min-width: 0;
+}
+
+.pages {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  width: 100%;
+}
+
+.figure {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  max-width: 100%;
+}
+
+.caption {
+  font-size: 12px;
+  color: var(--label2);
+  line-height: 1;
+}
+
+.pagebox {
+  position: relative;
+  max-width: 100%;
+  background: #fff;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.18);
+  line-height: 0;
+  /* Room for the first outline's label above the page's top edge. */
+  margin-top: 22px;
+}
+
+.canvas canvas {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+.outline {
+  position: absolute;
+  padding: 0;
+  font: inherit;
+  border-radius: 4px;
+  border: 1.5px solid var(--accent);
+  background: color-mix(in srgb, var(--accent) 10%, transparent);
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.outline.dim {
+  border-style: dashed;
+  border-color: color-mix(in srgb, var(--accent) 55%, transparent);
+  background: transparent;
+}
+
+.outline.dim:hover {
+  background: color-mix(in srgb, var(--accent) 8%, transparent);
+}
+
+.outline span {
+  position: absolute;
+  top: -22px;
+  left: -1px;
+  font: 600 11px/1 var(--font);
+  background: var(--accent);
+  color: var(--on-accent);
+  padding: 4px 6px;
+  border-radius: 4px;
+  white-space: nowrap;
+}
+
+.outline.dim span {
+  background: rgba(60, 60, 67, 0.6);
+  color: #fff;
+}
+
+.message {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 40px 16px;
+  color: var(--label2);
+  text-align: center;
+}
+
+.message p {
+  margin: 0;
+}
+
+.message > svg {
+  width: 36px;
+  height: 36px;
+  stroke-width: 1.2;
+  color: var(--label3);
+}

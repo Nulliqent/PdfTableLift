@@ -1,0 +1,422 @@
+{
+  "fixture": "tests/fixtures/separate-tables.pdf",
+  "sha256": "55ca279e40e494b30649adec6385d42be6d58f61aa8815ca193905ba286fb621",
+  "pdfjs": "3.11.174",
+  "status": "ready",
+  "error": "",
+  "pages": [
+    {
+      "num": 1,
+      "w": 612,
+      "h": 792,
+      "items": [
+        {"str":"Regional results","x":72,"y":740,"w":108.92000000000002,"h":14,"bold":true},
+        {"str":"Store","x":72,"y":710,"w":23.004000000000005,"h":9,"bold":true},
+        {"str":"Region","x":220,"y":710,"w":30.501000000000005,"h":9,"bold":true},
+        {"str":"Q1","x":387.994,"y":710,"w":12.006,"h":9,"bold":true},
+        {"str":"Q2","x":467.994,"y":710,"w":12.006,"h":9,"bold":true},
+        {"str":"Portland","x":72,"y":696,"w":33.426,"h":9,"bold":false},
+        {"str":"West","x":220,"y":696,"w":20.23199999999999,"h":9,"bold":false},
+        {"str":"412.8","x":377.482,"y":696,"w":22.518,"h":9,"bold":false},
+        {"str":"430.1","x":457.482,"y":696,"w":22.518,"h":9,"bold":false},
+        {"str":"Denver","x":72,"y":682,"w":28.602000000000004,"h":9,"bold":false},
+        {"str":"Mountain","x":220,"y":682,"w":37.017,"h":9,"bold":false},
+        {"str":"388.1","x":377.482,"y":682,"w":22.518,"h":9,"bold":false},
+        {"str":"391.7","x":457.482,"y":682,"w":22.518,"h":9,"bold":false},
+        {"str":"Austin","x":72,"y":668,"w":24.741000000000007,"h":9,"bold":false},
+        {"str":"South","x":220,"y":668,"w":23.517000000000003,"h":9,"bold":false},
+        {"str":"501.2","x":377.482,"y":668,"w":22.518,"h":9,"bold":false},
+        {"str":"522.9","x":457.482,"y":668,"w":22.518,"h":9,"bold":false},
+        {
+          "str": "Headcount is reported separately below. Figures are full-time equivalents",
+          "x": 72,
+          "y": 634,
+          "w": 322.1600000000001,
+          "h": 10,
+          "bold": false
+        },
+        {"str":"at the end of each quarter and exclude seasonal contractors.","x":72,"y":621,"w":268.89,"h":10,"bold":false},
+        {"str":"Team","x":72,"y":584,"w":22.967999999999996,"h":9,"bold":true},
+        {"str":"Staff","x":280.002,"y":584,"w":19.998,"h":9,"bold":true},
+        {"str":"Open roles","x":353.164,"y":584,"w":46.836000000000006,"h":9,"bold":true},
+        {"str":"Engineering","x":72,"y":570,"w":48.159000000000006,"h":9,"bold":false},
+        {"str":"42","x":289.992,"y":570,"w":10.008000000000001,"h":9,"bold":false},
+        {"str":"6","x":394.996,"y":570,"w":5.0040000000000004,"h":9,"bold":false},
+        {"str":"Support","x":72,"y":556,"w":31.878000000000004,"h":9,"bold":false},
+        {"str":"18","x":289.992,"y":556,"w":10.008000000000001,"h":9,"bold":false},
+        {"str":"2","x":394.996,"y":556,"w":5.0040000000000004,"h":9,"bold":false},
+        {"str":"Sales","x":72,"y":542,"w":22.509000000000004,"h":9,"bold":false},
+        {"str":"25","x":289.992,"y":542,"w":10.008000000000001,"h":9,"bold":false},
+        {"str":"4","x":394.996,"y":542,"w":5.0040000000000004,"h":9,"bold":false}
+      ]
+    }
+  ],
+  "runs": [
+    {
+      "columnSpacing": 1,
+      "joining": true,
+      "tables": [
+        {
+          "n": 1,
+          "pages": [1],
+          "parts": [{"page":1,"bbox":[68,664.85,484,719.45]}],
+          "header": true,
+          "firstBold": true,
+          "grid": [
+            ["Store","Region","Q1","Q2"],
+            ["Portland","West","412.8","430.1"],
+            ["Denver","Mountain","388.1","391.7"],
+            ["Austin","South","501.2","522.9"]
+          ],
+          "sections": [],
+          "cols": [[72,105.426],[220,257.017],[377.482,400],[457.482,480]],
+          "repeats": 0,
+          "exports": {
+            "column": {
+              "csv": "Store,Region,Q1,Q2\nPortland,West,412.8,430.1\nDenver,Mountain,388.1,391.7\nAustin,South,501.2,522.9",
+              "tsv": "Store\tRegion\tQ1\tQ2\nPortland\tWest\t412.8\t430.1\nDenver\tMountain\t388.1\t391.7\nAustin\tSouth\t501.2\t522.9",
+              "md": "| Store | Region | Q1 | Q2 |\n| --- | --- | ---: | ---: |\n| Portland | West | 412.8 | 430.1 |\n| Denver | Mountain | 388.1 | 391.7 |\n| Austin | South | 501.2 | 522.9 |",
+              "json": "[\n  {\n    \"Store\": \"Portland\",\n    \"Region\": \"West\",\n    \"Q1\": \"412.8\",\n    \"Q2\": \"430.1\"\n  },\n  {\n    \"Store\": \"Denver\",\n    \"Region\": \"Mountain\",\n    \"Q1\": \"388.1\",\n    \"Q2\": \"391.7\"\n  },\n  {\n    \"Store\": \"Austin\",\n    \"Region\": \"South\",\n    \"Q1\": \"501.2\",\n    \"Q2\": \"522.9\"\n  }\n]"
+            },
+            "rows": {
+              "csv": "Store,Region,Q1,Q2\nPortland,West,412.8,430.1\nDenver,Mountain,388.1,391.7\nAustin,South,501.2,522.9",
+              "tsv": "Store\tRegion\tQ1\tQ2\nPortland\tWest\t412.8\t430.1\nDenver\tMountain\t388.1\t391.7\nAustin\tSouth\t501.2\t522.9",
+              "md": "| Store | Region | Q1 | Q2 |\n| --- | --- | ---: | ---: |\n| Portland | West | 412.8 | 430.1 |\n| Denver | Mountain | 388.1 | 391.7 |\n| Austin | South | 501.2 | 522.9 |",
+              "json": "[\n  {\n    \"Store\": \"Portland\",\n    \"Region\": \"West\",\n    \"Q1\": \"412.8\",\n    \"Q2\": \"430.1\"\n  },\n  {\n    \"Store\": \"Denver\",\n    \"Region\": \"Mountain\",\n    \"Q1\": \"388.1\",\n    \"Q2\": \"391.7\"\n  },\n  {\n    \"Store\": \"Austin\",\n    \"Region\": \"South\",\n    \"Q1\": \"501.2\",\n    \"Q2\": \"522.9\"\n  }\n]"
+            }
+          }
+        },
+        {
+          "n": 2,
+          "pages": [1],
+          "parts": [{"page":1,"bbox":[68,538.85,404,593.45]}],
+          "header": true,
+          "firstBold": true,
+          "grid": [["Team","Staff","Open roles"],["Engineering","42","6"],["Support","18","2"],["Sales","25","4"]],
+          "sections": [],
+          "cols": [[72,120.159],[280.002,300],[353.164,400]],
+          "repeats": 0,
+          "exports": {
+            "column": {
+              "csv": "Team,Staff,Open roles\nEngineering,42,6\nSupport,18,2\nSales,25,4",
+              "tsv": "Team\tStaff\tOpen roles\nEngineering\t42\t6\nSupport\t18\t2\nSales\t25\t4",
+              "md": "| Team | Staff | Open roles |\n| --- | ---: | ---: |\n| Engineering | 42 | 6 |\n| Support | 18 | 2 |\n| Sales | 25 | 4 |",
+              "json": "[\n  {\n    \"Team\": \"Engineering\",\n    \"Staff\": \"42\",\n    \"Open roles\": \"6\"\n  },\n  {\n    \"Team\": \"Support\",\n    \"Staff\": \"18\",\n    \"Open roles\": \"2\"\n  },\n  {\n    \"Team\": \"Sales\",\n    \"Staff\": \"25\",\n    \"Open roles\": \"4\"\n  }\n]"
+            },
+            "rows": {
+              "csv": "Team,Staff,Open roles\nEngineering,42,6\nSupport,18,2\nSales,25,4",
+              "tsv": "Team\tStaff\tOpen roles\nEngineering\t42\t6\nSupport\t18\t2\nSales\t25\t4",
+              "md": "| Team | Staff | Open roles |\n| --- | ---: | ---: |\n| Engineering | 42 | 6 |\n| Support | 18 | 2 |\n| Sales | 25 | 4 |",
+              "json": "[\n  {\n    \"Team\": \"Engineering\",\n    \"Staff\": \"42\",\n    \"Open roles\": \"6\"\n  },\n  {\n    \"Team\": \"Support\",\n    \"Staff\": \"18\",\n    \"Open roles\": \"2\"\n  },\n  {\n    \"Team\": \"Sales\",\n    \"Staff\": \"25\",\n    \"Open roles\": \"4\"\n  }\n]"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "columnSpacing": 1,
+      "joining": false,
+      "tables": [
+        {
+          "n": 1,
+          "pages": [1],
+          "parts": [{"page":1,"bbox":[68,664.85,484,719.45]}],
+          "header": true,
+          "firstBold": true,
+          "grid": [
+            ["Store","Region","Q1","Q2"],
+            ["Portland","West","412.8","430.1"],
+            ["Denver","Mountain","388.1","391.7"],
+            ["Austin","South","501.2","522.9"]
+          ],
+          "sections": [],
+          "cols": [[72,105.426],[220,257.017],[377.482,400],[457.482,480]],
+          "repeats": 0,
+          "exports": {
+            "column": {
+              "csv": "Store,Region,Q1,Q2\nPortland,West,412.8,430.1\nDenver,Mountain,388.1,391.7\nAustin,South,501.2,522.9",
+              "tsv": "Store\tRegion\tQ1\tQ2\nPortland\tWest\t412.8\t430.1\nDenver\tMountain\t388.1\t391.7\nAustin\tSouth\t501.2\t522.9",
+              "md": "| Store | Region | Q1 | Q2 |\n| --- | --- | ---: | ---: |\n| Portland | West | 412.8 | 430.1 |\n| Denver | Mountain | 388.1 | 391.7 |\n| Austin | South | 501.2 | 522.9 |",
+              "json": "[\n  {\n    \"Store\": \"Portland\",\n    \"Region\": \"West\",\n    \"Q1\": \"412.8\",\n    \"Q2\": \"430.1\"\n  },\n  {\n    \"Store\": \"Denver\",\n    \"Region\": \"Mountain\",\n    \"Q1\": \"388.1\",\n    \"Q2\": \"391.7\"\n  },\n  {\n    \"Store\": \"Austin\",\n    \"Region\": \"South\",\n    \"Q1\": \"501.2\",\n    \"Q2\": \"522.9\"\n  }\n]"
+            },
+            "rows": {
+              "csv": "Store,Region,Q1,Q2\nPortland,West,412.8,430.1\nDenver,Mountain,388.1,391.7\nAustin,South,501.2,522.9",
+              "tsv": "Store\tRegion\tQ1\tQ2\nPortland\tWest\t412.8\t430.1\nDenver\tMountain\t388.1\t391.7\nAustin\tSouth\t501.2\t522.9",
+              "md": "| Store | Region | Q1 | Q2 |\n| --- | --- | ---: | ---: |\n| Portland | West | 412.8 | 430.1 |\n| Denver | Mountain | 388.1 | 391.7 |\n| Austin | South | 501.2 | 522.9 |",
+              "json": "[\n  {\n    \"Store\": \"Portland\",\n    \"Region\": \"West\",\n    \"Q1\": \"412.8\",\n    \"Q2\": \"430.1\"\n  },\n  {\n    \"Store\": \"Denver\",\n    \"Region\": \"Mountain\",\n    \"Q1\": \"388.1\",\n    \"Q2\": \"391.7\"\n  },\n  {\n    \"Store\": \"Austin\",\n    \"Region\": \"South\",\n    \"Q1\": \"501.2\",\n    \"Q2\": \"522.9\"\n  }\n]"
+            }
+          }
+        },
+        {
+          "n": 2,
+          "pages": [1],
+          "parts": [{"page":1,"bbox":[68,538.85,404,593.45]}],
+          "header": true,
+          "firstBold": true,
+          "grid": [["Team","Staff","Open roles"],["Engineering","42","6"],["Support","18","2"],["Sales","25","4"]],
+          "sections": [],
+          "cols": [[72,120.159],[280.002,300],[353.164,400]],
+          "repeats": 0,
+          "exports": {
+            "column": {
+              "csv": "Team,Staff,Open roles\nEngineering,42,6\nSupport,18,2\nSales,25,4",
+              "tsv": "Team\tStaff\tOpen roles\nEngineering\t42\t6\nSupport\t18\t2\nSales\t25\t4",
+              "md": "| Team | Staff | Open roles |\n| --- | ---: | ---: |\n| Engineering | 42 | 6 |\n| Support | 18 | 2 |\n| Sales | 25 | 4 |",
+              "json": "[\n  {\n    \"Team\": \"Engineering\",\n    \"Staff\": \"42\",\n    \"Open roles\": \"6\"\n  },\n  {\n    \"Team\": \"Support\",\n    \"Staff\": \"18\",\n    \"Open roles\": \"2\"\n  },\n  {\n    \"Team\": \"Sales\",\n    \"Staff\": \"25\",\n    \"Open roles\": \"4\"\n  }\n]"
+            },
+            "rows": {
+              "csv": "Team,Staff,Open roles\nEngineering,42,6\nSupport,18,2\nSales,25,4",
+              "tsv": "Team\tStaff\tOpen roles\nEngineering\t42\t6\nSupport\t18\t2\nSales\t25\t4",
+              "md": "| Team | Staff | Open roles |\n| --- | ---: | ---: |\n| Engineering | 42 | 6 |\n| Support | 18 | 2 |\n| Sales | 25 | 4 |",
+              "json": "[\n  {\n    \"Team\": \"Engineering\",\n    \"Staff\": \"42\",\n    \"Open roles\": \"6\"\n  },\n  {\n    \"Team\": \"Support\",\n    \"Staff\": \"18\",\n    \"Open roles\": \"2\"\n  },\n  {\n    \"Team\": \"Sales\",\n    \"Staff\": \"25\",\n    \"Open roles\": \"4\"\n  }\n]"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "columnSpacing": 0.5,
+      "joining": true,
+      "tables": [
+        {
+          "n": 1,
+          "pages": [1],
+          "parts": [{"page":1,"bbox":[68,664.85,484,719.45]}],
+          "header": true,
+          "firstBold": true,
+          "grid": [
+            ["Store","Region","Q1","Q2"],
+            ["Portland","West","412.8","430.1"],
+            ["Denver","Mountain","388.1","391.7"],
+            ["Austin","South","501.2","522.9"]
+          ],
+          "sections": [],
+          "cols": [[72,105.426],[220,257.017],[377.482,400],[457.482,480]],
+          "repeats": 0,
+          "exports": {
+            "column": {
+              "csv": "Store,Region,Q1,Q2\nPortland,West,412.8,430.1\nDenver,Mountain,388.1,391.7\nAustin,South,501.2,522.9",
+              "tsv": "Store\tRegion\tQ1\tQ2\nPortland\tWest\t412.8\t430.1\nDenver\tMountain\t388.1\t391.7\nAustin\tSouth\t501.2\t522.9",
+              "md": "| Store | Region | Q1 | Q2 |\n| --- | --- | ---: | ---: |\n| Portland | West | 412.8 | 430.1 |\n| Denver | Mountain | 388.1 | 391.7 |\n| Austin | South | 501.2 | 522.9 |",
+              "json": "[\n  {\n    \"Store\": \"Portland\",\n    \"Region\": \"West\",\n    \"Q1\": \"412.8\",\n    \"Q2\": \"430.1\"\n  },\n  {\n    \"Store\": \"Denver\",\n    \"Region\": \"Mountain\",\n    \"Q1\": \"388.1\",\n    \"Q2\": \"391.7\"\n  },\n  {\n    \"Store\": \"Austin\",\n    \"Region\": \"South\",\n    \"Q1\": \"501.2\",\n    \"Q2\": \"522.9\"\n  }\n]"
+            },
+            "rows": {
+              "csv": "Store,Region,Q1,Q2\nPortland,West,412.8,430.1\nDenver,Mountain,388.1,391.7\nAustin,South,501.2,522.9",
+              "tsv": "Store\tRegion\tQ1\tQ2\nPortland\tWest\t412.8\t430.1\nDenver\tMountain\t388.1\t391.7\nAustin\tSouth\t501.2\t522.9",
+              "md": "| Store | Region | Q1 | Q2 |\n| --- | --- | ---: | ---: |\n| Portland | West | 412.8 | 430.1 |\n| Denver | Mountain | 388.1 | 391.7 |\n| Austin | South | 501.2 | 522.9 |",
+              "json": "[\n  {\n    \"Store\": \"Portland\",\n    \"Region\": \"West\",\n    \"Q1\": \"412.8\",\n    \"Q2\": \"430.1\"\n  },\n  {\n    \"Store\": \"Denver\",\n    \"Region\": \"Mountain\",\n    \"Q1\": \"388.1\",\n    \"Q2\": \"391.7\"\n  },\n  {\n    \"Store\": \"Austin\",\n    \"Region\": \"South\",\n    \"Q1\": \"501.2\",\n    \"Q2\": \"522.9\"\n  }\n]"
+            }
+          }
+        },
+        {
+          "n": 2,
+          "pages": [1],
+          "parts": [{"page":1,"bbox":[68,538.85,404,593.45]}],
+          "header": true,
+          "firstBold": true,
+          "grid": [["Team","Staff","Open roles"],["Engineering","42","6"],["Support","18","2"],["Sales","25","4"]],
+          "sections": [],
+          "cols": [[72,120.159],[280.002,300],[353.164,400]],
+          "repeats": 0,
+          "exports": {
+            "column": {
+              "csv": "Team,Staff,Open roles\nEngineering,42,6\nSupport,18,2\nSales,25,4",
+              "tsv": "Team\tStaff\tOpen roles\nEngineering\t42\t6\nSupport\t18\t2\nSales\t25\t4",
+              "md": "| Team | Staff | Open roles |\n| --- | ---: | ---: |\n| Engineering | 42 | 6 |\n| Support | 18 | 2 |\n| Sales | 25 | 4 |",
+              "json": "[\n  {\n    \"Team\": \"Engineering\",\n    \"Staff\": \"42\",\n    \"Open roles\": \"6\"\n  },\n  {\n    \"Team\": \"Support\",\n    \"Staff\": \"18\",\n    \"Open roles\": \"2\"\n  },\n  {\n    \"Team\": \"Sales\",\n    \"Staff\": \"25\",\n    \"Open roles\": \"4\"\n  }\n]"
+            },
+            "rows": {
+              "csv": "Team,Staff,Open roles\nEngineering,42,6\nSupport,18,2\nSales,25,4",
+              "tsv": "Team\tStaff\tOpen roles\nEngineering\t42\t6\nSupport\t18\t2\nSales\t25\t4",
+              "md": "| Team | Staff | Open roles |\n| --- | ---: | ---: |\n| Engineering | 42 | 6 |\n| Support | 18 | 2 |\n| Sales | 25 | 4 |",
+              "json": "[\n  {\n    \"Team\": \"Engineering\",\n    \"Staff\": \"42\",\n    \"Open roles\": \"6\"\n  },\n  {\n    \"Team\": \"Support\",\n    \"Staff\": \"18\",\n    \"Open roles\": \"2\"\n  },\n  {\n    \"Team\": \"Sales\",\n    \"Staff\": \"25\",\n    \"Open roles\": \"4\"\n  }\n]"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "columnSpacing": 0.5,
+      "joining": false,
+      "tables": [
+        {
+          "n": 1,
+          "pages": [1],
+          "parts": [{"page":1,"bbox":[68,664.85,484,719.45]}],
+          "header": true,
+          "firstBold": true,
+          "grid": [
+            ["Store","Region","Q1","Q2"],
+            ["Portland","West","412.8","430.1"],
+            ["Denver","Mountain","388.1","391.7"],
+            ["Austin","South","501.2","522.9"]
+          ],
+          "sections": [],
+          "cols": [[72,105.426],[220,257.017],[377.482,400],[457.482,480]],
+          "repeats": 0,
+          "exports": {
+            "column": {
+              "csv": "Store,Region,Q1,Q2\nPortland,West,412.8,430.1\nDenver,Mountain,388.1,391.7\nAustin,South,501.2,522.9",
+              "tsv": "Store\tRegion\tQ1\tQ2\nPortland\tWest\t412.8\t430.1\nDenver\tMountain\t388.1\t391.7\nAustin\tSouth\t501.2\t522.9",
+              "md": "| Store | Region | Q1 | Q2 |\n| --- | --- | ---: | ---: |\n| Portland | West | 412.8 | 430.1 |\n| Denver | Mountain | 388.1 | 391.7 |\n| Austin | South | 501.2 | 522.9 |",
+              "json": "[\n  {\n    \"Store\": \"Portland\",\n    \"Region\": \"West\",\n    \"Q1\": \"412.8\",\n    \"Q2\": \"430.1\"\n  },\n  {\n    \"Store\": \"Denver\",\n    \"Region\": \"Mountain\",\n    \"Q1\": \"388.1\",\n    \"Q2\": \"391.7\"\n  },\n  {\n    \"Store\": \"Austin\",\n    \"Region\": \"South\",\n    \"Q1\": \"501.2\",\n    \"Q2\": \"522.9\"\n  }\n]"
+            },
+            "rows": {
+              "csv": "Store,Region,Q1,Q2\nPortland,West,412.8,430.1\nDenver,Mountain,388.1,391.7\nAustin,South,501.2,522.9",
+              "tsv": "Store\tRegion\tQ1\tQ2\nPortland\tWest\t412.8\t430.1\nDenver\tMountain\t388.1\t391.7\nAustin\tSouth\t501.2\t522.9",
+              "md": "| Store | Region | Q1 | Q2 |\n| --- | --- | ---: | ---: |\n| Portland | West | 412.8 | 430.1 |\n| Denver | Mountain | 388.1 | 391.7 |\n| Austin | South | 501.2 | 522.9 |",
+              "json": "[\n  {\n    \"Store\": \"Portland\",\n    \"Region\": \"West\",\n    \"Q1\": \"412.8\",\n    \"Q2\": \"430.1\"\n  },\n  {\n    \"Store\": \"Denver\",\n    \"Region\": \"Mountain\",\n    \"Q1\": \"388.1\",\n    \"Q2\": \"391.7\"\n  },\n  {\n    \"Store\": \"Austin\",\n    \"Region\": \"South\",\n    \"Q1\": \"501.2\",\n    \"Q2\": \"522.9\"\n  }\n]"
+            }
+          }
+        },
+        {
+          "n": 2,
+          "pages": [1],
+          "parts": [{"page":1,"bbox":[68,538.85,404,593.45]}],
+          "header": true,
+          "firstBold": true,
+          "grid": [["Team","Staff","Open roles"],["Engineering","42","6"],["Support","18","2"],["Sales","25","4"]],
+          "sections": [],
+          "cols": [[72,120.159],[280.002,300],[353.164,400]],
+          "repeats": 0,
+          "exports": {
+            "column": {
+              "csv": "Team,Staff,Open roles\nEngineering,42,6\nSupport,18,2\nSales,25,4",
+              "tsv": "Team\tStaff\tOpen roles\nEngineering\t42\t6\nSupport\t18\t2\nSales\t25\t4",
+              "md": "| Team | Staff | Open roles |\n| --- | ---: | ---: |\n| Engineering | 42 | 6 |\n| Support | 18 | 2 |\n| Sales | 25 | 4 |",
+              "json": "[\n  {\n    \"Team\": \"Engineering\",\n    \"Staff\": \"42\",\n    \"Open roles\": \"6\"\n  },\n  {\n    \"Team\": \"Support\",\n    \"Staff\": \"18\",\n    \"Open roles\": \"2\"\n  },\n  {\n    \"Team\": \"Sales\",\n    \"Staff\": \"25\",\n    \"Open roles\": \"4\"\n  }\n]"
+            },
+            "rows": {
+              "csv": "Team,Staff,Open roles\nEngineering,42,6\nSupport,18,2\nSales,25,4",
+              "tsv": "Team\tStaff\tOpen roles\nEngineering\t42\t6\nSupport\t18\t2\nSales\t25\t4",
+              "md": "| Team | Staff | Open roles |\n| --- | ---: | ---: |\n| Engineering | 42 | 6 |\n| Support | 18 | 2 |\n| Sales | 25 | 4 |",
+              "json": "[\n  {\n    \"Team\": \"Engineering\",\n    \"Staff\": \"42\",\n    \"Open roles\": \"6\"\n  },\n  {\n    \"Team\": \"Support\",\n    \"Staff\": \"18\",\n    \"Open roles\": \"2\"\n  },\n  {\n    \"Team\": \"Sales\",\n    \"Staff\": \"25\",\n    \"Open roles\": \"4\"\n  }\n]"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "columnSpacing": 2,
+      "joining": true,
+      "tables": [
+        {
+          "n": 1,
+          "pages": [1],
+          "parts": [{"page":1,"bbox":[68,664.85,484,719.45]}],
+          "header": true,
+          "firstBold": true,
+          "grid": [
+            ["Store","Region","Q1","Q2"],
+            ["Portland","West","412.8","430.1"],
+            ["Denver","Mountain","388.1","391.7"],
+            ["Austin","South","501.2","522.9"]
+          ],
+          "sections": [],
+          "cols": [[72,105.426],[220,257.017],[377.482,400],[457.482,480]],
+          "repeats": 0,
+          "exports": {
+            "column": {
+              "csv": "Store,Region,Q1,Q2\nPortland,West,412.8,430.1\nDenver,Mountain,388.1,391.7\nAustin,South,501.2,522.9",
+              "tsv": "Store\tRegion\tQ1\tQ2\nPortland\tWest\t412.8\t430.1\nDenver\tMountain\t388.1\t391.7\nAustin\tSouth\t501.2\t522.9",
+              "md": "| Store | Region | Q1 | Q2 |\n| --- | --- | ---: | ---: |\n| Portland | West | 412.8 | 430.1 |\n| Denver | Mountain | 388.1 | 391.7 |\n| Austin | South | 501.2 | 522.9 |",
+              "json": "[\n  {\n    \"Store\": \"Portland\",\n    \"Region\": \"West\",\n    \"Q1\": \"412.8\",\n    \"Q2\": \"430.1\"\n  },\n  {\n    \"Store\": \"Denver\",\n    \"Region\": \"Mountain\",\n    \"Q1\": \"388.1\",\n    \"Q2\": \"391.7\"\n  },\n  {\n    \"Store\": \"Austin\",\n    \"Region\": \"South\",\n    \"Q1\": \"501.2\",\n    \"Q2\": \"522.9\"\n  }\n]"
+            },
+            "rows": {
+              "csv": "Store,Region,Q1,Q2\nPortland,West,412.8,430.1\nDenver,Mountain,388.1,391.7\nAustin,South,501.2,522.9",
+              "tsv": "Store\tRegion\tQ1\tQ2\nPortland\tWest\t412.8\t430.1\nDenver\tMountain\t388.1\t391.7\nAustin\tSouth\t501.2\t522.9",
+              "md": "| Store | Region | Q1 | Q2 |\n| --- | --- | ---: | ---: |\n| Portland | West | 412.8 | 430.1 |\n| Denver | Mountain | 388.1 | 391.7 |\n| Austin | South | 501.2 | 522.9 |",
+              "json": "[\n  {\n    \"Store\": \"Portland\",\n    \"Region\": \"West\",\n    \"Q1\": \"412.8\",\n    \"Q2\": \"430.1\"\n  },\n  {\n    \"Store\": \"Denver\",\n    \"Region\": \"Mountain\",\n    \"Q1\": \"388.1\",\n    \"Q2\": \"391.7\"\n  },\n  {\n    \"Store\": \"Austin\",\n    \"Region\": \"South\",\n    \"Q1\": \"501.2\",\n    \"Q2\": \"522.9\"\n  }\n]"
+            }
+          }
+        },
+        {
+          "n": 2,
+          "pages": [1],
+          "parts": [{"page":1,"bbox":[68,538.85,404,593.45]}],
+          "header": true,
+          "firstBold": true,
+          "grid": [["Team","Staff","Open roles"],["Engineering","42","6"],["Support","18","2"],["Sales","25","4"]],
+          "sections": [],
+          "cols": [[72,120.159],[280.002,300],[353.164,400]],
+          "repeats": 0,
+          "exports": {
+            "column": {
+              "csv": "Team,Staff,Open roles\nEngineering,42,6\nSupport,18,2\nSales,25,4",
+              "tsv": "Team\tStaff\tOpen roles\nEngineering\t42\t6\nSupport\t18\t2\nSales\t25\t4",
+              "md": "| Team | Staff | Open roles |\n| --- | ---: | ---: |\n| Engineering | 42 | 6 |\n| Support | 18 | 2 |\n| Sales | 25 | 4 |",
+              "json": "[\n  {\n    \"Team\": \"Engineering\",\n    \"Staff\": \"42\",\n    \"Open roles\": \"6\"\n  },\n  {\n    \"Team\": \"Support\",\n    \"Staff\": \"18\",\n    \"Open roles\": \"2\"\n  },\n  {\n    \"Team\": \"Sales\",\n    \"Staff\": \"25\",\n    \"Open roles\": \"4\"\n  }\n]"
+            },
+            "rows": {
+              "csv": "Team,Staff,Open roles\nEngineering,42,6\nSupport,18,2\nSales,25,4",
+              "tsv": "Team\tStaff\tOpen roles\nEngineering\t42\t6\nSupport\t18\t2\nSales\t25\t4",
+              "md": "| Team | Staff | Open roles |\n| --- | ---: | ---: |\n| Engineering | 42 | 6 |\n| Support | 18 | 2 |\n| Sales | 25 | 4 |",
+              "json": "[\n  {\n    \"Team\": \"Engineering\",\n    \"Staff\": \"42\",\n    \"Open roles\": \"6\"\n  },\n  {\n    \"Team\": \"Support\",\n    \"Staff\": \"18\",\n    \"Open roles\": \"2\"\n  },\n  {\n    \"Team\": \"Sales\",\n    \"Staff\": \"25\",\n    \"Open roles\": \"4\"\n  }\n]"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "columnSpacing": 2,
+      "joining": false,
+      "tables": [
+        {
+          "n": 1,
+          "pages": [1],
+          "parts": [{"page":1,"bbox":[68,664.85,484,719.45]}],
+          "header": true,
+          "firstBold": true,
+          "grid": [
+            ["Store","Region","Q1","Q2"],
+            ["Portland","West","412.8","430.1"],
+            ["Denver","Mountain","388.1","391.7"],
+            ["Austin","South","501.2","522.9"]
+          ],
+          "sections": [],
+          "cols": [[72,105.426],[220,257.017],[377.482,400],[457.482,480]],
+          "repeats": 0,
+          "exports": {
+            "column": {
+              "csv": "Store,Region,Q1,Q2\nPortland,West,412.8,430.1\nDenver,Mountain,388.1,391.7\nAustin,South,501.2,522.9",
+              "tsv": "Store\tRegion\tQ1\tQ2\nPortland\tWest\t412.8\t430.1\nDenver\tMountain\t388.1\t391.7\nAustin\tSouth\t501.2\t522.9",
+              "md": "| Store | Region | Q1 | Q2 |\n| --- | --- | ---: | ---: |\n| Portland | West | 412.8 | 430.1 |\n| Denver | Mountain | 388.1 | 391.7 |\n| Austin | South | 501.2 | 522.9 |",
+              "json": "[\n  {\n    \"Store\": \"Portland\",\n    \"Region\": \"West\",\n    \"Q1\": \"412.8\",\n    \"Q2\": \"430.1\"\n  },\n  {\n    \"Store\": \"Denver\",\n    \"Region\": \"Mountain\",\n    \"Q1\": \"388.1\",\n    \"Q2\": \"391.7\"\n  },\n  {\n    \"Store\": \"Austin\",\n    \"Region\": \"South\",\n    \"Q1\": \"501.2\",\n    \"Q2\": \"522.9\"\n  }\n]"
+            },
+            "rows": {
+              "csv": "Store,Region,Q1,Q2\nPortland,West,412.8,430.1\nDenver,Mountain,388.1,391.7\nAustin,South,501.2,522.9",
+              "tsv": "Store\tRegion\tQ1\tQ2\nPortland\tWest\t412.8\t430.1\nDenver\tMountain\t388.1\t391.7\nAustin\tSouth\t501.2\t522.9",
+              "md": "| Store | Region | Q1 | Q2 |\n| --- | --- | ---: | ---: |\n| Portland | West | 412.8 | 430.1 |\n| Denver | Mountain | 388.1 | 391.7 |\n| Austin | South | 501.2 | 522.9 |",
+              "json": "[\n  {\n    \"Store\": \"Portland\",\n    \"Region\": \"West\",\n    \"Q1\": \"412.8\",\n    \"Q2\": \"430.1\"\n  },\n  {\n    \"Store\": \"Denver\",\n    \"Region\": \"Mountain\",\n    \"Q1\": \"388.1\",\n    \"Q2\": \"391.7\"\n  },\n  {\n    \"Store\": \"Austin\",\n    \"Region\": \"South\",\n    \"Q1\": \"501.2\",\n    \"Q2\": \"522.9\"\n  }\n]"
+            }
+          }
+        },
+        {
+          "n": 2,
+          "pages": [1],
+          "parts": [{"page":1,"bbox":[68,538.85,404,593.45]}],
+          "header": true,
+          "firstBold": true,
+          "grid": [["Team","Staff","Open roles"],["Engineering","42","6"],["Support","18","2"],["Sales","25","4"]],
+          "sections": [],
+          "cols": [[72,120.159],[280.002,300],[353.164,400]],
+          "repeats": 0,
+          "exports": {
+            "column": {
+              "csv": "Team,Staff,Open roles\nEngineering,42,6\nSupport,18,2\nSales,25,4",
+              "tsv": "Team\tStaff\tOpen roles\nEngineering\t42\t6\nSupport\t18\t2\nSales\t25\t4",
+              "md": "| Team | Staff | Open roles |\n| --- | ---: | ---: |\n| Engineering | 42 | 6 |\n| Support | 18 | 2 |\n| Sales | 25 | 4 |",
+              "json": "[\n  {\n    \"Team\": \"Engineering\",\n    \"Staff\": \"42\",\n    \"Open roles\": \"6\"\n  },\n  {\n    \"Team\": \"Support\",\n    \"Staff\": \"18\",\n    \"Open roles\": \"2\"\n  },\n  {\n    \"Team\": \"Sales\",\n    \"Staff\": \"25\",\n    \"Open roles\": \"4\"\n  }\n]"
+            },
+            "rows": {
+              "csv": "Team,Staff,Open roles\nEngineering,42,6\nSupport,18,2\nSales,25,4",
+              "tsv": "Team\tStaff\tOpen roles\nEngineering\t42\t6\nSupport\t18\t2\nSales\t25\t4",
+              "md": "| Team | Staff | Open roles |\n| --- | ---: | ---: |\n| Engineering | 42 | 6 |\n| Support | 18 | 2 |\n| Sales | 25 | 4 |",
+              "json": "[\n  {\n    \"Team\": \"Engineering\",\n    \"Staff\": \"42\",\n    \"Open roles\": \"6\"\n  },\n  {\n    \"Team\": \"Support\",\n    \"Staff\": \"18\",\n    \"Open roles\": \"2\"\n  },\n  {\n    \"Team\": \"Sales\",\n    \"Staff\": \"25\",\n    \"Open roles\": \"4\"\n  }\n]"
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

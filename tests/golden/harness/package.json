@@ -1,0 +1,9 @@
+{
+  "name": "table-lift-golden-harness",
+  "private": true,
+  "description": "Dev-only: runs the prototype's engine on pdf.js 3.11.174 to write the golden snapshots. Not part of the app.",
+  "type": "module",
+  "dependencies": {
+    "pdfjs-dist": "3.11.174"
+  }
+}

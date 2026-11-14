@@ -1,0 +1,25 @@
+.app {
+  display: grid;
+  grid-template-rows: auto 1fr;
+  height: 100%;
+  min-height: 0;
+}
+
+.split {
+  display: grid;
+  grid-template-columns: 288px minmax(0, 1fr);
+  min-height: 0;
+}
+
+/* Phone: stack the sidebar above the content in one column. */
+@media (max-width: 760px) {
+  .app {
+    height: auto;
+    display: block;
+  }
+
+  .split {
+    display: flex;
+    flex-direction: column;
+  }
+}

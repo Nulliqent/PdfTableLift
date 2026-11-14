@@ -1,0 +1,16 @@
+{
+  "fixture": "tests/fixtures/not-a-pdf.pdf",
+  "sha256": "305ffd989247f892bc434542e37568fcfd560645e3c414c7459afdb985afc51d",
+  "pdfjs": "3.11.174",
+  "status": "error",
+  "error": "This file couldn't be read as a PDF.",
+  "pages": [],
+  "runs": [
+    {"columnSpacing":1,"joining":true,"tables":[]},
+    {"columnSpacing":1,"joining":false,"tables":[]},
+    {"columnSpacing":0.5,"joining":true,"tables":[]},
+    {"columnSpacing":0.5,"joining":false,"tables":[]},
+    {"columnSpacing":2,"joining":true,"tables":[]},
+    {"columnSpacing":2,"joining":false,"tables":[]}
+  ]
+}

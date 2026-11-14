@@ -1,0 +1,54 @@
+.sheet {
+  border: 0;
+  padding: 16px;
+  margin: auto;
+  background: none;
+  width: min(592px, 100%);
+  max-width: 100%;
+  box-sizing: border-box;
+  color: var(--label);
+}
+
+.sheet::backdrop {
+  background: rgba(0, 0, 0, 0.3);
+}
+
+.box {
+  background: var(--surface);
+  border-radius: var(--r-l);
+  box-shadow: var(--shadow);
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.box h3 {
+  margin: 0;
+  font-size: 17px;
+}
+
+.box p {
+  margin: 0;
+  font-size: 13px;
+  color: var(--label2);
+}
+
+.box textarea {
+  width: 100%;
+  min-height: 200px;
+  font: 12px/1.5 var(--mono);
+  border-radius: var(--r-s);
+  border: 1px solid var(--separator);
+  background: var(--window);
+  color: var(--label);
+  padding: 10px;
+  resize: vertical;
+  box-sizing: border-box;
+}
+
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}

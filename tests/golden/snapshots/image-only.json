@@ -1,0 +1,16 @@
+{
+  "fixture": "tests/fixtures/image-only.pdf",
+  "sha256": "3fe8f54894a1d4c80c0a91f00c42680a4f690e3bf5beb9442d57c637fbbb4768",
+  "pdfjs": "3.11.174",
+  "status": "error",
+  "error": "No text found. This looks like a scanned PDF, which needs OCR first.",
+  "pages": [{"num":1,"w":612,"h":792,"items":[]}],
+  "runs": [
+    {"columnSpacing":1,"joining":true,"tables":[]},
+    {"columnSpacing":1,"joining":false,"tables":[]},
+    {"columnSpacing":0.5,"joining":true,"tables":[]},
+    {"columnSpacing":0.5,"joining":false,"tables":[]},
+    {"columnSpacing":2,"joining":true,"tables":[]},
+    {"columnSpacing":2,"joining":false,"tables":[]}
+  ]
+}

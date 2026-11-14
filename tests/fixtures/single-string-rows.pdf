@@ -1,0 +1,86 @@
+%PDF-1.4
+%‚„œ”
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+2 0 obj
+<< /Type /Pages /Kids [3 0 R] /Count 1 >>
+endobj
+3 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Contents 4 0 R /Resources << /Font << /F1 5 0 R /F2 7 0 R >> >> >>
+endobj
+4 0 obj
+<< /Length 261 >>
+stream
+BT /F2 14 Tf 72 740 Td (StorÄresults) Tj ET
+BT /F2 9 Tf 72 710 Td (StorÅRegioÇQÉQ2) Tj ET
+BT /F1 9 Tf 72 696 Td (PortlanÄPearÅWesÇ412.É430.1) Tj ET
+BT /F1 9 Tf 72 682 Td (BoisÑDowntowÖMountaiÜ388.á391.7) Tj ET
+BT /F1 9 Tf 72 668 Td (AustiàSoutâ501.ä522.9) Tj ET
+endstream
+endobj
+5 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Courier /FirstChar 32 /LastChar 138 /Widths [600 600 600 600 600 600 600 600 600 600 600 600 600 600 600 600 600 600 600 600 600 600 600 600 600 600 600 600 600 600 600 600 600 600 600 600 600 600 600 600 600 600 600 600 600 600 600 600 600 600 600 600 600 600 600 600 600 600 600 600 600 600 600 600 600 600 600 600 600 600 600 600 600 600 600 600 600 600 600 600 600 600 600 600 600 600 600 600 600 600 600 600 600 600 600 0 1200 4200 5400 3000 1800 3600 3000 3000 9000 4800 3000] /Encoding << /Type /Encoding /BaseEncoding /WinAnsiEncoding /Differences [128 /d /l /t /eight /e /n /n /one /n /h /two] >> /ToUnicode 6 0 R >>
+endobj
+6 0 obj
+<< /Length 711 >>
+stream
+/CIDInit /ProcSet findresource begin 12 dict begin begincmap
+/CMapName /TableLift-US14 def /CIDSystemInfo << /Registry (Adobe) /Ordering (UCS) /Supplement 0 >> def
+1 begincodespacerange <00> <FF> endcodespacerange
+11 beginbfchar
+<80> <00640020>
+<81> <006c002000200020002000200020>
+<82> <007400200020002000200020002000200020>
+<83> <00380020002000200020>
+<84> <006500200020>
+<85> <006e00200020002000200020>
+<86> <006e0020002000200020>
+<87> <00310020002000200020>
+<88> <006e00200020002000200020002000200020002000200020002000200020>
+<89> <00680020002000200020002000200020>
+<8a> <00320020002000200020>
+endbfchar
+1 beginbfrange <20> <7e> <0020> endbfrange
+endcmap CMapName currentdict /CMap defineresource pop end end
+endstream
+endobj
+7 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Courier-Bold /FirstChar 32 /LastChar 131 /Widths [600 600 600 600 600 600 600 600 600 600 600 600 600 600 600 600 600 600 600 600 600 600 600 600 600 600 600 600 600 600 600 600 600 600 600 600 600 600 600 600 600 600 600 600 600 600 600 600 600 600 600 600 600 600 600 600 600 600 600 600 600 600 600 600 600 600 600 600 600 600 600 600 600 600 600 600 600 600 600 600 600 600 600 600 600 600 600 600 600 600 600 600 600 600 600 0 1200 9600 4200 4800] /Encoding << /Type /Encoding /BaseEncoding /WinAnsiEncoding /Differences [128 /e /e /n /one] >> /ToUnicode 8 0 R >>
+endobj
+8 0 obj
+<< /Length 506 >>
+stream
+/CIDInit /ProcSet findresource begin 12 dict begin begincmap
+/CMapName /TableLift-US14 def /CIDSystemInfo << /Registry (Adobe) /Ordering (UCS) /Supplement 0 >> def
+1 begincodespacerange <00> <FF> endcodespacerange
+4 beginbfchar
+<80> <00650020>
+<81> <0065002000200020002000200020002000200020002000200020002000200020>
+<82> <006e002000200020002000200020>
+<83> <00310020002000200020002000200020>
+endbfchar
+1 beginbfrange <20> <7e> <0020> endbfrange
+endcmap CMapName currentdict /CMap defineresource pop end end
+endstream
+endobj
+9 0 obj
+<< /Title (Single-string rows) /Producer (Table Lift fixtures) >>
+endobj
+xref
+0 10
+0000000000 65535 f 
+0000000015 00000 n 
+0000000064 00000 n 
+0000000121 00000 n 
+0000000257 00000 n 
+0000000569 00000 n 
+0000001252 00000 n 
+0000002014 00000 n 
+0000002640 00000 n 
+0000003197 00000 n 
+trailer
+<< /Size 10 /Root 1 0 R /Info 9 0 R >>
+startxref
+3278
+%%EOF

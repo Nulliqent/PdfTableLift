@@ -1,0 +1,80 @@
+.drawing {
+  cursor: crosshair;
+  overflow: hidden;
+  /* The Region's label sits inside its box, so no room is needed above the page. */
+  margin-top: 0;
+  margin-inline: auto;
+}
+
+.layer {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  /* A finger scrolls the pane; the Draw toggle makes it drag a Region instead. */
+  touch-action: pan-y pinch-zoom;
+  cursor: crosshair;
+}
+
+.fingerDraws {
+  touch-action: none;
+}
+
+/* Only where there is a finger: a mouse always draws, so it needs no toggle. */
+.drawToggle {
+  display: none;
+}
+
+@media (any-pointer: coarse) {
+  .drawToggle {
+    display: flex;
+    width: fit-content;
+    align-items: center;
+    min-height: 44px;
+    margin: 0 auto 8px;
+    padding: 0 18px;
+    border: 1px solid var(--separator);
+    border-radius: var(--r-m);
+    background: var(--surface);
+    color: var(--label);
+    font: 600 15px/1 var(--font);
+  }
+
+  .drawToggle[aria-pressed="true"] {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: var(--on-accent);
+  }
+}
+
+.existing {
+  pointer-events: none;
+}
+
+.existing span {
+  /* Inside the box, since the page clips what lies outside it. */
+  top: 2px;
+  left: 2px;
+}
+
+.selection {
+  position: absolute;
+  z-index: 1;
+  border: 2px solid var(--accent);
+  border-radius: 3px;
+  background: color-mix(in srgb, var(--accent) 14%, transparent);
+  box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.18);
+  pointer-events: none;
+}
+
+.selection span {
+  position: absolute;
+  bottom: 2px;
+  right: 2px;
+  font: 600 11px/1 var(--font);
+  background: var(--accent);
+  color: var(--on-accent);
+  padding: 5px 7px;
+  border-radius: 5px;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}

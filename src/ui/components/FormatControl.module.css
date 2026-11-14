@@ -1,0 +1,28 @@
+.seg {
+  display: inline-flex;
+  background: var(--fill);
+  border-radius: 9px;
+  padding: 2px;
+  gap: 2px;
+}
+
+.seg button {
+  border: 0;
+  background: none;
+  border-radius: 7px;
+  padding: 3px 10px;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  color: var(--label);
+  transition:
+    background 0.15s,
+    box-shadow 0.15s;
+}
+
+.seg button[aria-pressed="true"] {
+  background: var(--thumb);
+  box-shadow:
+    0 1px 3px rgba(0, 0, 0, 0.14),
+    0 0 0 0.5px rgba(0, 0, 0, 0.04);
+}
