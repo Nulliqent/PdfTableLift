@@ -107,3 +107,6 @@ tests/
 
 Dependencies flow one way: UI → Engine and UI → PDF Reader. ESLint fails if the Engine imports
 pdf.js, React, the DOM or another module.
+
+[docs/architecture.md](docs/architecture.md) has diagrams of the modules, a Document's path from
+PDF to export, and the kinds of Table.
