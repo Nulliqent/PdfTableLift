@@ -27,6 +27,7 @@ export type {
   Redraw,
   Region,
   RegionInProgress,
+  RegionTable,
   RemovedTable,
   Selection,
   Settings,

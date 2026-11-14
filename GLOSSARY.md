@@ -29,6 +29,9 @@ _Avoid_: Manual table, custom table
 The rectangle on a page that a Hand-drawn Table is built from.
 _Avoid_: Selection, area, box
 
+**Single-Row Region**:
+A Region the user declares to hold exactly one Row, so all its text becomes one Row however many lines it spans.
+
 **Removed Table**:
 A Detected Table the user has dismissed; it can be restored.
 _Avoid_: Dismissed table, deleted table
@@ -44,6 +47,16 @@ The piece of a Joined Table that lies on a single page.
 _Avoid_: Fragment, segment
 
 ## Structure
+
+**Cell**:
+One entry of a Table, at the meeting of a Row and a column.
+
+**Row**:
+All the text of a Table that belongs together, even when it runs over several lines of the page.
+_Avoid_: Line (a line is a single line of text on the page, and a Row may span several)
+
+**Wrapped Cell**:
+A Cell whose text runs over more than one line, whether the other Cells of its Row sit beside the first line, the last, or the middle.
 
 **Header Row**:
 The first row of a Table when it names the columns.

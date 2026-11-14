@@ -27,6 +27,18 @@ describe("readDocument", () => {
     ]);
   });
 
+  it("gives a page's size and origin in the frame of its text items, /Rotate and CropBox aside", async () => {
+    const [rotated, cropped] = await readPages("page-frames.pdf");
+
+    // A quarter turn changes how the page is shown, not the user space its text is in.
+    expect(rotated).toMatchObject({ num: 1, w: 612, h: 792 });
+    expect(rotated!.origin).toBeUndefined();
+    expect(rotated!.items[0]).toMatchObject({ str: "Item", x: 72, y: 700 });
+    // Cropped to [100, 200, 512, 692]: the page starts at (100, 200), where the items are.
+    expect(cropped).toMatchObject({ num: 2, w: 412, h: 492, origin: [100, 200] });
+    expect(cropped!.items[0]).toMatchObject({ str: "Item", x: 130, y: 640 });
+  });
+
   it("detects bold from an embedded font, not only from the standard 14", async () => {
     const pages = await readPages("embedded-bold.pdf");
 
@@ -71,6 +83,58 @@ describe("readDocument", () => {
       );
       expect(result).toBe("not-pdf");
       expect(destroy).toHaveBeenCalled();
+    });
+
+    it("waits for a font that never resolves once per Document, not once per page and font", async () => {
+      vi.useFakeTimers();
+      try {
+        // Two pages, each using two fonts that pdf.js never delivers, and one bold font it has.
+        const text = (str: string, y: number, fontName: string) => ({
+          str,
+          transform: [9, 0, 0, 9, 72, y],
+          width: 20,
+          height: 9,
+          fontName,
+        });
+        const commonObjs = {
+          has: (name: string) => name === "bold",
+          // Called with a callback for a font still loading; this fake never calls it back.
+          get: (name: string) => (name === "bold" ? { name: "ABCDEF+Lato-Bold" } : undefined),
+        };
+        const page = {
+          view: [0, 0, 612, 792],
+          commonObjs,
+          getTextContent: () =>
+            Promise.resolve({
+              items: [
+                text("Head", 720, "bold"),
+                text("one", 700, "lost1"),
+                text("two", 680, "lost2"),
+              ],
+            }),
+          getOperatorList: () => Promise.resolve({}),
+        };
+        const read = createReadDocument({
+          getDocument: () =>
+            ({
+              promise: Promise.resolve({ numPages: 2, getPage: () => Promise.resolve(page) }),
+              destroy: () => Promise.resolve(),
+            }) as never,
+        });
+
+        let result: Awaited<ReturnType<typeof read>> | undefined;
+        void read(new Uint8Array([1])).then((r) => (result = r));
+        await vi.advanceTimersByTimeAsync(2000);
+
+        expect(result).toHaveLength(2);
+        const pages = result as Exclude<typeof result, string | undefined>;
+        expect(pages.map((p) => p.items.map((i) => i.bold))).toEqual([
+          [true, false, false],
+          [true, false, false],
+        ]);
+      } finally {
+        vi.useRealTimers();
+      }
     });
 
     it("destroys the loading task when opening the PDF is rejected", async () => {

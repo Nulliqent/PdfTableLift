@@ -1,0 +1,281 @@
+{
+  "fixture": "tests/fixtures/statement.pdf",
+  "sha256": "1ff7307f8a4cb43fa31cfc6cee07dbe5443adde39f4c2bdfb7a9d44a0e623971",
+  "pdfjs": "6.4.299",
+  "engine": "app",
+  "status": "ready",
+  "error": "",
+  "pages": [
+    {
+      "num": 1,
+      "w": 612,
+      "h": 792,
+      "items": [
+        {"str":"Card account statement","x":72,"y":750,"w":159.19400000000005,"h":14,"bold":true},
+        {"str":"Posted Date","x":72,"y":710,"w":51.650999999999996,"h":9,"bold":true},
+        {"str":"Transaction Date","x":150,"y":710,"w":72.29700000000003,"h":9,"bold":true},
+        {"str":"Description","x":240,"y":710,"w":49.509000000000015,"h":9,"bold":true},
+        {"str":"Amount","x":526.007,"y":710,"w":33.99300000000001,"h":9,"bold":true},
+        {"str":"BRIGHTWATER LANTERNFISH NOO","x":240,"y":680,"w":152.98200000000006,"h":9,"bold":false},
+        {"str":"DLES","x":240,"y":667,"w":23.508000000000003,"h":9,"bold":false},
+        {"str":"Card Payment","x":240,"y":654,"w":47.407499999999956,"h":7.5,"bold":false},
+        {"str":"NZD 42.80","x":240,"y":641,"w":36.26250000000001,"h":7.5,"bold":false},
+        {"str":"04 MAR","x":72,"y":660.5,"w":32.507999999999996,"h":9,"bold":false},
+        {"str":"02 MAR","x":150,"y":660.5,"w":32.50800000000001,"h":9,"bold":false},
+        {"str":"-24.15","x":534.485,"y":660.5,"w":25.515000000000004,"h":9,"bold":false},
+        {"str":"PEBBLE & FERN STATIONERY","x":240,"y":611,"w":127.92600000000007,"h":9,"bold":false},
+        {"str":"Card Payment","x":240,"y":598,"w":47.407499999999956,"h":7.5,"bold":false},
+        {"str":"NZD 18.00","x":240,"y":585,"w":36.26250000000001,"h":7.5,"bold":false},
+        {"str":"05 MAR","x":72,"y":598,"w":32.507999999999996,"h":9,"bold":false},
+        {"str":"03 MAR","x":150,"y":598,"w":32.50800000000001,"h":9,"bold":false},
+        {"str":"-9.60","x":539.489,"y":598,"w":20.511000000000003,"h":9,"bold":false},
+        {"str":"ORCHARD LANE BAKERY","x":240,"y":555,"w":110.07000000000005,"h":9,"bold":false},
+        {"str":"06 MAR","x":72,"y":555,"w":32.507999999999996,"h":9,"bold":false},
+        {"str":"06 MAR","x":150,"y":555,"w":32.50800000000001,"h":9,"bold":false},
+        {"str":"-3.75","x":539.489,"y":555,"w":20.511000000000003,"h":9,"bold":false},
+        {"str":"RIVERSTONE CYCLE WORKS","x":240,"y":525,"w":126.62100000000001,"h":9,"bold":false},
+        {"str":"Card Payment","x":240,"y":512,"w":47.407499999999956,"h":7.5,"bold":false},
+        {"str":"NZD 98.00","x":240,"y":499,"w":36.26250000000001,"h":7.5,"bold":false},
+        {"str":"08 MAR","x":72,"y":525,"w":32.507999999999996,"h":9,"bold":false},
+        {"str":"07 MAR","x":150,"y":525,"w":32.50800000000001,"h":9,"bold":false},
+        {"str":"-56.40","x":534.485,"y":525,"w":25.515000000000004,"h":9,"bold":false},
+        {"str":"INTERNAL TRANSFER","x":240,"y":469,"w":95.05800000000004,"h":9,"bold":false},
+        {"str":"From Savings 0412","x":240,"y":456,"w":64.53749999999998,"h":7.5,"bold":false},
+        {"str":"Standing order","x":240,"y":443,"w":49.19249999999999,"h":7.5,"bold":false},
+        {"str":"10 MAR","x":72,"y":443,"w":32.507999999999996,"h":9,"bold":false},
+        {"str":"10 MAR","x":150,"y":443,"w":32.50800000000001,"h":9,"bold":false},
+        {"str":"250.00","x":532.478,"y":443,"w":27.522000000000002,"h":9,"bold":false}
+      ]
+    }
+  ],
+  "runs": [
+    {
+      "columnSpacing": 1,
+      "joining": true,
+      "tables": [
+        {
+          "n": 1,
+          "pages": [1],
+          "parts": [{"page":1,"bbox":[68,439.85,564,719.45]}],
+          "header": true,
+          "firstBold": true,
+          "grid": [
+            ["Posted Date","Transaction Date","Description","Amount"],
+            ["04 MAR","02 MAR","BRIGHTWATER LANTERNFISH NOO DLES Card Payment NZD 42.80","-24.15"],
+            ["05 MAR","03 MAR","PEBBLE & FERN STATIONERY Card Payment NZD 18.00","-9.60"],
+            ["06 MAR","06 MAR","ORCHARD LANE BAKERY","-3.75"],
+            ["08 MAR","07 MAR","RIVERSTONE CYCLE WORKS Card Payment NZD 98.00","-56.40"],
+            ["10 MAR","10 MAR","INTERNAL TRANSFER From Savings 0412 Standing order","250.00"]
+          ],
+          "sections": [],
+          "cols": [[72,123.651],[150,222.29700000000003],[240,392.9820000000001],[526.007,560]],
+          "repeats": 0,
+          "exports": {
+            "column": {
+              "csv": "Posted Date,Transaction Date,Description,Amount\n04 MAR,02 MAR,BRIGHTWATER LANTERNFISH NOO DLES Card Payment NZD 42.80,-24.15\n05 MAR,03 MAR,PEBBLE & FERN STATIONERY Card Payment NZD 18.00,-9.60\n06 MAR,06 MAR,ORCHARD LANE BAKERY,-3.75\n08 MAR,07 MAR,RIVERSTONE CYCLE WORKS Card Payment NZD 98.00,-56.40\n10 MAR,10 MAR,INTERNAL TRANSFER From Savings 0412 Standing order,250.00",
+              "tsv": "Posted Date\tTransaction Date\tDescription\tAmount\n04 MAR\t02 MAR\tBRIGHTWATER LANTERNFISH NOO DLES Card Payment NZD 42.80\t-24.15\n05 MAR\t03 MAR\tPEBBLE & FERN STATIONERY Card Payment NZD 18.00\t-9.60\n06 MAR\t06 MAR\tORCHARD LANE BAKERY\t-3.75\n08 MAR\t07 MAR\tRIVERSTONE CYCLE WORKS Card Payment NZD 98.00\t-56.40\n10 MAR\t10 MAR\tINTERNAL TRANSFER From Savings 0412 Standing order\t250.00",
+              "md": "| Posted Date | Transaction Date | Description | Amount |\n| --- | --- | --- | ---: |\n| 04 MAR | 02 MAR | BRIGHTWATER LANTERNFISH NOO DLES Card Payment NZD 42.80 | -24.15 |\n| 05 MAR | 03 MAR | PEBBLE & FERN STATIONERY Card Payment NZD 18.00 | -9.60 |\n| 06 MAR | 06 MAR | ORCHARD LANE BAKERY | -3.75 |\n| 08 MAR | 07 MAR | RIVERSTONE CYCLE WORKS Card Payment NZD 98.00 | -56.40 |\n| 10 MAR | 10 MAR | INTERNAL TRANSFER From Savings 0412 Standing order | 250.00 |",
+              "json": "[\n  {\n    \"Posted Date\": \"04 MAR\",\n    \"Transaction Date\": \"02 MAR\",\n    \"Description\": \"BRIGHTWATER LANTERNFISH NOO DLES Card Payment NZD 42.80\",\n    \"Amount\": \"-24.15\"\n  },\n  {\n    \"Posted Date\": \"05 MAR\",\n    \"Transaction Date\": \"03 MAR\",\n    \"Description\": \"PEBBLE & FERN STATIONERY Card Payment NZD 18.00\",\n    \"Amount\": \"-9.60\"\n  },\n  {\n    \"Posted Date\": \"06 MAR\",\n    \"Transaction Date\": \"06 MAR\",\n    \"Description\": \"ORCHARD LANE BAKERY\",\n    \"Amount\": \"-3.75\"\n  },\n  {\n    \"Posted Date\": \"08 MAR\",\n    \"Transaction Date\": \"07 MAR\",\n    \"Description\": \"RIVERSTONE CYCLE WORKS Card Payment NZD 98.00\",\n    \"Amount\": \"-56.40\"\n  },\n  {\n    \"Posted Date\": \"10 MAR\",\n    \"Transaction Date\": \"10 MAR\",\n    \"Description\": \"INTERNAL TRANSFER From Savings 0412 Standing order\",\n    \"Amount\": \"250.00\"\n  }\n]"
+            },
+            "rows": {
+              "csv": "Posted Date,Transaction Date,Description,Amount\n04 MAR,02 MAR,BRIGHTWATER LANTERNFISH NOO DLES Card Payment NZD 42.80,-24.15\n05 MAR,03 MAR,PEBBLE & FERN STATIONERY Card Payment NZD 18.00,-9.60\n06 MAR,06 MAR,ORCHARD LANE BAKERY,-3.75\n08 MAR,07 MAR,RIVERSTONE CYCLE WORKS Card Payment NZD 98.00,-56.40\n10 MAR,10 MAR,INTERNAL TRANSFER From Savings 0412 Standing order,250.00",
+              "tsv": "Posted Date\tTransaction Date\tDescription\tAmount\n04 MAR\t02 MAR\tBRIGHTWATER LANTERNFISH NOO DLES Card Payment NZD 42.80\t-24.15\n05 MAR\t03 MAR\tPEBBLE & FERN STATIONERY Card Payment NZD 18.00\t-9.60\n06 MAR\t06 MAR\tORCHARD LANE BAKERY\t-3.75\n08 MAR\t07 MAR\tRIVERSTONE CYCLE WORKS Card Payment NZD 98.00\t-56.40\n10 MAR\t10 MAR\tINTERNAL TRANSFER From Savings 0412 Standing order\t250.00",
+              "md": "| Posted Date | Transaction Date | Description | Amount |\n| --- | --- | --- | ---: |\n| 04 MAR | 02 MAR | BRIGHTWATER LANTERNFISH NOO DLES Card Payment NZD 42.80 | -24.15 |\n| 05 MAR | 03 MAR | PEBBLE & FERN STATIONERY Card Payment NZD 18.00 | -9.60 |\n| 06 MAR | 06 MAR | ORCHARD LANE BAKERY | -3.75 |\n| 08 MAR | 07 MAR | RIVERSTONE CYCLE WORKS Card Payment NZD 98.00 | -56.40 |\n| 10 MAR | 10 MAR | INTERNAL TRANSFER From Savings 0412 Standing order | 250.00 |",
+              "json": "[\n  {\n    \"Posted Date\": \"04 MAR\",\n    \"Transaction Date\": \"02 MAR\",\n    \"Description\": \"BRIGHTWATER LANTERNFISH NOO DLES Card Payment NZD 42.80\",\n    \"Amount\": \"-24.15\"\n  },\n  {\n    \"Posted Date\": \"05 MAR\",\n    \"Transaction Date\": \"03 MAR\",\n    \"Description\": \"PEBBLE & FERN STATIONERY Card Payment NZD 18.00\",\n    \"Amount\": \"-9.60\"\n  },\n  {\n    \"Posted Date\": \"06 MAR\",\n    \"Transaction Date\": \"06 MAR\",\n    \"Description\": \"ORCHARD LANE BAKERY\",\n    \"Amount\": \"-3.75\"\n  },\n  {\n    \"Posted Date\": \"08 MAR\",\n    \"Transaction Date\": \"07 MAR\",\n    \"Description\": \"RIVERSTONE CYCLE WORKS Card Payment NZD 98.00\",\n    \"Amount\": \"-56.40\"\n  },\n  {\n    \"Posted Date\": \"10 MAR\",\n    \"Transaction Date\": \"10 MAR\",\n    \"Description\": \"INTERNAL TRANSFER From Savings 0412 Standing order\",\n    \"Amount\": \"250.00\"\n  }\n]"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "columnSpacing": 1,
+      "joining": false,
+      "tables": [
+        {
+          "n": 1,
+          "pages": [1],
+          "parts": [{"page":1,"bbox":[68,439.85,564,719.45]}],
+          "header": true,
+          "firstBold": true,
+          "grid": [
+            ["Posted Date","Transaction Date","Description","Amount"],
+            ["04 MAR","02 MAR","BRIGHTWATER LANTERNFISH NOO DLES Card Payment NZD 42.80","-24.15"],
+            ["05 MAR","03 MAR","PEBBLE & FERN STATIONERY Card Payment NZD 18.00","-9.60"],
+            ["06 MAR","06 MAR","ORCHARD LANE BAKERY","-3.75"],
+            ["08 MAR","07 MAR","RIVERSTONE CYCLE WORKS Card Payment NZD 98.00","-56.40"],
+            ["10 MAR","10 MAR","INTERNAL TRANSFER From Savings 0412 Standing order","250.00"]
+          ],
+          "sections": [],
+          "cols": [[72,123.651],[150,222.29700000000003],[240,392.9820000000001],[526.007,560]],
+          "repeats": 0,
+          "exports": {
+            "column": {
+              "csv": "Posted Date,Transaction Date,Description,Amount\n04 MAR,02 MAR,BRIGHTWATER LANTERNFISH NOO DLES Card Payment NZD 42.80,-24.15\n05 MAR,03 MAR,PEBBLE & FERN STATIONERY Card Payment NZD 18.00,-9.60\n06 MAR,06 MAR,ORCHARD LANE BAKERY,-3.75\n08 MAR,07 MAR,RIVERSTONE CYCLE WORKS Card Payment NZD 98.00,-56.40\n10 MAR,10 MAR,INTERNAL TRANSFER From Savings 0412 Standing order,250.00",
+              "tsv": "Posted Date\tTransaction Date\tDescription\tAmount\n04 MAR\t02 MAR\tBRIGHTWATER LANTERNFISH NOO DLES Card Payment NZD 42.80\t-24.15\n05 MAR\t03 MAR\tPEBBLE & FERN STATIONERY Card Payment NZD 18.00\t-9.60\n06 MAR\t06 MAR\tORCHARD LANE BAKERY\t-3.75\n08 MAR\t07 MAR\tRIVERSTONE CYCLE WORKS Card Payment NZD 98.00\t-56.40\n10 MAR\t10 MAR\tINTERNAL TRANSFER From Savings 0412 Standing order\t250.00",
+              "md": "| Posted Date | Transaction Date | Description | Amount |\n| --- | --- | --- | ---: |\n| 04 MAR | 02 MAR | BRIGHTWATER LANTERNFISH NOO DLES Card Payment NZD 42.80 | -24.15 |\n| 05 MAR | 03 MAR | PEBBLE & FERN STATIONERY Card Payment NZD 18.00 | -9.60 |\n| 06 MAR | 06 MAR | ORCHARD LANE BAKERY | -3.75 |\n| 08 MAR | 07 MAR | RIVERSTONE CYCLE WORKS Card Payment NZD 98.00 | -56.40 |\n| 10 MAR | 10 MAR | INTERNAL TRANSFER From Savings 0412 Standing order | 250.00 |",
+              "json": "[\n  {\n    \"Posted Date\": \"04 MAR\",\n    \"Transaction Date\": \"02 MAR\",\n    \"Description\": \"BRIGHTWATER LANTERNFISH NOO DLES Card Payment NZD 42.80\",\n    \"Amount\": \"-24.15\"\n  },\n  {\n    \"Posted Date\": \"05 MAR\",\n    \"Transaction Date\": \"03 MAR\",\n    \"Description\": \"PEBBLE & FERN STATIONERY Card Payment NZD 18.00\",\n    \"Amount\": \"-9.60\"\n  },\n  {\n    \"Posted Date\": \"06 MAR\",\n    \"Transaction Date\": \"06 MAR\",\n    \"Description\": \"ORCHARD LANE BAKERY\",\n    \"Amount\": \"-3.75\"\n  },\n  {\n    \"Posted Date\": \"08 MAR\",\n    \"Transaction Date\": \"07 MAR\",\n    \"Description\": \"RIVERSTONE CYCLE WORKS Card Payment NZD 98.00\",\n    \"Amount\": \"-56.40\"\n  },\n  {\n    \"Posted Date\": \"10 MAR\",\n    \"Transaction Date\": \"10 MAR\",\n    \"Description\": \"INTERNAL TRANSFER From Savings 0412 Standing order\",\n    \"Amount\": \"250.00\"\n  }\n]"
+            },
+            "rows": {
+              "csv": "Posted Date,Transaction Date,Description,Amount\n04 MAR,02 MAR,BRIGHTWATER LANTERNFISH NOO DLES Card Payment NZD 42.80,-24.15\n05 MAR,03 MAR,PEBBLE & FERN STATIONERY Card Payment NZD 18.00,-9.60\n06 MAR,06 MAR,ORCHARD LANE BAKERY,-3.75\n08 MAR,07 MAR,RIVERSTONE CYCLE WORKS Card Payment NZD 98.00,-56.40\n10 MAR,10 MAR,INTERNAL TRANSFER From Savings 0412 Standing order,250.00",
+              "tsv": "Posted Date\tTransaction Date\tDescription\tAmount\n04 MAR\t02 MAR\tBRIGHTWATER LANTERNFISH NOO DLES Card Payment NZD 42.80\t-24.15\n05 MAR\t03 MAR\tPEBBLE & FERN STATIONERY Card Payment NZD 18.00\t-9.60\n06 MAR\t06 MAR\tORCHARD LANE BAKERY\t-3.75\n08 MAR\t07 MAR\tRIVERSTONE CYCLE WORKS Card Payment NZD 98.00\t-56.40\n10 MAR\t10 MAR\tINTERNAL TRANSFER From Savings 0412 Standing order\t250.00",
+              "md": "| Posted Date | Transaction Date | Description | Amount |\n| --- | --- | --- | ---: |\n| 04 MAR | 02 MAR | BRIGHTWATER LANTERNFISH NOO DLES Card Payment NZD 42.80 | -24.15 |\n| 05 MAR | 03 MAR | PEBBLE & FERN STATIONERY Card Payment NZD 18.00 | -9.60 |\n| 06 MAR | 06 MAR | ORCHARD LANE BAKERY | -3.75 |\n| 08 MAR | 07 MAR | RIVERSTONE CYCLE WORKS Card Payment NZD 98.00 | -56.40 |\n| 10 MAR | 10 MAR | INTERNAL TRANSFER From Savings 0412 Standing order | 250.00 |",
+              "json": "[\n  {\n    \"Posted Date\": \"04 MAR\",\n    \"Transaction Date\": \"02 MAR\",\n    \"Description\": \"BRIGHTWATER LANTERNFISH NOO DLES Card Payment NZD 42.80\",\n    \"Amount\": \"-24.15\"\n  },\n  {\n    \"Posted Date\": \"05 MAR\",\n    \"Transaction Date\": \"03 MAR\",\n    \"Description\": \"PEBBLE & FERN STATIONERY Card Payment NZD 18.00\",\n    \"Amount\": \"-9.60\"\n  },\n  {\n    \"Posted Date\": \"06 MAR\",\n    \"Transaction Date\": \"06 MAR\",\n    \"Description\": \"ORCHARD LANE BAKERY\",\n    \"Amount\": \"-3.75\"\n  },\n  {\n    \"Posted Date\": \"08 MAR\",\n    \"Transaction Date\": \"07 MAR\",\n    \"Description\": \"RIVERSTONE CYCLE WORKS Card Payment NZD 98.00\",\n    \"Amount\": \"-56.40\"\n  },\n  {\n    \"Posted Date\": \"10 MAR\",\n    \"Transaction Date\": \"10 MAR\",\n    \"Description\": \"INTERNAL TRANSFER From Savings 0412 Standing order\",\n    \"Amount\": \"250.00\"\n  }\n]"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "columnSpacing": 0.5,
+      "joining": true,
+      "tables": [
+        {
+          "n": 1,
+          "pages": [1],
+          "parts": [{"page":1,"bbox":[68,439.85,564,719.45]}],
+          "header": true,
+          "firstBold": true,
+          "grid": [
+            ["Posted Date","Transaction Date","Description","Amount"],
+            ["04 MAR","02 MAR","BRIGHTWATER LANTERNFISH NOO DLES Card Payment NZD 42.80","-24.15"],
+            ["05 MAR","03 MAR","PEBBLE & FERN STATIONERY Card Payment NZD 18.00","-9.60"],
+            ["06 MAR","06 MAR","ORCHARD LANE BAKERY","-3.75"],
+            ["08 MAR","07 MAR","RIVERSTONE CYCLE WORKS Card Payment NZD 98.00","-56.40"],
+            ["10 MAR","10 MAR","INTERNAL TRANSFER From Savings 0412 Standing order","250.00"]
+          ],
+          "sections": [],
+          "cols": [[72,123.651],[150,222.29700000000003],[240,392.9820000000001],[526.007,560]],
+          "repeats": 0,
+          "exports": {
+            "column": {
+              "csv": "Posted Date,Transaction Date,Description,Amount\n04 MAR,02 MAR,BRIGHTWATER LANTERNFISH NOO DLES Card Payment NZD 42.80,-24.15\n05 MAR,03 MAR,PEBBLE & FERN STATIONERY Card Payment NZD 18.00,-9.60\n06 MAR,06 MAR,ORCHARD LANE BAKERY,-3.75\n08 MAR,07 MAR,RIVERSTONE CYCLE WORKS Card Payment NZD 98.00,-56.40\n10 MAR,10 MAR,INTERNAL TRANSFER From Savings 0412 Standing order,250.00",
+              "tsv": "Posted Date\tTransaction Date\tDescription\tAmount\n04 MAR\t02 MAR\tBRIGHTWATER LANTERNFISH NOO DLES Card Payment NZD 42.80\t-24.15\n05 MAR\t03 MAR\tPEBBLE & FERN STATIONERY Card Payment NZD 18.00\t-9.60\n06 MAR\t06 MAR\tORCHARD LANE BAKERY\t-3.75\n08 MAR\t07 MAR\tRIVERSTONE CYCLE WORKS Card Payment NZD 98.00\t-56.40\n10 MAR\t10 MAR\tINTERNAL TRANSFER From Savings 0412 Standing order\t250.00",
+              "md": "| Posted Date | Transaction Date | Description | Amount |\n| --- | --- | --- | ---: |\n| 04 MAR | 02 MAR | BRIGHTWATER LANTERNFISH NOO DLES Card Payment NZD 42.80 | -24.15 |\n| 05 MAR | 03 MAR | PEBBLE & FERN STATIONERY Card Payment NZD 18.00 | -9.60 |\n| 06 MAR | 06 MAR | ORCHARD LANE BAKERY | -3.75 |\n| 08 MAR | 07 MAR | RIVERSTONE CYCLE WORKS Card Payment NZD 98.00 | -56.40 |\n| 10 MAR | 10 MAR | INTERNAL TRANSFER From Savings 0412 Standing order | 250.00 |",
+              "json": "[\n  {\n    \"Posted Date\": \"04 MAR\",\n    \"Transaction Date\": \"02 MAR\",\n    \"Description\": \"BRIGHTWATER LANTERNFISH NOO DLES Card Payment NZD 42.80\",\n    \"Amount\": \"-24.15\"\n  },\n  {\n    \"Posted Date\": \"05 MAR\",\n    \"Transaction Date\": \"03 MAR\",\n    \"Description\": \"PEBBLE & FERN STATIONERY Card Payment NZD 18.00\",\n    \"Amount\": \"-9.60\"\n  },\n  {\n    \"Posted Date\": \"06 MAR\",\n    \"Transaction Date\": \"06 MAR\",\n    \"Description\": \"ORCHARD LANE BAKERY\",\n    \"Amount\": \"-3.75\"\n  },\n  {\n    \"Posted Date\": \"08 MAR\",\n    \"Transaction Date\": \"07 MAR\",\n    \"Description\": \"RIVERSTONE CYCLE WORKS Card Payment NZD 98.00\",\n    \"Amount\": \"-56.40\"\n  },\n  {\n    \"Posted Date\": \"10 MAR\",\n    \"Transaction Date\": \"10 MAR\",\n    \"Description\": \"INTERNAL TRANSFER From Savings 0412 Standing order\",\n    \"Amount\": \"250.00\"\n  }\n]"
+            },
+            "rows": {
+              "csv": "Posted Date,Transaction Date,Description,Amount\n04 MAR,02 MAR,BRIGHTWATER LANTERNFISH NOO DLES Card Payment NZD 42.80,-24.15\n05 MAR,03 MAR,PEBBLE & FERN STATIONERY Card Payment NZD 18.00,-9.60\n06 MAR,06 MAR,ORCHARD LANE BAKERY,-3.75\n08 MAR,07 MAR,RIVERSTONE CYCLE WORKS Card Payment NZD 98.00,-56.40\n10 MAR,10 MAR,INTERNAL TRANSFER From Savings 0412 Standing order,250.00",
+              "tsv": "Posted Date\tTransaction Date\tDescription\tAmount\n04 MAR\t02 MAR\tBRIGHTWATER LANTERNFISH NOO DLES Card Payment NZD 42.80\t-24.15\n05 MAR\t03 MAR\tPEBBLE & FERN STATIONERY Card Payment NZD 18.00\t-9.60\n06 MAR\t06 MAR\tORCHARD LANE BAKERY\t-3.75\n08 MAR\t07 MAR\tRIVERSTONE CYCLE WORKS Card Payment NZD 98.00\t-56.40\n10 MAR\t10 MAR\tINTERNAL TRANSFER From Savings 0412 Standing order\t250.00",
+              "md": "| Posted Date | Transaction Date | Description | Amount |\n| --- | --- | --- | ---: |\n| 04 MAR | 02 MAR | BRIGHTWATER LANTERNFISH NOO DLES Card Payment NZD 42.80 | -24.15 |\n| 05 MAR | 03 MAR | PEBBLE & FERN STATIONERY Card Payment NZD 18.00 | -9.60 |\n| 06 MAR | 06 MAR | ORCHARD LANE BAKERY | -3.75 |\n| 08 MAR | 07 MAR | RIVERSTONE CYCLE WORKS Card Payment NZD 98.00 | -56.40 |\n| 10 MAR | 10 MAR | INTERNAL TRANSFER From Savings 0412 Standing order | 250.00 |",
+              "json": "[\n  {\n    \"Posted Date\": \"04 MAR\",\n    \"Transaction Date\": \"02 MAR\",\n    \"Description\": \"BRIGHTWATER LANTERNFISH NOO DLES Card Payment NZD 42.80\",\n    \"Amount\": \"-24.15\"\n  },\n  {\n    \"Posted Date\": \"05 MAR\",\n    \"Transaction Date\": \"03 MAR\",\n    \"Description\": \"PEBBLE & FERN STATIONERY Card Payment NZD 18.00\",\n    \"Amount\": \"-9.60\"\n  },\n  {\n    \"Posted Date\": \"06 MAR\",\n    \"Transaction Date\": \"06 MAR\",\n    \"Description\": \"ORCHARD LANE BAKERY\",\n    \"Amount\": \"-3.75\"\n  },\n  {\n    \"Posted Date\": \"08 MAR\",\n    \"Transaction Date\": \"07 MAR\",\n    \"Description\": \"RIVERSTONE CYCLE WORKS Card Payment NZD 98.00\",\n    \"Amount\": \"-56.40\"\n  },\n  {\n    \"Posted Date\": \"10 MAR\",\n    \"Transaction Date\": \"10 MAR\",\n    \"Description\": \"INTERNAL TRANSFER From Savings 0412 Standing order\",\n    \"Amount\": \"250.00\"\n  }\n]"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "columnSpacing": 0.5,
+      "joining": false,
+      "tables": [
+        {
+          "n": 1,
+          "pages": [1],
+          "parts": [{"page":1,"bbox":[68,439.85,564,719.45]}],
+          "header": true,
+          "firstBold": true,
+          "grid": [
+            ["Posted Date","Transaction Date","Description","Amount"],
+            ["04 MAR","02 MAR","BRIGHTWATER LANTERNFISH NOO DLES Card Payment NZD 42.80","-24.15"],
+            ["05 MAR","03 MAR","PEBBLE & FERN STATIONERY Card Payment NZD 18.00","-9.60"],
+            ["06 MAR","06 MAR","ORCHARD LANE BAKERY","-3.75"],
+            ["08 MAR","07 MAR","RIVERSTONE CYCLE WORKS Card Payment NZD 98.00","-56.40"],
+            ["10 MAR","10 MAR","INTERNAL TRANSFER From Savings 0412 Standing order","250.00"]
+          ],
+          "sections": [],
+          "cols": [[72,123.651],[150,222.29700000000003],[240,392.9820000000001],[526.007,560]],
+          "repeats": 0,
+          "exports": {
+            "column": {
+              "csv": "Posted Date,Transaction Date,Description,Amount\n04 MAR,02 MAR,BRIGHTWATER LANTERNFISH NOO DLES Card Payment NZD 42.80,-24.15\n05 MAR,03 MAR,PEBBLE & FERN STATIONERY Card Payment NZD 18.00,-9.60\n06 MAR,06 MAR,ORCHARD LANE BAKERY,-3.75\n08 MAR,07 MAR,RIVERSTONE CYCLE WORKS Card Payment NZD 98.00,-56.40\n10 MAR,10 MAR,INTERNAL TRANSFER From Savings 0412 Standing order,250.00",
+              "tsv": "Posted Date\tTransaction Date\tDescription\tAmount\n04 MAR\t02 MAR\tBRIGHTWATER LANTERNFISH NOO DLES Card Payment NZD 42.80\t-24.15\n05 MAR\t03 MAR\tPEBBLE & FERN STATIONERY Card Payment NZD 18.00\t-9.60\n06 MAR\t06 MAR\tORCHARD LANE BAKERY\t-3.75\n08 MAR\t07 MAR\tRIVERSTONE CYCLE WORKS Card Payment NZD 98.00\t-56.40\n10 MAR\t10 MAR\tINTERNAL TRANSFER From Savings 0412 Standing order\t250.00",
+              "md": "| Posted Date | Transaction Date | Description | Amount |\n| --- | --- | --- | ---: |\n| 04 MAR | 02 MAR | BRIGHTWATER LANTERNFISH NOO DLES Card Payment NZD 42.80 | -24.15 |\n| 05 MAR | 03 MAR | PEBBLE & FERN STATIONERY Card Payment NZD 18.00 | -9.60 |\n| 06 MAR | 06 MAR | ORCHARD LANE BAKERY | -3.75 |\n| 08 MAR | 07 MAR | RIVERSTONE CYCLE WORKS Card Payment NZD 98.00 | -56.40 |\n| 10 MAR | 10 MAR | INTERNAL TRANSFER From Savings 0412 Standing order | 250.00 |",
+              "json": "[\n  {\n    \"Posted Date\": \"04 MAR\",\n    \"Transaction Date\": \"02 MAR\",\n    \"Description\": \"BRIGHTWATER LANTERNFISH NOO DLES Card Payment NZD 42.80\",\n    \"Amount\": \"-24.15\"\n  },\n  {\n    \"Posted Date\": \"05 MAR\",\n    \"Transaction Date\": \"03 MAR\",\n    \"Description\": \"PEBBLE & FERN STATIONERY Card Payment NZD 18.00\",\n    \"Amount\": \"-9.60\"\n  },\n  {\n    \"Posted Date\": \"06 MAR\",\n    \"Transaction Date\": \"06 MAR\",\n    \"Description\": \"ORCHARD LANE BAKERY\",\n    \"Amount\": \"-3.75\"\n  },\n  {\n    \"Posted Date\": \"08 MAR\",\n    \"Transaction Date\": \"07 MAR\",\n    \"Description\": \"RIVERSTONE CYCLE WORKS Card Payment NZD 98.00\",\n    \"Amount\": \"-56.40\"\n  },\n  {\n    \"Posted Date\": \"10 MAR\",\n    \"Transaction Date\": \"10 MAR\",\n    \"Description\": \"INTERNAL TRANSFER From Savings 0412 Standing order\",\n    \"Amount\": \"250.00\"\n  }\n]"
+            },
+            "rows": {
+              "csv": "Posted Date,Transaction Date,Description,Amount\n04 MAR,02 MAR,BRIGHTWATER LANTERNFISH NOO DLES Card Payment NZD 42.80,-24.15\n05 MAR,03 MAR,PEBBLE & FERN STATIONERY Card Payment NZD 18.00,-9.60\n06 MAR,06 MAR,ORCHARD LANE BAKERY,-3.75\n08 MAR,07 MAR,RIVERSTONE CYCLE WORKS Card Payment NZD 98.00,-56.40\n10 MAR,10 MAR,INTERNAL TRANSFER From Savings 0412 Standing order,250.00",
+              "tsv": "Posted Date\tTransaction Date\tDescription\tAmount\n04 MAR\t02 MAR\tBRIGHTWATER LANTERNFISH NOO DLES Card Payment NZD 42.80\t-24.15\n05 MAR\t03 MAR\tPEBBLE & FERN STATIONERY Card Payment NZD 18.00\t-9.60\n06 MAR\t06 MAR\tORCHARD LANE BAKERY\t-3.75\n08 MAR\t07 MAR\tRIVERSTONE CYCLE WORKS Card Payment NZD 98.00\t-56.40\n10 MAR\t10 MAR\tINTERNAL TRANSFER From Savings 0412 Standing order\t250.00",
+              "md": "| Posted Date | Transaction Date | Description | Amount |\n| --- | --- | --- | ---: |\n| 04 MAR | 02 MAR | BRIGHTWATER LANTERNFISH NOO DLES Card Payment NZD 42.80 | -24.15 |\n| 05 MAR | 03 MAR | PEBBLE & FERN STATIONERY Card Payment NZD 18.00 | -9.60 |\n| 06 MAR | 06 MAR | ORCHARD LANE BAKERY | -3.75 |\n| 08 MAR | 07 MAR | RIVERSTONE CYCLE WORKS Card Payment NZD 98.00 | -56.40 |\n| 10 MAR | 10 MAR | INTERNAL TRANSFER From Savings 0412 Standing order | 250.00 |",
+              "json": "[\n  {\n    \"Posted Date\": \"04 MAR\",\n    \"Transaction Date\": \"02 MAR\",\n    \"Description\": \"BRIGHTWATER LANTERNFISH NOO DLES Card Payment NZD 42.80\",\n    \"Amount\": \"-24.15\"\n  },\n  {\n    \"Posted Date\": \"05 MAR\",\n    \"Transaction Date\": \"03 MAR\",\n    \"Description\": \"PEBBLE & FERN STATIONERY Card Payment NZD 18.00\",\n    \"Amount\": \"-9.60\"\n  },\n  {\n    \"Posted Date\": \"06 MAR\",\n    \"Transaction Date\": \"06 MAR\",\n    \"Description\": \"ORCHARD LANE BAKERY\",\n    \"Amount\": \"-3.75\"\n  },\n  {\n    \"Posted Date\": \"08 MAR\",\n    \"Transaction Date\": \"07 MAR\",\n    \"Description\": \"RIVERSTONE CYCLE WORKS Card Payment NZD 98.00\",\n    \"Amount\": \"-56.40\"\n  },\n  {\n    \"Posted Date\": \"10 MAR\",\n    \"Transaction Date\": \"10 MAR\",\n    \"Description\": \"INTERNAL TRANSFER From Savings 0412 Standing order\",\n    \"Amount\": \"250.00\"\n  }\n]"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "columnSpacing": 2,
+      "joining": true,
+      "tables": [
+        {
+          "n": 1,
+          "pages": [1],
+          "parts": [{"page":1,"bbox":[68,439.85,564,719.45]}],
+          "header": true,
+          "firstBold": true,
+          "grid": [
+            ["Posted Date","Transaction Date Description","Amount"],
+            ["04 MAR","02 MAR BRIGHTWATER LANTERNFISH NOO DLES Card Payment NZD 42.80","-24.15"],
+            ["05 MAR","03 MAR PEBBLE & FERN STATIONERY Card Payment NZD 18.00","-9.60"],
+            ["06 MAR","06 MAR ORCHARD LANE BAKERY","-3.75"],
+            ["08 MAR","07 MAR RIVERSTONE CYCLE WORKS Card Payment NZD 98.00","-56.40"],
+            ["10 MAR","10 MAR INTERNAL TRANSFER From Savings 0412 Standing order","250.00"]
+          ],
+          "sections": [],
+          "cols": [[72,123.651],[150,392.9820000000001],[526.007,560]],
+          "repeats": 0,
+          "exports": {
+            "column": {
+              "csv": "Posted Date,Transaction Date Description,Amount\n04 MAR,02 MAR BRIGHTWATER LANTERNFISH NOO DLES Card Payment NZD 42.80,-24.15\n05 MAR,03 MAR PEBBLE & FERN STATIONERY Card Payment NZD 18.00,-9.60\n06 MAR,06 MAR ORCHARD LANE BAKERY,-3.75\n08 MAR,07 MAR RIVERSTONE CYCLE WORKS Card Payment NZD 98.00,-56.40\n10 MAR,10 MAR INTERNAL TRANSFER From Savings 0412 Standing order,250.00",
+              "tsv": "Posted Date\tTransaction Date Description\tAmount\n04 MAR\t02 MAR BRIGHTWATER LANTERNFISH NOO DLES Card Payment NZD 42.80\t-24.15\n05 MAR\t03 MAR PEBBLE & FERN STATIONERY Card Payment NZD 18.00\t-9.60\n06 MAR\t06 MAR ORCHARD LANE BAKERY\t-3.75\n08 MAR\t07 MAR RIVERSTONE CYCLE WORKS Card Payment NZD 98.00\t-56.40\n10 MAR\t10 MAR INTERNAL TRANSFER From Savings 0412 Standing order\t250.00",
+              "md": "| Posted Date | Transaction Date Description | Amount |\n| --- | --- | ---: |\n| 04 MAR | 02 MAR BRIGHTWATER LANTERNFISH NOO DLES Card Payment NZD 42.80 | -24.15 |\n| 05 MAR | 03 MAR PEBBLE & FERN STATIONERY Card Payment NZD 18.00 | -9.60 |\n| 06 MAR | 06 MAR ORCHARD LANE BAKERY | -3.75 |\n| 08 MAR | 07 MAR RIVERSTONE CYCLE WORKS Card Payment NZD 98.00 | -56.40 |\n| 10 MAR | 10 MAR INTERNAL TRANSFER From Savings 0412 Standing order | 250.00 |",
+              "json": "[\n  {\n    \"Posted Date\": \"04 MAR\",\n    \"Transaction Date Description\": \"02 MAR BRIGHTWATER LANTERNFISH NOO DLES Card Payment NZD 42.80\",\n    \"Amount\": \"-24.15\"\n  },\n  {\n    \"Posted Date\": \"05 MAR\",\n    \"Transaction Date Description\": \"03 MAR PEBBLE & FERN STATIONERY Card Payment NZD 18.00\",\n    \"Amount\": \"-9.60\"\n  },\n  {\n    \"Posted Date\": \"06 MAR\",\n    \"Transaction Date Description\": \"06 MAR ORCHARD LANE BAKERY\",\n    \"Amount\": \"-3.75\"\n  },\n  {\n    \"Posted Date\": \"08 MAR\",\n    \"Transaction Date Description\": \"07 MAR RIVERSTONE CYCLE WORKS Card Payment NZD 98.00\",\n    \"Amount\": \"-56.40\"\n  },\n  {\n    \"Posted Date\": \"10 MAR\",\n    \"Transaction Date Description\": \"10 MAR INTERNAL TRANSFER From Savings 0412 Standing order\",\n    \"Amount\": \"250.00\"\n  }\n]"
+            },
+            "rows": {
+              "csv": "Posted Date,Transaction Date Description,Amount\n04 MAR,02 MAR BRIGHTWATER LANTERNFISH NOO DLES Card Payment NZD 42.80,-24.15\n05 MAR,03 MAR PEBBLE & FERN STATIONERY Card Payment NZD 18.00,-9.60\n06 MAR,06 MAR ORCHARD LANE BAKERY,-3.75\n08 MAR,07 MAR RIVERSTONE CYCLE WORKS Card Payment NZD 98.00,-56.40\n10 MAR,10 MAR INTERNAL TRANSFER From Savings 0412 Standing order,250.00",
+              "tsv": "Posted Date\tTransaction Date Description\tAmount\n04 MAR\t02 MAR BRIGHTWATER LANTERNFISH NOO DLES Card Payment NZD 42.80\t-24.15\n05 MAR\t03 MAR PEBBLE & FERN STATIONERY Card Payment NZD 18.00\t-9.60\n06 MAR\t06 MAR ORCHARD LANE BAKERY\t-3.75\n08 MAR\t07 MAR RIVERSTONE CYCLE WORKS Card Payment NZD 98.00\t-56.40\n10 MAR\t10 MAR INTERNAL TRANSFER From Savings 0412 Standing order\t250.00",
+              "md": "| Posted Date | Transaction Date Description | Amount |\n| --- | --- | ---: |\n| 04 MAR | 02 MAR BRIGHTWATER LANTERNFISH NOO DLES Card Payment NZD 42.80 | -24.15 |\n| 05 MAR | 03 MAR PEBBLE & FERN STATIONERY Card Payment NZD 18.00 | -9.60 |\n| 06 MAR | 06 MAR ORCHARD LANE BAKERY | -3.75 |\n| 08 MAR | 07 MAR RIVERSTONE CYCLE WORKS Card Payment NZD 98.00 | -56.40 |\n| 10 MAR | 10 MAR INTERNAL TRANSFER From Savings 0412 Standing order | 250.00 |",
+              "json": "[\n  {\n    \"Posted Date\": \"04 MAR\",\n    \"Transaction Date Description\": \"02 MAR BRIGHTWATER LANTERNFISH NOO DLES Card Payment NZD 42.80\",\n    \"Amount\": \"-24.15\"\n  },\n  {\n    \"Posted Date\": \"05 MAR\",\n    \"Transaction Date Description\": \"03 MAR PEBBLE & FERN STATIONERY Card Payment NZD 18.00\",\n    \"Amount\": \"-9.60\"\n  },\n  {\n    \"Posted Date\": \"06 MAR\",\n    \"Transaction Date Description\": \"06 MAR ORCHARD LANE BAKERY\",\n    \"Amount\": \"-3.75\"\n  },\n  {\n    \"Posted Date\": \"08 MAR\",\n    \"Transaction Date Description\": \"07 MAR RIVERSTONE CYCLE WORKS Card Payment NZD 98.00\",\n    \"Amount\": \"-56.40\"\n  },\n  {\n    \"Posted Date\": \"10 MAR\",\n    \"Transaction Date Description\": \"10 MAR INTERNAL TRANSFER From Savings 0412 Standing order\",\n    \"Amount\": \"250.00\"\n  }\n]"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "columnSpacing": 2,
+      "joining": false,
+      "tables": [
+        {
+          "n": 1,
+          "pages": [1],
+          "parts": [{"page":1,"bbox":[68,439.85,564,719.45]}],
+          "header": true,
+          "firstBold": true,
+          "grid": [
+            ["Posted Date","Transaction Date Description","Amount"],
+            ["04 MAR","02 MAR BRIGHTWATER LANTERNFISH NOO DLES Card Payment NZD 42.80","-24.15"],
+            ["05 MAR","03 MAR PEBBLE & FERN STATIONERY Card Payment NZD 18.00","-9.60"],
+            ["06 MAR","06 MAR ORCHARD LANE BAKERY","-3.75"],
+            ["08 MAR","07 MAR RIVERSTONE CYCLE WORKS Card Payment NZD 98.00","-56.40"],
+            ["10 MAR","10 MAR INTERNAL TRANSFER From Savings 0412 Standing order","250.00"]
+          ],
+          "sections": [],
+          "cols": [[72,123.651],[150,392.9820000000001],[526.007,560]],
+          "repeats": 0,
+          "exports": {
+            "column": {
+              "csv": "Posted Date,Transaction Date Description,Amount\n04 MAR,02 MAR BRIGHTWATER LANTERNFISH NOO DLES Card Payment NZD 42.80,-24.15\n05 MAR,03 MAR PEBBLE & FERN STATIONERY Card Payment NZD 18.00,-9.60\n06 MAR,06 MAR ORCHARD LANE BAKERY,-3.75\n08 MAR,07 MAR RIVERSTONE CYCLE WORKS Card Payment NZD 98.00,-56.40\n10 MAR,10 MAR INTERNAL TRANSFER From Savings 0412 Standing order,250.00",
+              "tsv": "Posted Date\tTransaction Date Description\tAmount\n04 MAR\t02 MAR BRIGHTWATER LANTERNFISH NOO DLES Card Payment NZD 42.80\t-24.15\n05 MAR\t03 MAR PEBBLE & FERN STATIONERY Card Payment NZD 18.00\t-9.60\n06 MAR\t06 MAR ORCHARD LANE BAKERY\t-3.75\n08 MAR\t07 MAR RIVERSTONE CYCLE WORKS Card Payment NZD 98.00\t-56.40\n10 MAR\t10 MAR INTERNAL TRANSFER From Savings 0412 Standing order\t250.00",
+              "md": "| Posted Date | Transaction Date Description | Amount |\n| --- | --- | ---: |\n| 04 MAR | 02 MAR BRIGHTWATER LANTERNFISH NOO DLES Card Payment NZD 42.80 | -24.15 |\n| 05 MAR | 03 MAR PEBBLE & FERN STATIONERY Card Payment NZD 18.00 | -9.60 |\n| 06 MAR | 06 MAR ORCHARD LANE BAKERY | -3.75 |\n| 08 MAR | 07 MAR RIVERSTONE CYCLE WORKS Card Payment NZD 98.00 | -56.40 |\n| 10 MAR | 10 MAR INTERNAL TRANSFER From Savings 0412 Standing order | 250.00 |",
+              "json": "[\n  {\n    \"Posted Date\": \"04 MAR\",\n    \"Transaction Date Description\": \"02 MAR BRIGHTWATER LANTERNFISH NOO DLES Card Payment NZD 42.80\",\n    \"Amount\": \"-24.15\"\n  },\n  {\n    \"Posted Date\": \"05 MAR\",\n    \"Transaction Date Description\": \"03 MAR PEBBLE & FERN STATIONERY Card Payment NZD 18.00\",\n    \"Amount\": \"-9.60\"\n  },\n  {\n    \"Posted Date\": \"06 MAR\",\n    \"Transaction Date Description\": \"06 MAR ORCHARD LANE BAKERY\",\n    \"Amount\": \"-3.75\"\n  },\n  {\n    \"Posted Date\": \"08 MAR\",\n    \"Transaction Date Description\": \"07 MAR RIVERSTONE CYCLE WORKS Card Payment NZD 98.00\",\n    \"Amount\": \"-56.40\"\n  },\n  {\n    \"Posted Date\": \"10 MAR\",\n    \"Transaction Date Description\": \"10 MAR INTERNAL TRANSFER From Savings 0412 Standing order\",\n    \"Amount\": \"250.00\"\n  }\n]"
+            },
+            "rows": {
+              "csv": "Posted Date,Transaction Date Description,Amount\n04 MAR,02 MAR BRIGHTWATER LANTERNFISH NOO DLES Card Payment NZD 42.80,-24.15\n05 MAR,03 MAR PEBBLE & FERN STATIONERY Card Payment NZD 18.00,-9.60\n06 MAR,06 MAR ORCHARD LANE BAKERY,-3.75\n08 MAR,07 MAR RIVERSTONE CYCLE WORKS Card Payment NZD 98.00,-56.40\n10 MAR,10 MAR INTERNAL TRANSFER From Savings 0412 Standing order,250.00",
+              "tsv": "Posted Date\tTransaction Date Description\tAmount\n04 MAR\t02 MAR BRIGHTWATER LANTERNFISH NOO DLES Card Payment NZD 42.80\t-24.15\n05 MAR\t03 MAR PEBBLE & FERN STATIONERY Card Payment NZD 18.00\t-9.60\n06 MAR\t06 MAR ORCHARD LANE BAKERY\t-3.75\n08 MAR\t07 MAR RIVERSTONE CYCLE WORKS Card Payment NZD 98.00\t-56.40\n10 MAR\t10 MAR INTERNAL TRANSFER From Savings 0412 Standing order\t250.00",
+              "md": "| Posted Date | Transaction Date Description | Amount |\n| --- | --- | ---: |\n| 04 MAR | 02 MAR BRIGHTWATER LANTERNFISH NOO DLES Card Payment NZD 42.80 | -24.15 |\n| 05 MAR | 03 MAR PEBBLE & FERN STATIONERY Card Payment NZD 18.00 | -9.60 |\n| 06 MAR | 06 MAR ORCHARD LANE BAKERY | -3.75 |\n| 08 MAR | 07 MAR RIVERSTONE CYCLE WORKS Card Payment NZD 98.00 | -56.40 |\n| 10 MAR | 10 MAR INTERNAL TRANSFER From Savings 0412 Standing order | 250.00 |",
+              "json": "[\n  {\n    \"Posted Date\": \"04 MAR\",\n    \"Transaction Date Description\": \"02 MAR BRIGHTWATER LANTERNFISH NOO DLES Card Payment NZD 42.80\",\n    \"Amount\": \"-24.15\"\n  },\n  {\n    \"Posted Date\": \"05 MAR\",\n    \"Transaction Date Description\": \"03 MAR PEBBLE & FERN STATIONERY Card Payment NZD 18.00\",\n    \"Amount\": \"-9.60\"\n  },\n  {\n    \"Posted Date\": \"06 MAR\",\n    \"Transaction Date Description\": \"06 MAR ORCHARD LANE BAKERY\",\n    \"Amount\": \"-3.75\"\n  },\n  {\n    \"Posted Date\": \"08 MAR\",\n    \"Transaction Date Description\": \"07 MAR RIVERSTONE CYCLE WORKS Card Payment NZD 98.00\",\n    \"Amount\": \"-56.40\"\n  },\n  {\n    \"Posted Date\": \"10 MAR\",\n    \"Transaction Date Description\": \"10 MAR INTERNAL TRANSFER From Savings 0412 Standing order\",\n    \"Amount\": \"250.00\"\n  }\n]"
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

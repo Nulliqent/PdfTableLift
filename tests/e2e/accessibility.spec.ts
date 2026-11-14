@@ -137,14 +137,19 @@ test.describe("keyboard", () => {
     await page.keyboard.press("Escape");
     await expect(confirm).toBeHidden();
 
-    // Region selection: stepper, Select Whole Page, Cancel and Add Table.
+    // Region selection: stepper, Select Whole Page, the Single-Row switch, Cancel and Add Table.
     await page.getByRole("button", { name: /Select Table Region/ }).click();
     await expect(main.getByRole("button", { name: "Select Whole Page" })).toBeVisible();
     const stops = await tabThrough(page);
     const labels = stops.map((s) => s.label);
-    for (const expected of ["Select Whole Page", "Cancel"])
+    for (const expected of ["Select Whole Page", "Treat selection as one row", "Cancel"])
       expect(labels, `Tab reaches ${expected}`).toContain(expected);
     expectFocusVisibleEverywhere(stops);
+    // The switch works from the keyboard: Space flips it.
+    const oneRow = main.getByRole("switch", { name: "Treat selection as one row" });
+    await oneRow.focus();
+    await page.keyboard.press("Space");
+    await expect(oneRow).toBeChecked();
   });
 
   test("a cell is edited from the keyboard alone and Enter finishes the edit", async ({ page }) => {
@@ -287,6 +292,15 @@ test.describe("phone layout", () => {
     await expect(main.getByRole("button", { name: "Select Whole Page" })).toBeVisible();
     await main.getByRole("button", { name: "Select Whole Page" }).click();
     await expect(main.getByText("Preview", { exact: true })).toBeVisible();
+    await expectOneColumn(page);
+    // The Single-Row switch fits and can be tapped at phone width.
+    const oneRow = main.getByRole("switch", { name: "Treat selection as one row" });
+    const box = (await oneRow.boundingBox())!;
+    expect(box.x).toBeGreaterThanOrEqual(0);
+    expect(box.x + box.width).toBeLessThanOrEqual(390);
+    await oneRow.tap();
+    await expect(oneRow).toBeChecked();
+    await expect(main.getByText(/^1 row × \d+ columns?$/)).toBeVisible();
     await expectOneColumn(page);
     await page.keyboard.press("Escape");
 

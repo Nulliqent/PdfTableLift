@@ -70,7 +70,13 @@ describe("selecting a Region", () => {
       page: 2,
     });
 
-    expect(state.region).toEqual({ documentId: "d1", page: 2, bbox: null, redraw: null });
+    expect(state.region).toEqual({
+      documentId: "d1",
+      page: 2,
+      bbox: null,
+      redraw: null,
+      singleRow: false,
+    });
     expect(regionPreview(state)).toBeNull();
   });
 
@@ -119,7 +125,13 @@ describe("selecting a Region", () => {
       bbox: null,
     });
 
-    expect(state.region).toEqual({ documentId: "d1", page: 2, bbox: null, redraw: null });
+    expect(state.region).toEqual({
+      documentId: "d1",
+      page: 2,
+      bbox: null,
+      redraw: null,
+      singleRow: false,
+    });
   });
 
   it("ignores a page the Document does not have", () => {
@@ -137,6 +149,29 @@ describe("selecting a Region", () => {
 
     expect(state.region!.bbox).toEqual([18, 18, 612 - 18, 792 - 18]);
     expect(regionPreview(state)!.grid).toHaveLength(4);
+  });
+
+  it("Select Whole Page covers a page whose CropBox does not start at 0,0", () => {
+    // Cropped to [100, 200, 512, 692]; its text sits in that frame.
+    const cropped: PageText = {
+      num: 1,
+      w: 412,
+      h: 492,
+      origin: [100, 200],
+      items: [
+        ...row(640, ["Item", "Owner", "Cost"], true, [130, 250, 400]),
+        ...row(626, ["Lamp", "Ines", "40.0"], false, [130, 250, 400]),
+        ...row(612, ["Desk", "Omar", "220.5"], false, [130, 250, 400]),
+      ],
+    };
+    const state = run(
+      opened([cropped]),
+      { type: "regionStarted", documentId: "d1", page: 1 },
+      { type: "wholePageSelected" },
+    );
+
+    expect(state.region!.bbox).toEqual([118, 218, 512 - 18, 692 - 18]);
+    expect(regionPreview(state)!.grid).toHaveLength(3);
   });
 
   it("Cancel leaves with no changes (US-36)", () => {
