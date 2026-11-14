@@ -55,6 +55,14 @@ One entry of a Table, at the meeting of a Row and a column.
 All the text of a Table that belongs together, even when it runs over several lines of the page.
 _Avoid_: Line (a line is a single line of text on the page, and a Row may span several)
 
+**Combine**:
+To put a Row together with the Row directly above or below it, so each Cell holds both Rows' text; a correction the user makes by hand.
+_Avoid_: Join (reserved for Joined Tables), merge
+
+**Split back**:
+To undo the most recent Combine on a Row, restoring the two Rows it came from.
+_Avoid_: Unmerge, separate
+
 **Wrapped Cell**:
 A Cell whose text runs over more than one line, whether the other Cells of its Row sit beside the first line, the last, or the middle.
 

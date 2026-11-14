@@ -1,0 +1,494 @@
+{
+  "fixture": "tests/fixtures/statement-first-column.pdf",
+  "sha256": "91467f27db984b6fb766f641d4dffdc1a57db056c7b00aa08bc9052d6654ab55",
+  "pdfjs": "6.4.299",
+  "engine": "app",
+  "status": "ready",
+  "error": "",
+  "pages": [
+    {
+      "num": 1,
+      "w": 612,
+      "h": 792,
+      "items": [
+        {"str":"Description","x":72,"y":710,"w":49.509000000000015,"h":9,"bold":true},
+        {"str":"Date","x":300,"y":710,"w":19.503000000000004,"h":9,"bold":true},
+        {"str":"Amount","x":506.007,"y":710,"w":33.99300000000001,"h":9,"bold":true},
+        {"str":"OCTOBER","x":72,"y":690,"w":44.640000000000015,"h":9,"bold":true},
+        {"str":"HARBOUR COFFEE HOUSE","x":72,"y":670,"w":118.51200000000003,"h":9,"bold":false},
+        {"str":"Card Payment","x":72,"y":657,"w":56.889,"h":9,"bold":false},
+        {"str":"SGD 12.00","x":72,"y":644,"w":44.522999999999996,"h":9,"bold":false},
+        {"str":"02 OCT","x":300,"y":657,"w":31.509000000000015,"h":9,"bold":false},
+        {"str":"-12.00","x":514.485,"y":657,"w":25.515000000000004,"h":9,"bold":false},
+        {"str":"FOLIO BOOK STORE","x":72,"y":614,"w":88.66799999999998,"h":9,"bold":false},
+        {"str":"Card Payment","x":72,"y":601,"w":56.889,"h":9,"bold":false},
+        {"str":"SGD 8.50","x":72,"y":588,"w":39.519,"h":9,"bold":false},
+        {"str":"03 OCT","x":300,"y":601,"w":31.509000000000015,"h":9,"bold":false},
+        {"str":"-8.50","x":519.489,"y":601,"w":20.511000000000003,"h":9,"bold":false},
+        {"str":"NOVEMBER","x":72,"y":558,"w":51.55200000000001,"h":9,"bold":true},
+        {"str":"GREENLEAF GROCERY MART","x":72,"y":538,"w":129.61800000000002,"h":9,"bold":false},
+        {"str":"Card Payment","x":72,"y":525,"w":56.889,"h":9,"bold":false},
+        {"str":"SGD 30.00","x":72,"y":512,"w":44.522999999999996,"h":9,"bold":false},
+        {"str":"01 NOV","x":300,"y":525,"w":31.563000000000024,"h":9,"bold":false},
+        {"str":"-30.00","x":514.485,"y":525,"w":25.515000000000004,"h":9,"bold":false},
+        {"str":"TIDEWATER FERRY","x":72,"y":482,"w":84.02400000000003,"h":9,"bold":false},
+        {"str":"Card Payment","x":72,"y":469,"w":56.889,"h":9,"bold":false},
+        {"str":"SGD 6.20","x":72,"y":456,"w":39.519,"h":9,"bold":false},
+        {"str":"04 NOV","x":300,"y":469,"w":31.563000000000024,"h":9,"bold":false},
+        {"str":"-6.20","x":519.489,"y":469,"w":20.511000000000003,"h":9,"bold":false}
+      ]
+    },
+    {
+      "num": 2,
+      "w": 612,
+      "h": 792,
+      "items": [
+        {"str":"Merchant","x":72,"y":740,"w":39.73499999999999,"h":9,"bold":true},
+        {"str":"Posted","x":300,"y":740,"w":29.645999999999994,"h":9,"bold":true},
+        {"str":"Value","x":516.528,"y":740,"w":23.47200000000004,"h":9,"bold":true},
+        {"str":"QUARRY HILL HARDWARE","x":72,"y":720,"w":113.30100000000002,"h":9,"bold":false},
+        {"str":"Card Payment","x":72,"y":707,"w":56.889,"h":9,"bold":false},
+        {"str":"SGD 41.80","x":72,"y":694,"w":44.522999999999996,"h":9,"bold":false},
+        {"str":"11 NOV","x":300,"y":707,"w":31.563000000000024,"h":9,"bold":false},
+        {"str":"-41.80","x":514.485,"y":707,"w":25.515000000000004,"h":9,"bold":false},
+        {"str":"SILVERFIN SUSHI BAR","x":72,"y":664,"w":96.53400000000002,"h":9,"bold":false},
+        {"str":"Card Payment","x":72,"y":651,"w":56.889,"h":9,"bold":false},
+        {"str":"SGD 27.60","x":72,"y":638,"w":44.522999999999996,"h":9,"bold":false},
+        {"str":"14 NOV","x":300,"y":651,"w":31.563000000000024,"h":9,"bold":false},
+        {"str":"-27.60","x":514.485,"y":651,"w":25.515000000000004,"h":9,"bold":false},
+        {"str":"LANTERN STREET LAUNDRY","x":72,"y":608,"w":124.61400000000006,"h":9,"bold":false},
+        {"str":"Card Payment","x":72,"y":595,"w":56.889,"h":9,"bold":false},
+        {"str":"SGD 9.00","x":72,"y":582,"w":39.519,"h":9,"bold":false},
+        {"str":"18 NOV","x":300,"y":595,"w":31.563000000000024,"h":9,"bold":false},
+        {"str":"-9.00","x":519.489,"y":595,"w":20.511000000000003,"h":9,"bold":false},
+        {"str":"BLUE HERON BIKE HIRE","x":72,"y":552,"w":105.34500000000001,"h":9,"bold":false},
+        {"str":"Card Payment","x":72,"y":539,"w":56.889,"h":9,"bold":false},
+        {"str":"SGD 15.50","x":72,"y":526,"w":44.522999999999996,"h":9,"bold":false},
+        {"str":"21 NOV","x":300,"y":539,"w":31.563000000000024,"h":9,"bold":false},
+        {"str":"-15.50","x":514.485,"y":539,"w":25.515000000000004,"h":9,"bold":false}
+      ]
+    }
+  ],
+  "runs": [
+    {
+      "columnSpacing": 1,
+      "joining": true,
+      "tables": [
+        {
+          "n": 1,
+          "pages": [1],
+          "parts": [{"page":1,"bbox":[68,452.85,544,719.45]}],
+          "header": true,
+          "firstBold": true,
+          "grid": [
+            ["Description","Date","Amount"],
+            ["OCTOBER","",""],
+            ["HARBOUR COFFEE HOUSE Card Payment SGD 12.00","02 OCT","-12.00"],
+            ["FOLIO BOOK STORE Card Payment SGD 8.50","03 OCT","-8.50"],
+            ["NOVEMBER","",""],
+            ["GREENLEAF GROCERY MART Card Payment SGD 30.00","01 NOV","-30.00"],
+            ["TIDEWATER FERRY Card Payment SGD 6.20","04 NOV","-6.20"]
+          ],
+          "sections": [1,4],
+          "cols": [[72,201.61800000000002],[300,331.56300000000005],[506.007,540]],
+          "repeats": 0,
+          "exports": {
+            "column": {
+              "csv": "Section,Description,Date,Amount\nOCTOBER,HARBOUR COFFEE HOUSE Card Payment SGD 12.00,02 OCT,-12.00\nOCTOBER,FOLIO BOOK STORE Card Payment SGD 8.50,03 OCT,-8.50\nNOVEMBER,GREENLEAF GROCERY MART Card Payment SGD 30.00,01 NOV,-30.00\nNOVEMBER,TIDEWATER FERRY Card Payment SGD 6.20,04 NOV,-6.20",
+              "tsv": "Section\tDescription\tDate\tAmount\nOCTOBER\tHARBOUR COFFEE HOUSE Card Payment SGD 12.00\t02 OCT\t-12.00\nOCTOBER\tFOLIO BOOK STORE Card Payment SGD 8.50\t03 OCT\t-8.50\nNOVEMBER\tGREENLEAF GROCERY MART Card Payment SGD 30.00\t01 NOV\t-30.00\nNOVEMBER\tTIDEWATER FERRY Card Payment SGD 6.20\t04 NOV\t-6.20",
+              "md": "| Section | Description | Date | Amount |\n| --- | --- | --- | ---: |\n| OCTOBER | HARBOUR COFFEE HOUSE Card Payment SGD 12.00 | 02 OCT | -12.00 |\n| OCTOBER | FOLIO BOOK STORE Card Payment SGD 8.50 | 03 OCT | -8.50 |\n| NOVEMBER | GREENLEAF GROCERY MART Card Payment SGD 30.00 | 01 NOV | -30.00 |\n| NOVEMBER | TIDEWATER FERRY Card Payment SGD 6.20 | 04 NOV | -6.20 |",
+              "json": "[\n  {\n    \"Section\": \"OCTOBER\",\n    \"Description\": \"HARBOUR COFFEE HOUSE Card Payment SGD 12.00\",\n    \"Date\": \"02 OCT\",\n    \"Amount\": \"-12.00\"\n  },\n  {\n    \"Section\": \"OCTOBER\",\n    \"Description\": \"FOLIO BOOK STORE Card Payment SGD 8.50\",\n    \"Date\": \"03 OCT\",\n    \"Amount\": \"-8.50\"\n  },\n  {\n    \"Section\": \"NOVEMBER\",\n    \"Description\": \"GREENLEAF GROCERY MART Card Payment SGD 30.00\",\n    \"Date\": \"01 NOV\",\n    \"Amount\": \"-30.00\"\n  },\n  {\n    \"Section\": \"NOVEMBER\",\n    \"Description\": \"TIDEWATER FERRY Card Payment SGD 6.20\",\n    \"Date\": \"04 NOV\",\n    \"Amount\": \"-6.20\"\n  }\n]"
+            },
+            "rows": {
+              "csv": "Description,Date,Amount\nOCTOBER,,\nHARBOUR COFFEE HOUSE Card Payment SGD 12.00,02 OCT,-12.00\nFOLIO BOOK STORE Card Payment SGD 8.50,03 OCT,-8.50\nNOVEMBER,,\nGREENLEAF GROCERY MART Card Payment SGD 30.00,01 NOV,-30.00\nTIDEWATER FERRY Card Payment SGD 6.20,04 NOV,-6.20",
+              "tsv": "Description\tDate\tAmount\nOCTOBER\t\t\nHARBOUR COFFEE HOUSE Card Payment SGD 12.00\t02 OCT\t-12.00\nFOLIO BOOK STORE Card Payment SGD 8.50\t03 OCT\t-8.50\nNOVEMBER\t\t\nGREENLEAF GROCERY MART Card Payment SGD 30.00\t01 NOV\t-30.00\nTIDEWATER FERRY Card Payment SGD 6.20\t04 NOV\t-6.20",
+              "md": "| Description | Date | Amount |\n| --- | --- | ---: |\n| **OCTOBER** | | |\n| HARBOUR COFFEE HOUSE Card Payment SGD 12.00 | 02 OCT | -12.00 |\n| FOLIO BOOK STORE Card Payment SGD 8.50 | 03 OCT | -8.50 |\n| **NOVEMBER** | | |\n| GREENLEAF GROCERY MART Card Payment SGD 30.00 | 01 NOV | -30.00 |\n| TIDEWATER FERRY Card Payment SGD 6.20 | 04 NOV | -6.20 |",
+              "json": "[\n  {\n    \"section\": \"OCTOBER\",\n    \"rows\": [\n      {\n        \"Description\": \"HARBOUR COFFEE HOUSE Card Payment SGD 12.00\",\n        \"Date\": \"02 OCT\",\n        \"Amount\": \"-12.00\"\n      },\n      {\n        \"Description\": \"FOLIO BOOK STORE Card Payment SGD 8.50\",\n        \"Date\": \"03 OCT\",\n        \"Amount\": \"-8.50\"\n      }\n    ]\n  },\n  {\n    \"section\": \"NOVEMBER\",\n    \"rows\": [\n      {\n        \"Description\": \"GREENLEAF GROCERY MART Card Payment SGD 30.00\",\n        \"Date\": \"01 NOV\",\n        \"Amount\": \"-30.00\"\n      },\n      {\n        \"Description\": \"TIDEWATER FERRY Card Payment SGD 6.20\",\n        \"Date\": \"04 NOV\",\n        \"Amount\": \"-6.20\"\n      }\n    ]\n  }\n]"
+            }
+          }
+        },
+        {
+          "n": 2,
+          "pages": [2],
+          "parts": [{"page":2,"bbox":[68,522.85,544.0000000000001,749.45]}],
+          "header": true,
+          "firstBold": true,
+          "grid": [
+            ["Merchant","Posted","Value"],
+            ["QUARRY HILL HARDWARE Card Payment SGD 41.80","11 NOV","-41.80"],
+            ["SILVERFIN SUSHI BAR Card Payment SGD 27.60","14 NOV","-27.60"],
+            ["LANTERN STREET LAUNDRY Card Payment SGD 9.00","18 NOV","-9.00"],
+            ["BLUE HERON BIKE HIRE Card Payment SGD 15.50","21 NOV","-15.50"]
+          ],
+          "sections": [],
+          "cols": [[72,196.61400000000006],[300,331.56300000000005],[514.485,540.0000000000001]],
+          "repeats": 0,
+          "exports": {
+            "column": {
+              "csv": "Merchant,Posted,Value\nQUARRY HILL HARDWARE Card Payment SGD 41.80,11 NOV,-41.80\nSILVERFIN SUSHI BAR Card Payment SGD 27.60,14 NOV,-27.60\nLANTERN STREET LAUNDRY Card Payment SGD 9.00,18 NOV,-9.00\nBLUE HERON BIKE HIRE Card Payment SGD 15.50,21 NOV,-15.50",
+              "tsv": "Merchant\tPosted\tValue\nQUARRY HILL HARDWARE Card Payment SGD 41.80\t11 NOV\t-41.80\nSILVERFIN SUSHI BAR Card Payment SGD 27.60\t14 NOV\t-27.60\nLANTERN STREET LAUNDRY Card Payment SGD 9.00\t18 NOV\t-9.00\nBLUE HERON BIKE HIRE Card Payment SGD 15.50\t21 NOV\t-15.50",
+              "md": "| Merchant | Posted | Value |\n| --- | --- | ---: |\n| QUARRY HILL HARDWARE Card Payment SGD 41.80 | 11 NOV | -41.80 |\n| SILVERFIN SUSHI BAR Card Payment SGD 27.60 | 14 NOV | -27.60 |\n| LANTERN STREET LAUNDRY Card Payment SGD 9.00 | 18 NOV | -9.00 |\n| BLUE HERON BIKE HIRE Card Payment SGD 15.50 | 21 NOV | -15.50 |",
+              "json": "[\n  {\n    \"Merchant\": \"QUARRY HILL HARDWARE Card Payment SGD 41.80\",\n    \"Posted\": \"11 NOV\",\n    \"Value\": \"-41.80\"\n  },\n  {\n    \"Merchant\": \"SILVERFIN SUSHI BAR Card Payment SGD 27.60\",\n    \"Posted\": \"14 NOV\",\n    \"Value\": \"-27.60\"\n  },\n  {\n    \"Merchant\": \"LANTERN STREET LAUNDRY Card Payment SGD 9.00\",\n    \"Posted\": \"18 NOV\",\n    \"Value\": \"-9.00\"\n  },\n  {\n    \"Merchant\": \"BLUE HERON BIKE HIRE Card Payment SGD 15.50\",\n    \"Posted\": \"21 NOV\",\n    \"Value\": \"-15.50\"\n  }\n]"
+            },
+            "rows": {
+              "csv": "Merchant,Posted,Value\nQUARRY HILL HARDWARE Card Payment SGD 41.80,11 NOV,-41.80\nSILVERFIN SUSHI BAR Card Payment SGD 27.60,14 NOV,-27.60\nLANTERN STREET LAUNDRY Card Payment SGD 9.00,18 NOV,-9.00\nBLUE HERON BIKE HIRE Card Payment SGD 15.50,21 NOV,-15.50",
+              "tsv": "Merchant\tPosted\tValue\nQUARRY HILL HARDWARE Card Payment SGD 41.80\t11 NOV\t-41.80\nSILVERFIN SUSHI BAR Card Payment SGD 27.60\t14 NOV\t-27.60\nLANTERN STREET LAUNDRY Card Payment SGD 9.00\t18 NOV\t-9.00\nBLUE HERON BIKE HIRE Card Payment SGD 15.50\t21 NOV\t-15.50",
+              "md": "| Merchant | Posted | Value |\n| --- | --- | ---: |\n| QUARRY HILL HARDWARE Card Payment SGD 41.80 | 11 NOV | -41.80 |\n| SILVERFIN SUSHI BAR Card Payment SGD 27.60 | 14 NOV | -27.60 |\n| LANTERN STREET LAUNDRY Card Payment SGD 9.00 | 18 NOV | -9.00 |\n| BLUE HERON BIKE HIRE Card Payment SGD 15.50 | 21 NOV | -15.50 |",
+              "json": "[\n  {\n    \"Merchant\": \"QUARRY HILL HARDWARE Card Payment SGD 41.80\",\n    \"Posted\": \"11 NOV\",\n    \"Value\": \"-41.80\"\n  },\n  {\n    \"Merchant\": \"SILVERFIN SUSHI BAR Card Payment SGD 27.60\",\n    \"Posted\": \"14 NOV\",\n    \"Value\": \"-27.60\"\n  },\n  {\n    \"Merchant\": \"LANTERN STREET LAUNDRY Card Payment SGD 9.00\",\n    \"Posted\": \"18 NOV\",\n    \"Value\": \"-9.00\"\n  },\n  {\n    \"Merchant\": \"BLUE HERON BIKE HIRE Card Payment SGD 15.50\",\n    \"Posted\": \"21 NOV\",\n    \"Value\": \"-15.50\"\n  }\n]"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "columnSpacing": 1,
+      "joining": false,
+      "tables": [
+        {
+          "n": 1,
+          "pages": [1],
+          "parts": [{"page":1,"bbox":[68,452.85,544,719.45]}],
+          "header": true,
+          "firstBold": true,
+          "grid": [
+            ["Description","Date","Amount"],
+            ["OCTOBER","",""],
+            ["HARBOUR COFFEE HOUSE Card Payment SGD 12.00","02 OCT","-12.00"],
+            ["FOLIO BOOK STORE Card Payment SGD 8.50","03 OCT","-8.50"],
+            ["NOVEMBER","",""],
+            ["GREENLEAF GROCERY MART Card Payment SGD 30.00","01 NOV","-30.00"],
+            ["TIDEWATER FERRY Card Payment SGD 6.20","04 NOV","-6.20"]
+          ],
+          "sections": [1,4],
+          "cols": [[72,201.61800000000002],[300,331.56300000000005],[506.007,540]],
+          "repeats": 0,
+          "exports": {
+            "column": {
+              "csv": "Section,Description,Date,Amount\nOCTOBER,HARBOUR COFFEE HOUSE Card Payment SGD 12.00,02 OCT,-12.00\nOCTOBER,FOLIO BOOK STORE Card Payment SGD 8.50,03 OCT,-8.50\nNOVEMBER,GREENLEAF GROCERY MART Card Payment SGD 30.00,01 NOV,-30.00\nNOVEMBER,TIDEWATER FERRY Card Payment SGD 6.20,04 NOV,-6.20",
+              "tsv": "Section\tDescription\tDate\tAmount\nOCTOBER\tHARBOUR COFFEE HOUSE Card Payment SGD 12.00\t02 OCT\t-12.00\nOCTOBER\tFOLIO BOOK STORE Card Payment SGD 8.50\t03 OCT\t-8.50\nNOVEMBER\tGREENLEAF GROCERY MART Card Payment SGD 30.00\t01 NOV\t-30.00\nNOVEMBER\tTIDEWATER FERRY Card Payment SGD 6.20\t04 NOV\t-6.20",
+              "md": "| Section | Description | Date | Amount |\n| --- | --- | --- | ---: |\n| OCTOBER | HARBOUR COFFEE HOUSE Card Payment SGD 12.00 | 02 OCT | -12.00 |\n| OCTOBER | FOLIO BOOK STORE Card Payment SGD 8.50 | 03 OCT | -8.50 |\n| NOVEMBER | GREENLEAF GROCERY MART Card Payment SGD 30.00 | 01 NOV | -30.00 |\n| NOVEMBER | TIDEWATER FERRY Card Payment SGD 6.20 | 04 NOV | -6.20 |",
+              "json": "[\n  {\n    \"Section\": \"OCTOBER\",\n    \"Description\": \"HARBOUR COFFEE HOUSE Card Payment SGD 12.00\",\n    \"Date\": \"02 OCT\",\n    \"Amount\": \"-12.00\"\n  },\n  {\n    \"Section\": \"OCTOBER\",\n    \"Description\": \"FOLIO BOOK STORE Card Payment SGD 8.50\",\n    \"Date\": \"03 OCT\",\n    \"Amount\": \"-8.50\"\n  },\n  {\n    \"Section\": \"NOVEMBER\",\n    \"Description\": \"GREENLEAF GROCERY MART Card Payment SGD 30.00\",\n    \"Date\": \"01 NOV\",\n    \"Amount\": \"-30.00\"\n  },\n  {\n    \"Section\": \"NOVEMBER\",\n    \"Description\": \"TIDEWATER FERRY Card Payment SGD 6.20\",\n    \"Date\": \"04 NOV\",\n    \"Amount\": \"-6.20\"\n  }\n]"
+            },
+            "rows": {
+              "csv": "Description,Date,Amount\nOCTOBER,,\nHARBOUR COFFEE HOUSE Card Payment SGD 12.00,02 OCT,-12.00\nFOLIO BOOK STORE Card Payment SGD 8.50,03 OCT,-8.50\nNOVEMBER,,\nGREENLEAF GROCERY MART Card Payment SGD 30.00,01 NOV,-30.00\nTIDEWATER FERRY Card Payment SGD 6.20,04 NOV,-6.20",
+              "tsv": "Description\tDate\tAmount\nOCTOBER\t\t\nHARBOUR COFFEE HOUSE Card Payment SGD 12.00\t02 OCT\t-12.00\nFOLIO BOOK STORE Card Payment SGD 8.50\t03 OCT\t-8.50\nNOVEMBER\t\t\nGREENLEAF GROCERY MART Card Payment SGD 30.00\t01 NOV\t-30.00\nTIDEWATER FERRY Card Payment SGD 6.20\t04 NOV\t-6.20",
+              "md": "| Description | Date | Amount |\n| --- | --- | ---: |\n| **OCTOBER** | | |\n| HARBOUR COFFEE HOUSE Card Payment SGD 12.00 | 02 OCT | -12.00 |\n| FOLIO BOOK STORE Card Payment SGD 8.50 | 03 OCT | -8.50 |\n| **NOVEMBER** | | |\n| GREENLEAF GROCERY MART Card Payment SGD 30.00 | 01 NOV | -30.00 |\n| TIDEWATER FERRY Card Payment SGD 6.20 | 04 NOV | -6.20 |",
+              "json": "[\n  {\n    \"section\": \"OCTOBER\",\n    \"rows\": [\n      {\n        \"Description\": \"HARBOUR COFFEE HOUSE Card Payment SGD 12.00\",\n        \"Date\": \"02 OCT\",\n        \"Amount\": \"-12.00\"\n      },\n      {\n        \"Description\": \"FOLIO BOOK STORE Card Payment SGD 8.50\",\n        \"Date\": \"03 OCT\",\n        \"Amount\": \"-8.50\"\n      }\n    ]\n  },\n  {\n    \"section\": \"NOVEMBER\",\n    \"rows\": [\n      {\n        \"Description\": \"GREENLEAF GROCERY MART Card Payment SGD 30.00\",\n        \"Date\": \"01 NOV\",\n        \"Amount\": \"-30.00\"\n      },\n      {\n        \"Description\": \"TIDEWATER FERRY Card Payment SGD 6.20\",\n        \"Date\": \"04 NOV\",\n        \"Amount\": \"-6.20\"\n      }\n    ]\n  }\n]"
+            }
+          }
+        },
+        {
+          "n": 2,
+          "pages": [2],
+          "parts": [{"page":2,"bbox":[68,522.85,544.0000000000001,749.45]}],
+          "header": true,
+          "firstBold": true,
+          "grid": [
+            ["Merchant","Posted","Value"],
+            ["QUARRY HILL HARDWARE Card Payment SGD 41.80","11 NOV","-41.80"],
+            ["SILVERFIN SUSHI BAR Card Payment SGD 27.60","14 NOV","-27.60"],
+            ["LANTERN STREET LAUNDRY Card Payment SGD 9.00","18 NOV","-9.00"],
+            ["BLUE HERON BIKE HIRE Card Payment SGD 15.50","21 NOV","-15.50"]
+          ],
+          "sections": [],
+          "cols": [[72,196.61400000000006],[300,331.56300000000005],[514.485,540.0000000000001]],
+          "repeats": 0,
+          "exports": {
+            "column": {
+              "csv": "Merchant,Posted,Value\nQUARRY HILL HARDWARE Card Payment SGD 41.80,11 NOV,-41.80\nSILVERFIN SUSHI BAR Card Payment SGD 27.60,14 NOV,-27.60\nLANTERN STREET LAUNDRY Card Payment SGD 9.00,18 NOV,-9.00\nBLUE HERON BIKE HIRE Card Payment SGD 15.50,21 NOV,-15.50",
+              "tsv": "Merchant\tPosted\tValue\nQUARRY HILL HARDWARE Card Payment SGD 41.80\t11 NOV\t-41.80\nSILVERFIN SUSHI BAR Card Payment SGD 27.60\t14 NOV\t-27.60\nLANTERN STREET LAUNDRY Card Payment SGD 9.00\t18 NOV\t-9.00\nBLUE HERON BIKE HIRE Card Payment SGD 15.50\t21 NOV\t-15.50",
+              "md": "| Merchant | Posted | Value |\n| --- | --- | ---: |\n| QUARRY HILL HARDWARE Card Payment SGD 41.80 | 11 NOV | -41.80 |\n| SILVERFIN SUSHI BAR Card Payment SGD 27.60 | 14 NOV | -27.60 |\n| LANTERN STREET LAUNDRY Card Payment SGD 9.00 | 18 NOV | -9.00 |\n| BLUE HERON BIKE HIRE Card Payment SGD 15.50 | 21 NOV | -15.50 |",
+              "json": "[\n  {\n    \"Merchant\": \"QUARRY HILL HARDWARE Card Payment SGD 41.80\",\n    \"Posted\": \"11 NOV\",\n    \"Value\": \"-41.80\"\n  },\n  {\n    \"Merchant\": \"SILVERFIN SUSHI BAR Card Payment SGD 27.60\",\n    \"Posted\": \"14 NOV\",\n    \"Value\": \"-27.60\"\n  },\n  {\n    \"Merchant\": \"LANTERN STREET LAUNDRY Card Payment SGD 9.00\",\n    \"Posted\": \"18 NOV\",\n    \"Value\": \"-9.00\"\n  },\n  {\n    \"Merchant\": \"BLUE HERON BIKE HIRE Card Payment SGD 15.50\",\n    \"Posted\": \"21 NOV\",\n    \"Value\": \"-15.50\"\n  }\n]"
+            },
+            "rows": {
+              "csv": "Merchant,Posted,Value\nQUARRY HILL HARDWARE Card Payment SGD 41.80,11 NOV,-41.80\nSILVERFIN SUSHI BAR Card Payment SGD 27.60,14 NOV,-27.60\nLANTERN STREET LAUNDRY Card Payment SGD 9.00,18 NOV,-9.00\nBLUE HERON BIKE HIRE Card Payment SGD 15.50,21 NOV,-15.50",
+              "tsv": "Merchant\tPosted\tValue\nQUARRY HILL HARDWARE Card Payment SGD 41.80\t11 NOV\t-41.80\nSILVERFIN SUSHI BAR Card Payment SGD 27.60\t14 NOV\t-27.60\nLANTERN STREET LAUNDRY Card Payment SGD 9.00\t18 NOV\t-9.00\nBLUE HERON BIKE HIRE Card Payment SGD 15.50\t21 NOV\t-15.50",
+              "md": "| Merchant | Posted | Value |\n| --- | --- | ---: |\n| QUARRY HILL HARDWARE Card Payment SGD 41.80 | 11 NOV | -41.80 |\n| SILVERFIN SUSHI BAR Card Payment SGD 27.60 | 14 NOV | -27.60 |\n| LANTERN STREET LAUNDRY Card Payment SGD 9.00 | 18 NOV | -9.00 |\n| BLUE HERON BIKE HIRE Card Payment SGD 15.50 | 21 NOV | -15.50 |",
+              "json": "[\n  {\n    \"Merchant\": \"QUARRY HILL HARDWARE Card Payment SGD 41.80\",\n    \"Posted\": \"11 NOV\",\n    \"Value\": \"-41.80\"\n  },\n  {\n    \"Merchant\": \"SILVERFIN SUSHI BAR Card Payment SGD 27.60\",\n    \"Posted\": \"14 NOV\",\n    \"Value\": \"-27.60\"\n  },\n  {\n    \"Merchant\": \"LANTERN STREET LAUNDRY Card Payment SGD 9.00\",\n    \"Posted\": \"18 NOV\",\n    \"Value\": \"-9.00\"\n  },\n  {\n    \"Merchant\": \"BLUE HERON BIKE HIRE Card Payment SGD 15.50\",\n    \"Posted\": \"21 NOV\",\n    \"Value\": \"-15.50\"\n  }\n]"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "columnSpacing": 0.5,
+      "joining": true,
+      "tables": [
+        {
+          "n": 1,
+          "pages": [1],
+          "parts": [{"page":1,"bbox":[68,452.85,544,719.45]}],
+          "header": true,
+          "firstBold": true,
+          "grid": [
+            ["Description","Date","Amount"],
+            ["OCTOBER","",""],
+            ["HARBOUR COFFEE HOUSE Card Payment SGD 12.00","02 OCT","-12.00"],
+            ["FOLIO BOOK STORE Card Payment SGD 8.50","03 OCT","-8.50"],
+            ["NOVEMBER","",""],
+            ["GREENLEAF GROCERY MART Card Payment SGD 30.00","01 NOV","-30.00"],
+            ["TIDEWATER FERRY Card Payment SGD 6.20","04 NOV","-6.20"]
+          ],
+          "sections": [1,4],
+          "cols": [[72,201.61800000000002],[300,331.56300000000005],[506.007,540]],
+          "repeats": 0,
+          "exports": {
+            "column": {
+              "csv": "Section,Description,Date,Amount\nOCTOBER,HARBOUR COFFEE HOUSE Card Payment SGD 12.00,02 OCT,-12.00\nOCTOBER,FOLIO BOOK STORE Card Payment SGD 8.50,03 OCT,-8.50\nNOVEMBER,GREENLEAF GROCERY MART Card Payment SGD 30.00,01 NOV,-30.00\nNOVEMBER,TIDEWATER FERRY Card Payment SGD 6.20,04 NOV,-6.20",
+              "tsv": "Section\tDescription\tDate\tAmount\nOCTOBER\tHARBOUR COFFEE HOUSE Card Payment SGD 12.00\t02 OCT\t-12.00\nOCTOBER\tFOLIO BOOK STORE Card Payment SGD 8.50\t03 OCT\t-8.50\nNOVEMBER\tGREENLEAF GROCERY MART Card Payment SGD 30.00\t01 NOV\t-30.00\nNOVEMBER\tTIDEWATER FERRY Card Payment SGD 6.20\t04 NOV\t-6.20",
+              "md": "| Section | Description | Date | Amount |\n| --- | --- | --- | ---: |\n| OCTOBER | HARBOUR COFFEE HOUSE Card Payment SGD 12.00 | 02 OCT | -12.00 |\n| OCTOBER | FOLIO BOOK STORE Card Payment SGD 8.50 | 03 OCT | -8.50 |\n| NOVEMBER | GREENLEAF GROCERY MART Card Payment SGD 30.00 | 01 NOV | -30.00 |\n| NOVEMBER | TIDEWATER FERRY Card Payment SGD 6.20 | 04 NOV | -6.20 |",
+              "json": "[\n  {\n    \"Section\": \"OCTOBER\",\n    \"Description\": \"HARBOUR COFFEE HOUSE Card Payment SGD 12.00\",\n    \"Date\": \"02 OCT\",\n    \"Amount\": \"-12.00\"\n  },\n  {\n    \"Section\": \"OCTOBER\",\n    \"Description\": \"FOLIO BOOK STORE Card Payment SGD 8.50\",\n    \"Date\": \"03 OCT\",\n    \"Amount\": \"-8.50\"\n  },\n  {\n    \"Section\": \"NOVEMBER\",\n    \"Description\": \"GREENLEAF GROCERY MART Card Payment SGD 30.00\",\n    \"Date\": \"01 NOV\",\n    \"Amount\": \"-30.00\"\n  },\n  {\n    \"Section\": \"NOVEMBER\",\n    \"Description\": \"TIDEWATER FERRY Card Payment SGD 6.20\",\n    \"Date\": \"04 NOV\",\n    \"Amount\": \"-6.20\"\n  }\n]"
+            },
+            "rows": {
+              "csv": "Description,Date,Amount\nOCTOBER,,\nHARBOUR COFFEE HOUSE Card Payment SGD 12.00,02 OCT,-12.00\nFOLIO BOOK STORE Card Payment SGD 8.50,03 OCT,-8.50\nNOVEMBER,,\nGREENLEAF GROCERY MART Card Payment SGD 30.00,01 NOV,-30.00\nTIDEWATER FERRY Card Payment SGD 6.20,04 NOV,-6.20",
+              "tsv": "Description\tDate\tAmount\nOCTOBER\t\t\nHARBOUR COFFEE HOUSE Card Payment SGD 12.00\t02 OCT\t-12.00\nFOLIO BOOK STORE Card Payment SGD 8.50\t03 OCT\t-8.50\nNOVEMBER\t\t\nGREENLEAF GROCERY MART Card Payment SGD 30.00\t01 NOV\t-30.00\nTIDEWATER FERRY Card Payment SGD 6.20\t04 NOV\t-6.20",
+              "md": "| Description | Date | Amount |\n| --- | --- | ---: |\n| **OCTOBER** | | |\n| HARBOUR COFFEE HOUSE Card Payment SGD 12.00 | 02 OCT | -12.00 |\n| FOLIO BOOK STORE Card Payment SGD 8.50 | 03 OCT | -8.50 |\n| **NOVEMBER** | | |\n| GREENLEAF GROCERY MART Card Payment SGD 30.00 | 01 NOV | -30.00 |\n| TIDEWATER FERRY Card Payment SGD 6.20 | 04 NOV | -6.20 |",
+              "json": "[\n  {\n    \"section\": \"OCTOBER\",\n    \"rows\": [\n      {\n        \"Description\": \"HARBOUR COFFEE HOUSE Card Payment SGD 12.00\",\n        \"Date\": \"02 OCT\",\n        \"Amount\": \"-12.00\"\n      },\n      {\n        \"Description\": \"FOLIO BOOK STORE Card Payment SGD 8.50\",\n        \"Date\": \"03 OCT\",\n        \"Amount\": \"-8.50\"\n      }\n    ]\n  },\n  {\n    \"section\": \"NOVEMBER\",\n    \"rows\": [\n      {\n        \"Description\": \"GREENLEAF GROCERY MART Card Payment SGD 30.00\",\n        \"Date\": \"01 NOV\",\n        \"Amount\": \"-30.00\"\n      },\n      {\n        \"Description\": \"TIDEWATER FERRY Card Payment SGD 6.20\",\n        \"Date\": \"04 NOV\",\n        \"Amount\": \"-6.20\"\n      }\n    ]\n  }\n]"
+            }
+          }
+        },
+        {
+          "n": 2,
+          "pages": [2],
+          "parts": [{"page":2,"bbox":[68,522.85,544.0000000000001,749.45]}],
+          "header": true,
+          "firstBold": true,
+          "grid": [
+            ["Merchant","Posted","Value"],
+            ["QUARRY HILL HARDWARE Card Payment SGD 41.80","11 NOV","-41.80"],
+            ["SILVERFIN SUSHI BAR Card Payment SGD 27.60","14 NOV","-27.60"],
+            ["LANTERN STREET LAUNDRY Card Payment SGD 9.00","18 NOV","-9.00"],
+            ["BLUE HERON BIKE HIRE Card Payment SGD 15.50","21 NOV","-15.50"]
+          ],
+          "sections": [],
+          "cols": [[72,196.61400000000006],[300,331.56300000000005],[514.485,540.0000000000001]],
+          "repeats": 0,
+          "exports": {
+            "column": {
+              "csv": "Merchant,Posted,Value\nQUARRY HILL HARDWARE Card Payment SGD 41.80,11 NOV,-41.80\nSILVERFIN SUSHI BAR Card Payment SGD 27.60,14 NOV,-27.60\nLANTERN STREET LAUNDRY Card Payment SGD 9.00,18 NOV,-9.00\nBLUE HERON BIKE HIRE Card Payment SGD 15.50,21 NOV,-15.50",
+              "tsv": "Merchant\tPosted\tValue\nQUARRY HILL HARDWARE Card Payment SGD 41.80\t11 NOV\t-41.80\nSILVERFIN SUSHI BAR Card Payment SGD 27.60\t14 NOV\t-27.60\nLANTERN STREET LAUNDRY Card Payment SGD 9.00\t18 NOV\t-9.00\nBLUE HERON BIKE HIRE Card Payment SGD 15.50\t21 NOV\t-15.50",
+              "md": "| Merchant | Posted | Value |\n| --- | --- | ---: |\n| QUARRY HILL HARDWARE Card Payment SGD 41.80 | 11 NOV | -41.80 |\n| SILVERFIN SUSHI BAR Card Payment SGD 27.60 | 14 NOV | -27.60 |\n| LANTERN STREET LAUNDRY Card Payment SGD 9.00 | 18 NOV | -9.00 |\n| BLUE HERON BIKE HIRE Card Payment SGD 15.50 | 21 NOV | -15.50 |",
+              "json": "[\n  {\n    \"Merchant\": \"QUARRY HILL HARDWARE Card Payment SGD 41.80\",\n    \"Posted\": \"11 NOV\",\n    \"Value\": \"-41.80\"\n  },\n  {\n    \"Merchant\": \"SILVERFIN SUSHI BAR Card Payment SGD 27.60\",\n    \"Posted\": \"14 NOV\",\n    \"Value\": \"-27.60\"\n  },\n  {\n    \"Merchant\": \"LANTERN STREET LAUNDRY Card Payment SGD 9.00\",\n    \"Posted\": \"18 NOV\",\n    \"Value\": \"-9.00\"\n  },\n  {\n    \"Merchant\": \"BLUE HERON BIKE HIRE Card Payment SGD 15.50\",\n    \"Posted\": \"21 NOV\",\n    \"Value\": \"-15.50\"\n  }\n]"
+            },
+            "rows": {
+              "csv": "Merchant,Posted,Value\nQUARRY HILL HARDWARE Card Payment SGD 41.80,11 NOV,-41.80\nSILVERFIN SUSHI BAR Card Payment SGD 27.60,14 NOV,-27.60\nLANTERN STREET LAUNDRY Card Payment SGD 9.00,18 NOV,-9.00\nBLUE HERON BIKE HIRE Card Payment SGD 15.50,21 NOV,-15.50",
+              "tsv": "Merchant\tPosted\tValue\nQUARRY HILL HARDWARE Card Payment SGD 41.80\t11 NOV\t-41.80\nSILVERFIN SUSHI BAR Card Payment SGD 27.60\t14 NOV\t-27.60\nLANTERN STREET LAUNDRY Card Payment SGD 9.00\t18 NOV\t-9.00\nBLUE HERON BIKE HIRE Card Payment SGD 15.50\t21 NOV\t-15.50",
+              "md": "| Merchant | Posted | Value |\n| --- | --- | ---: |\n| QUARRY HILL HARDWARE Card Payment SGD 41.80 | 11 NOV | -41.80 |\n| SILVERFIN SUSHI BAR Card Payment SGD 27.60 | 14 NOV | -27.60 |\n| LANTERN STREET LAUNDRY Card Payment SGD 9.00 | 18 NOV | -9.00 |\n| BLUE HERON BIKE HIRE Card Payment SGD 15.50 | 21 NOV | -15.50 |",
+              "json": "[\n  {\n    \"Merchant\": \"QUARRY HILL HARDWARE Card Payment SGD 41.80\",\n    \"Posted\": \"11 NOV\",\n    \"Value\": \"-41.80\"\n  },\n  {\n    \"Merchant\": \"SILVERFIN SUSHI BAR Card Payment SGD 27.60\",\n    \"Posted\": \"14 NOV\",\n    \"Value\": \"-27.60\"\n  },\n  {\n    \"Merchant\": \"LANTERN STREET LAUNDRY Card Payment SGD 9.00\",\n    \"Posted\": \"18 NOV\",\n    \"Value\": \"-9.00\"\n  },\n  {\n    \"Merchant\": \"BLUE HERON BIKE HIRE Card Payment SGD 15.50\",\n    \"Posted\": \"21 NOV\",\n    \"Value\": \"-15.50\"\n  }\n]"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "columnSpacing": 0.5,
+      "joining": false,
+      "tables": [
+        {
+          "n": 1,
+          "pages": [1],
+          "parts": [{"page":1,"bbox":[68,452.85,544,719.45]}],
+          "header": true,
+          "firstBold": true,
+          "grid": [
+            ["Description","Date","Amount"],
+            ["OCTOBER","",""],
+            ["HARBOUR COFFEE HOUSE Card Payment SGD 12.00","02 OCT","-12.00"],
+            ["FOLIO BOOK STORE Card Payment SGD 8.50","03 OCT","-8.50"],
+            ["NOVEMBER","",""],
+            ["GREENLEAF GROCERY MART Card Payment SGD 30.00","01 NOV","-30.00"],
+            ["TIDEWATER FERRY Card Payment SGD 6.20","04 NOV","-6.20"]
+          ],
+          "sections": [1,4],
+          "cols": [[72,201.61800000000002],[300,331.56300000000005],[506.007,540]],
+          "repeats": 0,
+          "exports": {
+            "column": {
+              "csv": "Section,Description,Date,Amount\nOCTOBER,HARBOUR COFFEE HOUSE Card Payment SGD 12.00,02 OCT,-12.00\nOCTOBER,FOLIO BOOK STORE Card Payment SGD 8.50,03 OCT,-8.50\nNOVEMBER,GREENLEAF GROCERY MART Card Payment SGD 30.00,01 NOV,-30.00\nNOVEMBER,TIDEWATER FERRY Card Payment SGD 6.20,04 NOV,-6.20",
+              "tsv": "Section\tDescription\tDate\tAmount\nOCTOBER\tHARBOUR COFFEE HOUSE Card Payment SGD 12.00\t02 OCT\t-12.00\nOCTOBER\tFOLIO BOOK STORE Card Payment SGD 8.50\t03 OCT\t-8.50\nNOVEMBER\tGREENLEAF GROCERY MART Card Payment SGD 30.00\t01 NOV\t-30.00\nNOVEMBER\tTIDEWATER FERRY Card Payment SGD 6.20\t04 NOV\t-6.20",
+              "md": "| Section | Description | Date | Amount |\n| --- | --- | --- | ---: |\n| OCTOBER | HARBOUR COFFEE HOUSE Card Payment SGD 12.00 | 02 OCT | -12.00 |\n| OCTOBER | FOLIO BOOK STORE Card Payment SGD 8.50 | 03 OCT | -8.50 |\n| NOVEMBER | GREENLEAF GROCERY MART Card Payment SGD 30.00 | 01 NOV | -30.00 |\n| NOVEMBER | TIDEWATER FERRY Card Payment SGD 6.20 | 04 NOV | -6.20 |",
+              "json": "[\n  {\n    \"Section\": \"OCTOBER\",\n    \"Description\": \"HARBOUR COFFEE HOUSE Card Payment SGD 12.00\",\n    \"Date\": \"02 OCT\",\n    \"Amount\": \"-12.00\"\n  },\n  {\n    \"Section\": \"OCTOBER\",\n    \"Description\": \"FOLIO BOOK STORE Card Payment SGD 8.50\",\n    \"Date\": \"03 OCT\",\n    \"Amount\": \"-8.50\"\n  },\n  {\n    \"Section\": \"NOVEMBER\",\n    \"Description\": \"GREENLEAF GROCERY MART Card Payment SGD 30.00\",\n    \"Date\": \"01 NOV\",\n    \"Amount\": \"-30.00\"\n  },\n  {\n    \"Section\": \"NOVEMBER\",\n    \"Description\": \"TIDEWATER FERRY Card Payment SGD 6.20\",\n    \"Date\": \"04 NOV\",\n    \"Amount\": \"-6.20\"\n  }\n]"
+            },
+            "rows": {
+              "csv": "Description,Date,Amount\nOCTOBER,,\nHARBOUR COFFEE HOUSE Card Payment SGD 12.00,02 OCT,-12.00\nFOLIO BOOK STORE Card Payment SGD 8.50,03 OCT,-8.50\nNOVEMBER,,\nGREENLEAF GROCERY MART Card Payment SGD 30.00,01 NOV,-30.00\nTIDEWATER FERRY Card Payment SGD 6.20,04 NOV,-6.20",
+              "tsv": "Description\tDate\tAmount\nOCTOBER\t\t\nHARBOUR COFFEE HOUSE Card Payment SGD 12.00\t02 OCT\t-12.00\nFOLIO BOOK STORE Card Payment SGD 8.50\t03 OCT\t-8.50\nNOVEMBER\t\t\nGREENLEAF GROCERY MART Card Payment SGD 30.00\t01 NOV\t-30.00\nTIDEWATER FERRY Card Payment SGD 6.20\t04 NOV\t-6.20",
+              "md": "| Description | Date | Amount |\n| --- | --- | ---: |\n| **OCTOBER** | | |\n| HARBOUR COFFEE HOUSE Card Payment SGD 12.00 | 02 OCT | -12.00 |\n| FOLIO BOOK STORE Card Payment SGD 8.50 | 03 OCT | -8.50 |\n| **NOVEMBER** | | |\n| GREENLEAF GROCERY MART Card Payment SGD 30.00 | 01 NOV | -30.00 |\n| TIDEWATER FERRY Card Payment SGD 6.20 | 04 NOV | -6.20 |",
+              "json": "[\n  {\n    \"section\": \"OCTOBER\",\n    \"rows\": [\n      {\n        \"Description\": \"HARBOUR COFFEE HOUSE Card Payment SGD 12.00\",\n        \"Date\": \"02 OCT\",\n        \"Amount\": \"-12.00\"\n      },\n      {\n        \"Description\": \"FOLIO BOOK STORE Card Payment SGD 8.50\",\n        \"Date\": \"03 OCT\",\n        \"Amount\": \"-8.50\"\n      }\n    ]\n  },\n  {\n    \"section\": \"NOVEMBER\",\n    \"rows\": [\n      {\n        \"Description\": \"GREENLEAF GROCERY MART Card Payment SGD 30.00\",\n        \"Date\": \"01 NOV\",\n        \"Amount\": \"-30.00\"\n      },\n      {\n        \"Description\": \"TIDEWATER FERRY Card Payment SGD 6.20\",\n        \"Date\": \"04 NOV\",\n        \"Amount\": \"-6.20\"\n      }\n    ]\n  }\n]"
+            }
+          }
+        },
+        {
+          "n": 2,
+          "pages": [2],
+          "parts": [{"page":2,"bbox":[68,522.85,544.0000000000001,749.45]}],
+          "header": true,
+          "firstBold": true,
+          "grid": [
+            ["Merchant","Posted","Value"],
+            ["QUARRY HILL HARDWARE Card Payment SGD 41.80","11 NOV","-41.80"],
+            ["SILVERFIN SUSHI BAR Card Payment SGD 27.60","14 NOV","-27.60"],
+            ["LANTERN STREET LAUNDRY Card Payment SGD 9.00","18 NOV","-9.00"],
+            ["BLUE HERON BIKE HIRE Card Payment SGD 15.50","21 NOV","-15.50"]
+          ],
+          "sections": [],
+          "cols": [[72,196.61400000000006],[300,331.56300000000005],[514.485,540.0000000000001]],
+          "repeats": 0,
+          "exports": {
+            "column": {
+              "csv": "Merchant,Posted,Value\nQUARRY HILL HARDWARE Card Payment SGD 41.80,11 NOV,-41.80\nSILVERFIN SUSHI BAR Card Payment SGD 27.60,14 NOV,-27.60\nLANTERN STREET LAUNDRY Card Payment SGD 9.00,18 NOV,-9.00\nBLUE HERON BIKE HIRE Card Payment SGD 15.50,21 NOV,-15.50",
+              "tsv": "Merchant\tPosted\tValue\nQUARRY HILL HARDWARE Card Payment SGD 41.80\t11 NOV\t-41.80\nSILVERFIN SUSHI BAR Card Payment SGD 27.60\t14 NOV\t-27.60\nLANTERN STREET LAUNDRY Card Payment SGD 9.00\t18 NOV\t-9.00\nBLUE HERON BIKE HIRE Card Payment SGD 15.50\t21 NOV\t-15.50",
+              "md": "| Merchant | Posted | Value |\n| --- | --- | ---: |\n| QUARRY HILL HARDWARE Card Payment SGD 41.80 | 11 NOV | -41.80 |\n| SILVERFIN SUSHI BAR Card Payment SGD 27.60 | 14 NOV | -27.60 |\n| LANTERN STREET LAUNDRY Card Payment SGD 9.00 | 18 NOV | -9.00 |\n| BLUE HERON BIKE HIRE Card Payment SGD 15.50 | 21 NOV | -15.50 |",
+              "json": "[\n  {\n    \"Merchant\": \"QUARRY HILL HARDWARE Card Payment SGD 41.80\",\n    \"Posted\": \"11 NOV\",\n    \"Value\": \"-41.80\"\n  },\n  {\n    \"Merchant\": \"SILVERFIN SUSHI BAR Card Payment SGD 27.60\",\n    \"Posted\": \"14 NOV\",\n    \"Value\": \"-27.60\"\n  },\n  {\n    \"Merchant\": \"LANTERN STREET LAUNDRY Card Payment SGD 9.00\",\n    \"Posted\": \"18 NOV\",\n    \"Value\": \"-9.00\"\n  },\n  {\n    \"Merchant\": \"BLUE HERON BIKE HIRE Card Payment SGD 15.50\",\n    \"Posted\": \"21 NOV\",\n    \"Value\": \"-15.50\"\n  }\n]"
+            },
+            "rows": {
+              "csv": "Merchant,Posted,Value\nQUARRY HILL HARDWARE Card Payment SGD 41.80,11 NOV,-41.80\nSILVERFIN SUSHI BAR Card Payment SGD 27.60,14 NOV,-27.60\nLANTERN STREET LAUNDRY Card Payment SGD 9.00,18 NOV,-9.00\nBLUE HERON BIKE HIRE Card Payment SGD 15.50,21 NOV,-15.50",
+              "tsv": "Merchant\tPosted\tValue\nQUARRY HILL HARDWARE Card Payment SGD 41.80\t11 NOV\t-41.80\nSILVERFIN SUSHI BAR Card Payment SGD 27.60\t14 NOV\t-27.60\nLANTERN STREET LAUNDRY Card Payment SGD 9.00\t18 NOV\t-9.00\nBLUE HERON BIKE HIRE Card Payment SGD 15.50\t21 NOV\t-15.50",
+              "md": "| Merchant | Posted | Value |\n| --- | --- | ---: |\n| QUARRY HILL HARDWARE Card Payment SGD 41.80 | 11 NOV | -41.80 |\n| SILVERFIN SUSHI BAR Card Payment SGD 27.60 | 14 NOV | -27.60 |\n| LANTERN STREET LAUNDRY Card Payment SGD 9.00 | 18 NOV | -9.00 |\n| BLUE HERON BIKE HIRE Card Payment SGD 15.50 | 21 NOV | -15.50 |",
+              "json": "[\n  {\n    \"Merchant\": \"QUARRY HILL HARDWARE Card Payment SGD 41.80\",\n    \"Posted\": \"11 NOV\",\n    \"Value\": \"-41.80\"\n  },\n  {\n    \"Merchant\": \"SILVERFIN SUSHI BAR Card Payment SGD 27.60\",\n    \"Posted\": \"14 NOV\",\n    \"Value\": \"-27.60\"\n  },\n  {\n    \"Merchant\": \"LANTERN STREET LAUNDRY Card Payment SGD 9.00\",\n    \"Posted\": \"18 NOV\",\n    \"Value\": \"-9.00\"\n  },\n  {\n    \"Merchant\": \"BLUE HERON BIKE HIRE Card Payment SGD 15.50\",\n    \"Posted\": \"21 NOV\",\n    \"Value\": \"-15.50\"\n  }\n]"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "columnSpacing": 2,
+      "joining": true,
+      "tables": [
+        {
+          "n": 1,
+          "pages": [1],
+          "parts": [{"page":1,"bbox":[68,452.85,544,719.45]}],
+          "header": true,
+          "firstBold": true,
+          "grid": [
+            ["Description","Date","Amount"],
+            ["OCTOBER","",""],
+            ["HARBOUR COFFEE HOUSE Card Payment SGD 12.00","02 OCT","-12.00"],
+            ["FOLIO BOOK STORE Card Payment SGD 8.50","03 OCT","-8.50"],
+            ["NOVEMBER","",""],
+            ["GREENLEAF GROCERY MART Card Payment SGD 30.00","01 NOV","-30.00"],
+            ["TIDEWATER FERRY Card Payment SGD 6.20","04 NOV","-6.20"]
+          ],
+          "sections": [1,4],
+          "cols": [[72,201.61800000000002],[300,331.56300000000005],[506.007,540]],
+          "repeats": 0,
+          "exports": {
+            "column": {
+              "csv": "Section,Description,Date,Amount\nOCTOBER,HARBOUR COFFEE HOUSE Card Payment SGD 12.00,02 OCT,-12.00\nOCTOBER,FOLIO BOOK STORE Card Payment SGD 8.50,03 OCT,-8.50\nNOVEMBER,GREENLEAF GROCERY MART Card Payment SGD 30.00,01 NOV,-30.00\nNOVEMBER,TIDEWATER FERRY Card Payment SGD 6.20,04 NOV,-6.20",
+              "tsv": "Section\tDescription\tDate\tAmount\nOCTOBER\tHARBOUR COFFEE HOUSE Card Payment SGD 12.00\t02 OCT\t-12.00\nOCTOBER\tFOLIO BOOK STORE Card Payment SGD 8.50\t03 OCT\t-8.50\nNOVEMBER\tGREENLEAF GROCERY MART Card Payment SGD 30.00\t01 NOV\t-30.00\nNOVEMBER\tTIDEWATER FERRY Card Payment SGD 6.20\t04 NOV\t-6.20",
+              "md": "| Section | Description | Date | Amount |\n| --- | --- | --- | ---: |\n| OCTOBER | HARBOUR COFFEE HOUSE Card Payment SGD 12.00 | 02 OCT | -12.00 |\n| OCTOBER | FOLIO BOOK STORE Card Payment SGD 8.50 | 03 OCT | -8.50 |\n| NOVEMBER | GREENLEAF GROCERY MART Card Payment SGD 30.00 | 01 NOV | -30.00 |\n| NOVEMBER | TIDEWATER FERRY Card Payment SGD 6.20 | 04 NOV | -6.20 |",
+              "json": "[\n  {\n    \"Section\": \"OCTOBER\",\n    \"Description\": \"HARBOUR COFFEE HOUSE Card Payment SGD 12.00\",\n    \"Date\": \"02 OCT\",\n    \"Amount\": \"-12.00\"\n  },\n  {\n    \"Section\": \"OCTOBER\",\n    \"Description\": \"FOLIO BOOK STORE Card Payment SGD 8.50\",\n    \"Date\": \"03 OCT\",\n    \"Amount\": \"-8.50\"\n  },\n  {\n    \"Section\": \"NOVEMBER\",\n    \"Description\": \"GREENLEAF GROCERY MART Card Payment SGD 30.00\",\n    \"Date\": \"01 NOV\",\n    \"Amount\": \"-30.00\"\n  },\n  {\n    \"Section\": \"NOVEMBER\",\n    \"Description\": \"TIDEWATER FERRY Card Payment SGD 6.20\",\n    \"Date\": \"04 NOV\",\n    \"Amount\": \"-6.20\"\n  }\n]"
+            },
+            "rows": {
+              "csv": "Description,Date,Amount\nOCTOBER,,\nHARBOUR COFFEE HOUSE Card Payment SGD 12.00,02 OCT,-12.00\nFOLIO BOOK STORE Card Payment SGD 8.50,03 OCT,-8.50\nNOVEMBER,,\nGREENLEAF GROCERY MART Card Payment SGD 30.00,01 NOV,-30.00\nTIDEWATER FERRY Card Payment SGD 6.20,04 NOV,-6.20",
+              "tsv": "Description\tDate\tAmount\nOCTOBER\t\t\nHARBOUR COFFEE HOUSE Card Payment SGD 12.00\t02 OCT\t-12.00\nFOLIO BOOK STORE Card Payment SGD 8.50\t03 OCT\t-8.50\nNOVEMBER\t\t\nGREENLEAF GROCERY MART Card Payment SGD 30.00\t01 NOV\t-30.00\nTIDEWATER FERRY Card Payment SGD 6.20\t04 NOV\t-6.20",
+              "md": "| Description | Date | Amount |\n| --- | --- | ---: |\n| **OCTOBER** | | |\n| HARBOUR COFFEE HOUSE Card Payment SGD 12.00 | 02 OCT | -12.00 |\n| FOLIO BOOK STORE Card Payment SGD 8.50 | 03 OCT | -8.50 |\n| **NOVEMBER** | | |\n| GREENLEAF GROCERY MART Card Payment SGD 30.00 | 01 NOV | -30.00 |\n| TIDEWATER FERRY Card Payment SGD 6.20 | 04 NOV | -6.20 |",
+              "json": "[\n  {\n    \"section\": \"OCTOBER\",\n    \"rows\": [\n      {\n        \"Description\": \"HARBOUR COFFEE HOUSE Card Payment SGD 12.00\",\n        \"Date\": \"02 OCT\",\n        \"Amount\": \"-12.00\"\n      },\n      {\n        \"Description\": \"FOLIO BOOK STORE Card Payment SGD 8.50\",\n        \"Date\": \"03 OCT\",\n        \"Amount\": \"-8.50\"\n      }\n    ]\n  },\n  {\n    \"section\": \"NOVEMBER\",\n    \"rows\": [\n      {\n        \"Description\": \"GREENLEAF GROCERY MART Card Payment SGD 30.00\",\n        \"Date\": \"01 NOV\",\n        \"Amount\": \"-30.00\"\n      },\n      {\n        \"Description\": \"TIDEWATER FERRY Card Payment SGD 6.20\",\n        \"Date\": \"04 NOV\",\n        \"Amount\": \"-6.20\"\n      }\n    ]\n  }\n]"
+            }
+          }
+        },
+        {
+          "n": 2,
+          "pages": [2],
+          "parts": [{"page":2,"bbox":[68,522.85,544.0000000000001,749.45]}],
+          "header": true,
+          "firstBold": true,
+          "grid": [
+            ["Merchant","Posted","Value"],
+            ["QUARRY HILL HARDWARE Card Payment SGD 41.80","11 NOV","-41.80"],
+            ["SILVERFIN SUSHI BAR Card Payment SGD 27.60","14 NOV","-27.60"],
+            ["LANTERN STREET LAUNDRY Card Payment SGD 9.00","18 NOV","-9.00"],
+            ["BLUE HERON BIKE HIRE Card Payment SGD 15.50","21 NOV","-15.50"]
+          ],
+          "sections": [],
+          "cols": [[72,196.61400000000006],[300,331.56300000000005],[514.485,540.0000000000001]],
+          "repeats": 0,
+          "exports": {
+            "column": {
+              "csv": "Merchant,Posted,Value\nQUARRY HILL HARDWARE Card Payment SGD 41.80,11 NOV,-41.80\nSILVERFIN SUSHI BAR Card Payment SGD 27.60,14 NOV,-27.60\nLANTERN STREET LAUNDRY Card Payment SGD 9.00,18 NOV,-9.00\nBLUE HERON BIKE HIRE Card Payment SGD 15.50,21 NOV,-15.50",
+              "tsv": "Merchant\tPosted\tValue\nQUARRY HILL HARDWARE Card Payment SGD 41.80\t11 NOV\t-41.80\nSILVERFIN SUSHI BAR Card Payment SGD 27.60\t14 NOV\t-27.60\nLANTERN STREET LAUNDRY Card Payment SGD 9.00\t18 NOV\t-9.00\nBLUE HERON BIKE HIRE Card Payment SGD 15.50\t21 NOV\t-15.50",
+              "md": "| Merchant | Posted | Value |\n| --- | --- | ---: |\n| QUARRY HILL HARDWARE Card Payment SGD 41.80 | 11 NOV | -41.80 |\n| SILVERFIN SUSHI BAR Card Payment SGD 27.60 | 14 NOV | -27.60 |\n| LANTERN STREET LAUNDRY Card Payment SGD 9.00 | 18 NOV | -9.00 |\n| BLUE HERON BIKE HIRE Card Payment SGD 15.50 | 21 NOV | -15.50 |",
+              "json": "[\n  {\n    \"Merchant\": \"QUARRY HILL HARDWARE Card Payment SGD 41.80\",\n    \"Posted\": \"11 NOV\",\n    \"Value\": \"-41.80\"\n  },\n  {\n    \"Merchant\": \"SILVERFIN SUSHI BAR Card Payment SGD 27.60\",\n    \"Posted\": \"14 NOV\",\n    \"Value\": \"-27.60\"\n  },\n  {\n    \"Merchant\": \"LANTERN STREET LAUNDRY Card Payment SGD 9.00\",\n    \"Posted\": \"18 NOV\",\n    \"Value\": \"-9.00\"\n  },\n  {\n    \"Merchant\": \"BLUE HERON BIKE HIRE Card Payment SGD 15.50\",\n    \"Posted\": \"21 NOV\",\n    \"Value\": \"-15.50\"\n  }\n]"
+            },
+            "rows": {
+              "csv": "Merchant,Posted,Value\nQUARRY HILL HARDWARE Card Payment SGD 41.80,11 NOV,-41.80\nSILVERFIN SUSHI BAR Card Payment SGD 27.60,14 NOV,-27.60\nLANTERN STREET LAUNDRY Card Payment SGD 9.00,18 NOV,-9.00\nBLUE HERON BIKE HIRE Card Payment SGD 15.50,21 NOV,-15.50",
+              "tsv": "Merchant\tPosted\tValue\nQUARRY HILL HARDWARE Card Payment SGD 41.80\t11 NOV\t-41.80\nSILVERFIN SUSHI BAR Card Payment SGD 27.60\t14 NOV\t-27.60\nLANTERN STREET LAUNDRY Card Payment SGD 9.00\t18 NOV\t-9.00\nBLUE HERON BIKE HIRE Card Payment SGD 15.50\t21 NOV\t-15.50",
+              "md": "| Merchant | Posted | Value |\n| --- | --- | ---: |\n| QUARRY HILL HARDWARE Card Payment SGD 41.80 | 11 NOV | -41.80 |\n| SILVERFIN SUSHI BAR Card Payment SGD 27.60 | 14 NOV | -27.60 |\n| LANTERN STREET LAUNDRY Card Payment SGD 9.00 | 18 NOV | -9.00 |\n| BLUE HERON BIKE HIRE Card Payment SGD 15.50 | 21 NOV | -15.50 |",
+              "json": "[\n  {\n    \"Merchant\": \"QUARRY HILL HARDWARE Card Payment SGD 41.80\",\n    \"Posted\": \"11 NOV\",\n    \"Value\": \"-41.80\"\n  },\n  {\n    \"Merchant\": \"SILVERFIN SUSHI BAR Card Payment SGD 27.60\",\n    \"Posted\": \"14 NOV\",\n    \"Value\": \"-27.60\"\n  },\n  {\n    \"Merchant\": \"LANTERN STREET LAUNDRY Card Payment SGD 9.00\",\n    \"Posted\": \"18 NOV\",\n    \"Value\": \"-9.00\"\n  },\n  {\n    \"Merchant\": \"BLUE HERON BIKE HIRE Card Payment SGD 15.50\",\n    \"Posted\": \"21 NOV\",\n    \"Value\": \"-15.50\"\n  }\n]"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "columnSpacing": 2,
+      "joining": false,
+      "tables": [
+        {
+          "n": 1,
+          "pages": [1],
+          "parts": [{"page":1,"bbox":[68,452.85,544,719.45]}],
+          "header": true,
+          "firstBold": true,
+          "grid": [
+            ["Description","Date","Amount"],
+            ["OCTOBER","",""],
+            ["HARBOUR COFFEE HOUSE Card Payment SGD 12.00","02 OCT","-12.00"],
+            ["FOLIO BOOK STORE Card Payment SGD 8.50","03 OCT","-8.50"],
+            ["NOVEMBER","",""],
+            ["GREENLEAF GROCERY MART Card Payment SGD 30.00","01 NOV","-30.00"],
+            ["TIDEWATER FERRY Card Payment SGD 6.20","04 NOV","-6.20"]
+          ],
+          "sections": [1,4],
+          "cols": [[72,201.61800000000002],[300,331.56300000000005],[506.007,540]],
+          "repeats": 0,
+          "exports": {
+            "column": {
+              "csv": "Section,Description,Date,Amount\nOCTOBER,HARBOUR COFFEE HOUSE Card Payment SGD 12.00,02 OCT,-12.00\nOCTOBER,FOLIO BOOK STORE Card Payment SGD 8.50,03 OCT,-8.50\nNOVEMBER,GREENLEAF GROCERY MART Card Payment SGD 30.00,01 NOV,-30.00\nNOVEMBER,TIDEWATER FERRY Card Payment SGD 6.20,04 NOV,-6.20",
+              "tsv": "Section\tDescription\tDate\tAmount\nOCTOBER\tHARBOUR COFFEE HOUSE Card Payment SGD 12.00\t02 OCT\t-12.00\nOCTOBER\tFOLIO BOOK STORE Card Payment SGD 8.50\t03 OCT\t-8.50\nNOVEMBER\tGREENLEAF GROCERY MART Card Payment SGD 30.00\t01 NOV\t-30.00\nNOVEMBER\tTIDEWATER FERRY Card Payment SGD 6.20\t04 NOV\t-6.20",
+              "md": "| Section | Description | Date | Amount |\n| --- | --- | --- | ---: |\n| OCTOBER | HARBOUR COFFEE HOUSE Card Payment SGD 12.00 | 02 OCT | -12.00 |\n| OCTOBER | FOLIO BOOK STORE Card Payment SGD 8.50 | 03 OCT | -8.50 |\n| NOVEMBER | GREENLEAF GROCERY MART Card Payment SGD 30.00 | 01 NOV | -30.00 |\n| NOVEMBER | TIDEWATER FERRY Card Payment SGD 6.20 | 04 NOV | -6.20 |",
+              "json": "[\n  {\n    \"Section\": \"OCTOBER\",\n    \"Description\": \"HARBOUR COFFEE HOUSE Card Payment SGD 12.00\",\n    \"Date\": \"02 OCT\",\n    \"Amount\": \"-12.00\"\n  },\n  {\n    \"Section\": \"OCTOBER\",\n    \"Description\": \"FOLIO BOOK STORE Card Payment SGD 8.50\",\n    \"Date\": \"03 OCT\",\n    \"Amount\": \"-8.50\"\n  },\n  {\n    \"Section\": \"NOVEMBER\",\n    \"Description\": \"GREENLEAF GROCERY MART Card Payment SGD 30.00\",\n    \"Date\": \"01 NOV\",\n    \"Amount\": \"-30.00\"\n  },\n  {\n    \"Section\": \"NOVEMBER\",\n    \"Description\": \"TIDEWATER FERRY Card Payment SGD 6.20\",\n    \"Date\": \"04 NOV\",\n    \"Amount\": \"-6.20\"\n  }\n]"
+            },
+            "rows": {
+              "csv": "Description,Date,Amount\nOCTOBER,,\nHARBOUR COFFEE HOUSE Card Payment SGD 12.00,02 OCT,-12.00\nFOLIO BOOK STORE Card Payment SGD 8.50,03 OCT,-8.50\nNOVEMBER,,\nGREENLEAF GROCERY MART Card Payment SGD 30.00,01 NOV,-30.00\nTIDEWATER FERRY Card Payment SGD 6.20,04 NOV,-6.20",
+              "tsv": "Description\tDate\tAmount\nOCTOBER\t\t\nHARBOUR COFFEE HOUSE Card Payment SGD 12.00\t02 OCT\t-12.00\nFOLIO BOOK STORE Card Payment SGD 8.50\t03 OCT\t-8.50\nNOVEMBER\t\t\nGREENLEAF GROCERY MART Card Payment SGD 30.00\t01 NOV\t-30.00\nTIDEWATER FERRY Card Payment SGD 6.20\t04 NOV\t-6.20",
+              "md": "| Description | Date | Amount |\n| --- | --- | ---: |\n| **OCTOBER** | | |\n| HARBOUR COFFEE HOUSE Card Payment SGD 12.00 | 02 OCT | -12.00 |\n| FOLIO BOOK STORE Card Payment SGD 8.50 | 03 OCT | -8.50 |\n| **NOVEMBER** | | |\n| GREENLEAF GROCERY MART Card Payment SGD 30.00 | 01 NOV | -30.00 |\n| TIDEWATER FERRY Card Payment SGD 6.20 | 04 NOV | -6.20 |",
+              "json": "[\n  {\n    \"section\": \"OCTOBER\",\n    \"rows\": [\n      {\n        \"Description\": \"HARBOUR COFFEE HOUSE Card Payment SGD 12.00\",\n        \"Date\": \"02 OCT\",\n        \"Amount\": \"-12.00\"\n      },\n      {\n        \"Description\": \"FOLIO BOOK STORE Card Payment SGD 8.50\",\n        \"Date\": \"03 OCT\",\n        \"Amount\": \"-8.50\"\n      }\n    ]\n  },\n  {\n    \"section\": \"NOVEMBER\",\n    \"rows\": [\n      {\n        \"Description\": \"GREENLEAF GROCERY MART Card Payment SGD 30.00\",\n        \"Date\": \"01 NOV\",\n        \"Amount\": \"-30.00\"\n      },\n      {\n        \"Description\": \"TIDEWATER FERRY Card Payment SGD 6.20\",\n        \"Date\": \"04 NOV\",\n        \"Amount\": \"-6.20\"\n      }\n    ]\n  }\n]"
+            }
+          }
+        },
+        {
+          "n": 2,
+          "pages": [2],
+          "parts": [{"page":2,"bbox":[68,522.85,544.0000000000001,749.45]}],
+          "header": true,
+          "firstBold": true,
+          "grid": [
+            ["Merchant","Posted","Value"],
+            ["QUARRY HILL HARDWARE Card Payment SGD 41.80","11 NOV","-41.80"],
+            ["SILVERFIN SUSHI BAR Card Payment SGD 27.60","14 NOV","-27.60"],
+            ["LANTERN STREET LAUNDRY Card Payment SGD 9.00","18 NOV","-9.00"],
+            ["BLUE HERON BIKE HIRE Card Payment SGD 15.50","21 NOV","-15.50"]
+          ],
+          "sections": [],
+          "cols": [[72,196.61400000000006],[300,331.56300000000005],[514.485,540.0000000000001]],
+          "repeats": 0,
+          "exports": {
+            "column": {
+              "csv": "Merchant,Posted,Value\nQUARRY HILL HARDWARE Card Payment SGD 41.80,11 NOV,-41.80\nSILVERFIN SUSHI BAR Card Payment SGD 27.60,14 NOV,-27.60\nLANTERN STREET LAUNDRY Card Payment SGD 9.00,18 NOV,-9.00\nBLUE HERON BIKE HIRE Card Payment SGD 15.50,21 NOV,-15.50",
+              "tsv": "Merchant\tPosted\tValue\nQUARRY HILL HARDWARE Card Payment SGD 41.80\t11 NOV\t-41.80\nSILVERFIN SUSHI BAR Card Payment SGD 27.60\t14 NOV\t-27.60\nLANTERN STREET LAUNDRY Card Payment SGD 9.00\t18 NOV\t-9.00\nBLUE HERON BIKE HIRE Card Payment SGD 15.50\t21 NOV\t-15.50",
+              "md": "| Merchant | Posted | Value |\n| --- | --- | ---: |\n| QUARRY HILL HARDWARE Card Payment SGD 41.80 | 11 NOV | -41.80 |\n| SILVERFIN SUSHI BAR Card Payment SGD 27.60 | 14 NOV | -27.60 |\n| LANTERN STREET LAUNDRY Card Payment SGD 9.00 | 18 NOV | -9.00 |\n| BLUE HERON BIKE HIRE Card Payment SGD 15.50 | 21 NOV | -15.50 |",
+              "json": "[\n  {\n    \"Merchant\": \"QUARRY HILL HARDWARE Card Payment SGD 41.80\",\n    \"Posted\": \"11 NOV\",\n    \"Value\": \"-41.80\"\n  },\n  {\n    \"Merchant\": \"SILVERFIN SUSHI BAR Card Payment SGD 27.60\",\n    \"Posted\": \"14 NOV\",\n    \"Value\": \"-27.60\"\n  },\n  {\n    \"Merchant\": \"LANTERN STREET LAUNDRY Card Payment SGD 9.00\",\n    \"Posted\": \"18 NOV\",\n    \"Value\": \"-9.00\"\n  },\n  {\n    \"Merchant\": \"BLUE HERON BIKE HIRE Card Payment SGD 15.50\",\n    \"Posted\": \"21 NOV\",\n    \"Value\": \"-15.50\"\n  }\n]"
+            },
+            "rows": {
+              "csv": "Merchant,Posted,Value\nQUARRY HILL HARDWARE Card Payment SGD 41.80,11 NOV,-41.80\nSILVERFIN SUSHI BAR Card Payment SGD 27.60,14 NOV,-27.60\nLANTERN STREET LAUNDRY Card Payment SGD 9.00,18 NOV,-9.00\nBLUE HERON BIKE HIRE Card Payment SGD 15.50,21 NOV,-15.50",
+              "tsv": "Merchant\tPosted\tValue\nQUARRY HILL HARDWARE Card Payment SGD 41.80\t11 NOV\t-41.80\nSILVERFIN SUSHI BAR Card Payment SGD 27.60\t14 NOV\t-27.60\nLANTERN STREET LAUNDRY Card Payment SGD 9.00\t18 NOV\t-9.00\nBLUE HERON BIKE HIRE Card Payment SGD 15.50\t21 NOV\t-15.50",
+              "md": "| Merchant | Posted | Value |\n| --- | --- | ---: |\n| QUARRY HILL HARDWARE Card Payment SGD 41.80 | 11 NOV | -41.80 |\n| SILVERFIN SUSHI BAR Card Payment SGD 27.60 | 14 NOV | -27.60 |\n| LANTERN STREET LAUNDRY Card Payment SGD 9.00 | 18 NOV | -9.00 |\n| BLUE HERON BIKE HIRE Card Payment SGD 15.50 | 21 NOV | -15.50 |",
+              "json": "[\n  {\n    \"Merchant\": \"QUARRY HILL HARDWARE Card Payment SGD 41.80\",\n    \"Posted\": \"11 NOV\",\n    \"Value\": \"-41.80\"\n  },\n  {\n    \"Merchant\": \"SILVERFIN SUSHI BAR Card Payment SGD 27.60\",\n    \"Posted\": \"14 NOV\",\n    \"Value\": \"-27.60\"\n  },\n  {\n    \"Merchant\": \"LANTERN STREET LAUNDRY Card Payment SGD 9.00\",\n    \"Posted\": \"18 NOV\",\n    \"Value\": \"-9.00\"\n  },\n  {\n    \"Merchant\": \"BLUE HERON BIKE HIRE Card Payment SGD 15.50\",\n    \"Posted\": \"21 NOV\",\n    \"Value\": \"-15.50\"\n  }\n]"
+            }
+          }
+        }
+      ]
+    }
+  ]
+}
