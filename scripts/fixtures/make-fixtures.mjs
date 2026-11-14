@@ -526,6 +526,86 @@ await write("page-frames", {}, (d) => {
   table(d, cols3(130), frameRows, 640);
 });
 
+// --- Parts list on a drawing sheet (spec #39): titles apart from the Rows --------------------------
+// Invented data. Page 1: the two-line column titles sit in a framed band above the Rows, with a
+// stray line between; a note cuts through the list, and a title block sits below. Page 2: the Rows
+// come first, numbered upward, and the titles are below them in a framed band next to the title
+// block, as on many CAD sheets.
+const PL = { item: 72, part: 112, desc: 185, qty: 300, material: 335 };
+const frame = (d, x0, top, x1, bottom) =>
+  d
+    .lineWidth(0.75)
+    .rect(x0, H - top, x1 - x0, top - bottom)
+    .stroke();
+const rule = (d, y) =>
+  d
+    .lineWidth(0.5)
+    .moveTo(66, H - y)
+    .lineTo(395, H - y)
+    .stroke();
+// The framed band of column titles: two lines, with some titles on the lower line only.
+function partsTitles(d, top) {
+  const l1 = top - 12;
+  const l2 = top - 24;
+  frame(d, 66, top, 395, top - 32);
+  at(d, "PART", PL.part, l1, { bold: true });
+  at(d, "MATERIAL", PL.material, l1, { bold: true });
+  at(d, "ITEM", PL.item, l2, { bold: true });
+  at(d, "NUMBER", PL.part, l2, { bold: true });
+  at(d, "DESCRIPTION", PL.desc, l2, { bold: true });
+  at(d, "QTY", PL.qty, l2, { bold: true });
+  at(d, "SPEC", PL.material, l2, { bold: true });
+}
+function partsRow(d, y, cells) {
+  at(d, cells[0], PL.item, y);
+  at(d, cells[1], PL.part, y);
+  at(d, cells[2], PL.desc, y);
+  at(d, cells[3], PL.qty, y);
+  at(d, cells[4], PL.material, y);
+}
+// A note across the list, between two ruled lines.
+function partsNote(d, y) {
+  rule(d, y + 10);
+  at(d, "NOTE 1. DEBURR ALL EDGES AND", PL.item, y, { size: 8 });
+  at(d, "BREAK SHARP CORNERS 0.5 MAX.", PL.item, y - 11, { size: 8 });
+  rule(d, y - 19);
+}
+function titleBlock(d, top, sheet) {
+  frame(d, 410, top, 545, top - 62);
+  [
+    ["TITLE", "BRACKET ASSEMBLY"],
+    ["DWG NO", "TL-0417"],
+    ["SCALE", "1:2"],
+    ["SHEET", sheet],
+  ].forEach(([k, v], i) => {
+    at(d, k, 416, top - 14 - i * 14, { bold: true, size: 8 });
+    at(d, v, 460, top - 14 - i * 14, { size: 8 });
+  });
+}
+await write("parts-list-drawing", {}, (d) => {
+  at(d, "BRACKET ASSEMBLY - PARTS LIST", 72, 740, { size: 12, bold: true });
+  partsTitles(d, 712);
+  at(d, "ALL DIMENSIONS IN MM", PL.item, 664, { size: 8 });
+  partsRow(d, 640, ["1", "BK-1001", "BASE PLATE", "1", "STEEL S235"]);
+  partsRow(d, 626, ["2", "BK-1002", "SUPPORT BRACKET", "2", "STEEL S235"]);
+  partsRow(d, 612, ["3", "BK-1003", "SPACER SLEEVE", "4", "ALUMINIUM"]);
+  partsNote(d, 590);
+  partsRow(d, 556, ["4", "FS-2010", "HEX BOLT M8X30", "8", "STAINLESS"]);
+  partsRow(d, 542, ["5", "FS-2011", "WASHER M8", "16", "STAINLESS"]);
+  partsRow(d, 528, ["6", "FS-2012", "LOCK NUT M8", "8", "STAINLESS"]);
+  titleBlock(d, 472, "1 OF 2");
+  d.addPage();
+  partsRow(d, 700, ["5", "CV-3004", "COVER PANEL", "1", "ALUMINIUM"]);
+  partsRow(d, 686, ["4", "CV-3003", "HINGE PIN", "2", "STEEL S235"]);
+  partsRow(d, 672, ["3", "CV-3002", "GASKET", "1", "RUBBER"]);
+  partsNote(d, 650);
+  partsRow(d, 616, ["2", "CV-3001", "HANDLE GRIP", "2", "NYLON"]);
+  partsRow(d, 602, ["1", "CV-3000", "MOUNT FRAME", "1", "STEEL S235"]);
+  partsTitles(d, 580);
+  titleBlock(d, 580, "2 OF 2");
+  at(d, "COVER ASSEMBLY - PARTS LIST", 72, 480, { size: 12, bold: true });
+});
+
 // --- Rows stored as one string with runs of spaces, written by pdfkit --------------------------------
 // pdf.js splits these strings into separate items itself, so this does NOT exercise the US-14 split
 // (single-string-rows.pdf below does). It pins that pdf.js behaviour.

@@ -22,15 +22,21 @@ A Table found automatically on a page.
 _Avoid_: Auto table
 
 **Hand-drawn Table**:
-A Table built only from the text inside a Region the user drew; shown as "Selected by hand". It replaces any Detected Table it covers and is never part of a Joined Table.
+A Table built only from the text inside the Regions the user drew, all on one page; shown as "Selected by hand". It replaces any Detected Table it covers and is never part of a Joined Table.
 _Avoid_: Manual table, custom table
 
 **Region**:
-The rectangle on a page that a Hand-drawn Table is built from.
+A rectangle on a page that a Hand-drawn Table is built from. A Hand-drawn Table has one or more Regions, each a Header Region or a Body Region.
 _Avoid_: Selection, area, box
 
+**Header Region**:
+The Region whose text becomes the Header Row of its Hand-drawn Table, always as one Row, wherever it lies on the page. A Hand-drawn Table has at most one.
+
+**Body Region**:
+A Region whose text becomes the Rows of its Hand-drawn Table.
+
 **Single-Row Region**:
-A Region the user declares to hold exactly one Row, so all its text becomes one Row however many lines it spans.
+A Body Region the user declares to hold exactly one Row, so all its text becomes one Row however many lines it spans.
 
 **Removed Table**:
 A Detected Table the user has dismissed; it can be restored.

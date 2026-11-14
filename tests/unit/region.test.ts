@@ -73,9 +73,9 @@ describe("selecting a Region", () => {
     expect(state.region).toEqual({
       documentId: "d1",
       page: 2,
-      bbox: null,
+      regions: [{ bbox: null, role: "body", singleRow: false }],
+      edited: 0,
       redraw: null,
-      singleRow: false,
     });
     expect(regionPreview(state)).toBeNull();
   });
@@ -105,7 +105,7 @@ describe("selecting a Region", () => {
   it("previews nothing for a Region with no text (US-54)", () => {
     const state = draw(opened([stores]), 1, [60, 400, 560, 500]);
 
-    expect(state.region!.bbox).not.toBeNull();
+    expect(state.region!.regions[0]!.bbox).not.toBeNull();
     expect(regionPreview(state)).toBeNull();
   });
 
@@ -128,9 +128,9 @@ describe("selecting a Region", () => {
     expect(state.region).toEqual({
       documentId: "d1",
       page: 2,
-      bbox: null,
+      regions: [{ bbox: null, role: "body", singleRow: false }],
+      edited: 0,
       redraw: null,
-      singleRow: false,
     });
   });
 
@@ -147,7 +147,7 @@ describe("selecting a Region", () => {
       { type: "wholePageSelected" },
     );
 
-    expect(state.region!.bbox).toEqual([18, 18, 612 - 18, 792 - 18]);
+    expect(state.region!.regions[0]!.bbox).toEqual([18, 18, 612 - 18, 792 - 18]);
     expect(regionPreview(state)!.grid).toHaveLength(4);
   });
 
@@ -170,7 +170,7 @@ describe("selecting a Region", () => {
       { type: "wholePageSelected" },
     );
 
-    expect(state.region!.bbox).toEqual([118, 218, 512 - 18, 692 - 18]);
+    expect(state.region!.regions[0]!.bbox).toEqual([118, 218, 512 - 18, 692 - 18]);
     expect(regionPreview(state)!.grid).toHaveLength(3);
   });
 
@@ -278,7 +278,7 @@ describe("Hand-drawn Tables and the other actions", () => {
     const state = run(saved, { type: "tableRemoved", documentId: "d1", tableId: table.id });
 
     const doc = state.documents[0]!;
-    expect(doc.regions).toEqual([]);
+    expect(doc.handDrawn).toEqual([]);
     expect(doc.removed).toEqual([]);
     expect(doc.tables.map((t) => t.manual)).toEqual([null]);
   });
@@ -297,11 +297,27 @@ describe("Hand-drawn Tables and the other actions", () => {
 
     const asked = run(drawn, { type: "regionCommitted" });
     expect(asked.pendingChange).toEqual({ type: "regionCommitted" });
-    expect(asked.documents[0]!.regions).toEqual([]);
+    expect(asked.documents[0]!.handDrawn).toEqual([]);
 
     const done = run(asked, { type: "changeConfirmed" });
-    expect(done.documents[0]!.regions).toHaveLength(1);
+    expect(done.documents[0]!.handDrawn).toHaveLength(1);
     expect(selectedTable(done)!.manual).not.toBeNull();
+  });
+
+  it("#40: a saved Hand-drawn Table is one record holding one Body Region", () => {
+    const done = run(draw(opened([stores, prose]), 2, [60, 660, 200, 720]), {
+      type: "regionCommitted",
+    });
+    const [record] = done.documents[0]!.handDrawn;
+
+    expect(done.documents[0]!.handDrawn).toHaveLength(1);
+    expect(selectedTable(done)!.manual).toBe(record!.id);
+    expect(record).toMatchObject({
+      page: 2,
+      replaces: null,
+      apart: [],
+      regions: [{ bbox: [60, 660, 200, 720], role: "body", singleRow: false }],
+    });
   });
 });
 

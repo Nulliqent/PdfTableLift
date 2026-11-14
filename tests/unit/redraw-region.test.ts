@@ -92,7 +92,8 @@ describe("redrawing a Region", () => {
       page: 1,
       tableId: t.id,
     });
-    expect(started.region).toMatchObject({ documentId: "d", page: 1, bbox: t.parts[0]!.bbox });
+    expect(started.region).toMatchObject({ documentId: "d", page: 1 });
+    expect(started.region!.regions[0]!.bbox).toEqual(t.parts[0]!.bbox);
   });
 
   it("replaces a Detected Table with a Hand-drawn Table (US-31, US-32)", () => {
@@ -119,7 +120,7 @@ describe("redrawing a Region", () => {
   it("replaces a Hand-drawn Table's own Region rather than adding a second", () => {
     const first = redraw(open([solo]), 0, 1, [60, 690, 560, 760]);
     const again = redraw(first, 0, 1, [60, 670, 560, 760]);
-    expect(again.documents[0]!.regions).toHaveLength(1);
+    expect(again.documents[0]!.handDrawn).toHaveLength(1);
     expect(tablesOf(again)).toHaveLength(1);
     expect(tablesOf(again)[0]!.grid).toHaveLength(3);
     expect(selectedTable(again)).toBe(tablesOf(again)[0]);
@@ -225,7 +226,8 @@ describe("redrawing one Part of a Joined Table", () => {
       page: 2,
       tableId: tablesOf(state)[0]!.id,
     });
-    expect(started.region).toMatchObject({ page: 2, bbox: tablesOf(state)[0]!.parts[1]!.bbox });
+    expect(started.region).toMatchObject({ page: 2 });
+    expect(started.region!.regions[0]!.bbox).toEqual(tablesOf(state)[0]!.parts[1]!.bbox);
   });
 
   it("stays split when joining or Column Spacing re-detects", () => {

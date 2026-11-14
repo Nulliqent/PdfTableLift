@@ -39,6 +39,49 @@ describe("readDocument", () => {
     expect(cropped!.items[0]).toMatchObject({ str: "Item", x: 130, y: 640 });
   });
 
+  it("reads the drawing's titles, Rows, note and title block into page text", async () => {
+    const [sheet1, sheet2] = await readPages("parts-list-drawing.pdf");
+    const strs = (p: typeof sheet1, from: number, to: number) =>
+      p!.items.filter((i) => i.y >= from && i.y <= to).map((i) => i.str);
+
+    // Page 1: two-line titles in a band above the Rows (PART/NUMBER over one column), a stray line,
+    // items 1 to 3, a note across two lines, items 4 to 6, then the title block.
+    expect(sheet1).toMatchObject({ num: 1, w: 612, h: 792 });
+    expect(strs(sheet1, 700, 700)).toEqual(["PART", "MATERIAL"]);
+    expect(strs(sheet1, 688, 688)).toEqual(["ITEM", "NUMBER", "DESCRIPTION", "QTY", "SPEC"]);
+    expect(strs(sheet1, 664, 664)).toEqual(["ALL DIMENSIONS IN MM"]);
+    expect(strs(sheet1, 640, 640)).toEqual(["1", "BK-1001", "BASE PLATE", "1", "STEEL S235"]);
+    expect(strs(sheet1, 590, 590)).toEqual(["NOTE 1. DEBURR ALL EDGES AND"]);
+    expect(strs(sheet1, 579, 579)).toEqual(["BREAK SHARP CORNERS 0.5 MAX."]);
+    expect(strs(sheet1, 528, 528)).toEqual(["6", "FS-2012", "LOCK NUT M8", "8", "STAINLESS"]);
+    expect(strs(sheet1, 416, 458)).toEqual([
+      "TITLE",
+      "BRACKET ASSEMBLY",
+      "DWG NO",
+      "TL-0417",
+      "SCALE",
+      "1:2",
+      "SHEET",
+      "1 OF 2",
+    ]);
+    // Every title sits above its column's Rows: PART NUMBER, at the Rows' x.
+    const x = (page: typeof sheet1, str: string) => page!.items.find((i) => i.str === str)!.x;
+    expect(x(sheet1, "NUMBER")).toBe(x(sheet1, "BK-1001"));
+    expect(x(sheet1, "DESCRIPTION")).toBe(x(sheet1, "BASE PLATE"));
+
+    // Page 2: items 5 down to 1 with the note between 3 and 2, then the titles beside the title block.
+    expect(sheet2).toMatchObject({ num: 2, w: 612, h: 792 });
+    expect(strs(sheet2, 700, 700)).toEqual(["5", "CV-3004", "COVER PANEL", "1", "ALUMINIUM"]);
+    expect(strs(sheet2, 639, 650)).toEqual([
+      "NOTE 1. DEBURR ALL EDGES AND",
+      "BREAK SHARP CORNERS 0.5 MAX.",
+    ]);
+    expect(strs(sheet2, 602, 602)).toEqual(["1", "CV-3000", "MOUNT FRAME", "1", "STEEL S235"]);
+    const below = sheet2!.items.filter((i) => i.y < 600 && i.x < 400).map((i) => i.str);
+    expect(below).toEqual(expect.arrayContaining(["PART", "NUMBER", "DESCRIPTION", "QTY", "SPEC"]));
+    expect(strs(sheet2, 524, 566).filter((s) => s === "2 OF 2")).toHaveLength(1);
+  });
+
   it("detects bold from an embedded font, not only from the standard 14", async () => {
     const pages = await readPages("embedded-bold.pdf");
 

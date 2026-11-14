@@ -1,0 +1,1040 @@
+{
+  "fixture": "tests/fixtures/parts-list-drawing.pdf",
+  "sha256": "6c2c0923d427919d78e62fb16ce4d7ff9284e427d23ea40df47b3731ef3d25ea",
+  "pdfjs": "6.4.299",
+  "engine": "app",
+  "status": "ready",
+  "error": "",
+  "pages": [
+    {
+      "num": 1,
+      "w": 612,
+      "h": 792,
+      "items": [
+        {"str":"BRACKET ASSEMBLY - PARTS LIST","x":72,"y":740,"w":205.98000000000002,"h":12,"bold":true},
+        {"str":"PART","x":112,"y":700,"w":23.417999999999992,"h":9,"bold":true},
+        {"str":"MATERIAL","x":335,"y":700,"w":45.684000000000005,"h":9,"bold":true},
+        {"str":"ITEM","x":72,"y":688,"w":21.501,"h":9,"bold":true},
+        {"str":"NUMBER","x":112,"y":688,"w":39.492000000000004,"h":9,"bold":true},
+        {"str":"DESCRIPTION","x":185,"y":688,"w":61.506000000000014,"h":9,"bold":true},
+        {"str":"QTY","x":300,"y":688,"w":18.504,"h":9,"bold":true},
+        {"str":"SPEC","x":335,"y":688,"w":24.507000000000005,"h":9,"bold":true},
+        {"str":"ALL DIMENSIONS IN MM","x":72,"y":664,"w":92.90399999999998,"h":8,"bold":false},
+        {"str":"1","x":72,"y":640,"w":5.0040000000000004,"h":9,"bold":false},
+        {"str":"BK-1001","x":112,"y":640,"w":35.019000000000005,"h":9,"bold":false},
+        {"str":"BASE PLATE","x":185,"y":640,"w":53.946000000000005,"h":9,"bold":false},
+        {"str":"1","x":300,"y":640,"w":5.0040000000000004,"h":9,"bold":false},
+        {"str":"STEEL S235","x":335,"y":640,"w":52.02900000000001,"h":9,"bold":false},
+        {"str":"2","x":72,"y":626,"w":5.0040000000000004,"h":9,"bold":false},
+        {"str":"BK-1002","x":112,"y":626,"w":35.019000000000005,"h":9,"bold":false},
+        {"str":"SUPPORT BRACKET","x":185,"y":626,"w":87.975,"h":9,"bold":false},
+        {"str":"2","x":300,"y":626,"w":5.0040000000000004,"h":9,"bold":false},
+        {"str":"STEEL S235","x":335,"y":626,"w":52.02900000000001,"h":9,"bold":false},
+        {"str":"3","x":72,"y":612,"w":5.0040000000000004,"h":9,"bold":false},
+        {"str":"BK-1003","x":112,"y":612,"w":35.019000000000005,"h":9,"bold":false},
+        {"str":"SPACER SLEEVE","x":185,"y":612,"w":73.179,"h":9,"bold":false},
+        {"str":"4","x":300,"y":612,"w":5.0040000000000004,"h":9,"bold":false},
+        {"str":"ALUMINIUM","x":335,"y":612,"w":50.49900000000001,"h":9,"bold":false},
+        {"str":"NOTE 1. DEBURR ALL EDGES AND","x":72,"y":590,"w":132.03999999999996,"h":8,"bold":false},
+        {"str":"BREAK SHARP CORNERS 0.5 MAX.","x":72,"y":579,"w":134.25599999999994,"h":8,"bold":false},
+        {"str":"4","x":72,"y":556,"w":5.0040000000000004,"h":9,"bold":false},
+        {"str":"FS-2010","x":112,"y":556,"w":34.51500000000001,"h":9,"bold":false},
+        {"str":"HEX BOLT M8X30","x":185,"y":556,"w":74.53800000000003,"h":9,"bold":false},
+        {"str":"8","x":300,"y":556,"w":5.0040000000000004,"h":9,"bold":false},
+        {"str":"STAINLESS","x":335,"y":556,"w":48.438000000000024,"h":9,"bold":false},
+        {"str":"5","x":72,"y":542,"w":5.0040000000000004,"h":9,"bold":false},
+        {"str":"FS-2011","x":112,"y":542,"w":34.51500000000001,"h":9,"bold":false},
+        {"str":"WASHER M8","x":185,"y":542,"w":54.05400000000002,"h":9,"bold":false},
+        {"str":"16","x":300,"y":542,"w":10.008000000000001,"h":9,"bold":false},
+        {"str":"STAINLESS","x":335,"y":542,"w":48.438000000000024,"h":9,"bold":false},
+        {"str":"6","x":72,"y":528,"w":5.0040000000000004,"h":9,"bold":false},
+        {"str":"FS-2012","x":112,"y":528,"w":34.51500000000001,"h":9,"bold":false},
+        {"str":"LOCK NUT M8","x":185,"y":528,"w":60.50700000000002,"h":9,"bold":false},
+        {"str":"8","x":300,"y":528,"w":5.0040000000000004,"h":9,"bold":false},
+        {"str":"STAINLESS","x":335,"y":528,"w":48.438000000000024,"h":9,"bold":false},
+        {"str":"TITLE","x":416,"y":458,"w":22.223999999999997,"h":8,"bold":true},
+        {"str":"BRACKET ASSEMBLY","x":460,"y":458,"w":81.77599999999997,"h":8,"bold":false},
+        {"str":"DWG NO","x":416,"y":444,"w":33.455999999999996,"h":8,"bold":true},
+        {"str":"TL-0417","x":460,"y":444,"w":29.792,"h":8,"bold":false},
+        {"str":"SCALE","x":416,"y":430,"w":27.111999999999995,"h":8,"bold":true},
+        {"str":"1:2","x":460,"y":430,"w":11.120000000000001,"h":8,"bold":false},
+        {"str":"SHEET","x":416,"y":416,"w":26.671999999999997,"h":8,"bold":true},
+        {"str":"1 OF 2","x":460,"y":416,"w":24.45599999999998,"h":8,"bold":false}
+      ]
+    },
+    {
+      "num": 2,
+      "w": 612,
+      "h": 792,
+      "items": [
+        {"str":"5","x":72,"y":700,"w":5.0040000000000004,"h":9,"bold":false},
+        {"str":"CV-3004","x":112,"y":700,"w":34.794000000000004,"h":9,"bold":false},
+        {"str":"COVER PANEL","x":185,"y":700,"w":62.487000000000016,"h":9,"bold":false},
+        {"str":"1","x":300,"y":700,"w":5.0040000000000004,"h":9,"bold":false},
+        {"str":"ALUMINIUM","x":335,"y":700,"w":50.49900000000001,"h":9,"bold":false},
+        {"str":"4","x":72,"y":686,"w":5.0040000000000004,"h":9,"bold":false},
+        {"str":"CV-3003","x":112,"y":686,"w":34.794000000000004,"h":9,"bold":false},
+        {"str":"HINGE PIN","x":185,"y":686,"w":46.008000000000024,"h":9,"bold":false},
+        {"str":"2","x":300,"y":686,"w":5.0040000000000004,"h":9,"bold":false},
+        {"str":"STEEL S235","x":335,"y":686,"w":52.02900000000001,"h":9,"bold":false},
+        {"str":"3","x":72,"y":672,"w":5.0040000000000004,"h":9,"bold":false},
+        {"str":"CV-3002","x":112,"y":672,"w":34.794000000000004,"h":9,"bold":false},
+        {"str":"GASKET","x":185,"y":672,"w":36.513000000000005,"h":9,"bold":false},
+        {"str":"1","x":300,"y":672,"w":5.0040000000000004,"h":9,"bold":false},
+        {"str":"RUBBER","x":335,"y":672,"w":37.14299999999999,"h":9,"bold":false},
+        {"str":"NOTE 1. DEBURR ALL EDGES AND","x":72,"y":650,"w":132.03999999999996,"h":8,"bold":false},
+        {"str":"BREAK SHARP CORNERS 0.5 MAX.","x":72,"y":639,"w":134.25599999999994,"h":8,"bold":false},
+        {"str":"2","x":72,"y":616,"w":5.0040000000000004,"h":9,"bold":false},
+        {"str":"CV-3001","x":112,"y":616,"w":34.794000000000004,"h":9,"bold":false},
+        {"str":"HANDLE GRIP","x":185,"y":616,"w":61.01100000000002,"h":9,"bold":false},
+        {"str":"2","x":300,"y":616,"w":5.0040000000000004,"h":9,"bold":false},
+        {"str":"NYLON","x":335,"y":616,"w":31.005000000000006,"h":9,"bold":false},
+        {"str":"1","x":72,"y":602,"w":5.0040000000000004,"h":9,"bold":false},
+        {"str":"CV-3000","x":112,"y":602,"w":34.794000000000004,"h":9,"bold":false},
+        {"str":"MOUNT FRAME","x":185,"y":602,"w":66.99600000000002,"h":9,"bold":false},
+        {"str":"1","x":300,"y":602,"w":5.0040000000000004,"h":9,"bold":false},
+        {"str":"STEEL S235","x":335,"y":602,"w":52.02900000000001,"h":9,"bold":false},
+        {"str":"PART","x":112,"y":568,"w":23.417999999999992,"h":9,"bold":true},
+        {"str":"MATERIAL","x":335,"y":568,"w":45.684000000000005,"h":9,"bold":true},
+        {"str":"ITEM","x":72,"y":556,"w":21.501,"h":9,"bold":true},
+        {"str":"NUMBER","x":112,"y":556,"w":39.492000000000004,"h":9,"bold":true},
+        {"str":"DESCRIPTION","x":185,"y":556,"w":61.506000000000014,"h":9,"bold":true},
+        {"str":"QTY","x":300,"y":556,"w":18.504,"h":9,"bold":true},
+        {"str":"SPEC","x":335,"y":556,"w":24.507000000000005,"h":9,"bold":true},
+        {"str":"TITLE","x":416,"y":566,"w":22.223999999999997,"h":8,"bold":true},
+        {"str":"BRACKET ASSEMBLY","x":460,"y":566,"w":81.77599999999997,"h":8,"bold":false},
+        {"str":"DWG NO","x":416,"y":552,"w":33.455999999999996,"h":8,"bold":true},
+        {"str":"TL-0417","x":460,"y":552,"w":29.792,"h":8,"bold":false},
+        {"str":"SCALE","x":416,"y":538,"w":27.111999999999995,"h":8,"bold":true},
+        {"str":"1:2","x":460,"y":538,"w":11.120000000000001,"h":8,"bold":false},
+        {"str":"SHEET","x":416,"y":524,"w":26.671999999999997,"h":8,"bold":true},
+        {"str":"2 OF 2","x":460,"y":524,"w":24.45599999999998,"h":8,"bold":false},
+        {"str":"COVER ASSEMBLY - PARTS LIST","x":72,"y":480,"w":189.87599999999998,"h":12,"bold":true}
+      ]
+    }
+  ],
+  "runs": [
+    {
+      "columnSpacing": 1,
+      "joining": true,
+      "tables": [
+        {
+          "n": 1,
+          "pages": [1],
+          "parts": [{"page":1,"bbox":[68,684.85,363.507,709.45]}],
+          "header": true,
+          "firstBold": true,
+          "grid": [["","PART","","","MATERIAL"],["ITEM","NUMBER","DESCRIPTION","QTY","SPEC"]],
+          "sections": [],
+          "cols": [[72,93.501],[112,151.49200000000002],[185,246.50600000000003],[300,318.504],[335,359.507]],
+          "repeats": 0,
+          "exports": {
+            "column": {
+              "csv": ",PART,,,MATERIAL\nITEM,NUMBER,DESCRIPTION,QTY,SPEC",
+              "tsv": "\tPART\t\t\tMATERIAL\nITEM\tNUMBER\tDESCRIPTION\tQTY\tSPEC",
+              "md": "|  | PART |  |  | MATERIAL |\n| --- | --- | --- | --- | --- |\n| ITEM | NUMBER | DESCRIPTION | QTY | SPEC |",
+              "json": "[\n  {\n    \"column_1\": \"ITEM\",\n    \"PART\": \"NUMBER\",\n    \"column_3\": \"DESCRIPTION\",\n    \"column_4\": \"QTY\",\n    \"MATERIAL\": \"SPEC\"\n  }\n]"
+            },
+            "rows": {
+              "csv": ",PART,,,MATERIAL\nITEM,NUMBER,DESCRIPTION,QTY,SPEC",
+              "tsv": "\tPART\t\t\tMATERIAL\nITEM\tNUMBER\tDESCRIPTION\tQTY\tSPEC",
+              "md": "|  | PART |  |  | MATERIAL |\n| --- | --- | --- | --- | --- |\n| ITEM | NUMBER | DESCRIPTION | QTY | SPEC |",
+              "json": "[\n  {\n    \"column_1\": \"ITEM\",\n    \"PART\": \"NUMBER\",\n    \"column_3\": \"DESCRIPTION\",\n    \"column_4\": \"QTY\",\n    \"MATERIAL\": \"SPEC\"\n  }\n]"
+            }
+          }
+        },
+        {
+          "n": 2,
+          "pages": [1],
+          "parts": [{"page":1,"bbox":[68,524.85,391.029,649.45]}],
+          "header": true,
+          "firstBold": false,
+          "grid": [
+            ["1","BK-1001","BASE PLATE","1","STEEL S235"],
+            ["2","BK-1002","SUPPORT BRACKET","2","STEEL S235"],
+            ["3","BK-1003","SPACER SLEEVE","4","ALUMINIUM"],
+            ["NOTE 1. DEBURR ALL EDGES AND","","","",""],
+            ["BREAK SHARP CORNERS 0.5 MAX.","","","",""],
+            ["4","FS-2010","HEX BOLT M8X30","8","STAINLESS"],
+            ["5","FS-2011","WASHER M8","16","STAINLESS"],
+            ["6","FS-2012","LOCK NUT M8","8","STAINLESS"]
+          ],
+          "sections": [3,4],
+          "cols": [[72,77.004],[112,147.019],[185,272.975],[300,310.008],[335,387.029]],
+          "repeats": 0,
+          "exports": {
+            "column": {
+              "csv": "Section,1,BK-1001,BASE PLATE,1,STEEL S235\n,2,BK-1002,SUPPORT BRACKET,2,STEEL S235\n,3,BK-1003,SPACER SLEEVE,4,ALUMINIUM\nBREAK SHARP CORNERS 0.5 MAX.,4,FS-2010,HEX BOLT M8X30,8,STAINLESS\nBREAK SHARP CORNERS 0.5 MAX.,5,FS-2011,WASHER M8,16,STAINLESS\nBREAK SHARP CORNERS 0.5 MAX.,6,FS-2012,LOCK NUT M8,8,STAINLESS",
+              "tsv": "Section\t1\tBK-1001\tBASE PLATE\t1\tSTEEL S235\n\t2\tBK-1002\tSUPPORT BRACKET\t2\tSTEEL S235\n\t3\tBK-1003\tSPACER SLEEVE\t4\tALUMINIUM\nBREAK SHARP CORNERS 0.5 MAX.\t4\tFS-2010\tHEX BOLT M8X30\t8\tSTAINLESS\nBREAK SHARP CORNERS 0.5 MAX.\t5\tFS-2011\tWASHER M8\t16\tSTAINLESS\nBREAK SHARP CORNERS 0.5 MAX.\t6\tFS-2012\tLOCK NUT M8\t8\tSTAINLESS",
+              "md": "| Section | 1 | BK-1001 | BASE PLATE | 1 | STEEL S235 |\n| --- | ---: | --- | --- | ---: | --- |\n|  | 2 | BK-1002 | SUPPORT BRACKET | 2 | STEEL S235 |\n|  | 3 | BK-1003 | SPACER SLEEVE | 4 | ALUMINIUM |\n| BREAK SHARP CORNERS 0.5 MAX. | 4 | FS-2010 | HEX BOLT M8X30 | 8 | STAINLESS |\n| BREAK SHARP CORNERS 0.5 MAX. | 5 | FS-2011 | WASHER M8 | 16 | STAINLESS |\n| BREAK SHARP CORNERS 0.5 MAX. | 6 | FS-2012 | LOCK NUT M8 | 8 | STAINLESS |",
+              "json": "[\n  {\n    \"1\": \"2\",\n    \"Section\": \"\",\n    \"BK-1001\": \"BK-1002\",\n    \"BASE PLATE\": \"SUPPORT BRACKET\",\n    \"1_2\": \"2\",\n    \"STEEL S235\": \"STEEL S235\"\n  },\n  {\n    \"1\": \"3\",\n    \"Section\": \"\",\n    \"BK-1001\": \"BK-1003\",\n    \"BASE PLATE\": \"SPACER SLEEVE\",\n    \"1_2\": \"4\",\n    \"STEEL S235\": \"ALUMINIUM\"\n  },\n  {\n    \"1\": \"4\",\n    \"Section\": \"BREAK SHARP CORNERS 0.5 MAX.\",\n    \"BK-1001\": \"FS-2010\",\n    \"BASE PLATE\": \"HEX BOLT M8X30\",\n    \"1_2\": \"8\",\n    \"STEEL S235\": \"STAINLESS\"\n  },\n  {\n    \"1\": \"5\",\n    \"Section\": \"BREAK SHARP CORNERS 0.5 MAX.\",\n    \"BK-1001\": \"FS-2011\",\n    \"BASE PLATE\": \"WASHER M8\",\n    \"1_2\": \"16\",\n    \"STEEL S235\": \"STAINLESS\"\n  },\n  {\n    \"1\": \"6\",\n    \"Section\": \"BREAK SHARP CORNERS 0.5 MAX.\",\n    \"BK-1001\": \"FS-2012\",\n    \"BASE PLATE\": \"LOCK NUT M8\",\n    \"1_2\": \"8\",\n    \"STEEL S235\": \"STAINLESS\"\n  }\n]"
+            },
+            "rows": {
+              "csv": "1,BK-1001,BASE PLATE,1,STEEL S235\n2,BK-1002,SUPPORT BRACKET,2,STEEL S235\n3,BK-1003,SPACER SLEEVE,4,ALUMINIUM\nNOTE 1. DEBURR ALL EDGES AND,,,,\nBREAK SHARP CORNERS 0.5 MAX.,,,,\n4,FS-2010,HEX BOLT M8X30,8,STAINLESS\n5,FS-2011,WASHER M8,16,STAINLESS\n6,FS-2012,LOCK NUT M8,8,STAINLESS",
+              "tsv": "1\tBK-1001\tBASE PLATE\t1\tSTEEL S235\n2\tBK-1002\tSUPPORT BRACKET\t2\tSTEEL S235\n3\tBK-1003\tSPACER SLEEVE\t4\tALUMINIUM\nNOTE 1. DEBURR ALL EDGES AND\t\t\t\t\nBREAK SHARP CORNERS 0.5 MAX.\t\t\t\t\n4\tFS-2010\tHEX BOLT M8X30\t8\tSTAINLESS\n5\tFS-2011\tWASHER M8\t16\tSTAINLESS\n6\tFS-2012\tLOCK NUT M8\t8\tSTAINLESS",
+              "md": "| 1 | BK-1001 | BASE PLATE | 1 | STEEL S235 |\n| ---: | --- | --- | ---: | --- |\n| 2 | BK-1002 | SUPPORT BRACKET | 2 | STEEL S235 |\n| 3 | BK-1003 | SPACER SLEEVE | 4 | ALUMINIUM |\n| **NOTE 1. DEBURR ALL EDGES AND** | | | | |\n| **BREAK SHARP CORNERS 0.5 MAX.** | | | | |\n| 4 | FS-2010 | HEX BOLT M8X30 | 8 | STAINLESS |\n| 5 | FS-2011 | WASHER M8 | 16 | STAINLESS |\n| 6 | FS-2012 | LOCK NUT M8 | 8 | STAINLESS |",
+              "json": "[\n  {\n    \"section\": null,\n    \"rows\": [\n      {\n        \"1\": \"2\",\n        \"BK-1001\": \"BK-1002\",\n        \"BASE PLATE\": \"SUPPORT BRACKET\",\n        \"1_2\": \"2\",\n        \"STEEL S235\": \"STEEL S235\"\n      },\n      {\n        \"1\": \"3\",\n        \"BK-1001\": \"BK-1003\",\n        \"BASE PLATE\": \"SPACER SLEEVE\",\n        \"1_2\": \"4\",\n        \"STEEL S235\": \"ALUMINIUM\"\n      }\n    ]\n  },\n  {\n    \"section\": \"NOTE 1. DEBURR ALL EDGES AND\",\n    \"rows\": []\n  },\n  {\n    \"section\": \"BREAK SHARP CORNERS 0.5 MAX.\",\n    \"rows\": [\n      {\n        \"1\": \"4\",\n        \"BK-1001\": \"FS-2010\",\n        \"BASE PLATE\": \"HEX BOLT M8X30\",\n        \"1_2\": \"8\",\n        \"STEEL S235\": \"STAINLESS\"\n      },\n      {\n        \"1\": \"5\",\n        \"BK-1001\": \"FS-2011\",\n        \"BASE PLATE\": \"WASHER M8\",\n        \"1_2\": \"16\",\n        \"STEEL S235\": \"STAINLESS\"\n      },\n      {\n        \"1\": \"6\",\n        \"BK-1001\": \"FS-2012\",\n        \"BASE PLATE\": \"LOCK NUT M8\",\n        \"1_2\": \"8\",\n        \"STEEL S235\": \"STAINLESS\"\n      }\n    ]\n  }\n]"
+            }
+          }
+        },
+        {
+          "n": 3,
+          "pages": [1],
+          "parts": [{"page":1,"bbox":[412,413.2,545.776,466.4]}],
+          "header": true,
+          "firstBold": false,
+          "grid": [["TITLE","BRACKET ASSEMBLY"],["DWG NO","TL-0417"],["SCALE","1:2"],["SHEET","1 OF 2"]],
+          "sections": [],
+          "cols": [[416,449.456],[460,541.776]],
+          "repeats": 0,
+          "exports": {
+            "column": {
+              "csv": "TITLE,BRACKET ASSEMBLY\nDWG NO,TL-0417\nSCALE,1:2\nSHEET,1 OF 2",
+              "tsv": "TITLE\tBRACKET ASSEMBLY\nDWG NO\tTL-0417\nSCALE\t1:2\nSHEET\t1 OF 2",
+              "md": "| TITLE | BRACKET ASSEMBLY |\n| --- | --- |\n| DWG NO | TL-0417 |\n| SCALE | 1:2 |\n| SHEET | 1 OF 2 |",
+              "json": "[\n  {\n    \"TITLE\": \"DWG NO\",\n    \"BRACKET ASSEMBLY\": \"TL-0417\"\n  },\n  {\n    \"TITLE\": \"SCALE\",\n    \"BRACKET ASSEMBLY\": \"1:2\"\n  },\n  {\n    \"TITLE\": \"SHEET\",\n    \"BRACKET ASSEMBLY\": \"1 OF 2\"\n  }\n]"
+            },
+            "rows": {
+              "csv": "TITLE,BRACKET ASSEMBLY\nDWG NO,TL-0417\nSCALE,1:2\nSHEET,1 OF 2",
+              "tsv": "TITLE\tBRACKET ASSEMBLY\nDWG NO\tTL-0417\nSCALE\t1:2\nSHEET\t1 OF 2",
+              "md": "| TITLE | BRACKET ASSEMBLY |\n| --- | --- |\n| DWG NO | TL-0417 |\n| SCALE | 1:2 |\n| SHEET | 1 OF 2 |",
+              "json": "[\n  {\n    \"TITLE\": \"DWG NO\",\n    \"BRACKET ASSEMBLY\": \"TL-0417\"\n  },\n  {\n    \"TITLE\": \"SCALE\",\n    \"BRACKET ASSEMBLY\": \"1:2\"\n  },\n  {\n    \"TITLE\": \"SHEET\",\n    \"BRACKET ASSEMBLY\": \"1 OF 2\"\n  }\n]"
+            }
+          }
+        },
+        {
+          "n": 4,
+          "pages": [2],
+          "parts": [{"page":2,"bbox":[68,598.85,391.029,709.45]}],
+          "header": true,
+          "firstBold": false,
+          "grid": [
+            ["5","CV-3004","COVER PANEL","1","ALUMINIUM"],
+            ["4","CV-3003","HINGE PIN","2","STEEL S235"],
+            ["3","CV-3002","GASKET","1","RUBBER"],
+            ["NOTE 1. DEBURR ALL EDGES AND","","","",""],
+            ["BREAK SHARP CORNERS 0.5 MAX.","","","",""],
+            ["2","CV-3001","HANDLE GRIP","2","NYLON"],
+            ["1","CV-3000","MOUNT FRAME","1","STEEL S235"]
+          ],
+          "sections": [3,4],
+          "cols": [[72,77.004],[112,146.794],[185,251.99600000000004],[300,305.004],[335,387.029]],
+          "repeats": 0,
+          "exports": {
+            "column": {
+              "csv": "Section,5,CV-3004,COVER PANEL,1,ALUMINIUM\n,4,CV-3003,HINGE PIN,2,STEEL S235\n,3,CV-3002,GASKET,1,RUBBER\nBREAK SHARP CORNERS 0.5 MAX.,2,CV-3001,HANDLE GRIP,2,NYLON\nBREAK SHARP CORNERS 0.5 MAX.,1,CV-3000,MOUNT FRAME,1,STEEL S235",
+              "tsv": "Section\t5\tCV-3004\tCOVER PANEL\t1\tALUMINIUM\n\t4\tCV-3003\tHINGE PIN\t2\tSTEEL S235\n\t3\tCV-3002\tGASKET\t1\tRUBBER\nBREAK SHARP CORNERS 0.5 MAX.\t2\tCV-3001\tHANDLE GRIP\t2\tNYLON\nBREAK SHARP CORNERS 0.5 MAX.\t1\tCV-3000\tMOUNT FRAME\t1\tSTEEL S235",
+              "md": "| Section | 5 | CV-3004 | COVER PANEL | 1 | ALUMINIUM |\n| --- | ---: | --- | --- | ---: | --- |\n|  | 4 | CV-3003 | HINGE PIN | 2 | STEEL S235 |\n|  | 3 | CV-3002 | GASKET | 1 | RUBBER |\n| BREAK SHARP CORNERS 0.5 MAX. | 2 | CV-3001 | HANDLE GRIP | 2 | NYLON |\n| BREAK SHARP CORNERS 0.5 MAX. | 1 | CV-3000 | MOUNT FRAME | 1 | STEEL S235 |",
+              "json": "[\n  {\n    \"1\": \"2\",\n    \"5\": \"4\",\n    \"Section\": \"\",\n    \"CV-3004\": \"CV-3003\",\n    \"COVER PANEL\": \"HINGE PIN\",\n    \"ALUMINIUM\": \"STEEL S235\"\n  },\n  {\n    \"1\": \"1\",\n    \"5\": \"3\",\n    \"Section\": \"\",\n    \"CV-3004\": \"CV-3002\",\n    \"COVER PANEL\": \"GASKET\",\n    \"ALUMINIUM\": \"RUBBER\"\n  },\n  {\n    \"1\": \"2\",\n    \"5\": \"2\",\n    \"Section\": \"BREAK SHARP CORNERS 0.5 MAX.\",\n    \"CV-3004\": \"CV-3001\",\n    \"COVER PANEL\": \"HANDLE GRIP\",\n    \"ALUMINIUM\": \"NYLON\"\n  },\n  {\n    \"1\": \"1\",\n    \"5\": \"1\",\n    \"Section\": \"BREAK SHARP CORNERS 0.5 MAX.\",\n    \"CV-3004\": \"CV-3000\",\n    \"COVER PANEL\": \"MOUNT FRAME\",\n    \"ALUMINIUM\": \"STEEL S235\"\n  }\n]"
+            },
+            "rows": {
+              "csv": "5,CV-3004,COVER PANEL,1,ALUMINIUM\n4,CV-3003,HINGE PIN,2,STEEL S235\n3,CV-3002,GASKET,1,RUBBER\nNOTE 1. DEBURR ALL EDGES AND,,,,\nBREAK SHARP CORNERS 0.5 MAX.,,,,\n2,CV-3001,HANDLE GRIP,2,NYLON\n1,CV-3000,MOUNT FRAME,1,STEEL S235",
+              "tsv": "5\tCV-3004\tCOVER PANEL\t1\tALUMINIUM\n4\tCV-3003\tHINGE PIN\t2\tSTEEL S235\n3\tCV-3002\tGASKET\t1\tRUBBER\nNOTE 1. DEBURR ALL EDGES AND\t\t\t\t\nBREAK SHARP CORNERS 0.5 MAX.\t\t\t\t\n2\tCV-3001\tHANDLE GRIP\t2\tNYLON\n1\tCV-3000\tMOUNT FRAME\t1\tSTEEL S235",
+              "md": "| 5 | CV-3004 | COVER PANEL | 1 | ALUMINIUM |\n| ---: | --- | --- | ---: | --- |\n| 4 | CV-3003 | HINGE PIN | 2 | STEEL S235 |\n| 3 | CV-3002 | GASKET | 1 | RUBBER |\n| **NOTE 1. DEBURR ALL EDGES AND** | | | | |\n| **BREAK SHARP CORNERS 0.5 MAX.** | | | | |\n| 2 | CV-3001 | HANDLE GRIP | 2 | NYLON |\n| 1 | CV-3000 | MOUNT FRAME | 1 | STEEL S235 |",
+              "json": "[\n  {\n    \"section\": null,\n    \"rows\": [\n      {\n        \"1\": \"2\",\n        \"5\": \"4\",\n        \"CV-3004\": \"CV-3003\",\n        \"COVER PANEL\": \"HINGE PIN\",\n        \"ALUMINIUM\": \"STEEL S235\"\n      },\n      {\n        \"1\": \"1\",\n        \"5\": \"3\",\n        \"CV-3004\": \"CV-3002\",\n        \"COVER PANEL\": \"GASKET\",\n        \"ALUMINIUM\": \"RUBBER\"\n      }\n    ]\n  },\n  {\n    \"section\": \"NOTE 1. DEBURR ALL EDGES AND\",\n    \"rows\": []\n  },\n  {\n    \"section\": \"BREAK SHARP CORNERS 0.5 MAX.\",\n    \"rows\": [\n      {\n        \"1\": \"2\",\n        \"5\": \"2\",\n        \"CV-3004\": \"CV-3001\",\n        \"COVER PANEL\": \"HANDLE GRIP\",\n        \"ALUMINIUM\": \"NYLON\"\n      },\n      {\n        \"1\": \"1\",\n        \"5\": \"1\",\n        \"CV-3004\": \"CV-3000\",\n        \"COVER PANEL\": \"MOUNT FRAME\",\n        \"ALUMINIUM\": \"STEEL S235\"\n      }\n    ]\n  }\n]"
+            }
+          }
+        },
+        {
+          "n": 5,
+          "pages": [2],
+          "parts": [{"page":2,"bbox":[68,521.2,545.776,577.45]}],
+          "header": true,
+          "firstBold": false,
+          "grid": [
+            ["","PART","","","MATERIAL","TITLE","BRACKET ASSEMBLY"],
+            ["ITEM","NUMBER","DESCRIPTION","QTY","SPEC","",""],
+            ["","","","","","DWG NO","TL-0417"],
+            ["","","","","","SCALE","1:2"],
+            ["","","","","","SHEET","2 OF 2"]
+          ],
+          "sections": [],
+          "cols": [[72,93.501],[112,151.49200000000002],[185,246.50600000000003],[300,318.504],[335,380.684],[416,438.224],[460,541.776]],
+          "repeats": 0,
+          "exports": {
+            "column": {
+              "csv": ",PART,,,MATERIAL,TITLE,BRACKET ASSEMBLY\nITEM,NUMBER,DESCRIPTION,QTY,SPEC,,\n,,,,,DWG NO,TL-0417\n,,,,,SCALE,1:2\n,,,,,SHEET,2 OF 2",
+              "tsv": "\tPART\t\t\tMATERIAL\tTITLE\tBRACKET ASSEMBLY\nITEM\tNUMBER\tDESCRIPTION\tQTY\tSPEC\t\t\n\t\t\t\t\tDWG NO\tTL-0417\n\t\t\t\t\tSCALE\t1:2\n\t\t\t\t\tSHEET\t2 OF 2",
+              "md": "|  | PART |  |  | MATERIAL | TITLE | BRACKET ASSEMBLY |\n| --- | --- | --- | --- | --- | --- | --- |\n| ITEM | NUMBER | DESCRIPTION | QTY | SPEC |  |  |\n|  |  |  |  |  | DWG NO | TL-0417 |\n|  |  |  |  |  | SCALE | 1:2 |\n|  |  |  |  |  | SHEET | 2 OF 2 |",
+              "json": "[\n  {\n    \"column_1\": \"ITEM\",\n    \"PART\": \"NUMBER\",\n    \"column_3\": \"DESCRIPTION\",\n    \"column_4\": \"QTY\",\n    \"MATERIAL\": \"SPEC\",\n    \"TITLE\": \"\",\n    \"BRACKET ASSEMBLY\": \"\"\n  },\n  {\n    \"column_1\": \"\",\n    \"PART\": \"\",\n    \"column_3\": \"\",\n    \"column_4\": \"\",\n    \"MATERIAL\": \"\",\n    \"TITLE\": \"DWG NO\",\n    \"BRACKET ASSEMBLY\": \"TL-0417\"\n  },\n  {\n    \"column_1\": \"\",\n    \"PART\": \"\",\n    \"column_3\": \"\",\n    \"column_4\": \"\",\n    \"MATERIAL\": \"\",\n    \"TITLE\": \"SCALE\",\n    \"BRACKET ASSEMBLY\": \"1:2\"\n  },\n  {\n    \"column_1\": \"\",\n    \"PART\": \"\",\n    \"column_3\": \"\",\n    \"column_4\": \"\",\n    \"MATERIAL\": \"\",\n    \"TITLE\": \"SHEET\",\n    \"BRACKET ASSEMBLY\": \"2 OF 2\"\n  }\n]"
+            },
+            "rows": {
+              "csv": ",PART,,,MATERIAL,TITLE,BRACKET ASSEMBLY\nITEM,NUMBER,DESCRIPTION,QTY,SPEC,,\n,,,,,DWG NO,TL-0417\n,,,,,SCALE,1:2\n,,,,,SHEET,2 OF 2",
+              "tsv": "\tPART\t\t\tMATERIAL\tTITLE\tBRACKET ASSEMBLY\nITEM\tNUMBER\tDESCRIPTION\tQTY\tSPEC\t\t\n\t\t\t\t\tDWG NO\tTL-0417\n\t\t\t\t\tSCALE\t1:2\n\t\t\t\t\tSHEET\t2 OF 2",
+              "md": "|  | PART |  |  | MATERIAL | TITLE | BRACKET ASSEMBLY |\n| --- | --- | --- | --- | --- | --- | --- |\n| ITEM | NUMBER | DESCRIPTION | QTY | SPEC |  |  |\n|  |  |  |  |  | DWG NO | TL-0417 |\n|  |  |  |  |  | SCALE | 1:2 |\n|  |  |  |  |  | SHEET | 2 OF 2 |",
+              "json": "[\n  {\n    \"column_1\": \"ITEM\",\n    \"PART\": \"NUMBER\",\n    \"column_3\": \"DESCRIPTION\",\n    \"column_4\": \"QTY\",\n    \"MATERIAL\": \"SPEC\",\n    \"TITLE\": \"\",\n    \"BRACKET ASSEMBLY\": \"\"\n  },\n  {\n    \"column_1\": \"\",\n    \"PART\": \"\",\n    \"column_3\": \"\",\n    \"column_4\": \"\",\n    \"MATERIAL\": \"\",\n    \"TITLE\": \"DWG NO\",\n    \"BRACKET ASSEMBLY\": \"TL-0417\"\n  },\n  {\n    \"column_1\": \"\",\n    \"PART\": \"\",\n    \"column_3\": \"\",\n    \"column_4\": \"\",\n    \"MATERIAL\": \"\",\n    \"TITLE\": \"SCALE\",\n    \"BRACKET ASSEMBLY\": \"1:2\"\n  },\n  {\n    \"column_1\": \"\",\n    \"PART\": \"\",\n    \"column_3\": \"\",\n    \"column_4\": \"\",\n    \"MATERIAL\": \"\",\n    \"TITLE\": \"SHEET\",\n    \"BRACKET ASSEMBLY\": \"2 OF 2\"\n  }\n]"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "columnSpacing": 1,
+      "joining": false,
+      "tables": [
+        {
+          "n": 1,
+          "pages": [1],
+          "parts": [{"page":1,"bbox":[68,684.85,363.507,709.45]}],
+          "header": true,
+          "firstBold": true,
+          "grid": [["","PART","","","MATERIAL"],["ITEM","NUMBER","DESCRIPTION","QTY","SPEC"]],
+          "sections": [],
+          "cols": [[72,93.501],[112,151.49200000000002],[185,246.50600000000003],[300,318.504],[335,359.507]],
+          "repeats": 0,
+          "exports": {
+            "column": {
+              "csv": ",PART,,,MATERIAL\nITEM,NUMBER,DESCRIPTION,QTY,SPEC",
+              "tsv": "\tPART\t\t\tMATERIAL\nITEM\tNUMBER\tDESCRIPTION\tQTY\tSPEC",
+              "md": "|  | PART |  |  | MATERIAL |\n| --- | --- | --- | --- | --- |\n| ITEM | NUMBER | DESCRIPTION | QTY | SPEC |",
+              "json": "[\n  {\n    \"column_1\": \"ITEM\",\n    \"PART\": \"NUMBER\",\n    \"column_3\": \"DESCRIPTION\",\n    \"column_4\": \"QTY\",\n    \"MATERIAL\": \"SPEC\"\n  }\n]"
+            },
+            "rows": {
+              "csv": ",PART,,,MATERIAL\nITEM,NUMBER,DESCRIPTION,QTY,SPEC",
+              "tsv": "\tPART\t\t\tMATERIAL\nITEM\tNUMBER\tDESCRIPTION\tQTY\tSPEC",
+              "md": "|  | PART |  |  | MATERIAL |\n| --- | --- | --- | --- | --- |\n| ITEM | NUMBER | DESCRIPTION | QTY | SPEC |",
+              "json": "[\n  {\n    \"column_1\": \"ITEM\",\n    \"PART\": \"NUMBER\",\n    \"column_3\": \"DESCRIPTION\",\n    \"column_4\": \"QTY\",\n    \"MATERIAL\": \"SPEC\"\n  }\n]"
+            }
+          }
+        },
+        {
+          "n": 2,
+          "pages": [1],
+          "parts": [{"page":1,"bbox":[68,524.85,391.029,649.45]}],
+          "header": true,
+          "firstBold": false,
+          "grid": [
+            ["1","BK-1001","BASE PLATE","1","STEEL S235"],
+            ["2","BK-1002","SUPPORT BRACKET","2","STEEL S235"],
+            ["3","BK-1003","SPACER SLEEVE","4","ALUMINIUM"],
+            ["NOTE 1. DEBURR ALL EDGES AND","","","",""],
+            ["BREAK SHARP CORNERS 0.5 MAX.","","","",""],
+            ["4","FS-2010","HEX BOLT M8X30","8","STAINLESS"],
+            ["5","FS-2011","WASHER M8","16","STAINLESS"],
+            ["6","FS-2012","LOCK NUT M8","8","STAINLESS"]
+          ],
+          "sections": [3,4],
+          "cols": [[72,77.004],[112,147.019],[185,272.975],[300,310.008],[335,387.029]],
+          "repeats": 0,
+          "exports": {
+            "column": {
+              "csv": "Section,1,BK-1001,BASE PLATE,1,STEEL S235\n,2,BK-1002,SUPPORT BRACKET,2,STEEL S235\n,3,BK-1003,SPACER SLEEVE,4,ALUMINIUM\nBREAK SHARP CORNERS 0.5 MAX.,4,FS-2010,HEX BOLT M8X30,8,STAINLESS\nBREAK SHARP CORNERS 0.5 MAX.,5,FS-2011,WASHER M8,16,STAINLESS\nBREAK SHARP CORNERS 0.5 MAX.,6,FS-2012,LOCK NUT M8,8,STAINLESS",
+              "tsv": "Section\t1\tBK-1001\tBASE PLATE\t1\tSTEEL S235\n\t2\tBK-1002\tSUPPORT BRACKET\t2\tSTEEL S235\n\t3\tBK-1003\tSPACER SLEEVE\t4\tALUMINIUM\nBREAK SHARP CORNERS 0.5 MAX.\t4\tFS-2010\tHEX BOLT M8X30\t8\tSTAINLESS\nBREAK SHARP CORNERS 0.5 MAX.\t5\tFS-2011\tWASHER M8\t16\tSTAINLESS\nBREAK SHARP CORNERS 0.5 MAX.\t6\tFS-2012\tLOCK NUT M8\t8\tSTAINLESS",
+              "md": "| Section | 1 | BK-1001 | BASE PLATE | 1 | STEEL S235 |\n| --- | ---: | --- | --- | ---: | --- |\n|  | 2 | BK-1002 | SUPPORT BRACKET | 2 | STEEL S235 |\n|  | 3 | BK-1003 | SPACER SLEEVE | 4 | ALUMINIUM |\n| BREAK SHARP CORNERS 0.5 MAX. | 4 | FS-2010 | HEX BOLT M8X30 | 8 | STAINLESS |\n| BREAK SHARP CORNERS 0.5 MAX. | 5 | FS-2011 | WASHER M8 | 16 | STAINLESS |\n| BREAK SHARP CORNERS 0.5 MAX. | 6 | FS-2012 | LOCK NUT M8 | 8 | STAINLESS |",
+              "json": "[\n  {\n    \"1\": \"2\",\n    \"Section\": \"\",\n    \"BK-1001\": \"BK-1002\",\n    \"BASE PLATE\": \"SUPPORT BRACKET\",\n    \"1_2\": \"2\",\n    \"STEEL S235\": \"STEEL S235\"\n  },\n  {\n    \"1\": \"3\",\n    \"Section\": \"\",\n    \"BK-1001\": \"BK-1003\",\n    \"BASE PLATE\": \"SPACER SLEEVE\",\n    \"1_2\": \"4\",\n    \"STEEL S235\": \"ALUMINIUM\"\n  },\n  {\n    \"1\": \"4\",\n    \"Section\": \"BREAK SHARP CORNERS 0.5 MAX.\",\n    \"BK-1001\": \"FS-2010\",\n    \"BASE PLATE\": \"HEX BOLT M8X30\",\n    \"1_2\": \"8\",\n    \"STEEL S235\": \"STAINLESS\"\n  },\n  {\n    \"1\": \"5\",\n    \"Section\": \"BREAK SHARP CORNERS 0.5 MAX.\",\n    \"BK-1001\": \"FS-2011\",\n    \"BASE PLATE\": \"WASHER M8\",\n    \"1_2\": \"16\",\n    \"STEEL S235\": \"STAINLESS\"\n  },\n  {\n    \"1\": \"6\",\n    \"Section\": \"BREAK SHARP CORNERS 0.5 MAX.\",\n    \"BK-1001\": \"FS-2012\",\n    \"BASE PLATE\": \"LOCK NUT M8\",\n    \"1_2\": \"8\",\n    \"STEEL S235\": \"STAINLESS\"\n  }\n]"
+            },
+            "rows": {
+              "csv": "1,BK-1001,BASE PLATE,1,STEEL S235\n2,BK-1002,SUPPORT BRACKET,2,STEEL S235\n3,BK-1003,SPACER SLEEVE,4,ALUMINIUM\nNOTE 1. DEBURR ALL EDGES AND,,,,\nBREAK SHARP CORNERS 0.5 MAX.,,,,\n4,FS-2010,HEX BOLT M8X30,8,STAINLESS\n5,FS-2011,WASHER M8,16,STAINLESS\n6,FS-2012,LOCK NUT M8,8,STAINLESS",
+              "tsv": "1\tBK-1001\tBASE PLATE\t1\tSTEEL S235\n2\tBK-1002\tSUPPORT BRACKET\t2\tSTEEL S235\n3\tBK-1003\tSPACER SLEEVE\t4\tALUMINIUM\nNOTE 1. DEBURR ALL EDGES AND\t\t\t\t\nBREAK SHARP CORNERS 0.5 MAX.\t\t\t\t\n4\tFS-2010\tHEX BOLT M8X30\t8\tSTAINLESS\n5\tFS-2011\tWASHER M8\t16\tSTAINLESS\n6\tFS-2012\tLOCK NUT M8\t8\tSTAINLESS",
+              "md": "| 1 | BK-1001 | BASE PLATE | 1 | STEEL S235 |\n| ---: | --- | --- | ---: | --- |\n| 2 | BK-1002 | SUPPORT BRACKET | 2 | STEEL S235 |\n| 3 | BK-1003 | SPACER SLEEVE | 4 | ALUMINIUM |\n| **NOTE 1. DEBURR ALL EDGES AND** | | | | |\n| **BREAK SHARP CORNERS 0.5 MAX.** | | | | |\n| 4 | FS-2010 | HEX BOLT M8X30 | 8 | STAINLESS |\n| 5 | FS-2011 | WASHER M8 | 16 | STAINLESS |\n| 6 | FS-2012 | LOCK NUT M8 | 8 | STAINLESS |",
+              "json": "[\n  {\n    \"section\": null,\n    \"rows\": [\n      {\n        \"1\": \"2\",\n        \"BK-1001\": \"BK-1002\",\n        \"BASE PLATE\": \"SUPPORT BRACKET\",\n        \"1_2\": \"2\",\n        \"STEEL S235\": \"STEEL S235\"\n      },\n      {\n        \"1\": \"3\",\n        \"BK-1001\": \"BK-1003\",\n        \"BASE PLATE\": \"SPACER SLEEVE\",\n        \"1_2\": \"4\",\n        \"STEEL S235\": \"ALUMINIUM\"\n      }\n    ]\n  },\n  {\n    \"section\": \"NOTE 1. DEBURR ALL EDGES AND\",\n    \"rows\": []\n  },\n  {\n    \"section\": \"BREAK SHARP CORNERS 0.5 MAX.\",\n    \"rows\": [\n      {\n        \"1\": \"4\",\n        \"BK-1001\": \"FS-2010\",\n        \"BASE PLATE\": \"HEX BOLT M8X30\",\n        \"1_2\": \"8\",\n        \"STEEL S235\": \"STAINLESS\"\n      },\n      {\n        \"1\": \"5\",\n        \"BK-1001\": \"FS-2011\",\n        \"BASE PLATE\": \"WASHER M8\",\n        \"1_2\": \"16\",\n        \"STEEL S235\": \"STAINLESS\"\n      },\n      {\n        \"1\": \"6\",\n        \"BK-1001\": \"FS-2012\",\n        \"BASE PLATE\": \"LOCK NUT M8\",\n        \"1_2\": \"8\",\n        \"STEEL S235\": \"STAINLESS\"\n      }\n    ]\n  }\n]"
+            }
+          }
+        },
+        {
+          "n": 3,
+          "pages": [1],
+          "parts": [{"page":1,"bbox":[412,413.2,545.776,466.4]}],
+          "header": true,
+          "firstBold": false,
+          "grid": [["TITLE","BRACKET ASSEMBLY"],["DWG NO","TL-0417"],["SCALE","1:2"],["SHEET","1 OF 2"]],
+          "sections": [],
+          "cols": [[416,449.456],[460,541.776]],
+          "repeats": 0,
+          "exports": {
+            "column": {
+              "csv": "TITLE,BRACKET ASSEMBLY\nDWG NO,TL-0417\nSCALE,1:2\nSHEET,1 OF 2",
+              "tsv": "TITLE\tBRACKET ASSEMBLY\nDWG NO\tTL-0417\nSCALE\t1:2\nSHEET\t1 OF 2",
+              "md": "| TITLE | BRACKET ASSEMBLY |\n| --- | --- |\n| DWG NO | TL-0417 |\n| SCALE | 1:2 |\n| SHEET | 1 OF 2 |",
+              "json": "[\n  {\n    \"TITLE\": \"DWG NO\",\n    \"BRACKET ASSEMBLY\": \"TL-0417\"\n  },\n  {\n    \"TITLE\": \"SCALE\",\n    \"BRACKET ASSEMBLY\": \"1:2\"\n  },\n  {\n    \"TITLE\": \"SHEET\",\n    \"BRACKET ASSEMBLY\": \"1 OF 2\"\n  }\n]"
+            },
+            "rows": {
+              "csv": "TITLE,BRACKET ASSEMBLY\nDWG NO,TL-0417\nSCALE,1:2\nSHEET,1 OF 2",
+              "tsv": "TITLE\tBRACKET ASSEMBLY\nDWG NO\tTL-0417\nSCALE\t1:2\nSHEET\t1 OF 2",
+              "md": "| TITLE | BRACKET ASSEMBLY |\n| --- | --- |\n| DWG NO | TL-0417 |\n| SCALE | 1:2 |\n| SHEET | 1 OF 2 |",
+              "json": "[\n  {\n    \"TITLE\": \"DWG NO\",\n    \"BRACKET ASSEMBLY\": \"TL-0417\"\n  },\n  {\n    \"TITLE\": \"SCALE\",\n    \"BRACKET ASSEMBLY\": \"1:2\"\n  },\n  {\n    \"TITLE\": \"SHEET\",\n    \"BRACKET ASSEMBLY\": \"1 OF 2\"\n  }\n]"
+            }
+          }
+        },
+        {
+          "n": 4,
+          "pages": [2],
+          "parts": [{"page":2,"bbox":[68,598.85,391.029,709.45]}],
+          "header": true,
+          "firstBold": false,
+          "grid": [
+            ["5","CV-3004","COVER PANEL","1","ALUMINIUM"],
+            ["4","CV-3003","HINGE PIN","2","STEEL S235"],
+            ["3","CV-3002","GASKET","1","RUBBER"],
+            ["NOTE 1. DEBURR ALL EDGES AND","","","",""],
+            ["BREAK SHARP CORNERS 0.5 MAX.","","","",""],
+            ["2","CV-3001","HANDLE GRIP","2","NYLON"],
+            ["1","CV-3000","MOUNT FRAME","1","STEEL S235"]
+          ],
+          "sections": [3,4],
+          "cols": [[72,77.004],[112,146.794],[185,251.99600000000004],[300,305.004],[335,387.029]],
+          "repeats": 0,
+          "exports": {
+            "column": {
+              "csv": "Section,5,CV-3004,COVER PANEL,1,ALUMINIUM\n,4,CV-3003,HINGE PIN,2,STEEL S235\n,3,CV-3002,GASKET,1,RUBBER\nBREAK SHARP CORNERS 0.5 MAX.,2,CV-3001,HANDLE GRIP,2,NYLON\nBREAK SHARP CORNERS 0.5 MAX.,1,CV-3000,MOUNT FRAME,1,STEEL S235",
+              "tsv": "Section\t5\tCV-3004\tCOVER PANEL\t1\tALUMINIUM\n\t4\tCV-3003\tHINGE PIN\t2\tSTEEL S235\n\t3\tCV-3002\tGASKET\t1\tRUBBER\nBREAK SHARP CORNERS 0.5 MAX.\t2\tCV-3001\tHANDLE GRIP\t2\tNYLON\nBREAK SHARP CORNERS 0.5 MAX.\t1\tCV-3000\tMOUNT FRAME\t1\tSTEEL S235",
+              "md": "| Section | 5 | CV-3004 | COVER PANEL | 1 | ALUMINIUM |\n| --- | ---: | --- | --- | ---: | --- |\n|  | 4 | CV-3003 | HINGE PIN | 2 | STEEL S235 |\n|  | 3 | CV-3002 | GASKET | 1 | RUBBER |\n| BREAK SHARP CORNERS 0.5 MAX. | 2 | CV-3001 | HANDLE GRIP | 2 | NYLON |\n| BREAK SHARP CORNERS 0.5 MAX. | 1 | CV-3000 | MOUNT FRAME | 1 | STEEL S235 |",
+              "json": "[\n  {\n    \"1\": \"2\",\n    \"5\": \"4\",\n    \"Section\": \"\",\n    \"CV-3004\": \"CV-3003\",\n    \"COVER PANEL\": \"HINGE PIN\",\n    \"ALUMINIUM\": \"STEEL S235\"\n  },\n  {\n    \"1\": \"1\",\n    \"5\": \"3\",\n    \"Section\": \"\",\n    \"CV-3004\": \"CV-3002\",\n    \"COVER PANEL\": \"GASKET\",\n    \"ALUMINIUM\": \"RUBBER\"\n  },\n  {\n    \"1\": \"2\",\n    \"5\": \"2\",\n    \"Section\": \"BREAK SHARP CORNERS 0.5 MAX.\",\n    \"CV-3004\": \"CV-3001\",\n    \"COVER PANEL\": \"HANDLE GRIP\",\n    \"ALUMINIUM\": \"NYLON\"\n  },\n  {\n    \"1\": \"1\",\n    \"5\": \"1\",\n    \"Section\": \"BREAK SHARP CORNERS 0.5 MAX.\",\n    \"CV-3004\": \"CV-3000\",\n    \"COVER PANEL\": \"MOUNT FRAME\",\n    \"ALUMINIUM\": \"STEEL S235\"\n  }\n]"
+            },
+            "rows": {
+              "csv": "5,CV-3004,COVER PANEL,1,ALUMINIUM\n4,CV-3003,HINGE PIN,2,STEEL S235\n3,CV-3002,GASKET,1,RUBBER\nNOTE 1. DEBURR ALL EDGES AND,,,,\nBREAK SHARP CORNERS 0.5 MAX.,,,,\n2,CV-3001,HANDLE GRIP,2,NYLON\n1,CV-3000,MOUNT FRAME,1,STEEL S235",
+              "tsv": "5\tCV-3004\tCOVER PANEL\t1\tALUMINIUM\n4\tCV-3003\tHINGE PIN\t2\tSTEEL S235\n3\tCV-3002\tGASKET\t1\tRUBBER\nNOTE 1. DEBURR ALL EDGES AND\t\t\t\t\nBREAK SHARP CORNERS 0.5 MAX.\t\t\t\t\n2\tCV-3001\tHANDLE GRIP\t2\tNYLON\n1\tCV-3000\tMOUNT FRAME\t1\tSTEEL S235",
+              "md": "| 5 | CV-3004 | COVER PANEL | 1 | ALUMINIUM |\n| ---: | --- | --- | ---: | --- |\n| 4 | CV-3003 | HINGE PIN | 2 | STEEL S235 |\n| 3 | CV-3002 | GASKET | 1 | RUBBER |\n| **NOTE 1. DEBURR ALL EDGES AND** | | | | |\n| **BREAK SHARP CORNERS 0.5 MAX.** | | | | |\n| 2 | CV-3001 | HANDLE GRIP | 2 | NYLON |\n| 1 | CV-3000 | MOUNT FRAME | 1 | STEEL S235 |",
+              "json": "[\n  {\n    \"section\": null,\n    \"rows\": [\n      {\n        \"1\": \"2\",\n        \"5\": \"4\",\n        \"CV-3004\": \"CV-3003\",\n        \"COVER PANEL\": \"HINGE PIN\",\n        \"ALUMINIUM\": \"STEEL S235\"\n      },\n      {\n        \"1\": \"1\",\n        \"5\": \"3\",\n        \"CV-3004\": \"CV-3002\",\n        \"COVER PANEL\": \"GASKET\",\n        \"ALUMINIUM\": \"RUBBER\"\n      }\n    ]\n  },\n  {\n    \"section\": \"NOTE 1. DEBURR ALL EDGES AND\",\n    \"rows\": []\n  },\n  {\n    \"section\": \"BREAK SHARP CORNERS 0.5 MAX.\",\n    \"rows\": [\n      {\n        \"1\": \"2\",\n        \"5\": \"2\",\n        \"CV-3004\": \"CV-3001\",\n        \"COVER PANEL\": \"HANDLE GRIP\",\n        \"ALUMINIUM\": \"NYLON\"\n      },\n      {\n        \"1\": \"1\",\n        \"5\": \"1\",\n        \"CV-3004\": \"CV-3000\",\n        \"COVER PANEL\": \"MOUNT FRAME\",\n        \"ALUMINIUM\": \"STEEL S235\"\n      }\n    ]\n  }\n]"
+            }
+          }
+        },
+        {
+          "n": 5,
+          "pages": [2],
+          "parts": [{"page":2,"bbox":[68,521.2,545.776,577.45]}],
+          "header": true,
+          "firstBold": false,
+          "grid": [
+            ["","PART","","","MATERIAL","TITLE","BRACKET ASSEMBLY"],
+            ["ITEM","NUMBER","DESCRIPTION","QTY","SPEC","",""],
+            ["","","","","","DWG NO","TL-0417"],
+            ["","","","","","SCALE","1:2"],
+            ["","","","","","SHEET","2 OF 2"]
+          ],
+          "sections": [],
+          "cols": [[72,93.501],[112,151.49200000000002],[185,246.50600000000003],[300,318.504],[335,380.684],[416,438.224],[460,541.776]],
+          "repeats": 0,
+          "exports": {
+            "column": {
+              "csv": ",PART,,,MATERIAL,TITLE,BRACKET ASSEMBLY\nITEM,NUMBER,DESCRIPTION,QTY,SPEC,,\n,,,,,DWG NO,TL-0417\n,,,,,SCALE,1:2\n,,,,,SHEET,2 OF 2",
+              "tsv": "\tPART\t\t\tMATERIAL\tTITLE\tBRACKET ASSEMBLY\nITEM\tNUMBER\tDESCRIPTION\tQTY\tSPEC\t\t\n\t\t\t\t\tDWG NO\tTL-0417\n\t\t\t\t\tSCALE\t1:2\n\t\t\t\t\tSHEET\t2 OF 2",
+              "md": "|  | PART |  |  | MATERIAL | TITLE | BRACKET ASSEMBLY |\n| --- | --- | --- | --- | --- | --- | --- |\n| ITEM | NUMBER | DESCRIPTION | QTY | SPEC |  |  |\n|  |  |  |  |  | DWG NO | TL-0417 |\n|  |  |  |  |  | SCALE | 1:2 |\n|  |  |  |  |  | SHEET | 2 OF 2 |",
+              "json": "[\n  {\n    \"column_1\": \"ITEM\",\n    \"PART\": \"NUMBER\",\n    \"column_3\": \"DESCRIPTION\",\n    \"column_4\": \"QTY\",\n    \"MATERIAL\": \"SPEC\",\n    \"TITLE\": \"\",\n    \"BRACKET ASSEMBLY\": \"\"\n  },\n  {\n    \"column_1\": \"\",\n    \"PART\": \"\",\n    \"column_3\": \"\",\n    \"column_4\": \"\",\n    \"MATERIAL\": \"\",\n    \"TITLE\": \"DWG NO\",\n    \"BRACKET ASSEMBLY\": \"TL-0417\"\n  },\n  {\n    \"column_1\": \"\",\n    \"PART\": \"\",\n    \"column_3\": \"\",\n    \"column_4\": \"\",\n    \"MATERIAL\": \"\",\n    \"TITLE\": \"SCALE\",\n    \"BRACKET ASSEMBLY\": \"1:2\"\n  },\n  {\n    \"column_1\": \"\",\n    \"PART\": \"\",\n    \"column_3\": \"\",\n    \"column_4\": \"\",\n    \"MATERIAL\": \"\",\n    \"TITLE\": \"SHEET\",\n    \"BRACKET ASSEMBLY\": \"2 OF 2\"\n  }\n]"
+            },
+            "rows": {
+              "csv": ",PART,,,MATERIAL,TITLE,BRACKET ASSEMBLY\nITEM,NUMBER,DESCRIPTION,QTY,SPEC,,\n,,,,,DWG NO,TL-0417\n,,,,,SCALE,1:2\n,,,,,SHEET,2 OF 2",
+              "tsv": "\tPART\t\t\tMATERIAL\tTITLE\tBRACKET ASSEMBLY\nITEM\tNUMBER\tDESCRIPTION\tQTY\tSPEC\t\t\n\t\t\t\t\tDWG NO\tTL-0417\n\t\t\t\t\tSCALE\t1:2\n\t\t\t\t\tSHEET\t2 OF 2",
+              "md": "|  | PART |  |  | MATERIAL | TITLE | BRACKET ASSEMBLY |\n| --- | --- | --- | --- | --- | --- | --- |\n| ITEM | NUMBER | DESCRIPTION | QTY | SPEC |  |  |\n|  |  |  |  |  | DWG NO | TL-0417 |\n|  |  |  |  |  | SCALE | 1:2 |\n|  |  |  |  |  | SHEET | 2 OF 2 |",
+              "json": "[\n  {\n    \"column_1\": \"ITEM\",\n    \"PART\": \"NUMBER\",\n    \"column_3\": \"DESCRIPTION\",\n    \"column_4\": \"QTY\",\n    \"MATERIAL\": \"SPEC\",\n    \"TITLE\": \"\",\n    \"BRACKET ASSEMBLY\": \"\"\n  },\n  {\n    \"column_1\": \"\",\n    \"PART\": \"\",\n    \"column_3\": \"\",\n    \"column_4\": \"\",\n    \"MATERIAL\": \"\",\n    \"TITLE\": \"DWG NO\",\n    \"BRACKET ASSEMBLY\": \"TL-0417\"\n  },\n  {\n    \"column_1\": \"\",\n    \"PART\": \"\",\n    \"column_3\": \"\",\n    \"column_4\": \"\",\n    \"MATERIAL\": \"\",\n    \"TITLE\": \"SCALE\",\n    \"BRACKET ASSEMBLY\": \"1:2\"\n  },\n  {\n    \"column_1\": \"\",\n    \"PART\": \"\",\n    \"column_3\": \"\",\n    \"column_4\": \"\",\n    \"MATERIAL\": \"\",\n    \"TITLE\": \"SHEET\",\n    \"BRACKET ASSEMBLY\": \"2 OF 2\"\n  }\n]"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "columnSpacing": 0.5,
+      "joining": true,
+      "tables": [
+        {
+          "n": 1,
+          "pages": [1],
+          "parts": [{"page":1,"bbox":[68,684.85,363.507,709.45]}],
+          "header": true,
+          "firstBold": true,
+          "grid": [["","PART","","","MATERIAL"],["ITEM","NUMBER","DESCRIPTION","QTY","SPEC"]],
+          "sections": [],
+          "cols": [[72,93.501],[112,151.49200000000002],[185,246.50600000000003],[300,318.504],[335,359.507]],
+          "repeats": 0,
+          "exports": {
+            "column": {
+              "csv": ",PART,,,MATERIAL\nITEM,NUMBER,DESCRIPTION,QTY,SPEC",
+              "tsv": "\tPART\t\t\tMATERIAL\nITEM\tNUMBER\tDESCRIPTION\tQTY\tSPEC",
+              "md": "|  | PART |  |  | MATERIAL |\n| --- | --- | --- | --- | --- |\n| ITEM | NUMBER | DESCRIPTION | QTY | SPEC |",
+              "json": "[\n  {\n    \"column_1\": \"ITEM\",\n    \"PART\": \"NUMBER\",\n    \"column_3\": \"DESCRIPTION\",\n    \"column_4\": \"QTY\",\n    \"MATERIAL\": \"SPEC\"\n  }\n]"
+            },
+            "rows": {
+              "csv": ",PART,,,MATERIAL\nITEM,NUMBER,DESCRIPTION,QTY,SPEC",
+              "tsv": "\tPART\t\t\tMATERIAL\nITEM\tNUMBER\tDESCRIPTION\tQTY\tSPEC",
+              "md": "|  | PART |  |  | MATERIAL |\n| --- | --- | --- | --- | --- |\n| ITEM | NUMBER | DESCRIPTION | QTY | SPEC |",
+              "json": "[\n  {\n    \"column_1\": \"ITEM\",\n    \"PART\": \"NUMBER\",\n    \"column_3\": \"DESCRIPTION\",\n    \"column_4\": \"QTY\",\n    \"MATERIAL\": \"SPEC\"\n  }\n]"
+            }
+          }
+        },
+        {
+          "n": 2,
+          "pages": [1],
+          "parts": [{"page":1,"bbox":[68,524.85,391.029,649.45]}],
+          "header": true,
+          "firstBold": false,
+          "grid": [
+            ["1","BK-1001","BASE PLATE","1","STEEL S235"],
+            ["2","BK-1002","SUPPORT BRACKET","2","STEEL S235"],
+            ["3","BK-1003","SPACER SLEEVE","4","ALUMINIUM"],
+            ["NOTE 1. DEBURR ALL EDGES AND","","","",""],
+            ["BREAK SHARP CORNERS 0.5 MAX.","","","",""],
+            ["4","FS-2010","HEX BOLT M8X30","8","STAINLESS"],
+            ["5","FS-2011","WASHER M8","16","STAINLESS"],
+            ["6","FS-2012","LOCK NUT M8","8","STAINLESS"]
+          ],
+          "sections": [3,4],
+          "cols": [[72,77.004],[112,147.019],[185,272.975],[300,310.008],[335,387.029]],
+          "repeats": 0,
+          "exports": {
+            "column": {
+              "csv": "Section,1,BK-1001,BASE PLATE,1,STEEL S235\n,2,BK-1002,SUPPORT BRACKET,2,STEEL S235\n,3,BK-1003,SPACER SLEEVE,4,ALUMINIUM\nBREAK SHARP CORNERS 0.5 MAX.,4,FS-2010,HEX BOLT M8X30,8,STAINLESS\nBREAK SHARP CORNERS 0.5 MAX.,5,FS-2011,WASHER M8,16,STAINLESS\nBREAK SHARP CORNERS 0.5 MAX.,6,FS-2012,LOCK NUT M8,8,STAINLESS",
+              "tsv": "Section\t1\tBK-1001\tBASE PLATE\t1\tSTEEL S235\n\t2\tBK-1002\tSUPPORT BRACKET\t2\tSTEEL S235\n\t3\tBK-1003\tSPACER SLEEVE\t4\tALUMINIUM\nBREAK SHARP CORNERS 0.5 MAX.\t4\tFS-2010\tHEX BOLT M8X30\t8\tSTAINLESS\nBREAK SHARP CORNERS 0.5 MAX.\t5\tFS-2011\tWASHER M8\t16\tSTAINLESS\nBREAK SHARP CORNERS 0.5 MAX.\t6\tFS-2012\tLOCK NUT M8\t8\tSTAINLESS",
+              "md": "| Section | 1 | BK-1001 | BASE PLATE | 1 | STEEL S235 |\n| --- | ---: | --- | --- | ---: | --- |\n|  | 2 | BK-1002 | SUPPORT BRACKET | 2 | STEEL S235 |\n|  | 3 | BK-1003 | SPACER SLEEVE | 4 | ALUMINIUM |\n| BREAK SHARP CORNERS 0.5 MAX. | 4 | FS-2010 | HEX BOLT M8X30 | 8 | STAINLESS |\n| BREAK SHARP CORNERS 0.5 MAX. | 5 | FS-2011 | WASHER M8 | 16 | STAINLESS |\n| BREAK SHARP CORNERS 0.5 MAX. | 6 | FS-2012 | LOCK NUT M8 | 8 | STAINLESS |",
+              "json": "[\n  {\n    \"1\": \"2\",\n    \"Section\": \"\",\n    \"BK-1001\": \"BK-1002\",\n    \"BASE PLATE\": \"SUPPORT BRACKET\",\n    \"1_2\": \"2\",\n    \"STEEL S235\": \"STEEL S235\"\n  },\n  {\n    \"1\": \"3\",\n    \"Section\": \"\",\n    \"BK-1001\": \"BK-1003\",\n    \"BASE PLATE\": \"SPACER SLEEVE\",\n    \"1_2\": \"4\",\n    \"STEEL S235\": \"ALUMINIUM\"\n  },\n  {\n    \"1\": \"4\",\n    \"Section\": \"BREAK SHARP CORNERS 0.5 MAX.\",\n    \"BK-1001\": \"FS-2010\",\n    \"BASE PLATE\": \"HEX BOLT M8X30\",\n    \"1_2\": \"8\",\n    \"STEEL S235\": \"STAINLESS\"\n  },\n  {\n    \"1\": \"5\",\n    \"Section\": \"BREAK SHARP CORNERS 0.5 MAX.\",\n    \"BK-1001\": \"FS-2011\",\n    \"BASE PLATE\": \"WASHER M8\",\n    \"1_2\": \"16\",\n    \"STEEL S235\": \"STAINLESS\"\n  },\n  {\n    \"1\": \"6\",\n    \"Section\": \"BREAK SHARP CORNERS 0.5 MAX.\",\n    \"BK-1001\": \"FS-2012\",\n    \"BASE PLATE\": \"LOCK NUT M8\",\n    \"1_2\": \"8\",\n    \"STEEL S235\": \"STAINLESS\"\n  }\n]"
+            },
+            "rows": {
+              "csv": "1,BK-1001,BASE PLATE,1,STEEL S235\n2,BK-1002,SUPPORT BRACKET,2,STEEL S235\n3,BK-1003,SPACER SLEEVE,4,ALUMINIUM\nNOTE 1. DEBURR ALL EDGES AND,,,,\nBREAK SHARP CORNERS 0.5 MAX.,,,,\n4,FS-2010,HEX BOLT M8X30,8,STAINLESS\n5,FS-2011,WASHER M8,16,STAINLESS\n6,FS-2012,LOCK NUT M8,8,STAINLESS",
+              "tsv": "1\tBK-1001\tBASE PLATE\t1\tSTEEL S235\n2\tBK-1002\tSUPPORT BRACKET\t2\tSTEEL S235\n3\tBK-1003\tSPACER SLEEVE\t4\tALUMINIUM\nNOTE 1. DEBURR ALL EDGES AND\t\t\t\t\nBREAK SHARP CORNERS 0.5 MAX.\t\t\t\t\n4\tFS-2010\tHEX BOLT M8X30\t8\tSTAINLESS\n5\tFS-2011\tWASHER M8\t16\tSTAINLESS\n6\tFS-2012\tLOCK NUT M8\t8\tSTAINLESS",
+              "md": "| 1 | BK-1001 | BASE PLATE | 1 | STEEL S235 |\n| ---: | --- | --- | ---: | --- |\n| 2 | BK-1002 | SUPPORT BRACKET | 2 | STEEL S235 |\n| 3 | BK-1003 | SPACER SLEEVE | 4 | ALUMINIUM |\n| **NOTE 1. DEBURR ALL EDGES AND** | | | | |\n| **BREAK SHARP CORNERS 0.5 MAX.** | | | | |\n| 4 | FS-2010 | HEX BOLT M8X30 | 8 | STAINLESS |\n| 5 | FS-2011 | WASHER M8 | 16 | STAINLESS |\n| 6 | FS-2012 | LOCK NUT M8 | 8 | STAINLESS |",
+              "json": "[\n  {\n    \"section\": null,\n    \"rows\": [\n      {\n        \"1\": \"2\",\n        \"BK-1001\": \"BK-1002\",\n        \"BASE PLATE\": \"SUPPORT BRACKET\",\n        \"1_2\": \"2\",\n        \"STEEL S235\": \"STEEL S235\"\n      },\n      {\n        \"1\": \"3\",\n        \"BK-1001\": \"BK-1003\",\n        \"BASE PLATE\": \"SPACER SLEEVE\",\n        \"1_2\": \"4\",\n        \"STEEL S235\": \"ALUMINIUM\"\n      }\n    ]\n  },\n  {\n    \"section\": \"NOTE 1. DEBURR ALL EDGES AND\",\n    \"rows\": []\n  },\n  {\n    \"section\": \"BREAK SHARP CORNERS 0.5 MAX.\",\n    \"rows\": [\n      {\n        \"1\": \"4\",\n        \"BK-1001\": \"FS-2010\",\n        \"BASE PLATE\": \"HEX BOLT M8X30\",\n        \"1_2\": \"8\",\n        \"STEEL S235\": \"STAINLESS\"\n      },\n      {\n        \"1\": \"5\",\n        \"BK-1001\": \"FS-2011\",\n        \"BASE PLATE\": \"WASHER M8\",\n        \"1_2\": \"16\",\n        \"STEEL S235\": \"STAINLESS\"\n      },\n      {\n        \"1\": \"6\",\n        \"BK-1001\": \"FS-2012\",\n        \"BASE PLATE\": \"LOCK NUT M8\",\n        \"1_2\": \"8\",\n        \"STEEL S235\": \"STAINLESS\"\n      }\n    ]\n  }\n]"
+            }
+          }
+        },
+        {
+          "n": 3,
+          "pages": [1],
+          "parts": [{"page":1,"bbox":[412,413.2,545.776,466.4]}],
+          "header": true,
+          "firstBold": false,
+          "grid": [["TITLE","BRACKET ASSEMBLY"],["DWG NO","TL-0417"],["SCALE","1:2"],["SHEET","1 OF 2"]],
+          "sections": [],
+          "cols": [[416,449.456],[460,541.776]],
+          "repeats": 0,
+          "exports": {
+            "column": {
+              "csv": "TITLE,BRACKET ASSEMBLY\nDWG NO,TL-0417\nSCALE,1:2\nSHEET,1 OF 2",
+              "tsv": "TITLE\tBRACKET ASSEMBLY\nDWG NO\tTL-0417\nSCALE\t1:2\nSHEET\t1 OF 2",
+              "md": "| TITLE | BRACKET ASSEMBLY |\n| --- | --- |\n| DWG NO | TL-0417 |\n| SCALE | 1:2 |\n| SHEET | 1 OF 2 |",
+              "json": "[\n  {\n    \"TITLE\": \"DWG NO\",\n    \"BRACKET ASSEMBLY\": \"TL-0417\"\n  },\n  {\n    \"TITLE\": \"SCALE\",\n    \"BRACKET ASSEMBLY\": \"1:2\"\n  },\n  {\n    \"TITLE\": \"SHEET\",\n    \"BRACKET ASSEMBLY\": \"1 OF 2\"\n  }\n]"
+            },
+            "rows": {
+              "csv": "TITLE,BRACKET ASSEMBLY\nDWG NO,TL-0417\nSCALE,1:2\nSHEET,1 OF 2",
+              "tsv": "TITLE\tBRACKET ASSEMBLY\nDWG NO\tTL-0417\nSCALE\t1:2\nSHEET\t1 OF 2",
+              "md": "| TITLE | BRACKET ASSEMBLY |\n| --- | --- |\n| DWG NO | TL-0417 |\n| SCALE | 1:2 |\n| SHEET | 1 OF 2 |",
+              "json": "[\n  {\n    \"TITLE\": \"DWG NO\",\n    \"BRACKET ASSEMBLY\": \"TL-0417\"\n  },\n  {\n    \"TITLE\": \"SCALE\",\n    \"BRACKET ASSEMBLY\": \"1:2\"\n  },\n  {\n    \"TITLE\": \"SHEET\",\n    \"BRACKET ASSEMBLY\": \"1 OF 2\"\n  }\n]"
+            }
+          }
+        },
+        {
+          "n": 4,
+          "pages": [2],
+          "parts": [{"page":2,"bbox":[68,598.85,391.029,709.45]}],
+          "header": true,
+          "firstBold": false,
+          "grid": [
+            ["5","CV-3004","COVER PANEL","1","ALUMINIUM"],
+            ["4","CV-3003","HINGE PIN","2","STEEL S235"],
+            ["3","CV-3002","GASKET","1","RUBBER"],
+            ["NOTE 1. DEBURR ALL EDGES AND","","","",""],
+            ["BREAK SHARP CORNERS 0.5 MAX.","","","",""],
+            ["2","CV-3001","HANDLE GRIP","2","NYLON"],
+            ["1","CV-3000","MOUNT FRAME","1","STEEL S235"]
+          ],
+          "sections": [3,4],
+          "cols": [[72,77.004],[112,146.794],[185,251.99600000000004],[300,305.004],[335,387.029]],
+          "repeats": 0,
+          "exports": {
+            "column": {
+              "csv": "Section,5,CV-3004,COVER PANEL,1,ALUMINIUM\n,4,CV-3003,HINGE PIN,2,STEEL S235\n,3,CV-3002,GASKET,1,RUBBER\nBREAK SHARP CORNERS 0.5 MAX.,2,CV-3001,HANDLE GRIP,2,NYLON\nBREAK SHARP CORNERS 0.5 MAX.,1,CV-3000,MOUNT FRAME,1,STEEL S235",
+              "tsv": "Section\t5\tCV-3004\tCOVER PANEL\t1\tALUMINIUM\n\t4\tCV-3003\tHINGE PIN\t2\tSTEEL S235\n\t3\tCV-3002\tGASKET\t1\tRUBBER\nBREAK SHARP CORNERS 0.5 MAX.\t2\tCV-3001\tHANDLE GRIP\t2\tNYLON\nBREAK SHARP CORNERS 0.5 MAX.\t1\tCV-3000\tMOUNT FRAME\t1\tSTEEL S235",
+              "md": "| Section | 5 | CV-3004 | COVER PANEL | 1 | ALUMINIUM |\n| --- | ---: | --- | --- | ---: | --- |\n|  | 4 | CV-3003 | HINGE PIN | 2 | STEEL S235 |\n|  | 3 | CV-3002 | GASKET | 1 | RUBBER |\n| BREAK SHARP CORNERS 0.5 MAX. | 2 | CV-3001 | HANDLE GRIP | 2 | NYLON |\n| BREAK SHARP CORNERS 0.5 MAX. | 1 | CV-3000 | MOUNT FRAME | 1 | STEEL S235 |",
+              "json": "[\n  {\n    \"1\": \"2\",\n    \"5\": \"4\",\n    \"Section\": \"\",\n    \"CV-3004\": \"CV-3003\",\n    \"COVER PANEL\": \"HINGE PIN\",\n    \"ALUMINIUM\": \"STEEL S235\"\n  },\n  {\n    \"1\": \"1\",\n    \"5\": \"3\",\n    \"Section\": \"\",\n    \"CV-3004\": \"CV-3002\",\n    \"COVER PANEL\": \"GASKET\",\n    \"ALUMINIUM\": \"RUBBER\"\n  },\n  {\n    \"1\": \"2\",\n    \"5\": \"2\",\n    \"Section\": \"BREAK SHARP CORNERS 0.5 MAX.\",\n    \"CV-3004\": \"CV-3001\",\n    \"COVER PANEL\": \"HANDLE GRIP\",\n    \"ALUMINIUM\": \"NYLON\"\n  },\n  {\n    \"1\": \"1\",\n    \"5\": \"1\",\n    \"Section\": \"BREAK SHARP CORNERS 0.5 MAX.\",\n    \"CV-3004\": \"CV-3000\",\n    \"COVER PANEL\": \"MOUNT FRAME\",\n    \"ALUMINIUM\": \"STEEL S235\"\n  }\n]"
+            },
+            "rows": {
+              "csv": "5,CV-3004,COVER PANEL,1,ALUMINIUM\n4,CV-3003,HINGE PIN,2,STEEL S235\n3,CV-3002,GASKET,1,RUBBER\nNOTE 1. DEBURR ALL EDGES AND,,,,\nBREAK SHARP CORNERS 0.5 MAX.,,,,\n2,CV-3001,HANDLE GRIP,2,NYLON\n1,CV-3000,MOUNT FRAME,1,STEEL S235",
+              "tsv": "5\tCV-3004\tCOVER PANEL\t1\tALUMINIUM\n4\tCV-3003\tHINGE PIN\t2\tSTEEL S235\n3\tCV-3002\tGASKET\t1\tRUBBER\nNOTE 1. DEBURR ALL EDGES AND\t\t\t\t\nBREAK SHARP CORNERS 0.5 MAX.\t\t\t\t\n2\tCV-3001\tHANDLE GRIP\t2\tNYLON\n1\tCV-3000\tMOUNT FRAME\t1\tSTEEL S235",
+              "md": "| 5 | CV-3004 | COVER PANEL | 1 | ALUMINIUM |\n| ---: | --- | --- | ---: | --- |\n| 4 | CV-3003 | HINGE PIN | 2 | STEEL S235 |\n| 3 | CV-3002 | GASKET | 1 | RUBBER |\n| **NOTE 1. DEBURR ALL EDGES AND** | | | | |\n| **BREAK SHARP CORNERS 0.5 MAX.** | | | | |\n| 2 | CV-3001 | HANDLE GRIP | 2 | NYLON |\n| 1 | CV-3000 | MOUNT FRAME | 1 | STEEL S235 |",
+              "json": "[\n  {\n    \"section\": null,\n    \"rows\": [\n      {\n        \"1\": \"2\",\n        \"5\": \"4\",\n        \"CV-3004\": \"CV-3003\",\n        \"COVER PANEL\": \"HINGE PIN\",\n        \"ALUMINIUM\": \"STEEL S235\"\n      },\n      {\n        \"1\": \"1\",\n        \"5\": \"3\",\n        \"CV-3004\": \"CV-3002\",\n        \"COVER PANEL\": \"GASKET\",\n        \"ALUMINIUM\": \"RUBBER\"\n      }\n    ]\n  },\n  {\n    \"section\": \"NOTE 1. DEBURR ALL EDGES AND\",\n    \"rows\": []\n  },\n  {\n    \"section\": \"BREAK SHARP CORNERS 0.5 MAX.\",\n    \"rows\": [\n      {\n        \"1\": \"2\",\n        \"5\": \"2\",\n        \"CV-3004\": \"CV-3001\",\n        \"COVER PANEL\": \"HANDLE GRIP\",\n        \"ALUMINIUM\": \"NYLON\"\n      },\n      {\n        \"1\": \"1\",\n        \"5\": \"1\",\n        \"CV-3004\": \"CV-3000\",\n        \"COVER PANEL\": \"MOUNT FRAME\",\n        \"ALUMINIUM\": \"STEEL S235\"\n      }\n    ]\n  }\n]"
+            }
+          }
+        },
+        {
+          "n": 5,
+          "pages": [2],
+          "parts": [{"page":2,"bbox":[68,521.2,545.776,577.45]}],
+          "header": true,
+          "firstBold": false,
+          "grid": [
+            ["","PART","","","MATERIAL","TITLE","BRACKET ASSEMBLY"],
+            ["ITEM","NUMBER","DESCRIPTION","QTY","SPEC","",""],
+            ["","","","","","DWG NO","TL-0417"],
+            ["","","","","","SCALE","1:2"],
+            ["","","","","","SHEET","2 OF 2"]
+          ],
+          "sections": [],
+          "cols": [[72,93.501],[112,151.49200000000002],[185,246.50600000000003],[300,318.504],[335,380.684],[416,438.224],[460,541.776]],
+          "repeats": 0,
+          "exports": {
+            "column": {
+              "csv": ",PART,,,MATERIAL,TITLE,BRACKET ASSEMBLY\nITEM,NUMBER,DESCRIPTION,QTY,SPEC,,\n,,,,,DWG NO,TL-0417\n,,,,,SCALE,1:2\n,,,,,SHEET,2 OF 2",
+              "tsv": "\tPART\t\t\tMATERIAL\tTITLE\tBRACKET ASSEMBLY\nITEM\tNUMBER\tDESCRIPTION\tQTY\tSPEC\t\t\n\t\t\t\t\tDWG NO\tTL-0417\n\t\t\t\t\tSCALE\t1:2\n\t\t\t\t\tSHEET\t2 OF 2",
+              "md": "|  | PART |  |  | MATERIAL | TITLE | BRACKET ASSEMBLY |\n| --- | --- | --- | --- | --- | --- | --- |\n| ITEM | NUMBER | DESCRIPTION | QTY | SPEC |  |  |\n|  |  |  |  |  | DWG NO | TL-0417 |\n|  |  |  |  |  | SCALE | 1:2 |\n|  |  |  |  |  | SHEET | 2 OF 2 |",
+              "json": "[\n  {\n    \"column_1\": \"ITEM\",\n    \"PART\": \"NUMBER\",\n    \"column_3\": \"DESCRIPTION\",\n    \"column_4\": \"QTY\",\n    \"MATERIAL\": \"SPEC\",\n    \"TITLE\": \"\",\n    \"BRACKET ASSEMBLY\": \"\"\n  },\n  {\n    \"column_1\": \"\",\n    \"PART\": \"\",\n    \"column_3\": \"\",\n    \"column_4\": \"\",\n    \"MATERIAL\": \"\",\n    \"TITLE\": \"DWG NO\",\n    \"BRACKET ASSEMBLY\": \"TL-0417\"\n  },\n  {\n    \"column_1\": \"\",\n    \"PART\": \"\",\n    \"column_3\": \"\",\n    \"column_4\": \"\",\n    \"MATERIAL\": \"\",\n    \"TITLE\": \"SCALE\",\n    \"BRACKET ASSEMBLY\": \"1:2\"\n  },\n  {\n    \"column_1\": \"\",\n    \"PART\": \"\",\n    \"column_3\": \"\",\n    \"column_4\": \"\",\n    \"MATERIAL\": \"\",\n    \"TITLE\": \"SHEET\",\n    \"BRACKET ASSEMBLY\": \"2 OF 2\"\n  }\n]"
+            },
+            "rows": {
+              "csv": ",PART,,,MATERIAL,TITLE,BRACKET ASSEMBLY\nITEM,NUMBER,DESCRIPTION,QTY,SPEC,,\n,,,,,DWG NO,TL-0417\n,,,,,SCALE,1:2\n,,,,,SHEET,2 OF 2",
+              "tsv": "\tPART\t\t\tMATERIAL\tTITLE\tBRACKET ASSEMBLY\nITEM\tNUMBER\tDESCRIPTION\tQTY\tSPEC\t\t\n\t\t\t\t\tDWG NO\tTL-0417\n\t\t\t\t\tSCALE\t1:2\n\t\t\t\t\tSHEET\t2 OF 2",
+              "md": "|  | PART |  |  | MATERIAL | TITLE | BRACKET ASSEMBLY |\n| --- | --- | --- | --- | --- | --- | --- |\n| ITEM | NUMBER | DESCRIPTION | QTY | SPEC |  |  |\n|  |  |  |  |  | DWG NO | TL-0417 |\n|  |  |  |  |  | SCALE | 1:2 |\n|  |  |  |  |  | SHEET | 2 OF 2 |",
+              "json": "[\n  {\n    \"column_1\": \"ITEM\",\n    \"PART\": \"NUMBER\",\n    \"column_3\": \"DESCRIPTION\",\n    \"column_4\": \"QTY\",\n    \"MATERIAL\": \"SPEC\",\n    \"TITLE\": \"\",\n    \"BRACKET ASSEMBLY\": \"\"\n  },\n  {\n    \"column_1\": \"\",\n    \"PART\": \"\",\n    \"column_3\": \"\",\n    \"column_4\": \"\",\n    \"MATERIAL\": \"\",\n    \"TITLE\": \"DWG NO\",\n    \"BRACKET ASSEMBLY\": \"TL-0417\"\n  },\n  {\n    \"column_1\": \"\",\n    \"PART\": \"\",\n    \"column_3\": \"\",\n    \"column_4\": \"\",\n    \"MATERIAL\": \"\",\n    \"TITLE\": \"SCALE\",\n    \"BRACKET ASSEMBLY\": \"1:2\"\n  },\n  {\n    \"column_1\": \"\",\n    \"PART\": \"\",\n    \"column_3\": \"\",\n    \"column_4\": \"\",\n    \"MATERIAL\": \"\",\n    \"TITLE\": \"SHEET\",\n    \"BRACKET ASSEMBLY\": \"2 OF 2\"\n  }\n]"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "columnSpacing": 0.5,
+      "joining": false,
+      "tables": [
+        {
+          "n": 1,
+          "pages": [1],
+          "parts": [{"page":1,"bbox":[68,684.85,363.507,709.45]}],
+          "header": true,
+          "firstBold": true,
+          "grid": [["","PART","","","MATERIAL"],["ITEM","NUMBER","DESCRIPTION","QTY","SPEC"]],
+          "sections": [],
+          "cols": [[72,93.501],[112,151.49200000000002],[185,246.50600000000003],[300,318.504],[335,359.507]],
+          "repeats": 0,
+          "exports": {
+            "column": {
+              "csv": ",PART,,,MATERIAL\nITEM,NUMBER,DESCRIPTION,QTY,SPEC",
+              "tsv": "\tPART\t\t\tMATERIAL\nITEM\tNUMBER\tDESCRIPTION\tQTY\tSPEC",
+              "md": "|  | PART |  |  | MATERIAL |\n| --- | --- | --- | --- | --- |\n| ITEM | NUMBER | DESCRIPTION | QTY | SPEC |",
+              "json": "[\n  {\n    \"column_1\": \"ITEM\",\n    \"PART\": \"NUMBER\",\n    \"column_3\": \"DESCRIPTION\",\n    \"column_4\": \"QTY\",\n    \"MATERIAL\": \"SPEC\"\n  }\n]"
+            },
+            "rows": {
+              "csv": ",PART,,,MATERIAL\nITEM,NUMBER,DESCRIPTION,QTY,SPEC",
+              "tsv": "\tPART\t\t\tMATERIAL\nITEM\tNUMBER\tDESCRIPTION\tQTY\tSPEC",
+              "md": "|  | PART |  |  | MATERIAL |\n| --- | --- | --- | --- | --- |\n| ITEM | NUMBER | DESCRIPTION | QTY | SPEC |",
+              "json": "[\n  {\n    \"column_1\": \"ITEM\",\n    \"PART\": \"NUMBER\",\n    \"column_3\": \"DESCRIPTION\",\n    \"column_4\": \"QTY\",\n    \"MATERIAL\": \"SPEC\"\n  }\n]"
+            }
+          }
+        },
+        {
+          "n": 2,
+          "pages": [1],
+          "parts": [{"page":1,"bbox":[68,524.85,391.029,649.45]}],
+          "header": true,
+          "firstBold": false,
+          "grid": [
+            ["1","BK-1001","BASE PLATE","1","STEEL S235"],
+            ["2","BK-1002","SUPPORT BRACKET","2","STEEL S235"],
+            ["3","BK-1003","SPACER SLEEVE","4","ALUMINIUM"],
+            ["NOTE 1. DEBURR ALL EDGES AND","","","",""],
+            ["BREAK SHARP CORNERS 0.5 MAX.","","","",""],
+            ["4","FS-2010","HEX BOLT M8X30","8","STAINLESS"],
+            ["5","FS-2011","WASHER M8","16","STAINLESS"],
+            ["6","FS-2012","LOCK NUT M8","8","STAINLESS"]
+          ],
+          "sections": [3,4],
+          "cols": [[72,77.004],[112,147.019],[185,272.975],[300,310.008],[335,387.029]],
+          "repeats": 0,
+          "exports": {
+            "column": {
+              "csv": "Section,1,BK-1001,BASE PLATE,1,STEEL S235\n,2,BK-1002,SUPPORT BRACKET,2,STEEL S235\n,3,BK-1003,SPACER SLEEVE,4,ALUMINIUM\nBREAK SHARP CORNERS 0.5 MAX.,4,FS-2010,HEX BOLT M8X30,8,STAINLESS\nBREAK SHARP CORNERS 0.5 MAX.,5,FS-2011,WASHER M8,16,STAINLESS\nBREAK SHARP CORNERS 0.5 MAX.,6,FS-2012,LOCK NUT M8,8,STAINLESS",
+              "tsv": "Section\t1\tBK-1001\tBASE PLATE\t1\tSTEEL S235\n\t2\tBK-1002\tSUPPORT BRACKET\t2\tSTEEL S235\n\t3\tBK-1003\tSPACER SLEEVE\t4\tALUMINIUM\nBREAK SHARP CORNERS 0.5 MAX.\t4\tFS-2010\tHEX BOLT M8X30\t8\tSTAINLESS\nBREAK SHARP CORNERS 0.5 MAX.\t5\tFS-2011\tWASHER M8\t16\tSTAINLESS\nBREAK SHARP CORNERS 0.5 MAX.\t6\tFS-2012\tLOCK NUT M8\t8\tSTAINLESS",
+              "md": "| Section | 1 | BK-1001 | BASE PLATE | 1 | STEEL S235 |\n| --- | ---: | --- | --- | ---: | --- |\n|  | 2 | BK-1002 | SUPPORT BRACKET | 2 | STEEL S235 |\n|  | 3 | BK-1003 | SPACER SLEEVE | 4 | ALUMINIUM |\n| BREAK SHARP CORNERS 0.5 MAX. | 4 | FS-2010 | HEX BOLT M8X30 | 8 | STAINLESS |\n| BREAK SHARP CORNERS 0.5 MAX. | 5 | FS-2011 | WASHER M8 | 16 | STAINLESS |\n| BREAK SHARP CORNERS 0.5 MAX. | 6 | FS-2012 | LOCK NUT M8 | 8 | STAINLESS |",
+              "json": "[\n  {\n    \"1\": \"2\",\n    \"Section\": \"\",\n    \"BK-1001\": \"BK-1002\",\n    \"BASE PLATE\": \"SUPPORT BRACKET\",\n    \"1_2\": \"2\",\n    \"STEEL S235\": \"STEEL S235\"\n  },\n  {\n    \"1\": \"3\",\n    \"Section\": \"\",\n    \"BK-1001\": \"BK-1003\",\n    \"BASE PLATE\": \"SPACER SLEEVE\",\n    \"1_2\": \"4\",\n    \"STEEL S235\": \"ALUMINIUM\"\n  },\n  {\n    \"1\": \"4\",\n    \"Section\": \"BREAK SHARP CORNERS 0.5 MAX.\",\n    \"BK-1001\": \"FS-2010\",\n    \"BASE PLATE\": \"HEX BOLT M8X30\",\n    \"1_2\": \"8\",\n    \"STEEL S235\": \"STAINLESS\"\n  },\n  {\n    \"1\": \"5\",\n    \"Section\": \"BREAK SHARP CORNERS 0.5 MAX.\",\n    \"BK-1001\": \"FS-2011\",\n    \"BASE PLATE\": \"WASHER M8\",\n    \"1_2\": \"16\",\n    \"STEEL S235\": \"STAINLESS\"\n  },\n  {\n    \"1\": \"6\",\n    \"Section\": \"BREAK SHARP CORNERS 0.5 MAX.\",\n    \"BK-1001\": \"FS-2012\",\n    \"BASE PLATE\": \"LOCK NUT M8\",\n    \"1_2\": \"8\",\n    \"STEEL S235\": \"STAINLESS\"\n  }\n]"
+            },
+            "rows": {
+              "csv": "1,BK-1001,BASE PLATE,1,STEEL S235\n2,BK-1002,SUPPORT BRACKET,2,STEEL S235\n3,BK-1003,SPACER SLEEVE,4,ALUMINIUM\nNOTE 1. DEBURR ALL EDGES AND,,,,\nBREAK SHARP CORNERS 0.5 MAX.,,,,\n4,FS-2010,HEX BOLT M8X30,8,STAINLESS\n5,FS-2011,WASHER M8,16,STAINLESS\n6,FS-2012,LOCK NUT M8,8,STAINLESS",
+              "tsv": "1\tBK-1001\tBASE PLATE\t1\tSTEEL S235\n2\tBK-1002\tSUPPORT BRACKET\t2\tSTEEL S235\n3\tBK-1003\tSPACER SLEEVE\t4\tALUMINIUM\nNOTE 1. DEBURR ALL EDGES AND\t\t\t\t\nBREAK SHARP CORNERS 0.5 MAX.\t\t\t\t\n4\tFS-2010\tHEX BOLT M8X30\t8\tSTAINLESS\n5\tFS-2011\tWASHER M8\t16\tSTAINLESS\n6\tFS-2012\tLOCK NUT M8\t8\tSTAINLESS",
+              "md": "| 1 | BK-1001 | BASE PLATE | 1 | STEEL S235 |\n| ---: | --- | --- | ---: | --- |\n| 2 | BK-1002 | SUPPORT BRACKET | 2 | STEEL S235 |\n| 3 | BK-1003 | SPACER SLEEVE | 4 | ALUMINIUM |\n| **NOTE 1. DEBURR ALL EDGES AND** | | | | |\n| **BREAK SHARP CORNERS 0.5 MAX.** | | | | |\n| 4 | FS-2010 | HEX BOLT M8X30 | 8 | STAINLESS |\n| 5 | FS-2011 | WASHER M8 | 16 | STAINLESS |\n| 6 | FS-2012 | LOCK NUT M8 | 8 | STAINLESS |",
+              "json": "[\n  {\n    \"section\": null,\n    \"rows\": [\n      {\n        \"1\": \"2\",\n        \"BK-1001\": \"BK-1002\",\n        \"BASE PLATE\": \"SUPPORT BRACKET\",\n        \"1_2\": \"2\",\n        \"STEEL S235\": \"STEEL S235\"\n      },\n      {\n        \"1\": \"3\",\n        \"BK-1001\": \"BK-1003\",\n        \"BASE PLATE\": \"SPACER SLEEVE\",\n        \"1_2\": \"4\",\n        \"STEEL S235\": \"ALUMINIUM\"\n      }\n    ]\n  },\n  {\n    \"section\": \"NOTE 1. DEBURR ALL EDGES AND\",\n    \"rows\": []\n  },\n  {\n    \"section\": \"BREAK SHARP CORNERS 0.5 MAX.\",\n    \"rows\": [\n      {\n        \"1\": \"4\",\n        \"BK-1001\": \"FS-2010\",\n        \"BASE PLATE\": \"HEX BOLT M8X30\",\n        \"1_2\": \"8\",\n        \"STEEL S235\": \"STAINLESS\"\n      },\n      {\n        \"1\": \"5\",\n        \"BK-1001\": \"FS-2011\",\n        \"BASE PLATE\": \"WASHER M8\",\n        \"1_2\": \"16\",\n        \"STEEL S235\": \"STAINLESS\"\n      },\n      {\n        \"1\": \"6\",\n        \"BK-1001\": \"FS-2012\",\n        \"BASE PLATE\": \"LOCK NUT M8\",\n        \"1_2\": \"8\",\n        \"STEEL S235\": \"STAINLESS\"\n      }\n    ]\n  }\n]"
+            }
+          }
+        },
+        {
+          "n": 3,
+          "pages": [1],
+          "parts": [{"page":1,"bbox":[412,413.2,545.776,466.4]}],
+          "header": true,
+          "firstBold": false,
+          "grid": [["TITLE","BRACKET ASSEMBLY"],["DWG NO","TL-0417"],["SCALE","1:2"],["SHEET","1 OF 2"]],
+          "sections": [],
+          "cols": [[416,449.456],[460,541.776]],
+          "repeats": 0,
+          "exports": {
+            "column": {
+              "csv": "TITLE,BRACKET ASSEMBLY\nDWG NO,TL-0417\nSCALE,1:2\nSHEET,1 OF 2",
+              "tsv": "TITLE\tBRACKET ASSEMBLY\nDWG NO\tTL-0417\nSCALE\t1:2\nSHEET\t1 OF 2",
+              "md": "| TITLE | BRACKET ASSEMBLY |\n| --- | --- |\n| DWG NO | TL-0417 |\n| SCALE | 1:2 |\n| SHEET | 1 OF 2 |",
+              "json": "[\n  {\n    \"TITLE\": \"DWG NO\",\n    \"BRACKET ASSEMBLY\": \"TL-0417\"\n  },\n  {\n    \"TITLE\": \"SCALE\",\n    \"BRACKET ASSEMBLY\": \"1:2\"\n  },\n  {\n    \"TITLE\": \"SHEET\",\n    \"BRACKET ASSEMBLY\": \"1 OF 2\"\n  }\n]"
+            },
+            "rows": {
+              "csv": "TITLE,BRACKET ASSEMBLY\nDWG NO,TL-0417\nSCALE,1:2\nSHEET,1 OF 2",
+              "tsv": "TITLE\tBRACKET ASSEMBLY\nDWG NO\tTL-0417\nSCALE\t1:2\nSHEET\t1 OF 2",
+              "md": "| TITLE | BRACKET ASSEMBLY |\n| --- | --- |\n| DWG NO | TL-0417 |\n| SCALE | 1:2 |\n| SHEET | 1 OF 2 |",
+              "json": "[\n  {\n    \"TITLE\": \"DWG NO\",\n    \"BRACKET ASSEMBLY\": \"TL-0417\"\n  },\n  {\n    \"TITLE\": \"SCALE\",\n    \"BRACKET ASSEMBLY\": \"1:2\"\n  },\n  {\n    \"TITLE\": \"SHEET\",\n    \"BRACKET ASSEMBLY\": \"1 OF 2\"\n  }\n]"
+            }
+          }
+        },
+        {
+          "n": 4,
+          "pages": [2],
+          "parts": [{"page":2,"bbox":[68,598.85,391.029,709.45]}],
+          "header": true,
+          "firstBold": false,
+          "grid": [
+            ["5","CV-3004","COVER PANEL","1","ALUMINIUM"],
+            ["4","CV-3003","HINGE PIN","2","STEEL S235"],
+            ["3","CV-3002","GASKET","1","RUBBER"],
+            ["NOTE 1. DEBURR ALL EDGES AND","","","",""],
+            ["BREAK SHARP CORNERS 0.5 MAX.","","","",""],
+            ["2","CV-3001","HANDLE GRIP","2","NYLON"],
+            ["1","CV-3000","MOUNT FRAME","1","STEEL S235"]
+          ],
+          "sections": [3,4],
+          "cols": [[72,77.004],[112,146.794],[185,251.99600000000004],[300,305.004],[335,387.029]],
+          "repeats": 0,
+          "exports": {
+            "column": {
+              "csv": "Section,5,CV-3004,COVER PANEL,1,ALUMINIUM\n,4,CV-3003,HINGE PIN,2,STEEL S235\n,3,CV-3002,GASKET,1,RUBBER\nBREAK SHARP CORNERS 0.5 MAX.,2,CV-3001,HANDLE GRIP,2,NYLON\nBREAK SHARP CORNERS 0.5 MAX.,1,CV-3000,MOUNT FRAME,1,STEEL S235",
+              "tsv": "Section\t5\tCV-3004\tCOVER PANEL\t1\tALUMINIUM\n\t4\tCV-3003\tHINGE PIN\t2\tSTEEL S235\n\t3\tCV-3002\tGASKET\t1\tRUBBER\nBREAK SHARP CORNERS 0.5 MAX.\t2\tCV-3001\tHANDLE GRIP\t2\tNYLON\nBREAK SHARP CORNERS 0.5 MAX.\t1\tCV-3000\tMOUNT FRAME\t1\tSTEEL S235",
+              "md": "| Section | 5 | CV-3004 | COVER PANEL | 1 | ALUMINIUM |\n| --- | ---: | --- | --- | ---: | --- |\n|  | 4 | CV-3003 | HINGE PIN | 2 | STEEL S235 |\n|  | 3 | CV-3002 | GASKET | 1 | RUBBER |\n| BREAK SHARP CORNERS 0.5 MAX. | 2 | CV-3001 | HANDLE GRIP | 2 | NYLON |\n| BREAK SHARP CORNERS 0.5 MAX. | 1 | CV-3000 | MOUNT FRAME | 1 | STEEL S235 |",
+              "json": "[\n  {\n    \"1\": \"2\",\n    \"5\": \"4\",\n    \"Section\": \"\",\n    \"CV-3004\": \"CV-3003\",\n    \"COVER PANEL\": \"HINGE PIN\",\n    \"ALUMINIUM\": \"STEEL S235\"\n  },\n  {\n    \"1\": \"1\",\n    \"5\": \"3\",\n    \"Section\": \"\",\n    \"CV-3004\": \"CV-3002\",\n    \"COVER PANEL\": \"GASKET\",\n    \"ALUMINIUM\": \"RUBBER\"\n  },\n  {\n    \"1\": \"2\",\n    \"5\": \"2\",\n    \"Section\": \"BREAK SHARP CORNERS 0.5 MAX.\",\n    \"CV-3004\": \"CV-3001\",\n    \"COVER PANEL\": \"HANDLE GRIP\",\n    \"ALUMINIUM\": \"NYLON\"\n  },\n  {\n    \"1\": \"1\",\n    \"5\": \"1\",\n    \"Section\": \"BREAK SHARP CORNERS 0.5 MAX.\",\n    \"CV-3004\": \"CV-3000\",\n    \"COVER PANEL\": \"MOUNT FRAME\",\n    \"ALUMINIUM\": \"STEEL S235\"\n  }\n]"
+            },
+            "rows": {
+              "csv": "5,CV-3004,COVER PANEL,1,ALUMINIUM\n4,CV-3003,HINGE PIN,2,STEEL S235\n3,CV-3002,GASKET,1,RUBBER\nNOTE 1. DEBURR ALL EDGES AND,,,,\nBREAK SHARP CORNERS 0.5 MAX.,,,,\n2,CV-3001,HANDLE GRIP,2,NYLON\n1,CV-3000,MOUNT FRAME,1,STEEL S235",
+              "tsv": "5\tCV-3004\tCOVER PANEL\t1\tALUMINIUM\n4\tCV-3003\tHINGE PIN\t2\tSTEEL S235\n3\tCV-3002\tGASKET\t1\tRUBBER\nNOTE 1. DEBURR ALL EDGES AND\t\t\t\t\nBREAK SHARP CORNERS 0.5 MAX.\t\t\t\t\n2\tCV-3001\tHANDLE GRIP\t2\tNYLON\n1\tCV-3000\tMOUNT FRAME\t1\tSTEEL S235",
+              "md": "| 5 | CV-3004 | COVER PANEL | 1 | ALUMINIUM |\n| ---: | --- | --- | ---: | --- |\n| 4 | CV-3003 | HINGE PIN | 2 | STEEL S235 |\n| 3 | CV-3002 | GASKET | 1 | RUBBER |\n| **NOTE 1. DEBURR ALL EDGES AND** | | | | |\n| **BREAK SHARP CORNERS 0.5 MAX.** | | | | |\n| 2 | CV-3001 | HANDLE GRIP | 2 | NYLON |\n| 1 | CV-3000 | MOUNT FRAME | 1 | STEEL S235 |",
+              "json": "[\n  {\n    \"section\": null,\n    \"rows\": [\n      {\n        \"1\": \"2\",\n        \"5\": \"4\",\n        \"CV-3004\": \"CV-3003\",\n        \"COVER PANEL\": \"HINGE PIN\",\n        \"ALUMINIUM\": \"STEEL S235\"\n      },\n      {\n        \"1\": \"1\",\n        \"5\": \"3\",\n        \"CV-3004\": \"CV-3002\",\n        \"COVER PANEL\": \"GASKET\",\n        \"ALUMINIUM\": \"RUBBER\"\n      }\n    ]\n  },\n  {\n    \"section\": \"NOTE 1. DEBURR ALL EDGES AND\",\n    \"rows\": []\n  },\n  {\n    \"section\": \"BREAK SHARP CORNERS 0.5 MAX.\",\n    \"rows\": [\n      {\n        \"1\": \"2\",\n        \"5\": \"2\",\n        \"CV-3004\": \"CV-3001\",\n        \"COVER PANEL\": \"HANDLE GRIP\",\n        \"ALUMINIUM\": \"NYLON\"\n      },\n      {\n        \"1\": \"1\",\n        \"5\": \"1\",\n        \"CV-3004\": \"CV-3000\",\n        \"COVER PANEL\": \"MOUNT FRAME\",\n        \"ALUMINIUM\": \"STEEL S235\"\n      }\n    ]\n  }\n]"
+            }
+          }
+        },
+        {
+          "n": 5,
+          "pages": [2],
+          "parts": [{"page":2,"bbox":[68,521.2,545.776,577.45]}],
+          "header": true,
+          "firstBold": false,
+          "grid": [
+            ["","PART","","","MATERIAL","TITLE","BRACKET ASSEMBLY"],
+            ["ITEM","NUMBER","DESCRIPTION","QTY","SPEC","",""],
+            ["","","","","","DWG NO","TL-0417"],
+            ["","","","","","SCALE","1:2"],
+            ["","","","","","SHEET","2 OF 2"]
+          ],
+          "sections": [],
+          "cols": [[72,93.501],[112,151.49200000000002],[185,246.50600000000003],[300,318.504],[335,380.684],[416,438.224],[460,541.776]],
+          "repeats": 0,
+          "exports": {
+            "column": {
+              "csv": ",PART,,,MATERIAL,TITLE,BRACKET ASSEMBLY\nITEM,NUMBER,DESCRIPTION,QTY,SPEC,,\n,,,,,DWG NO,TL-0417\n,,,,,SCALE,1:2\n,,,,,SHEET,2 OF 2",
+              "tsv": "\tPART\t\t\tMATERIAL\tTITLE\tBRACKET ASSEMBLY\nITEM\tNUMBER\tDESCRIPTION\tQTY\tSPEC\t\t\n\t\t\t\t\tDWG NO\tTL-0417\n\t\t\t\t\tSCALE\t1:2\n\t\t\t\t\tSHEET\t2 OF 2",
+              "md": "|  | PART |  |  | MATERIAL | TITLE | BRACKET ASSEMBLY |\n| --- | --- | --- | --- | --- | --- | --- |\n| ITEM | NUMBER | DESCRIPTION | QTY | SPEC |  |  |\n|  |  |  |  |  | DWG NO | TL-0417 |\n|  |  |  |  |  | SCALE | 1:2 |\n|  |  |  |  |  | SHEET | 2 OF 2 |",
+              "json": "[\n  {\n    \"column_1\": \"ITEM\",\n    \"PART\": \"NUMBER\",\n    \"column_3\": \"DESCRIPTION\",\n    \"column_4\": \"QTY\",\n    \"MATERIAL\": \"SPEC\",\n    \"TITLE\": \"\",\n    \"BRACKET ASSEMBLY\": \"\"\n  },\n  {\n    \"column_1\": \"\",\n    \"PART\": \"\",\n    \"column_3\": \"\",\n    \"column_4\": \"\",\n    \"MATERIAL\": \"\",\n    \"TITLE\": \"DWG NO\",\n    \"BRACKET ASSEMBLY\": \"TL-0417\"\n  },\n  {\n    \"column_1\": \"\",\n    \"PART\": \"\",\n    \"column_3\": \"\",\n    \"column_4\": \"\",\n    \"MATERIAL\": \"\",\n    \"TITLE\": \"SCALE\",\n    \"BRACKET ASSEMBLY\": \"1:2\"\n  },\n  {\n    \"column_1\": \"\",\n    \"PART\": \"\",\n    \"column_3\": \"\",\n    \"column_4\": \"\",\n    \"MATERIAL\": \"\",\n    \"TITLE\": \"SHEET\",\n    \"BRACKET ASSEMBLY\": \"2 OF 2\"\n  }\n]"
+            },
+            "rows": {
+              "csv": ",PART,,,MATERIAL,TITLE,BRACKET ASSEMBLY\nITEM,NUMBER,DESCRIPTION,QTY,SPEC,,\n,,,,,DWG NO,TL-0417\n,,,,,SCALE,1:2\n,,,,,SHEET,2 OF 2",
+              "tsv": "\tPART\t\t\tMATERIAL\tTITLE\tBRACKET ASSEMBLY\nITEM\tNUMBER\tDESCRIPTION\tQTY\tSPEC\t\t\n\t\t\t\t\tDWG NO\tTL-0417\n\t\t\t\t\tSCALE\t1:2\n\t\t\t\t\tSHEET\t2 OF 2",
+              "md": "|  | PART |  |  | MATERIAL | TITLE | BRACKET ASSEMBLY |\n| --- | --- | --- | --- | --- | --- | --- |\n| ITEM | NUMBER | DESCRIPTION | QTY | SPEC |  |  |\n|  |  |  |  |  | DWG NO | TL-0417 |\n|  |  |  |  |  | SCALE | 1:2 |\n|  |  |  |  |  | SHEET | 2 OF 2 |",
+              "json": "[\n  {\n    \"column_1\": \"ITEM\",\n    \"PART\": \"NUMBER\",\n    \"column_3\": \"DESCRIPTION\",\n    \"column_4\": \"QTY\",\n    \"MATERIAL\": \"SPEC\",\n    \"TITLE\": \"\",\n    \"BRACKET ASSEMBLY\": \"\"\n  },\n  {\n    \"column_1\": \"\",\n    \"PART\": \"\",\n    \"column_3\": \"\",\n    \"column_4\": \"\",\n    \"MATERIAL\": \"\",\n    \"TITLE\": \"DWG NO\",\n    \"BRACKET ASSEMBLY\": \"TL-0417\"\n  },\n  {\n    \"column_1\": \"\",\n    \"PART\": \"\",\n    \"column_3\": \"\",\n    \"column_4\": \"\",\n    \"MATERIAL\": \"\",\n    \"TITLE\": \"SCALE\",\n    \"BRACKET ASSEMBLY\": \"1:2\"\n  },\n  {\n    \"column_1\": \"\",\n    \"PART\": \"\",\n    \"column_3\": \"\",\n    \"column_4\": \"\",\n    \"MATERIAL\": \"\",\n    \"TITLE\": \"SHEET\",\n    \"BRACKET ASSEMBLY\": \"2 OF 2\"\n  }\n]"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "columnSpacing": 2,
+      "joining": true,
+      "tables": [
+        {
+          "n": 1,
+          "pages": [1],
+          "parts": [{"page":1,"bbox":[68,684.85,363.507,709.45]}],
+          "header": true,
+          "firstBold": true,
+          "grid": [["","PART","","MATERIAL"],["ITEM","NUMBER","DESCRIPTION","QTY SPEC"]],
+          "sections": [],
+          "cols": [[72,93.501],[112,151.49200000000002],[185,246.50600000000003],[300,359.507]],
+          "repeats": 0,
+          "exports": {
+            "column": {
+              "csv": ",PART,,MATERIAL\nITEM,NUMBER,DESCRIPTION,QTY SPEC",
+              "tsv": "\tPART\t\tMATERIAL\nITEM\tNUMBER\tDESCRIPTION\tQTY SPEC",
+              "md": "|  | PART |  | MATERIAL |\n| --- | --- | --- | --- |\n| ITEM | NUMBER | DESCRIPTION | QTY SPEC |",
+              "json": "[\n  {\n    \"column_1\": \"ITEM\",\n    \"PART\": \"NUMBER\",\n    \"column_3\": \"DESCRIPTION\",\n    \"MATERIAL\": \"QTY SPEC\"\n  }\n]"
+            },
+            "rows": {
+              "csv": ",PART,,MATERIAL\nITEM,NUMBER,DESCRIPTION,QTY SPEC",
+              "tsv": "\tPART\t\tMATERIAL\nITEM\tNUMBER\tDESCRIPTION\tQTY SPEC",
+              "md": "|  | PART |  | MATERIAL |\n| --- | --- | --- | --- |\n| ITEM | NUMBER | DESCRIPTION | QTY SPEC |",
+              "json": "[\n  {\n    \"column_1\": \"ITEM\",\n    \"PART\": \"NUMBER\",\n    \"column_3\": \"DESCRIPTION\",\n    \"MATERIAL\": \"QTY SPEC\"\n  }\n]"
+            }
+          }
+        },
+        {
+          "n": 2,
+          "pages": [1],
+          "parts": [{"page":1,"bbox":[68,524.85,391.029,649.45]}],
+          "header": true,
+          "firstBold": false,
+          "grid": [
+            ["1","BK-1001","BASE PLATE","1","STEEL S235"],
+            ["2","BK-1002","SUPPORT BRACKET","2","STEEL S235"],
+            ["3","BK-1003","SPACER SLEEVE","4","ALUMINIUM"],
+            ["NOTE 1. DEBURR ALL EDGES AND","","","",""],
+            ["BREAK SHARP CORNERS 0.5 MAX.","","","",""],
+            ["4","FS-2010","HEX BOLT M8X30","8","STAINLESS"],
+            ["5","FS-2011","WASHER M8","16","STAINLESS"],
+            ["6","FS-2012","LOCK NUT M8","8","STAINLESS"]
+          ],
+          "sections": [3,4],
+          "cols": [[72,77.004],[112,147.019],[185,272.975],[300,310.008],[335,387.029]],
+          "repeats": 0,
+          "exports": {
+            "column": {
+              "csv": "Section,1,BK-1001,BASE PLATE,1,STEEL S235\n,2,BK-1002,SUPPORT BRACKET,2,STEEL S235\n,3,BK-1003,SPACER SLEEVE,4,ALUMINIUM\nBREAK SHARP CORNERS 0.5 MAX.,4,FS-2010,HEX BOLT M8X30,8,STAINLESS\nBREAK SHARP CORNERS 0.5 MAX.,5,FS-2011,WASHER M8,16,STAINLESS\nBREAK SHARP CORNERS 0.5 MAX.,6,FS-2012,LOCK NUT M8,8,STAINLESS",
+              "tsv": "Section\t1\tBK-1001\tBASE PLATE\t1\tSTEEL S235\n\t2\tBK-1002\tSUPPORT BRACKET\t2\tSTEEL S235\n\t3\tBK-1003\tSPACER SLEEVE\t4\tALUMINIUM\nBREAK SHARP CORNERS 0.5 MAX.\t4\tFS-2010\tHEX BOLT M8X30\t8\tSTAINLESS\nBREAK SHARP CORNERS 0.5 MAX.\t5\tFS-2011\tWASHER M8\t16\tSTAINLESS\nBREAK SHARP CORNERS 0.5 MAX.\t6\tFS-2012\tLOCK NUT M8\t8\tSTAINLESS",
+              "md": "| Section | 1 | BK-1001 | BASE PLATE | 1 | STEEL S235 |\n| --- | ---: | --- | --- | ---: | --- |\n|  | 2 | BK-1002 | SUPPORT BRACKET | 2 | STEEL S235 |\n|  | 3 | BK-1003 | SPACER SLEEVE | 4 | ALUMINIUM |\n| BREAK SHARP CORNERS 0.5 MAX. | 4 | FS-2010 | HEX BOLT M8X30 | 8 | STAINLESS |\n| BREAK SHARP CORNERS 0.5 MAX. | 5 | FS-2011 | WASHER M8 | 16 | STAINLESS |\n| BREAK SHARP CORNERS 0.5 MAX. | 6 | FS-2012 | LOCK NUT M8 | 8 | STAINLESS |",
+              "json": "[\n  {\n    \"1\": \"2\",\n    \"Section\": \"\",\n    \"BK-1001\": \"BK-1002\",\n    \"BASE PLATE\": \"SUPPORT BRACKET\",\n    \"1_2\": \"2\",\n    \"STEEL S235\": \"STEEL S235\"\n  },\n  {\n    \"1\": \"3\",\n    \"Section\": \"\",\n    \"BK-1001\": \"BK-1003\",\n    \"BASE PLATE\": \"SPACER SLEEVE\",\n    \"1_2\": \"4\",\n    \"STEEL S235\": \"ALUMINIUM\"\n  },\n  {\n    \"1\": \"4\",\n    \"Section\": \"BREAK SHARP CORNERS 0.5 MAX.\",\n    \"BK-1001\": \"FS-2010\",\n    \"BASE PLATE\": \"HEX BOLT M8X30\",\n    \"1_2\": \"8\",\n    \"STEEL S235\": \"STAINLESS\"\n  },\n  {\n    \"1\": \"5\",\n    \"Section\": \"BREAK SHARP CORNERS 0.5 MAX.\",\n    \"BK-1001\": \"FS-2011\",\n    \"BASE PLATE\": \"WASHER M8\",\n    \"1_2\": \"16\",\n    \"STEEL S235\": \"STAINLESS\"\n  },\n  {\n    \"1\": \"6\",\n    \"Section\": \"BREAK SHARP CORNERS 0.5 MAX.\",\n    \"BK-1001\": \"FS-2012\",\n    \"BASE PLATE\": \"LOCK NUT M8\",\n    \"1_2\": \"8\",\n    \"STEEL S235\": \"STAINLESS\"\n  }\n]"
+            },
+            "rows": {
+              "csv": "1,BK-1001,BASE PLATE,1,STEEL S235\n2,BK-1002,SUPPORT BRACKET,2,STEEL S235\n3,BK-1003,SPACER SLEEVE,4,ALUMINIUM\nNOTE 1. DEBURR ALL EDGES AND,,,,\nBREAK SHARP CORNERS 0.5 MAX.,,,,\n4,FS-2010,HEX BOLT M8X30,8,STAINLESS\n5,FS-2011,WASHER M8,16,STAINLESS\n6,FS-2012,LOCK NUT M8,8,STAINLESS",
+              "tsv": "1\tBK-1001\tBASE PLATE\t1\tSTEEL S235\n2\tBK-1002\tSUPPORT BRACKET\t2\tSTEEL S235\n3\tBK-1003\tSPACER SLEEVE\t4\tALUMINIUM\nNOTE 1. DEBURR ALL EDGES AND\t\t\t\t\nBREAK SHARP CORNERS 0.5 MAX.\t\t\t\t\n4\tFS-2010\tHEX BOLT M8X30\t8\tSTAINLESS\n5\tFS-2011\tWASHER M8\t16\tSTAINLESS\n6\tFS-2012\tLOCK NUT M8\t8\tSTAINLESS",
+              "md": "| 1 | BK-1001 | BASE PLATE | 1 | STEEL S235 |\n| ---: | --- | --- | ---: | --- |\n| 2 | BK-1002 | SUPPORT BRACKET | 2 | STEEL S235 |\n| 3 | BK-1003 | SPACER SLEEVE | 4 | ALUMINIUM |\n| **NOTE 1. DEBURR ALL EDGES AND** | | | | |\n| **BREAK SHARP CORNERS 0.5 MAX.** | | | | |\n| 4 | FS-2010 | HEX BOLT M8X30 | 8 | STAINLESS |\n| 5 | FS-2011 | WASHER M8 | 16 | STAINLESS |\n| 6 | FS-2012 | LOCK NUT M8 | 8 | STAINLESS |",
+              "json": "[\n  {\n    \"section\": null,\n    \"rows\": [\n      {\n        \"1\": \"2\",\n        \"BK-1001\": \"BK-1002\",\n        \"BASE PLATE\": \"SUPPORT BRACKET\",\n        \"1_2\": \"2\",\n        \"STEEL S235\": \"STEEL S235\"\n      },\n      {\n        \"1\": \"3\",\n        \"BK-1001\": \"BK-1003\",\n        \"BASE PLATE\": \"SPACER SLEEVE\",\n        \"1_2\": \"4\",\n        \"STEEL S235\": \"ALUMINIUM\"\n      }\n    ]\n  },\n  {\n    \"section\": \"NOTE 1. DEBURR ALL EDGES AND\",\n    \"rows\": []\n  },\n  {\n    \"section\": \"BREAK SHARP CORNERS 0.5 MAX.\",\n    \"rows\": [\n      {\n        \"1\": \"4\",\n        \"BK-1001\": \"FS-2010\",\n        \"BASE PLATE\": \"HEX BOLT M8X30\",\n        \"1_2\": \"8\",\n        \"STEEL S235\": \"STAINLESS\"\n      },\n      {\n        \"1\": \"5\",\n        \"BK-1001\": \"FS-2011\",\n        \"BASE PLATE\": \"WASHER M8\",\n        \"1_2\": \"16\",\n        \"STEEL S235\": \"STAINLESS\"\n      },\n      {\n        \"1\": \"6\",\n        \"BK-1001\": \"FS-2012\",\n        \"BASE PLATE\": \"LOCK NUT M8\",\n        \"1_2\": \"8\",\n        \"STEEL S235\": \"STAINLESS\"\n      }\n    ]\n  }\n]"
+            }
+          }
+        },
+        {
+          "n": 3,
+          "pages": [1],
+          "parts": [{"page":1,"bbox":[412,413.2,545.776,466.4]}],
+          "header": true,
+          "firstBold": false,
+          "grid": [["TITLE","BRACKET ASSEMBLY"],["DWG NO TL-0417",""],["SCALE","1:2"],["SHEET","1 OF 2"]],
+          "sections": [1],
+          "cols": [[416,443.11199999999997],[460,541.776]],
+          "repeats": 0,
+          "exports": {
+            "column": {
+              "csv": "Section,TITLE,BRACKET ASSEMBLY\nDWG NO TL-0417,SCALE,1:2\nDWG NO TL-0417,SHEET,1 OF 2",
+              "tsv": "Section\tTITLE\tBRACKET ASSEMBLY\nDWG NO TL-0417\tSCALE\t1:2\nDWG NO TL-0417\tSHEET\t1 OF 2",
+              "md": "| Section | TITLE | BRACKET ASSEMBLY |\n| --- | --- | --- |\n| DWG NO TL-0417 | SCALE | 1:2 |\n| DWG NO TL-0417 | SHEET | 1 OF 2 |",
+              "json": "[\n  {\n    \"Section\": \"DWG NO TL-0417\",\n    \"TITLE\": \"SCALE\",\n    \"BRACKET ASSEMBLY\": \"1:2\"\n  },\n  {\n    \"Section\": \"DWG NO TL-0417\",\n    \"TITLE\": \"SHEET\",\n    \"BRACKET ASSEMBLY\": \"1 OF 2\"\n  }\n]"
+            },
+            "rows": {
+              "csv": "TITLE,BRACKET ASSEMBLY\nDWG NO TL-0417,\nSCALE,1:2\nSHEET,1 OF 2",
+              "tsv": "TITLE\tBRACKET ASSEMBLY\nDWG NO TL-0417\t\nSCALE\t1:2\nSHEET\t1 OF 2",
+              "md": "| TITLE | BRACKET ASSEMBLY |\n| --- | --- |\n| **DWG NO TL-0417** | |\n| SCALE | 1:2 |\n| SHEET | 1 OF 2 |",
+              "json": "[\n  {\n    \"section\": \"DWG NO TL-0417\",\n    \"rows\": [\n      {\n        \"TITLE\": \"SCALE\",\n        \"BRACKET ASSEMBLY\": \"1:2\"\n      },\n      {\n        \"TITLE\": \"SHEET\",\n        \"BRACKET ASSEMBLY\": \"1 OF 2\"\n      }\n    ]\n  }\n]"
+            }
+          }
+        },
+        {
+          "n": 4,
+          "pages": [2],
+          "parts": [{"page":2,"bbox":[68,598.85,391.029,709.45]}],
+          "header": true,
+          "firstBold": false,
+          "grid": [
+            ["5","CV-3004","COVER PANEL","1","ALUMINIUM"],
+            ["4","CV-3003","HINGE PIN","2","STEEL S235"],
+            ["3","CV-3002","GASKET","1","RUBBER"],
+            ["NOTE 1. DEBURR ALL EDGES AND","","","",""],
+            ["BREAK SHARP CORNERS 0.5 MAX.","","","",""],
+            ["2","CV-3001","HANDLE GRIP","2","NYLON"],
+            ["1","CV-3000","MOUNT FRAME","1","STEEL S235"]
+          ],
+          "sections": [3,4],
+          "cols": [[72,77.004],[112,146.794],[185,251.99600000000004],[300,305.004],[335,387.029]],
+          "repeats": 0,
+          "exports": {
+            "column": {
+              "csv": "Section,5,CV-3004,COVER PANEL,1,ALUMINIUM\n,4,CV-3003,HINGE PIN,2,STEEL S235\n,3,CV-3002,GASKET,1,RUBBER\nBREAK SHARP CORNERS 0.5 MAX.,2,CV-3001,HANDLE GRIP,2,NYLON\nBREAK SHARP CORNERS 0.5 MAX.,1,CV-3000,MOUNT FRAME,1,STEEL S235",
+              "tsv": "Section\t5\tCV-3004\tCOVER PANEL\t1\tALUMINIUM\n\t4\tCV-3003\tHINGE PIN\t2\tSTEEL S235\n\t3\tCV-3002\tGASKET\t1\tRUBBER\nBREAK SHARP CORNERS 0.5 MAX.\t2\tCV-3001\tHANDLE GRIP\t2\tNYLON\nBREAK SHARP CORNERS 0.5 MAX.\t1\tCV-3000\tMOUNT FRAME\t1\tSTEEL S235",
+              "md": "| Section | 5 | CV-3004 | COVER PANEL | 1 | ALUMINIUM |\n| --- | ---: | --- | --- | ---: | --- |\n|  | 4 | CV-3003 | HINGE PIN | 2 | STEEL S235 |\n|  | 3 | CV-3002 | GASKET | 1 | RUBBER |\n| BREAK SHARP CORNERS 0.5 MAX. | 2 | CV-3001 | HANDLE GRIP | 2 | NYLON |\n| BREAK SHARP CORNERS 0.5 MAX. | 1 | CV-3000 | MOUNT FRAME | 1 | STEEL S235 |",
+              "json": "[\n  {\n    \"1\": \"2\",\n    \"5\": \"4\",\n    \"Section\": \"\",\n    \"CV-3004\": \"CV-3003\",\n    \"COVER PANEL\": \"HINGE PIN\",\n    \"ALUMINIUM\": \"STEEL S235\"\n  },\n  {\n    \"1\": \"1\",\n    \"5\": \"3\",\n    \"Section\": \"\",\n    \"CV-3004\": \"CV-3002\",\n    \"COVER PANEL\": \"GASKET\",\n    \"ALUMINIUM\": \"RUBBER\"\n  },\n  {\n    \"1\": \"2\",\n    \"5\": \"2\",\n    \"Section\": \"BREAK SHARP CORNERS 0.5 MAX.\",\n    \"CV-3004\": \"CV-3001\",\n    \"COVER PANEL\": \"HANDLE GRIP\",\n    \"ALUMINIUM\": \"NYLON\"\n  },\n  {\n    \"1\": \"1\",\n    \"5\": \"1\",\n    \"Section\": \"BREAK SHARP CORNERS 0.5 MAX.\",\n    \"CV-3004\": \"CV-3000\",\n    \"COVER PANEL\": \"MOUNT FRAME\",\n    \"ALUMINIUM\": \"STEEL S235\"\n  }\n]"
+            },
+            "rows": {
+              "csv": "5,CV-3004,COVER PANEL,1,ALUMINIUM\n4,CV-3003,HINGE PIN,2,STEEL S235\n3,CV-3002,GASKET,1,RUBBER\nNOTE 1. DEBURR ALL EDGES AND,,,,\nBREAK SHARP CORNERS 0.5 MAX.,,,,\n2,CV-3001,HANDLE GRIP,2,NYLON\n1,CV-3000,MOUNT FRAME,1,STEEL S235",
+              "tsv": "5\tCV-3004\tCOVER PANEL\t1\tALUMINIUM\n4\tCV-3003\tHINGE PIN\t2\tSTEEL S235\n3\tCV-3002\tGASKET\t1\tRUBBER\nNOTE 1. DEBURR ALL EDGES AND\t\t\t\t\nBREAK SHARP CORNERS 0.5 MAX.\t\t\t\t\n2\tCV-3001\tHANDLE GRIP\t2\tNYLON\n1\tCV-3000\tMOUNT FRAME\t1\tSTEEL S235",
+              "md": "| 5 | CV-3004 | COVER PANEL | 1 | ALUMINIUM |\n| ---: | --- | --- | ---: | --- |\n| 4 | CV-3003 | HINGE PIN | 2 | STEEL S235 |\n| 3 | CV-3002 | GASKET | 1 | RUBBER |\n| **NOTE 1. DEBURR ALL EDGES AND** | | | | |\n| **BREAK SHARP CORNERS 0.5 MAX.** | | | | |\n| 2 | CV-3001 | HANDLE GRIP | 2 | NYLON |\n| 1 | CV-3000 | MOUNT FRAME | 1 | STEEL S235 |",
+              "json": "[\n  {\n    \"section\": null,\n    \"rows\": [\n      {\n        \"1\": \"2\",\n        \"5\": \"4\",\n        \"CV-3004\": \"CV-3003\",\n        \"COVER PANEL\": \"HINGE PIN\",\n        \"ALUMINIUM\": \"STEEL S235\"\n      },\n      {\n        \"1\": \"1\",\n        \"5\": \"3\",\n        \"CV-3004\": \"CV-3002\",\n        \"COVER PANEL\": \"GASKET\",\n        \"ALUMINIUM\": \"RUBBER\"\n      }\n    ]\n  },\n  {\n    \"section\": \"NOTE 1. DEBURR ALL EDGES AND\",\n    \"rows\": []\n  },\n  {\n    \"section\": \"BREAK SHARP CORNERS 0.5 MAX.\",\n    \"rows\": [\n      {\n        \"1\": \"2\",\n        \"5\": \"2\",\n        \"CV-3004\": \"CV-3001\",\n        \"COVER PANEL\": \"HANDLE GRIP\",\n        \"ALUMINIUM\": \"NYLON\"\n      },\n      {\n        \"1\": \"1\",\n        \"5\": \"1\",\n        \"CV-3004\": \"CV-3000\",\n        \"COVER PANEL\": \"MOUNT FRAME\",\n        \"ALUMINIUM\": \"STEEL S235\"\n      }\n    ]\n  }\n]"
+            }
+          }
+        },
+        {
+          "n": 5,
+          "pages": [2],
+          "parts": [{"page":2,"bbox":[68,521.2,545.776,577.45]}],
+          "header": true,
+          "firstBold": false,
+          "grid": [
+            ["","PART","","MATERIAL","TITLE BRACKET ASSEMBLY"],
+            ["ITEM","NUMBER","DESCRIPTION","QTY SPEC","DWG NO TL-0417"],
+            ["","","","","SCALE 1:2"],
+            ["","","","","SHEET 2 OF 2"]
+          ],
+          "sections": [],
+          "cols": [[72,93.501],[112,151.49200000000002],[185,246.50600000000003],[300,380.684],[416,541.776]],
+          "repeats": 0,
+          "exports": {
+            "column": {
+              "csv": ",PART,,MATERIAL,TITLE BRACKET ASSEMBLY\nITEM,NUMBER,DESCRIPTION,QTY SPEC,DWG NO TL-0417\n,,,,SCALE 1:2\n,,,,SHEET 2 OF 2",
+              "tsv": "\tPART\t\tMATERIAL\tTITLE BRACKET ASSEMBLY\nITEM\tNUMBER\tDESCRIPTION\tQTY SPEC\tDWG NO TL-0417\n\t\t\t\tSCALE 1:2\n\t\t\t\tSHEET 2 OF 2",
+              "md": "|  | PART |  | MATERIAL | TITLE BRACKET ASSEMBLY |\n| --- | --- | --- | --- | --- |\n| ITEM | NUMBER | DESCRIPTION | QTY SPEC | DWG NO TL-0417 |\n|  |  |  |  | SCALE 1:2 |\n|  |  |  |  | SHEET 2 OF 2 |",
+              "json": "[\n  {\n    \"column_1\": \"ITEM\",\n    \"PART\": \"NUMBER\",\n    \"column_3\": \"DESCRIPTION\",\n    \"MATERIAL\": \"QTY SPEC\",\n    \"TITLE BRACKET ASSEMBLY\": \"DWG NO TL-0417\"\n  },\n  {\n    \"column_1\": \"\",\n    \"PART\": \"\",\n    \"column_3\": \"\",\n    \"MATERIAL\": \"\",\n    \"TITLE BRACKET ASSEMBLY\": \"SCALE 1:2\"\n  },\n  {\n    \"column_1\": \"\",\n    \"PART\": \"\",\n    \"column_3\": \"\",\n    \"MATERIAL\": \"\",\n    \"TITLE BRACKET ASSEMBLY\": \"SHEET 2 OF 2\"\n  }\n]"
+            },
+            "rows": {
+              "csv": ",PART,,MATERIAL,TITLE BRACKET ASSEMBLY\nITEM,NUMBER,DESCRIPTION,QTY SPEC,DWG NO TL-0417\n,,,,SCALE 1:2\n,,,,SHEET 2 OF 2",
+              "tsv": "\tPART\t\tMATERIAL\tTITLE BRACKET ASSEMBLY\nITEM\tNUMBER\tDESCRIPTION\tQTY SPEC\tDWG NO TL-0417\n\t\t\t\tSCALE 1:2\n\t\t\t\tSHEET 2 OF 2",
+              "md": "|  | PART |  | MATERIAL | TITLE BRACKET ASSEMBLY |\n| --- | --- | --- | --- | --- |\n| ITEM | NUMBER | DESCRIPTION | QTY SPEC | DWG NO TL-0417 |\n|  |  |  |  | SCALE 1:2 |\n|  |  |  |  | SHEET 2 OF 2 |",
+              "json": "[\n  {\n    \"column_1\": \"ITEM\",\n    \"PART\": \"NUMBER\",\n    \"column_3\": \"DESCRIPTION\",\n    \"MATERIAL\": \"QTY SPEC\",\n    \"TITLE BRACKET ASSEMBLY\": \"DWG NO TL-0417\"\n  },\n  {\n    \"column_1\": \"\",\n    \"PART\": \"\",\n    \"column_3\": \"\",\n    \"MATERIAL\": \"\",\n    \"TITLE BRACKET ASSEMBLY\": \"SCALE 1:2\"\n  },\n  {\n    \"column_1\": \"\",\n    \"PART\": \"\",\n    \"column_3\": \"\",\n    \"MATERIAL\": \"\",\n    \"TITLE BRACKET ASSEMBLY\": \"SHEET 2 OF 2\"\n  }\n]"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "columnSpacing": 2,
+      "joining": false,
+      "tables": [
+        {
+          "n": 1,
+          "pages": [1],
+          "parts": [{"page":1,"bbox":[68,684.85,363.507,709.45]}],
+          "header": true,
+          "firstBold": true,
+          "grid": [["","PART","","MATERIAL"],["ITEM","NUMBER","DESCRIPTION","QTY SPEC"]],
+          "sections": [],
+          "cols": [[72,93.501],[112,151.49200000000002],[185,246.50600000000003],[300,359.507]],
+          "repeats": 0,
+          "exports": {
+            "column": {
+              "csv": ",PART,,MATERIAL\nITEM,NUMBER,DESCRIPTION,QTY SPEC",
+              "tsv": "\tPART\t\tMATERIAL\nITEM\tNUMBER\tDESCRIPTION\tQTY SPEC",
+              "md": "|  | PART |  | MATERIAL |\n| --- | --- | --- | --- |\n| ITEM | NUMBER | DESCRIPTION | QTY SPEC |",
+              "json": "[\n  {\n    \"column_1\": \"ITEM\",\n    \"PART\": \"NUMBER\",\n    \"column_3\": \"DESCRIPTION\",\n    \"MATERIAL\": \"QTY SPEC\"\n  }\n]"
+            },
+            "rows": {
+              "csv": ",PART,,MATERIAL\nITEM,NUMBER,DESCRIPTION,QTY SPEC",
+              "tsv": "\tPART\t\tMATERIAL\nITEM\tNUMBER\tDESCRIPTION\tQTY SPEC",
+              "md": "|  | PART |  | MATERIAL |\n| --- | --- | --- | --- |\n| ITEM | NUMBER | DESCRIPTION | QTY SPEC |",
+              "json": "[\n  {\n    \"column_1\": \"ITEM\",\n    \"PART\": \"NUMBER\",\n    \"column_3\": \"DESCRIPTION\",\n    \"MATERIAL\": \"QTY SPEC\"\n  }\n]"
+            }
+          }
+        },
+        {
+          "n": 2,
+          "pages": [1],
+          "parts": [{"page":1,"bbox":[68,524.85,391.029,649.45]}],
+          "header": true,
+          "firstBold": false,
+          "grid": [
+            ["1","BK-1001","BASE PLATE","1","STEEL S235"],
+            ["2","BK-1002","SUPPORT BRACKET","2","STEEL S235"],
+            ["3","BK-1003","SPACER SLEEVE","4","ALUMINIUM"],
+            ["NOTE 1. DEBURR ALL EDGES AND","","","",""],
+            ["BREAK SHARP CORNERS 0.5 MAX.","","","",""],
+            ["4","FS-2010","HEX BOLT M8X30","8","STAINLESS"],
+            ["5","FS-2011","WASHER M8","16","STAINLESS"],
+            ["6","FS-2012","LOCK NUT M8","8","STAINLESS"]
+          ],
+          "sections": [3,4],
+          "cols": [[72,77.004],[112,147.019],[185,272.975],[300,310.008],[335,387.029]],
+          "repeats": 0,
+          "exports": {
+            "column": {
+              "csv": "Section,1,BK-1001,BASE PLATE,1,STEEL S235\n,2,BK-1002,SUPPORT BRACKET,2,STEEL S235\n,3,BK-1003,SPACER SLEEVE,4,ALUMINIUM\nBREAK SHARP CORNERS 0.5 MAX.,4,FS-2010,HEX BOLT M8X30,8,STAINLESS\nBREAK SHARP CORNERS 0.5 MAX.,5,FS-2011,WASHER M8,16,STAINLESS\nBREAK SHARP CORNERS 0.5 MAX.,6,FS-2012,LOCK NUT M8,8,STAINLESS",
+              "tsv": "Section\t1\tBK-1001\tBASE PLATE\t1\tSTEEL S235\n\t2\tBK-1002\tSUPPORT BRACKET\t2\tSTEEL S235\n\t3\tBK-1003\tSPACER SLEEVE\t4\tALUMINIUM\nBREAK SHARP CORNERS 0.5 MAX.\t4\tFS-2010\tHEX BOLT M8X30\t8\tSTAINLESS\nBREAK SHARP CORNERS 0.5 MAX.\t5\tFS-2011\tWASHER M8\t16\tSTAINLESS\nBREAK SHARP CORNERS 0.5 MAX.\t6\tFS-2012\tLOCK NUT M8\t8\tSTAINLESS",
+              "md": "| Section | 1 | BK-1001 | BASE PLATE | 1 | STEEL S235 |\n| --- | ---: | --- | --- | ---: | --- |\n|  | 2 | BK-1002 | SUPPORT BRACKET | 2 | STEEL S235 |\n|  | 3 | BK-1003 | SPACER SLEEVE | 4 | ALUMINIUM |\n| BREAK SHARP CORNERS 0.5 MAX. | 4 | FS-2010 | HEX BOLT M8X30 | 8 | STAINLESS |\n| BREAK SHARP CORNERS 0.5 MAX. | 5 | FS-2011 | WASHER M8 | 16 | STAINLESS |\n| BREAK SHARP CORNERS 0.5 MAX. | 6 | FS-2012 | LOCK NUT M8 | 8 | STAINLESS |",
+              "json": "[\n  {\n    \"1\": \"2\",\n    \"Section\": \"\",\n    \"BK-1001\": \"BK-1002\",\n    \"BASE PLATE\": \"SUPPORT BRACKET\",\n    \"1_2\": \"2\",\n    \"STEEL S235\": \"STEEL S235\"\n  },\n  {\n    \"1\": \"3\",\n    \"Section\": \"\",\n    \"BK-1001\": \"BK-1003\",\n    \"BASE PLATE\": \"SPACER SLEEVE\",\n    \"1_2\": \"4\",\n    \"STEEL S235\": \"ALUMINIUM\"\n  },\n  {\n    \"1\": \"4\",\n    \"Section\": \"BREAK SHARP CORNERS 0.5 MAX.\",\n    \"BK-1001\": \"FS-2010\",\n    \"BASE PLATE\": \"HEX BOLT M8X30\",\n    \"1_2\": \"8\",\n    \"STEEL S235\": \"STAINLESS\"\n  },\n  {\n    \"1\": \"5\",\n    \"Section\": \"BREAK SHARP CORNERS 0.5 MAX.\",\n    \"BK-1001\": \"FS-2011\",\n    \"BASE PLATE\": \"WASHER M8\",\n    \"1_2\": \"16\",\n    \"STEEL S235\": \"STAINLESS\"\n  },\n  {\n    \"1\": \"6\",\n    \"Section\": \"BREAK SHARP CORNERS 0.5 MAX.\",\n    \"BK-1001\": \"FS-2012\",\n    \"BASE PLATE\": \"LOCK NUT M8\",\n    \"1_2\": \"8\",\n    \"STEEL S235\": \"STAINLESS\"\n  }\n]"
+            },
+            "rows": {
+              "csv": "1,BK-1001,BASE PLATE,1,STEEL S235\n2,BK-1002,SUPPORT BRACKET,2,STEEL S235\n3,BK-1003,SPACER SLEEVE,4,ALUMINIUM\nNOTE 1. DEBURR ALL EDGES AND,,,,\nBREAK SHARP CORNERS 0.5 MAX.,,,,\n4,FS-2010,HEX BOLT M8X30,8,STAINLESS\n5,FS-2011,WASHER M8,16,STAINLESS\n6,FS-2012,LOCK NUT M8,8,STAINLESS",
+              "tsv": "1\tBK-1001\tBASE PLATE\t1\tSTEEL S235\n2\tBK-1002\tSUPPORT BRACKET\t2\tSTEEL S235\n3\tBK-1003\tSPACER SLEEVE\t4\tALUMINIUM\nNOTE 1. DEBURR ALL EDGES AND\t\t\t\t\nBREAK SHARP CORNERS 0.5 MAX.\t\t\t\t\n4\tFS-2010\tHEX BOLT M8X30\t8\tSTAINLESS\n5\tFS-2011\tWASHER M8\t16\tSTAINLESS\n6\tFS-2012\tLOCK NUT M8\t8\tSTAINLESS",
+              "md": "| 1 | BK-1001 | BASE PLATE | 1 | STEEL S235 |\n| ---: | --- | --- | ---: | --- |\n| 2 | BK-1002 | SUPPORT BRACKET | 2 | STEEL S235 |\n| 3 | BK-1003 | SPACER SLEEVE | 4 | ALUMINIUM |\n| **NOTE 1. DEBURR ALL EDGES AND** | | | | |\n| **BREAK SHARP CORNERS 0.5 MAX.** | | | | |\n| 4 | FS-2010 | HEX BOLT M8X30 | 8 | STAINLESS |\n| 5 | FS-2011 | WASHER M8 | 16 | STAINLESS |\n| 6 | FS-2012 | LOCK NUT M8 | 8 | STAINLESS |",
+              "json": "[\n  {\n    \"section\": null,\n    \"rows\": [\n      {\n        \"1\": \"2\",\n        \"BK-1001\": \"BK-1002\",\n        \"BASE PLATE\": \"SUPPORT BRACKET\",\n        \"1_2\": \"2\",\n        \"STEEL S235\": \"STEEL S235\"\n      },\n      {\n        \"1\": \"3\",\n        \"BK-1001\": \"BK-1003\",\n        \"BASE PLATE\": \"SPACER SLEEVE\",\n        \"1_2\": \"4\",\n        \"STEEL S235\": \"ALUMINIUM\"\n      }\n    ]\n  },\n  {\n    \"section\": \"NOTE 1. DEBURR ALL EDGES AND\",\n    \"rows\": []\n  },\n  {\n    \"section\": \"BREAK SHARP CORNERS 0.5 MAX.\",\n    \"rows\": [\n      {\n        \"1\": \"4\",\n        \"BK-1001\": \"FS-2010\",\n        \"BASE PLATE\": \"HEX BOLT M8X30\",\n        \"1_2\": \"8\",\n        \"STEEL S235\": \"STAINLESS\"\n      },\n      {\n        \"1\": \"5\",\n        \"BK-1001\": \"FS-2011\",\n        \"BASE PLATE\": \"WASHER M8\",\n        \"1_2\": \"16\",\n        \"STEEL S235\": \"STAINLESS\"\n      },\n      {\n        \"1\": \"6\",\n        \"BK-1001\": \"FS-2012\",\n        \"BASE PLATE\": \"LOCK NUT M8\",\n        \"1_2\": \"8\",\n        \"STEEL S235\": \"STAINLESS\"\n      }\n    ]\n  }\n]"
+            }
+          }
+        },
+        {
+          "n": 3,
+          "pages": [1],
+          "parts": [{"page":1,"bbox":[412,413.2,545.776,466.4]}],
+          "header": true,
+          "firstBold": false,
+          "grid": [["TITLE","BRACKET ASSEMBLY"],["DWG NO TL-0417",""],["SCALE","1:2"],["SHEET","1 OF 2"]],
+          "sections": [1],
+          "cols": [[416,443.11199999999997],[460,541.776]],
+          "repeats": 0,
+          "exports": {
+            "column": {
+              "csv": "Section,TITLE,BRACKET ASSEMBLY\nDWG NO TL-0417,SCALE,1:2\nDWG NO TL-0417,SHEET,1 OF 2",
+              "tsv": "Section\tTITLE\tBRACKET ASSEMBLY\nDWG NO TL-0417\tSCALE\t1:2\nDWG NO TL-0417\tSHEET\t1 OF 2",
+              "md": "| Section | TITLE | BRACKET ASSEMBLY |\n| --- | --- | --- |\n| DWG NO TL-0417 | SCALE | 1:2 |\n| DWG NO TL-0417 | SHEET | 1 OF 2 |",
+              "json": "[\n  {\n    \"Section\": \"DWG NO TL-0417\",\n    \"TITLE\": \"SCALE\",\n    \"BRACKET ASSEMBLY\": \"1:2\"\n  },\n  {\n    \"Section\": \"DWG NO TL-0417\",\n    \"TITLE\": \"SHEET\",\n    \"BRACKET ASSEMBLY\": \"1 OF 2\"\n  }\n]"
+            },
+            "rows": {
+              "csv": "TITLE,BRACKET ASSEMBLY\nDWG NO TL-0417,\nSCALE,1:2\nSHEET,1 OF 2",
+              "tsv": "TITLE\tBRACKET ASSEMBLY\nDWG NO TL-0417\t\nSCALE\t1:2\nSHEET\t1 OF 2",
+              "md": "| TITLE | BRACKET ASSEMBLY |\n| --- | --- |\n| **DWG NO TL-0417** | |\n| SCALE | 1:2 |\n| SHEET | 1 OF 2 |",
+              "json": "[\n  {\n    \"section\": \"DWG NO TL-0417\",\n    \"rows\": [\n      {\n        \"TITLE\": \"SCALE\",\n        \"BRACKET ASSEMBLY\": \"1:2\"\n      },\n      {\n        \"TITLE\": \"SHEET\",\n        \"BRACKET ASSEMBLY\": \"1 OF 2\"\n      }\n    ]\n  }\n]"
+            }
+          }
+        },
+        {
+          "n": 4,
+          "pages": [2],
+          "parts": [{"page":2,"bbox":[68,598.85,391.029,709.45]}],
+          "header": true,
+          "firstBold": false,
+          "grid": [
+            ["5","CV-3004","COVER PANEL","1","ALUMINIUM"],
+            ["4","CV-3003","HINGE PIN","2","STEEL S235"],
+            ["3","CV-3002","GASKET","1","RUBBER"],
+            ["NOTE 1. DEBURR ALL EDGES AND","","","",""],
+            ["BREAK SHARP CORNERS 0.5 MAX.","","","",""],
+            ["2","CV-3001","HANDLE GRIP","2","NYLON"],
+            ["1","CV-3000","MOUNT FRAME","1","STEEL S235"]
+          ],
+          "sections": [3,4],
+          "cols": [[72,77.004],[112,146.794],[185,251.99600000000004],[300,305.004],[335,387.029]],
+          "repeats": 0,
+          "exports": {
+            "column": {
+              "csv": "Section,5,CV-3004,COVER PANEL,1,ALUMINIUM\n,4,CV-3003,HINGE PIN,2,STEEL S235\n,3,CV-3002,GASKET,1,RUBBER\nBREAK SHARP CORNERS 0.5 MAX.,2,CV-3001,HANDLE GRIP,2,NYLON\nBREAK SHARP CORNERS 0.5 MAX.,1,CV-3000,MOUNT FRAME,1,STEEL S235",
+              "tsv": "Section\t5\tCV-3004\tCOVER PANEL\t1\tALUMINIUM\n\t4\tCV-3003\tHINGE PIN\t2\tSTEEL S235\n\t3\tCV-3002\tGASKET\t1\tRUBBER\nBREAK SHARP CORNERS 0.5 MAX.\t2\tCV-3001\tHANDLE GRIP\t2\tNYLON\nBREAK SHARP CORNERS 0.5 MAX.\t1\tCV-3000\tMOUNT FRAME\t1\tSTEEL S235",
+              "md": "| Section | 5 | CV-3004 | COVER PANEL | 1 | ALUMINIUM |\n| --- | ---: | --- | --- | ---: | --- |\n|  | 4 | CV-3003 | HINGE PIN | 2 | STEEL S235 |\n|  | 3 | CV-3002 | GASKET | 1 | RUBBER |\n| BREAK SHARP CORNERS 0.5 MAX. | 2 | CV-3001 | HANDLE GRIP | 2 | NYLON |\n| BREAK SHARP CORNERS 0.5 MAX. | 1 | CV-3000 | MOUNT FRAME | 1 | STEEL S235 |",
+              "json": "[\n  {\n    \"1\": \"2\",\n    \"5\": \"4\",\n    \"Section\": \"\",\n    \"CV-3004\": \"CV-3003\",\n    \"COVER PANEL\": \"HINGE PIN\",\n    \"ALUMINIUM\": \"STEEL S235\"\n  },\n  {\n    \"1\": \"1\",\n    \"5\": \"3\",\n    \"Section\": \"\",\n    \"CV-3004\": \"CV-3002\",\n    \"COVER PANEL\": \"GASKET\",\n    \"ALUMINIUM\": \"RUBBER\"\n  },\n  {\n    \"1\": \"2\",\n    \"5\": \"2\",\n    \"Section\": \"BREAK SHARP CORNERS 0.5 MAX.\",\n    \"CV-3004\": \"CV-3001\",\n    \"COVER PANEL\": \"HANDLE GRIP\",\n    \"ALUMINIUM\": \"NYLON\"\n  },\n  {\n    \"1\": \"1\",\n    \"5\": \"1\",\n    \"Section\": \"BREAK SHARP CORNERS 0.5 MAX.\",\n    \"CV-3004\": \"CV-3000\",\n    \"COVER PANEL\": \"MOUNT FRAME\",\n    \"ALUMINIUM\": \"STEEL S235\"\n  }\n]"
+            },
+            "rows": {
+              "csv": "5,CV-3004,COVER PANEL,1,ALUMINIUM\n4,CV-3003,HINGE PIN,2,STEEL S235\n3,CV-3002,GASKET,1,RUBBER\nNOTE 1. DEBURR ALL EDGES AND,,,,\nBREAK SHARP CORNERS 0.5 MAX.,,,,\n2,CV-3001,HANDLE GRIP,2,NYLON\n1,CV-3000,MOUNT FRAME,1,STEEL S235",
+              "tsv": "5\tCV-3004\tCOVER PANEL\t1\tALUMINIUM\n4\tCV-3003\tHINGE PIN\t2\tSTEEL S235\n3\tCV-3002\tGASKET\t1\tRUBBER\nNOTE 1. DEBURR ALL EDGES AND\t\t\t\t\nBREAK SHARP CORNERS 0.5 MAX.\t\t\t\t\n2\tCV-3001\tHANDLE GRIP\t2\tNYLON\n1\tCV-3000\tMOUNT FRAME\t1\tSTEEL S235",
+              "md": "| 5 | CV-3004 | COVER PANEL | 1 | ALUMINIUM |\n| ---: | --- | --- | ---: | --- |\n| 4 | CV-3003 | HINGE PIN | 2 | STEEL S235 |\n| 3 | CV-3002 | GASKET | 1 | RUBBER |\n| **NOTE 1. DEBURR ALL EDGES AND** | | | | |\n| **BREAK SHARP CORNERS 0.5 MAX.** | | | | |\n| 2 | CV-3001 | HANDLE GRIP | 2 | NYLON |\n| 1 | CV-3000 | MOUNT FRAME | 1 | STEEL S235 |",
+              "json": "[\n  {\n    \"section\": null,\n    \"rows\": [\n      {\n        \"1\": \"2\",\n        \"5\": \"4\",\n        \"CV-3004\": \"CV-3003\",\n        \"COVER PANEL\": \"HINGE PIN\",\n        \"ALUMINIUM\": \"STEEL S235\"\n      },\n      {\n        \"1\": \"1\",\n        \"5\": \"3\",\n        \"CV-3004\": \"CV-3002\",\n        \"COVER PANEL\": \"GASKET\",\n        \"ALUMINIUM\": \"RUBBER\"\n      }\n    ]\n  },\n  {\n    \"section\": \"NOTE 1. DEBURR ALL EDGES AND\",\n    \"rows\": []\n  },\n  {\n    \"section\": \"BREAK SHARP CORNERS 0.5 MAX.\",\n    \"rows\": [\n      {\n        \"1\": \"2\",\n        \"5\": \"2\",\n        \"CV-3004\": \"CV-3001\",\n        \"COVER PANEL\": \"HANDLE GRIP\",\n        \"ALUMINIUM\": \"NYLON\"\n      },\n      {\n        \"1\": \"1\",\n        \"5\": \"1\",\n        \"CV-3004\": \"CV-3000\",\n        \"COVER PANEL\": \"MOUNT FRAME\",\n        \"ALUMINIUM\": \"STEEL S235\"\n      }\n    ]\n  }\n]"
+            }
+          }
+        },
+        {
+          "n": 5,
+          "pages": [2],
+          "parts": [{"page":2,"bbox":[68,521.2,545.776,577.45]}],
+          "header": true,
+          "firstBold": false,
+          "grid": [
+            ["","PART","","MATERIAL","TITLE BRACKET ASSEMBLY"],
+            ["ITEM","NUMBER","DESCRIPTION","QTY SPEC","DWG NO TL-0417"],
+            ["","","","","SCALE 1:2"],
+            ["","","","","SHEET 2 OF 2"]
+          ],
+          "sections": [],
+          "cols": [[72,93.501],[112,151.49200000000002],[185,246.50600000000003],[300,380.684],[416,541.776]],
+          "repeats": 0,
+          "exports": {
+            "column": {
+              "csv": ",PART,,MATERIAL,TITLE BRACKET ASSEMBLY\nITEM,NUMBER,DESCRIPTION,QTY SPEC,DWG NO TL-0417\n,,,,SCALE 1:2\n,,,,SHEET 2 OF 2",
+              "tsv": "\tPART\t\tMATERIAL\tTITLE BRACKET ASSEMBLY\nITEM\tNUMBER\tDESCRIPTION\tQTY SPEC\tDWG NO TL-0417\n\t\t\t\tSCALE 1:2\n\t\t\t\tSHEET 2 OF 2",
+              "md": "|  | PART |  | MATERIAL | TITLE BRACKET ASSEMBLY |\n| --- | --- | --- | --- | --- |\n| ITEM | NUMBER | DESCRIPTION | QTY SPEC | DWG NO TL-0417 |\n|  |  |  |  | SCALE 1:2 |\n|  |  |  |  | SHEET 2 OF 2 |",
+              "json": "[\n  {\n    \"column_1\": \"ITEM\",\n    \"PART\": \"NUMBER\",\n    \"column_3\": \"DESCRIPTION\",\n    \"MATERIAL\": \"QTY SPEC\",\n    \"TITLE BRACKET ASSEMBLY\": \"DWG NO TL-0417\"\n  },\n  {\n    \"column_1\": \"\",\n    \"PART\": \"\",\n    \"column_3\": \"\",\n    \"MATERIAL\": \"\",\n    \"TITLE BRACKET ASSEMBLY\": \"SCALE 1:2\"\n  },\n  {\n    \"column_1\": \"\",\n    \"PART\": \"\",\n    \"column_3\": \"\",\n    \"MATERIAL\": \"\",\n    \"TITLE BRACKET ASSEMBLY\": \"SHEET 2 OF 2\"\n  }\n]"
+            },
+            "rows": {
+              "csv": ",PART,,MATERIAL,TITLE BRACKET ASSEMBLY\nITEM,NUMBER,DESCRIPTION,QTY SPEC,DWG NO TL-0417\n,,,,SCALE 1:2\n,,,,SHEET 2 OF 2",
+              "tsv": "\tPART\t\tMATERIAL\tTITLE BRACKET ASSEMBLY\nITEM\tNUMBER\tDESCRIPTION\tQTY SPEC\tDWG NO TL-0417\n\t\t\t\tSCALE 1:2\n\t\t\t\tSHEET 2 OF 2",
+              "md": "|  | PART |  | MATERIAL | TITLE BRACKET ASSEMBLY |\n| --- | --- | --- | --- | --- |\n| ITEM | NUMBER | DESCRIPTION | QTY SPEC | DWG NO TL-0417 |\n|  |  |  |  | SCALE 1:2 |\n|  |  |  |  | SHEET 2 OF 2 |",
+              "json": "[\n  {\n    \"column_1\": \"ITEM\",\n    \"PART\": \"NUMBER\",\n    \"column_3\": \"DESCRIPTION\",\n    \"MATERIAL\": \"QTY SPEC\",\n    \"TITLE BRACKET ASSEMBLY\": \"DWG NO TL-0417\"\n  },\n  {\n    \"column_1\": \"\",\n    \"PART\": \"\",\n    \"column_3\": \"\",\n    \"MATERIAL\": \"\",\n    \"TITLE BRACKET ASSEMBLY\": \"SCALE 1:2\"\n  },\n  {\n    \"column_1\": \"\",\n    \"PART\": \"\",\n    \"column_3\": \"\",\n    \"MATERIAL\": \"\",\n    \"TITLE BRACKET ASSEMBLY\": \"SHEET 2 OF 2\"\n  }\n]"
+            }
+          }
+        }
+      ]
+    }
+  ]
+}
