@@ -319,11 +319,18 @@ describe("a combined Row remembers the Rows it came from", () => {
     expect(memory(t, 4)).toEqual({
       upper: {
         cells: before.grid[4],
+        page: 1,
         section: true,
         sectionCells: before.sectionCells[4],
         combinedFrom: null,
       },
-      lower: { cells: before.grid[5], section: false, sectionCells: null, combinedFrom: null },
+      lower: {
+        cells: before.grid[5],
+        page: 1,
+        section: false,
+        sectionCells: null,
+        combinedFrom: null,
+      },
     });
   });
 

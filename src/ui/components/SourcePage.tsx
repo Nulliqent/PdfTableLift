@@ -1,28 +1,52 @@
 import { useRef } from "react";
 import type { OutlineBox } from "../../pdf-reader";
-import { regionName, roleLabel, tableRegions, type Document, type Table } from "../../engine";
+import {
+  regionName,
+  roleLabel,
+  tableRegions,
+  type Document,
+  type StackedMember,
+  type Table,
+} from "../../engine";
 import { Icon } from "./Icon";
 import { frame, useDrawnPages, usePageWidth } from "../page-drawing";
 import { CanvasHost } from "./CanvasHost";
 import styles from "./SourcePage.module.css";
 
+/** How a Table is outlined: the selected one, a Member of the selected Stacked Table, or another. */
+type Look = "selected" | "member" | "left-out" | "other";
+
 /**
- * The selected Table's source page(s), drawn to canvases with every Detected Table on them
- * outlined and labelled. Clicking an outline selects that Table.
+ * The source page(s) drawn to canvases, with Tables outlined and labelled. Clicking an outline
+ * selects that Table.
+ * - For a Table: its pages, with every Table on them outlined and the selected one standing out.
+ * - For a Stacked Table (`members`): every page holding a Member, once each and in page order,
+ *   with only the Members outlined. A left-out Member says so in its label.
  */
 export function SourcePage({
   document,
-  table,
   onSelect,
+  ...shown
 }: {
   document: Document;
-  table: Table;
   onSelect: (tableId: string) => void;
-}) {
+} & ({ table: Table } | { members: StackedMember[] })) {
   const host = useRef<HTMLDivElement>(null);
   // Fit the pages to the pane, and again whenever the pane changes size.
   const width = usePageWidth(host);
-  const pageNums = [...new Set(table.parts.map((p) => p.page))];
+  const table = "table" in shown ? shown.table : null;
+  const members = "members" in shown ? shown.members : [];
+  const outlined: { table: Table; look: Look }[] = table
+    ? document.tables.map((t) => ({ table: t, look: t.id === table.id ? "selected" : "other" }))
+    : members.flatMap((m, i, all) =>
+        // A Table that is the Member twice is outlined once.
+        m.table && all.findIndex((o) => o.table?.id === m.table!.id) === i
+          ? [{ table: m.table, look: m.leftOut ? "left-out" : "member" }]
+          : [],
+      );
+  const pageNums = table
+    ? [...new Set(table.parts.map((p) => p.page))]
+    : [...new Set(outlined.flatMap((o) => o.table.parts.map((p) => p.page)))].sort((a, b) => a - b);
   const drawn = useDrawnPages(document.id, pageNums, width);
 
   return (
@@ -47,9 +71,9 @@ export function SourcePage({
                 data-testid={`source-page-${num}`}
               >
                 <CanvasHost canvas={page.canvas} />
-                {document.tables.flatMap((t) => {
-                  // A Hand-drawn Table of several Regions is outlined Region by Region.
-                  const regions = t.id === table.id ? tableRegions(document, t) : null;
+                {outlined.flatMap(({ table: t, look }) => {
+                  // The selected Hand-drawn Table of several Regions is outlined Region by Region.
+                  const regions = look === "selected" ? tableRegions(document, t) : null;
                   if (regions && regions.length > 1)
                     return regions.map((r, k) => (
                       <RegionOutline
@@ -65,7 +89,7 @@ export function SourcePage({
                         key={`${t.id}:${k}`}
                         table={t}
                         part={k}
-                        selected={t.id === table.id}
+                        look={look}
                         box={page.locate(part.bbox)}
                         onSelect={() => onSelect(t.id)}
                       />
@@ -98,27 +122,35 @@ function RegionOutline({ name, header, box }: { name: string; header: boolean; b
   );
 }
 
+/**
+ * One Part of a Table, as a button that selects it. The selected Table and the Members are solid.
+ * Any other Table, and a left-out Member, is dashed, and "left out" is said in the label too.
+ */
 function Outline({
   table,
   part,
-  selected,
+  look,
   box,
   onSelect,
 }: {
   table: Table;
   part: number;
-  selected: boolean;
+  look: Look;
   box: OutlineBox;
   onSelect: () => void;
 }) {
-  const label = `Table ${table.n}${table.parts.length > 1 ? ` · part ${part + 1} of ${table.parts.length}` : ""}`;
+  const label =
+    `Table ${table.n}` +
+    (table.parts.length > 1 ? ` · part ${part + 1} of ${table.parts.length}` : "") +
+    (look === "left-out" ? " · left out" : "");
+  const solid = look === "selected" || look === "member";
   return (
     <button
       type="button"
-      className={selected ? styles.outline : `${styles.outline} ${styles.dim}`}
+      className={solid ? styles.outline : `${styles.outline} ${styles.dim}`}
       style={frame(box)}
       aria-label={label}
-      aria-current={selected ? "true" : undefined}
+      aria-current={look === "selected" ? "true" : undefined}
       title={`Show Table ${table.n}`}
       onClick={onSelect}
     >

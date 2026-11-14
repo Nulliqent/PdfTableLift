@@ -19,11 +19,38 @@ export {
   roleLabel,
   tableRegions,
   initialWorkspace,
+  isStackedSelected,
+  isTableSelected,
   reduce,
+  isStackedSelection,
   selectedDocument,
+  selectedStackedTable,
   selectedTable,
   tableSize,
 } from "./workspace";
+export {
+  buildStackedTable,
+  findMember,
+  headerMatch,
+  memberMove,
+  memberRef,
+  nextStackedNumber,
+  tickMatch,
+  tickOutcome,
+  tickedTables,
+  withMembers,
+} from "./stack";
+export type {
+  BuiltStackedTable,
+  HeaderMatch,
+  LeftOut,
+  MemberRef,
+  MoveDirection,
+  StackedMember,
+  StackedTable,
+  StackedTableRef,
+  TablesInProgress,
+} from "./stack";
 export type {
   Band,
   Bbox,
@@ -59,9 +86,10 @@ export {
   isSectionHeader,
   isSectionMode,
   usesSectionColumn,
+  exportFile,
   exportTable,
   isExportFormat,
   numericColumns,
 } from "./export";
-export type { ExportFormat, SectionMode } from "./export";
+export type { ExportFile, ExportFormat, SectionMode } from "./export";
 export type { FoundTable, RegionsBlocked } from "./detection";

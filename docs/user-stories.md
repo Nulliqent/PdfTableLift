@@ -4,6 +4,8 @@ Table Lift is a web app that extracts tables from text-based PDFs using drag and
 
 Stories added in the latest release are marked **(new)**.
 
+This is the original list for the first version and is no longer added to. Later work is described in the specs in GitHub Issues, which are the source of truth.
+
 ---
 
 ## 1. Getting PDFs in

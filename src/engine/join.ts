@@ -116,6 +116,7 @@ export function joinTables(
     out[out.length - 1] = {
       ...table,
       grid: [...table.grid, ...next.grid.slice(skip).map(onto)],
+      rowPages: [...table.rowPages, ...next.rowPages.slice(skip)],
       sections: [...table.sections, ...kept.map((s) => s + offset)],
       sectionCells: {
         ...table.sectionCells,

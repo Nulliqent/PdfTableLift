@@ -272,6 +272,75 @@ test.describe("keyboard", () => {
     await expect(main.getByRole("cell", { name: "Portland OR" })).not.toBeFocused();
   });
 
+  test("Select Tables and a Stacked Table: every control reachable with visible focus (#50)", async ({
+    page,
+  }) => {
+    await page.goto("/");
+    const sidebar = page.getByRole("complementary");
+    await expect(sidebar.getByRole("button", { name: /^Table 4/ })).toBeVisible();
+    // Joining off: Tables 4 and 5 share a Header Row on pages 2 and 3.
+    await page
+      .getByRole("switch", { name: "Join tables that continue onto the next page" })
+      .uncheck();
+    await expect(sidebar.getByRole("button", { name: /^Table 5/ })).toBeVisible();
+    await sidebar.getByRole("button", { name: /^Select Tables/ }).click();
+    await sidebar.getByRole("checkbox", { name: /^Table 4(?!\d)/ }).check();
+    await sidebar.getByRole("checkbox", { name: /^Table 5(?!\d)/ }).check();
+    let stops = await tabThrough(page);
+    let labels = stops.map((s) => s.label);
+    // Unavailable Tables stay reachable, so their reason is read with them.
+    for (const n of [1, 2, 3, 4])
+      expect(labels.some((l) => new RegExp(`^Table ${n}(?!\\d)`).test(l))).toBe(true);
+    expect(labels).toContain("Stack 2 Tables");
+    expect(labels).toContain("Cancel");
+    expectFocusVisibleEverywhere(stops);
+
+    await sidebar.getByRole("button", { name: "Stack 2 Tables" }).click();
+    await expect(
+      page.getByRole("main").getByRole("heading", { name: "Stacked Table 1" }),
+    ).toBeVisible();
+    stops = await tabThrough(page);
+    labels = stops.map((s) => s.label);
+    for (const expected of [
+      "Stacked Table 1",
+      "Table 4",
+      "Table 5",
+      "Edit Members",
+      "Remove Stacked Table",
+      "CSV",
+      "Copy",
+    ])
+      expect(
+        labels.some((l) => l.startsWith(expected)),
+        `Tab reaches "${expected}"`,
+      ).toBe(true);
+    expectFocusVisibleEverywhere(stops);
+
+    // #54: on its Source Page, each Member's outline is a stop with visible focus.
+    const main = page.getByRole("main");
+    await main.getByRole("button", { name: "Source Page" }).click();
+    await expect(main.getByTestId("source-page-3").locator("canvas")).toBeVisible();
+    stops = await tabThrough(page);
+    labels = stops.map((s) => s.label);
+    expect(labels.filter((l) => /^Table [45]$/.test(l)).length).toBeGreaterThanOrEqual(4);
+    expectFocusVisibleEverywhere(stops);
+
+    // Edit Members (#53): every move control, ends included, is reachable with Save and Cancel.
+    await main.getByRole("button", { name: "Edit Members" }).click();
+    stops = await tabThrough(page);
+    labels = stops.map((s) => s.label);
+    for (const expected of [
+      "Move Table 4 up",
+      "Move Table 4 down",
+      "Move Table 5 up",
+      "Move Table 5 down",
+      "Save",
+      "Cancel",
+    ])
+      expect(labels, `Tab reaches "${expected}"`).toContain(expected);
+    expectFocusVisibleEverywhere(stops);
+  });
+
   test("the No tables screen and an error screen are reachable by keyboard", async ({ page }) => {
     await page.goto("/");
     await openFixture(page, "embedded-bold.pdf");
@@ -431,6 +500,35 @@ test.describe("phone layout", () => {
     await main.getByRole("button", { name: "Remove Table" }).click();
     await expect(main.getByRole("heading", { name: "No tables were detected" })).toBeVisible();
     await expectOneColumn(page);
+  });
+
+  test("Select Tables and a Stacked Table fit the one-column layout (#50)", async ({ page }) => {
+    await page.goto("/");
+    const sidebar = page.getByRole("complementary");
+    await expect(sidebar.getByRole("button", { name: /^Table 4/ })).toBeVisible();
+    await page.getByRole("switch", { name: "Join tables that continue onto the next page" }).tap();
+    await expect(sidebar.getByRole("button", { name: /^Table 5/ })).toBeVisible();
+    await sidebar.getByRole("button", { name: /^Select Tables/ }).tap();
+    await sidebar.getByRole("checkbox", { name: /^Table 4(?!\d)/ }).tap();
+    await expect(sidebar.getByText("6 columns, not 5")).toBeVisible();
+    await expectOneColumn(page);
+    await sidebar.getByRole("checkbox", { name: /^Table 5(?!\d)/ }).tap();
+    const stack = sidebar.getByRole("button", { name: "Stack 2 Tables" });
+    const box = (await stack.boundingBox())!;
+    expect(box.x + box.width).toBeLessThanOrEqual(390);
+    await stack.tap();
+    await expect(
+      page.getByRole("main").getByRole("heading", { name: "Stacked Table 1" }),
+    ).toBeVisible();
+    await expectOneColumn(page);
+
+    // #54: its Source Page fits too, and an outline opens its Member by touch.
+    const main = page.getByRole("main");
+    await main.getByRole("button", { name: "Source Page" }).tap();
+    await expect(main.getByTestId("source-page-3").locator("canvas")).toBeVisible();
+    await expectOneColumn(page);
+    await main.getByTestId("source-page-3").getByRole("button", { name: "Table 5" }).tap();
+    await expect(main.getByRole("heading", { name: "Table 5" })).toBeVisible();
   });
 
   test("the row-number menu fits the phone's width and works by touch", async ({ page }) => {
